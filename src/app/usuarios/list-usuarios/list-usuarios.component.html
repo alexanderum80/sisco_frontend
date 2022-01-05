@@ -1,0 +1,4 @@
+<app-list-item title="Usuarios" [canAddItem]="hasAdminPermission()" (OnAddClicked)="add()">
+    <png-table [columns]="columns" [data]="usuarios" [menuItems]="menuItems"></png-table>
+</app-list-item>
+

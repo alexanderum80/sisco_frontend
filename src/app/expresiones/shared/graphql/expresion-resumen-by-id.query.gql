@@ -1,0 +1,14 @@
+query GetExpresionResumenById($id: Int!) {
+    getExpresionResumenById(id: $id) {
+        success
+        data {
+            IdExpresion
+            Expresion
+            Descripcion
+            Acumulado
+            OperacionesInternas
+            Centralizada
+        }
+        error
+    }
+}

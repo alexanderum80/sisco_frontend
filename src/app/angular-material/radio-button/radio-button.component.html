@@ -1,0 +1,9 @@
+<form [formGroup]="fg">
+    <label *ngIf="label">{{ label }}</label>
+    <mat-radio-group aria-labelledby="example-radio-group-label" [color]="color" 
+        [formControlName]="control" class="flex display-{orientation}">
+        <mat-radio-button *ngFor="let button of buttonValues" [value]="button.value">
+            {{ button.description }}
+        </mat-radio-button>
+    </mat-radio-group>
+</form>

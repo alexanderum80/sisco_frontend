@@ -1,0 +1,10 @@
+<div class="navigation-container">
+  <mat-menu #appMenu="matMenu">
+    <ng-template matMenuContent="matMenuContent" let-name="name">
+      <button mat-menu-item="mat-menu-item">Notificación</button>
+    </ng-template>
+  </mat-menu>
+  <button mat-icon-button="mat-icon-button" [matMenuTriggerFor]="appMenu" matTooltip="Alertas">
+    <div class="mdi mdi-bell-circle" [matBadge]="cantNotificaciones" matBadgeColor="accent"></div>
+  </button>
+</div>

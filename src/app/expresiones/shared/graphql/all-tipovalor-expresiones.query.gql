@@ -1,0 +1,10 @@
+query GetAllContaTipoValorExpresiones {
+    getAllContaTipoValorExpresiones {
+        success
+        data {
+            IdTipoValor
+            Valor
+        }
+        error
+    }
+}

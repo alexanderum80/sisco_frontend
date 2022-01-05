@@ -1,0 +1,59 @@
+<p-table #table
+    [columns]="columns" 
+    [value]="data" 
+    [sortField]="groupField" 
+    sortMode="single" 
+    rowGroupMode="subheader" 
+    [groupRowsBy]="groupField"
+    responsiveLayout="scroll"
+    styleClass="p-datatable-gridlines"
+    [paginator]="paginator" 
+    [rows]="20" 
+    [rowsPerPageOptions]="[20,50,100]" 
+    [loading]="loading" 
+    [showCurrentPageReport]="true" 
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    [globalFilterFields]="getFields()">
+    <ng-template pTemplate="header" let-columns>
+        <tr>
+            <th *ngFor="let col of columns" [class.text-right]="col.type === 'number' || col.type === 'decimal'" [pSortableColumn]="col.field" [style.width]="col.type === 'boolean' ? '100px' : 'auto'" pResizableColumn>
+                {{ col.header }}
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+            </th>
+            <th *ngIf="menuItems" class="menu-items-cell"></th>
+        </tr>
+        <tr *ngIf="filterData">
+            <th *ngFor="let col of columns" [ngSwitch]="col.type">
+                <p-columnFilter *ngSwitchCase="'date'" type="date" [field]="col.field" matchMode="is" class="w-full">
+                    <ng-template pTemplate="filter" let-filter="filterCallback">
+                        <p-calendar (onSelect)="filter($event)" dateFormat="dd/mm/yy"></p-calendar>
+                    </ng-template>
+                </p-columnFilter>
+                <p-columnFilter *ngSwitchCase="'boolean'" type="boolean" [field]="col.field" matchMode="is" class="w-full"></p-columnFilter>
+                <p-columnFilter *ngSwitchDefault type="text" [field]="col.field" matchMode="contains" class="w-full"></p-columnFilter>
+            </th>
+            <th *ngIf="menuItems" class="menu-items-cell"></th>
+        </tr>
+    </ng-template>
+    <ng-template *ngIf="groupField" pTemplate="groupheader" let-rowData>
+        <tr pRowGroupHeader>
+            <td colspan="12">
+                <span class="font-bold">{{ rowData[groupField] }}</span>
+            </td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-rowData let-columns="columns">
+        <tr>
+            <td *ngFor="let col of columns" [ngSwitch]="col.type" [class.text-right]="col.type === 'number' || col.type === 'decimal'">
+                <span *ngSwitchCase="'date'"> {{ rowData[col.field] | date }}</span>
+                <span *ngSwitchCase="'decimal'"> {{ rowData[col.field] | currency }}</span>
+                <i *ngSwitchCase="'boolean'" class="pi" [ngClass]="{'true-icon pi-check-circle': rowData[col.field], 'false-icon pi-times-circle': !rowData[col.field]}"></i>
+                <span *ngSwitchDefault> {{ _(rowData, col.field) }}</span>
+            </td>
+            <td *ngIf="menuItems" class="menu-items-cell">
+                <button #btn type="button" pButton icon="mdi mdi-dots-vertical" class="p-button-vertical-menu p-button-rounded p-button-text" (click)="menu.toggle($event)"></button>
+                <p-slideMenu #menu [model]="menuItems" [popup]="true" [viewportHeight]=120 (onShow)="updateMetaData(rowData)"></p-slideMenu>
+            </td>
+        </tr>
+    </ng-template>
+</p-table>

@@ -1,0 +1,15 @@
+query GetAllNoUsarEnCuenta {
+    getAllNoUsarEnCuenta {
+        success
+        data {
+            Id
+            Codigo
+            Cta
+            SubCta
+            Crit1
+            Crit2
+            Crit3
+        }
+        error
+    }
+}

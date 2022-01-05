@@ -1,0 +1,6 @@
+mutation DeleteExpresionResumen($id: Int!) {
+    deleteExpresionResumen(id: $id) {
+        success
+        error
+    }
+}

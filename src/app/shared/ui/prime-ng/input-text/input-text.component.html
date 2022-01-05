@@ -1,0 +1,20 @@
+<div>
+    <span [ngClass]="{'p-float-label mt-3': floatLabel }" class="p-field" [formGroup]="fg">
+        <label *ngIf="!floatLabel"
+            [for]="control" 
+            class="inline-label" 
+            [ngStyle]="{'width.px': labelWidth}"
+            [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty">{{ label }}:
+        </label>
+        <input [id]="control" 
+            type="text"
+            pInputText
+            [formControlName]="control" 
+            [placeholder]="placeholder" 
+            [autocomplete]="autocomplete"
+            [required]="required" 
+            [disabled]="disabled">
+        <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
+    </span>
+    <small *ngIf="!fg.controls[control].valid && fg.controls[control].dirty" id="username2-help" class="p-error">Este campo es obligatorio</small>
+</div>

@@ -1,0 +1,15 @@
+query GetUnidadesByIdDivision($idDivision: Int!) {
+    getUnidadesByIdDivision(idDivision: $idDivision) {
+        success
+        data {
+            IdUnidad
+            Nombre
+            IdSubdivision
+            Subdivision
+            IdDivision
+            Division
+            Abierta
+        }
+        error
+    }
+}

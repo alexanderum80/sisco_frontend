@@ -1,0 +1,45 @@
+<app-modal title="Configurar Conexión al Golden DWH" [fg]="fg" (saveClicked)="save()">
+  <form [formGroup]="fg">
+    <div class="form__group m-t-10">
+      <am-select class="w-100" label="División" [fg]="fg" control="idUnidad" [values]="divisionesValues" [required]="true"></am-select>
+    </div>
+    <mat-tab-group>
+      <mat-tab label="Golden Restaura">
+        <div class="form__group m-t-10">
+          <am-input class="w-100" label="Servidor" [fg]="fg" control="rest_ip" placeholder="Servidor" [required]="true" autocomplete="off"></am-input>
+        </div>
+        <div class="form__group m-t-10">
+          <am-input class="w-100" label="Usuario" [fg]="fg" control="rest_usuario" placeholder="Usuario" [required]="true" autocomplete="off"></am-input>
+        </div>
+        <div class="form__group">
+          <am-input class="w-100" label="Contraseña" type="password" [fg]="fg" control="rest_contrasena" placeholder="Contraseña" [required]="true" autocomplete="off"></am-input>
+        </div>
+        <div class="form__group m-t-10">
+          <am-select class="flex" label="Base de Datos" [fg]="fg" control="rest_baseDatos" [required]="true" [disabled]="loadingRestDataBase" [values]="baseDatosRestValues"></am-select>
+          <button mat-icon-button="mat-icon-button" aria-labelledby="aria-labelledby" [disabled]="loadingRestDataBase" matTooltip="Leer Bases de Datos del Servidor." (click)="refreshDataBases('Rest')">
+            <div class="mdi mdi-refresh" *ngIf="!loadingRestDataBase"></div>
+            <mat-spinner class="m-l-10 m-t-5" *ngIf="loadingRestDataBase" diameter="20"></mat-spinner>
+          </button>
+        </div>
+      </mat-tab>
+      <mat-tab label="Golden DWH">
+        <div class="form__group m-t-10">
+          <am-input class="w-100" label="Servidor" [fg]="fg" control="dwh_ip" placeholder="Servidor" [required]="true" autocomplete="off"></am-input>
+        </div>
+        <div class="form__group m-t-10">
+          <am-input class="w-100" label="Usuario" [fg]="fg" control="dwh_usuario" placeholder="Usuario" [required]="true" autocomplete="off"></am-input>
+        </div>
+        <div class="form__group">
+          <am-input class="w-100" label="Contraseña" type="password" [fg]="fg" control="dwh_contrasena" placeholder="Contraseña" [required]="true" autocomplete="off"></am-input>
+        </div>
+        <div class="form__group m-t-10">
+          <am-select class="flex" label="Base de Datos" [fg]="fg" control="dwh_baseDatos" [required]="true" [disabled]="loadingDWHDataBase" [values]="baseDatosDWHValues"></am-select>
+          <button mat-icon-button="mat-icon-button" aria-labelledby="aria-labelledby" [disabled]="loadingDWHDataBase" matTooltip="Leer Bases de Datos del Servidor." (click)="refreshDataBases('DWH')">
+            <div class="mdi mdi-refresh" *ngIf="!loadingDWHDataBase"></div>
+            <mat-spinner class="m-l-10 m-t-5" *ngIf="loadingDWHDataBase" diameter="20"></mat-spinner>
+          </button>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </form>
+</app-modal>

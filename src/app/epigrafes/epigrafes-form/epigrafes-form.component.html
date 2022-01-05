@@ -1,0 +1,7 @@
+<app-modal [title]="action + ' Epígrafe'" [fg]="fg" (saveClicked)="save()">
+  <form class="epigrafe-form" [formGroup]="fg">
+    <div class="form__group m-t-10">
+      <am-input class="w-100" label="Epígrafe" [fg]="fg" control="epigrafe" [required]="true" autocomplete="off"></am-input>
+    </div>
+  </form>
+</app-modal>

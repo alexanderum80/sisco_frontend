@@ -1,0 +1,6 @@
+mutation DeleteEmpleado($id: Int!) {
+    deleteEmpleado(id: $id) {
+        success
+        error
+    }
+}

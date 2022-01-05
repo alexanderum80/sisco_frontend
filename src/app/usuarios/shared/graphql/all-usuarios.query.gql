@@ -1,0 +1,18 @@
+query GetAllUsuarios {
+   getAllUsuarios {
+    success
+    data {
+      IdUsuario
+      Usuario
+      TipoUsuario {
+        IdTipo
+        TipoUsuario
+      }
+      Division {
+        IdDivision
+        Division
+      }
+    }
+    error
+  }
+}

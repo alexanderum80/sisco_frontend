@@ -1,0 +1,6 @@
+mutation DeleteElementoGasto($id: String!) {
+    deleteElementoGasto(id: $id) {
+        success
+        error
+    }
+}

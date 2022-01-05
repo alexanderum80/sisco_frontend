@@ -1,0 +1,14 @@
+// Text ellipsis
+@mixin text-ellipsis {
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+// Menu Buttons
+@mixin menu-button {
+    background-color: $color-primary;
+    border: none;
+    color: $color-white;
+}

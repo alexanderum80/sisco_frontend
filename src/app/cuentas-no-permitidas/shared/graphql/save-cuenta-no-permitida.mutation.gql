@@ -1,0 +1,6 @@
+mutation SaveNoUsarEnCuenta($noUsarEnCuentaInput: ContaNoUsarEnCuentaInput!) {
+    saveNoUsarEnCuenta(noUsarEnCuentaInput: $noUsarEnCuentaInput) {
+        success
+        error
+    }
+}

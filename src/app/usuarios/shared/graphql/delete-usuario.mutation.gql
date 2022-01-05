@@ -1,0 +1,6 @@
+mutation DeleteUsuario($IDs: [Int!]!) {
+   deleteUsuario(IDs: $IDs) {
+    success
+    error
+  }
+}

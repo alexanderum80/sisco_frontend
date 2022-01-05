@@ -1,0 +1,22 @@
+<app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
+  <form [formGroup]="fg">
+    <div class="form__group w-30rem">
+      <png-dropdown class="w-full" [fg]="fg" control="codigo" label="Centro" labelWidth="90" [optionsValues]="centrosValues" placeholder="&lt;TODOS&gt;" [filter]="true" [showClear]="true"></png-dropdown>
+    </div>
+    <div class="form__group w-30rem">
+      <png-input-text class="w-full mt-1" label="Cuenta" labelWidth="90" [fg]="fg" control="cta" autocomplete="off"></png-input-text>
+    </div>
+    <div class="form__group w-30rem">
+      <png-input-text class="w-full mt-1" label="Sub Cuenta" labelWidth="90" [fg]="fg" control="subcta" autocomplete="off"></png-input-text>
+    </div>
+    <div class="form__group w-30rem">
+      <png-input-text class="w-full mt-1" label="Criterio 1" labelWidth="90" [fg]="fg" control="crit1" autocomplete="off"></png-input-text>
+    </div>
+    <div class="form__group w-30rem">
+      <png-input-text class="w-full mt-1" label="Criterio 2" labelWidth="90" [fg]="fg" control="crit2" autocomplete="off"></png-input-text>
+    </div>
+    <div class="form__group w-30rem">
+      <png-input-text class="w-full mt-1" label="Criterio 3" labelWidth="90" [fg]="fg" control="crit3" autocomplete="off"></png-input-text>
+    </div>
+  </form>
+</app-add-edit-item>

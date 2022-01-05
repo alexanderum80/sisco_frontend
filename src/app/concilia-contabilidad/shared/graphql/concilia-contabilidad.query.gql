@@ -1,0 +1,28 @@
+query ConciliaContabilidad($conciliaContaInput: ConciliaContaInput!) {
+    conciliaContabilidad(conciliaContaInput: $conciliaContaInput) {
+        success
+        data {
+            ReporteClasificador {
+                success
+                data
+                error
+            }
+            ReporteConsultas {
+                success
+                data
+                error
+            }
+            ReporteExpresiones {
+                success
+                data
+                error
+            }
+            ReporteValores {
+                success
+                data
+                error
+            }
+        }
+        error
+    }
+}

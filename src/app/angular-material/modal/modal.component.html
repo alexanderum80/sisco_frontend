@@ -1,0 +1,10 @@
+<div class="mat-dialog-title" mat-dialog-title="mat-dialog-title">{{title}} </div>
+<mat-divider></mat-divider>
+<div mat-dialog-content="mat-dialog-content">
+  <ng-content></ng-content>
+</div>
+<mat-divider></mat-divider>
+<div class="mat-dialog-actions" mat-dialog-actions="mat-dialog-actions">
+  <button mat-raised-button="mat-raised-button" color="primary" [disabled]="!isFormValid()" (click)="save()">Aceptar</button>
+  <button mat-raised-button="mat-raised-button" (click)="closeModal()">Cancelar</button>
+</div>

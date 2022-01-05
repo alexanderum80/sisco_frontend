@@ -1,0 +1,11 @@
+query GetDWHConexion($idDivision: Int!) {
+    getDWHConexion(idDivision: $idDivision) {
+        success
+        data {
+          IdUnidad
+          ConexionRest
+          ConexionDWH
+        }
+        error
+    }
+}

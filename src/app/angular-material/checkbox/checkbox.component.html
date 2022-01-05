@@ -1,0 +1,11 @@
+<form [formGroup]="fg">
+    <mat-checkbox 
+        [labelPosition]="labelPosition"
+        [indeterminate]="indeterminateValue"
+        [formControlName]="control"
+        [required]="required"
+        [color]="color"
+        [disabled]="disabled"
+        [matTooltip]="tooltip"> {{ label }}
+    </mat-checkbox>
+</form>

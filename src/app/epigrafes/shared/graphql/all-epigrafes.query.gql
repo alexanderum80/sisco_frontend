@@ -1,0 +1,10 @@
+query GetAllEpigrafes {
+    getAllEpigrafes {
+        success
+        data {
+            IdEpigafre
+            Epigrafe
+        }
+        error
+    }
+}

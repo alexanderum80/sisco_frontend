@@ -1,0 +1,15 @@
+.chequea-conexion-detalle {
+    height: calc(100% - 150px);
+    margin: 0 10px;
+    overflow: auto !important;
+}
+
+.form-division {
+    max-width: 600px;
+    padding-left: 1rem;
+    padding-top: 1rem;
+}
+
+.estado-incorrecto {
+    color: red;
+}

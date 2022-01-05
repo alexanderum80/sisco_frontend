@@ -1,0 +1,21 @@
+.select-container {
+    width: 100%;
+    display: flex;
+}
+
+.select-reset {
+    padding-left: 5px;
+    padding-top: 15px;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.inputFilter {
+    padding: 1rem;
+}
+
+.mdi-close::before {
+    font-weight: bold;
+}

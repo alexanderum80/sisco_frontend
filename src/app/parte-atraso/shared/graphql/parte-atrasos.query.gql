@@ -1,0 +1,12 @@
+query ParteAtrasos($idDivision: Int!) {
+  parteAtrasos(idDivision: $idDivision) {
+    success
+    data
+    error
+  }
+  datosIdGAM(idDivision: $idDivision) {
+    success
+    data
+    error
+  }
+}

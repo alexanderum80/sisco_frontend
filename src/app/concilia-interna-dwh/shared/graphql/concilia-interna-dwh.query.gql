@@ -1,0 +1,16 @@
+query ConciliaInternaDWH($conciliaInternaDWHInput: ConciliaInternaDWHInput!) {
+  conciliaInternaDWH(conciliaInternaDWHInput: $conciliaInternaDWHInput) {
+    success
+    data {
+      Documento
+      FechaE
+      FechaR
+      Emisor
+      Receptor
+      ImporteE
+      ImporteR
+      Diferencia
+    }
+    error
+  }
+}

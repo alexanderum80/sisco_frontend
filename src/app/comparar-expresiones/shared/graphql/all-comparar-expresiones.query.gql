@@ -1,0 +1,18 @@
+query GetAllComprobarExpresiones {
+    getAllComprobarExpresiones {
+        success
+        data {
+            Id
+            Expresion
+            Operador
+            ExpresionC
+            Centro
+            Complejo
+            Con
+            ExpresionDesc
+            ExpresionDesc_C
+            OperadorDesc
+        }
+        error
+    }
+}

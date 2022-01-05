@@ -1,0 +1,6 @@
+mutation SaveEmpleado($empleadoInfo: EmpleadoInput!) {
+    saveEmpleado(empleadoInfo: $empleadoInfo) {
+        success
+        error
+    }
+}

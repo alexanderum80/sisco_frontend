@@ -1,0 +1,30 @@
+<p-menubar [model]="menu">
+  <ng-template pTemplate="end">
+    <app-usuario-info></app-usuario-info>
+  </ng-template>
+</p-menubar>
+
+<!-- <div class="align-center" layout="row" *ngFor="let menu of Menu">
+  <button mat-button="mat-button" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="menu"> 
+    <div class="flex"><a>{ menu.name }</a>
+      <div class="mdi mdi-menu-down-outline"></div>
+    </div>
+  </button>
+  <mat-menu #appMenu="matMenu">
+    <ng-template matMenuContent="matMenuContent" let-childrens="childrens">
+      <div *ngFor="let children of childrens">
+        <button mat-menu-item="mat-menu-item" *ngIf="!children.childrens" [matTooltip]="children.tooltip" matTooltipPosition="right" [disabled]="children.disabled" (click)="navigateTo(children.url)"> 
+          <div class="mdi mdi-{children.icon}"></div><a>{ children.name }</a>
+        </button>
+        <button mat-menu-item="mat-menu-item" *ngIf="children.childrens" [matMenuTriggerFor]="subMenu" [matMenuTriggerData]="children">{ children.name }</button>
+      </div>
+    </ng-template>
+  </mat-menu>
+  <mat-menu #subMenu="matMenu">
+    <ng-template matMenuContent="matMenuContent" let-childrens="childrens">
+      <button mat-menu-item="mat-menu-item" *ngFor="let children of childrens" [matTooltip]="children.tooltip" matTooltipPosition="right" [disabled]="children.disabled" (click)="navigateTo(children.url)"> 
+        <div class="mdi mdi-{children.icon}"></div><a>{ children.name }</a>
+      </button>
+    </ng-template>
+  </mat-menu>
+</div> -->

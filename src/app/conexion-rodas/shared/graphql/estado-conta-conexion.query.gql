@@ -1,0 +1,10 @@
+query EstadoContaConexiones($idDivision: Int!) {
+  estadoContaConexiones(idDivision: $idDivision) {
+    success
+    data {
+      Unidad
+      Estado
+    }
+    error
+  }
+}

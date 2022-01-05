@@ -1,0 +1,10 @@
+query GetEpigrafeById($id: Int!) {
+    getEpigrafeById(id: $id) {
+        success
+        data {
+            IdEpigafre
+            Epigrafe
+        }
+        error
+    }
+}

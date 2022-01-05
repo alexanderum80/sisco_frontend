@@ -1,0 +1,6 @@
+mutation DeleteContaConexion($id: Int!) {
+    deleteContaConexion(id: $id) {
+        success
+        error
+    }
+}

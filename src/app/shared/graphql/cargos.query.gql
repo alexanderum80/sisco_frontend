@@ -1,0 +1,10 @@
+query GetAllCargos {
+    getAllCargos {
+        success
+        data {
+            IdCargo
+            Cargo
+        }
+        error
+    }
+}

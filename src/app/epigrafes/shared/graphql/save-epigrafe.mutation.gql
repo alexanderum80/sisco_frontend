@@ -1,0 +1,6 @@
+mutation SaveEpigrafe($epigrafeInfo: EpigrafeInput!) {
+    saveEpigrafe(epigrafeInfo: $epigrafeInfo) {
+        success
+        error
+    }
+}

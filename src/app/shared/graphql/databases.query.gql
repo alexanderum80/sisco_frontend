@@ -1,0 +1,9 @@
+query getDataBases($ip: String!, $usuario: String!, $password: String!) {
+   getDataBases(ip: $ip, ususario: $usuario, password: $password) {
+    success
+    data {
+      name
+    }
+    error
+  }
+}

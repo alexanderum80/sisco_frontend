@@ -1,0 +1,23 @@
+query ConciliaDWH($conciliaDWHInput: ConciliaDWHInput!) {
+    conciliaDWH(conciliaDWHInput: $conciliaDWHInput) {
+        success
+        data {
+            RodasDWHInventarioVentas {
+                success
+                data
+                error
+            }
+            RodasDWHAlmacenes {
+                success
+                data
+                error
+            }
+            RodasDWHNota {
+                success
+                data
+                error
+            }
+        }
+        error
+    }
+}

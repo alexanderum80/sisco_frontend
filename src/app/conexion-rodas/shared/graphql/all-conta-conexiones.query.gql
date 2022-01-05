@@ -1,0 +1,17 @@
+query GetAllContaConexiones {
+    getAllContaConexiones {
+        success
+        data {
+            Id
+            IdUnidad
+            Unidad
+            IdDivision
+            Division
+            Consolidado
+            IpRodas
+            Usuario
+            BaseDatos
+        }
+        error
+    }
+}

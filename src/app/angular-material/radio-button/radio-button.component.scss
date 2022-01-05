@@ -1,0 +1,20 @@
+mat-radio-group {
+    display: flex;
+    margin: .5rem;
+
+    &.display-row {
+        flex-direction: row;
+
+        mat-radio-button:not(:last-child) {
+            margin-right: 1rem;
+        }
+    }
+
+    &.display-column {
+        flex-direction: column;
+
+        mat-radio-button:not(:last-child) {
+            margin-bottom: .5rem;
+        }
+    }
+}

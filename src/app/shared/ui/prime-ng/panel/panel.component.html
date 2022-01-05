@@ -1,0 +1,16 @@
+<p-panel [toggleable]="toggleable">
+    <ng-template pTemplate="header" *ngIf="header">
+        {{ header }}
+    </ng-template>
+    <ng-template pTemplate="icons" *ngIf="closeButton">
+        <button pButton icon="mdi mdi-close" 
+            class="p-panel-header-icon p-button-rounded p-button-text" 
+            pTooltip="Cerrar"
+            (click)="close()">
+        </button>
+    </ng-template>
+    <ng-content></ng-content>
+    <ng-template pTemplate="footer" *ngIf="footer">
+        {{ footer }}
+    </ng-template>
+</p-panel>

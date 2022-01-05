@@ -1,0 +1,9 @@
+query GetCuentasAgrupadas {
+  getCuentasAgrupadas {
+    success
+    data {
+      Cuenta
+    }
+    error
+  }
+}

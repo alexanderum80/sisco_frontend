@@ -1,0 +1,18 @@
+query GetUsuariosByDivision($idDivision: Int!) {
+   getUsuariosByDivision(idDivision: $idDivision) {
+    success
+    data {
+      IdUsuario
+      Usuario
+      TipoUsuario {
+        IdTipo
+        TipoUsuario
+      }
+      Division {
+        IdDivision
+        Division
+      }
+    }
+    error
+  }
+}

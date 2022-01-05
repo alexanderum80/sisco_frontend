@@ -1,0 +1,11 @@
+query GetAllSubdivisiones{
+  getAllSubdivisiones {
+    success
+    data {
+      IdSubdivision
+      Subdivision
+      IdDivision
+    }
+    error
+  }
+}

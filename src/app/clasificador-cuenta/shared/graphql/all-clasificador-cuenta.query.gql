@@ -1,0 +1,22 @@
+query GetAllClasificadorCuentas {
+  getAllClasificadorCuentas {
+    success
+    data {
+      Cuenta
+      SubCuenta
+      Descripcion
+      Naturaleza
+      Crit1
+      Crit2
+      Crit3
+      Obligacion
+      TipoClasificador
+      SeUtiliza
+      Terminal
+      Crit1Consolidacion
+      Crit2Consolidacion
+      Crit3Consolidacion
+    }
+    error
+  }
+}

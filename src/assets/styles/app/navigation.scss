@@ -1,0 +1,59 @@
+.more-vert {
+    position: relative;
+
+    &__container {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    &__group {
+        position: relative;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+    
+        &:hover {
+            background-color: lightgray;
+        }
+    }
+
+    &__btn {
+        position: absolute;
+        top: -4px;
+        right: 3px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        transition: all .3s;
+        color: rgba(black, .5);
+    
+        &:hover {
+            cursor: pointer;
+            color: rgba(black, 1);
+        }
+    }
+}
+
+.menu-item {
+    display: flex;
+
+    &__icon {
+        margin-right: .5rem;
+    }
+
+    &__label {
+        font-size: $default-font-size;
+    }
+}
+
+.dropdown-item {
+    display: flex;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    &.disabled {
+        cursor: not-allowed;
+    }
+}

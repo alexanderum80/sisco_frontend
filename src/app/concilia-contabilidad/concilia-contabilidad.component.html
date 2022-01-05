@@ -1,0 +1,43 @@
+<png-progress-spinner *ngIf="loading"></png-progress-spinner>
+<div class="content">
+  <png-panel class="h-full w-fu;;" header="Contabildad">
+    <form [formGroup]="fg">
+      <div class="flex p-1">
+        <png-card>
+          <png-radio-button [fg]="fg" control="tipoCentro" [items]="tipoCentrosValues"></png-radio-button>
+        </png-card>
+        <div class="unidad-container flex m-l-20" layout="column">
+          <div class="form__group">
+            <png-dropdown class="w-100" [fg]="fg" control="idCentro" label="Centro" labelWidth="100" [optionsValues]="centrosValues" placeholder="Seleccione el Centro" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+          </div>
+          <div class="form__group">
+            <png-dropdown class="w-100" [fg]="fg" control="tipoEntidad" label="Tipo de Centro" labelWidth="100" [optionsValues]="tipoEntidadValues" placeholder="Tipo de Centro" [disabled]="true"></png-dropdown>
+          </div>
+          <div class="form__group">
+            <png-calendar class="w-100" [fg]="fg" label="Período" labelWidth="100" control="periodo" view="month" dateFormat="MM/yy" [required]="true"></png-calendar>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="conciliacion-detalle shadow-1 mt-2">
+      <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
+        <p-tabPanel header="Análisis de Asientos">
+          <png-table [columns]="displayedColumnsConciliacion" [data]="dataSourceAsientos" [paginator]="false" groupField="Consulta"></png-table>
+        </p-tabPanel>
+        <p-tabPanel header="Chequeo de expresiones">
+          <png-table [columns]="displayedColumnsExpresiones" [data]="dataSourceExpresiones" [paginator]="false"></png-table>
+        </p-tabPanel>
+        <p-tabPanel header="Chequeo de valores">
+          <png-table [columns]="displayedColumnsValores" [data]="dataSourceValores" [paginator]="false"></png-table>
+        </p-tabPanel>
+        <p-tabPanel header="Análisis del Clasificador">
+          <png-table [columns]="displayedColumnsClasificador" [data]="dataSourceClasificador" [filterData]="false"></png-table>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+    <div class="item__footer mt-2">
+      <png-split-button class="mr-1" label="Conciliar" icon="mdi mdi-file-check-outline" [items]="buttonConciliarItems" [disabled]="!fg.valid" (clicked)="conciliar()"></png-split-button>
+      <png-button class="m-r-10" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSourceAsientos.length &amp;&amp; !dataSourceClasificador.length" (clicked)="reporte()"></png-button>
+    </div>
+  </png-panel>
+</div>

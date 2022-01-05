@@ -1,0 +1,6 @@
+mutation IniciarSaldos($iniciarSaldosInput: IniciarSaldosInput!) {
+    iniciarSaldos(iniciarSaldosInput: $iniciarSaldosInput) {
+        success
+        error
+    }
+}

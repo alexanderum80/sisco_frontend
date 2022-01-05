@@ -1,0 +1,6 @@
+mutation SaveClasificadorCuenta($clasificadorInfo: ClasificadorCuentaRealInput!) {
+  saveClasificadorCuenta(clasificadorInfo: $clasificadorInfo) {
+    success
+    error
+  }
+}

@@ -1,0 +1,6 @@
+mutation DeleteNoUsarEnCuenta($id: Int!) {
+    deleteNoUsarEnCuenta(id: $id) {
+        success
+        error
+    }
+}

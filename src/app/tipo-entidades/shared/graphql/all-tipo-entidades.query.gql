@@ -1,0 +1,11 @@
+query GetAllTipoEntidades {
+    getAllTipoEntidades {
+        success
+        data {
+            Id
+            Entidades
+            Descripcion
+        }
+        error
+    }
+}

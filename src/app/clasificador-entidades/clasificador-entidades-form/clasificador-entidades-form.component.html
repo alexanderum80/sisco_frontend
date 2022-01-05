@@ -1,0 +1,10 @@
+<app-modal [title]="action + ' Clasificador de Entidad'" [fg]="fg" (saveClicked)="save()">
+  <form [formGroup]="fg">
+    <div class="form__group m-t-10">
+      <am-select class="w-100" label="Unidad" [fg]="fg" control="idUnidad" [values]="unidadesValues" [required]="true" autocomplete="off"></am-select>
+    </div>
+    <div class="form__group">
+      <am-select class="w-100" label="Tipo Entidad" [fg]="fg" control="idTipoEntidad" [values]="tipoEntidadesValues" [required]="true" autocomplete="off"></am-select>
+    </div>
+  </form>
+</app-modal>

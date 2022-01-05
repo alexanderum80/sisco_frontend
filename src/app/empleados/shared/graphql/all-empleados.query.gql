@@ -1,0 +1,18 @@
+query GetAllEmpleados {
+    getAllEmpleados {
+        success
+        data {
+            IdEmpleado
+            Empleado
+            Cargo {
+                IdCargo
+                Cargo
+            }
+            Division {
+                IdDivision
+                Division
+            }
+        }
+        error
+    }
+}

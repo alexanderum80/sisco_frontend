@@ -1,0 +1,6 @@
+mutation DeleteClasificadorCuenta($cuenta: String!, $subcuenta: String!, $tipo: Int!) {
+  deleteClasificadorCuenta(cuenta: $cuenta, subcuenta: $subcuenta, tipo: $tipo) {
+    success
+    error
+  }
+}

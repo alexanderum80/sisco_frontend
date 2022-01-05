@@ -1,0 +1,6 @@
+mutation DeleteClasificadorEntidad($idUnidad: Int!) {
+    deleteClasificadorEntidad(idUnidad: $idUnidad) {
+        success
+        error
+    }
+}

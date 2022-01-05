@@ -1,0 +1,32 @@
+<app-modal [title]="action + ' Cuenta'" [fg]="fg" (saveClicked)="save()">
+  <form [formGroup]="fg">
+    <div class="form__group m-t-10">
+      <am-select class="w-100" label="Tipo de Clasificador" [fg]="fg" control="tipoClasificador" [values]="tipoClasificadorValues" [required]="true" autocomplete="off"></am-select>
+    </div>
+    <div class="form__group">
+      <am-input class="w-100" label="Cuenta" [fg]="fg" control="cuenta" [required]="true" autocomplete="off"></am-input>
+      <am-input class="w-100 m-l-10" label="CubCuenta" [fg]="fg" control="subcuenta" [required]="true" autocomplete="off"></am-input>
+    </div>
+    <div class="form__group">
+      <am-input class="w-100" label="Descripción" [fg]="fg" control="descripcion" [required]="true" autocomplete="off"></am-input>
+    </div>
+    <div class="form__group">
+      <am-select class="w-60" label="Naturaleza" [fg]="fg" control="naturaleza" [values]="naturalezaValues" [required]="true" autocomplete="off"></am-select>
+      <am-checkbox class="flex m-l-20 m-t-10" label="Terminal" [fg]="fg" control="terminal"></am-checkbox>
+      <am-checkbox class="flex m-l-20 m-t-10" label="Obligación" [fg]="fg" control="obligacion"></am-checkbox>
+    </div>
+    <div class="form__group">
+      <am-input label="Crit1" [fg]="fg" control="crit1" autocomplete="off"></am-input>
+      <am-input class="m-l-10" label="Crit2" [fg]="fg" control="crit2" autocomplete="off"></am-input>
+      <am-input class="m-l-10" label="Crit3" [fg]="fg" control="crit3" autocomplete="off"></am-input>
+    </div>
+    <div class="form__group">
+      <am-select class="w-100" label="Se utiliza en" [fg]="fg" control="seUtiliza" [values]="tipoUnidadesValues" [multiple]="true" [required]="true" autocomplete="off"></am-select>
+    </div>
+    <div class="form__group">
+      <am-input label="Crit1 Consolidación" [fg]="fg" control="crit1Consolidacion" autocomplete="off"></am-input>
+      <am-input class="m-l-10" label="Crit2 Consolidación" [fg]="fg" control="crit2Consolidacion" autocomplete="off"></am-input>
+      <am-input class="m-l-10" label="Crit3 Consolidación" [fg]="fg" control="crit2Consolidacion" autocomplete="off"></am-input>
+    </div>
+  </form>
+</app-modal>

@@ -1,0 +1,19 @@
+query GetUsuarioById($id: Int!) {
+   getUsuarioById(id: $id) {
+    success
+    data {
+      IdUsuario
+      Usuario
+      CambiarContrasena
+      TipoUsuario {
+        IdTipo
+        TipoUsuario
+      }
+      Division {
+        IdDivision
+        Division
+      }
+    }
+    error
+  }
+}

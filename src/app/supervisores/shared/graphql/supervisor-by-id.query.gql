@@ -1,0 +1,18 @@
+query GetSupervisorById($id: Int!) {
+    getSupervisorById(id: $id) {
+        success
+        data {
+            IdSupervisor
+            Supervisor
+            Cargo {
+                IdCargo
+                Cargo
+            }
+            Division {
+                IdDivision
+                Division
+            }
+        }
+        error
+    }
+}

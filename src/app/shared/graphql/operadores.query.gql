@@ -1,0 +1,10 @@
+query GetAllOperadores {
+    getAllOperadores {
+        success
+        data {
+            Id
+            Operador
+        }
+        error
+    }
+}

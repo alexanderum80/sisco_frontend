@@ -1,0 +1,6 @@
+mutation SaveTipoEntidad($tipoEntidadInfo: TipoEntidadInput!) {
+    saveTipoEntidad(tipoEntidadInfo: $tipoEntidadInfo) {
+        success
+        error
+    }
+}

@@ -1,0 +1,6 @@
+mutation DeleteEpigrafe($id: Int!) {
+    deleteEpigrafe(id: $id) {
+        success
+        error
+    }
+}

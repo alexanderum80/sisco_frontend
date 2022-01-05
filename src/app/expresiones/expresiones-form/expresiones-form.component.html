@@ -1,0 +1,106 @@
+<app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
+  <form class="flex" [formGroup]="fg">
+    <div class="form__group flex flex-column">
+      <png-input-text class="w-100 mt-1" label="Expresión" labelWidth="90" [fg]="fg" control="expresion" [required]="true" autocomplete="off"></png-input-text>
+      <png-input-text class="w-100 mt-2" label="Descripción" labelWidth="90" [fg]="fg" control="descripcion" autocomplete="off"></png-input-text>
+    </div>
+    <div class="form__group ml-3 flex flex-column">
+      <png-checkbox class="mr-3" [fg]="fg" control="acumulado" label="Acumulado"></png-checkbox>
+      <png-checkbox [fg]="fg" control="operacionesInternas" label="Operaciones Internas"></png-checkbox>
+    </div>
+  </form>
+  <p-card> 
+    <div> 
+      <png-button class="mb-2" icon="mdi mdi-plus" tooltip="Agregar Cuenta a la Expresión." [text]="true" [rounded]="true" (clicked)="addCuenta()"></png-button>
+    </div>
+    <p-table [value]="expresionesDetalle" dataKey="id" editMode="row" responsiveLayout="scroll">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width:4rem">Cuenta</th>
+          <th style="width:4rem">SubCuenta</th>
+          <th style="width:4rem">Crit1</th>
+          <th style="width:4rem">Crit2</th>
+          <th style="width:4rem">Crit3</th>
+          <th style="width:4rem">Signo</th>
+          <th style="width:4rem">PorCiento</th>
+          <th style="width:4rem">TipoValor</th>
+          <th style="width:8rem"></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-expresion="expresion" let-editing="editing" let-ri="rowIndex">
+        <tr [pEditableRow]="expresion">
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText="pInputText" type="text" [(ngModel)]="expresion.Cta" style="width:4rem"/>
+              </ng-template>
+              <ng-template pTemplate="output">{{expresion.Cta}}</ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText="pInputText" type="text" [(ngModel)]="expresion.SubCta" style="width:4rem"/>
+              </ng-template>
+              <ng-template pTemplate="output">{{expresion.SubCta}}</ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText="pInputText" type="text" [(ngModel)]="expresion.Crit1" style="width:4rem"/>
+              </ng-template>
+              <ng-template pTemplate="output">{{expresion.Crit1}}</ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText="pInputText" type="text" [(ngModel)]="expresion.Crit2" style="width:4rem"/>
+              </ng-template>
+              <ng-template pTemplate="output">{{expresion.Crit2}}</ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText="pInputText" type="text" [(ngModel)]="expresion.Crit3" style="width:4rem"/>
+              </ng-template>
+              <ng-template pTemplate="output">{{expresion.Crit3}}</ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-dropdown [options]="signosValues" [(ngModel)]="expresion.Signo" [style]="{'width':'100%'}"></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">{{expresion.Signo}}</ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText="pInputText" type="text" [(ngModel)]="expresion.PorCiento" style="width:4rem"/>
+              </ng-template>
+              <ng-template pTemplate="output">{{expresion.PorCiento}}</ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-dropdown [options]="tipoValorValues" [(ngModel)]="expresion.TipoValor" (onChange)="onChangeTipoValor($event, ri)" [style]="{'width':'100%'}"></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">{{expresion.TipoValorDesc}}</ng-template>
+            </p-cellEditor>
+          </td>
+          <td style="text-align:center">
+            <button class="p-button-rounded p-button-text" *ngIf="!editing" pButton="pButton" pRipple="pRipple" type="button" pInitEditableRow="pInitEditableRow" icon="pi pi-pencil" (click)="onRowEditInit(expresion)"></button>
+            <button class="p-button-rounded p-button-text" *ngIf="!editing" pButton="pButton" pRipple="pRipple" type="button" icon="pi pi-trash" (click)="onRowDelete(ri)"></button>
+            <button class="p-button-rounded p-button-text p-button-success p-mr-2" *ngIf="editing" pButton="pButton" pRipple="pRipple" type="button" pSaveEditableRow="pSaveEditableRow" icon="pi pi-check" (click)="onRowEditSave(expresion)"></button>
+            <button class="p-button-rounded p-button-text p-button-danger" *ngIf="editing" pButton="pButton" pRipple="pRipple" type="button" pCancelEditableRow="pCancelEditableRow" icon="pi pi-times" (click)="onRowEditCancel(expresion, ri)"></button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</app-add-edit-item>

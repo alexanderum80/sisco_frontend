@@ -1,0 +1,6 @@
+mutation UpdateDWhConexion($dwhConexionInput: DWHConexionesInput!) {
+    updateDWhConexion(dwhConexionInput: $dwhConexionInput) {
+        success
+        error
+    }
+}

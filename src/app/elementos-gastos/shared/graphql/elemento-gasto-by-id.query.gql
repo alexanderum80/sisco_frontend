@@ -1,0 +1,14 @@
+query GetElementoGastoById($id: String!) {
+    getElementoGastoById(id: $id) {
+        success
+        data {
+            Egasto
+            Descripcion
+            UsoContenido
+            TipoEntidad
+            CuentaAsociada
+            IdEpigrafe
+        }
+        error
+    }
+}

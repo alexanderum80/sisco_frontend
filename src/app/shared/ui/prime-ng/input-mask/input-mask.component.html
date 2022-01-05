@@ -1,0 +1,19 @@
+<div>
+    <div [class.p-float-label]="floatLabel" class="p-field" [formGroup]="fg">
+        <label *ngIf="!floatLabel"
+            [for]="control" 
+            class="inline-label" 
+            [ngStyle]="{'width.px': labelWidth}"
+            [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty">{{ label }}: 
+        </label>
+        <p-inputMask [id]="control" 
+            [mask]="mask"
+            [formControlName]="control" 
+            [placeholder]="placeholder" 
+            [required]="required" 
+            [disabled]="disabled">
+        </p-inputMask>
+        <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
+    </div>
+    <small *ngIf="!fg.controls[control].valid && fg.controls[control].dirty" id="username2-help" class="p-error">Este campo es obligatorio</small>
+</div>

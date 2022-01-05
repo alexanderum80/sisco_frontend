@@ -1,0 +1,11 @@
+query GetTipoEntidadById($id: Int!) {
+    getTipoEntidadById(id: $id) {
+        success
+        data {
+            Id
+            Entidades
+            Descripcion
+        }
+        error
+    }
+}

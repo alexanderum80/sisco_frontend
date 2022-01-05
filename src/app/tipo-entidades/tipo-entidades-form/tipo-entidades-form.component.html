@@ -1,0 +1,10 @@
+<app-modal [title]="action + ' Tipo de Entidad'" [fg]="fg" (saveClicked)="save()">
+  <form [formGroup]="fg">
+    <div class="form__group m-t-10">
+      <am-input class="w-100" label="Entidad" [fg]="fg" control="entidades" [required]="true" autocomplete="off"></am-input>
+    </div>
+    <div class="form__group">
+      <am-input class="w-100" label="Descripción" [fg]="fg" control="descripcion" [required]="true" autocomplete="off"></am-input>
+    </div>
+  </form>
+</app-modal>

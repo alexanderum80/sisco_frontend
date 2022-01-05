@@ -1,0 +1,6 @@
+mutation DeleteComprobarExpresion($id: Int!) {
+    deleteComprobarExpresion(id: $id) {
+        success
+        error
+    }
+}

@@ -1,0 +1,6 @@
+mutation DeleteTipoEntidad($id: Int!) {
+    deleteTipoEntidad(id: $id) {
+        success
+        error
+    }
+}

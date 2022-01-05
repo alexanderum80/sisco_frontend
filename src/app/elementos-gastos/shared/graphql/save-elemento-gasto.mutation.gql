@@ -1,0 +1,6 @@
+mutation SaveElementoGasto($elementoGastoInfo: ElementoGastoInput!) {
+    saveElementoGasto(elementoGastoInfo: $elementoGastoInfo) {
+        success
+        error
+    }
+}

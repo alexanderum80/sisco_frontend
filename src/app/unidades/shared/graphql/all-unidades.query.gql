@@ -1,0 +1,15 @@
+query GetAllUnidades {
+    getAllUnidades {
+        success
+        data {
+            IdUnidad
+            Nombre
+            IdSubdivision
+            Subdivision
+            IdDivision
+            Division
+            Abierta
+        }
+        error
+    }
+}

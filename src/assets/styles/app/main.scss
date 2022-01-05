@@ -1,0 +1,58 @@
+body {
+    margin: 0 !important;
+    font-size: 70% !important;
+                
+    ::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+.page-content {
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+}
+
+.top-menu {
+    display: flex;
+    border-bottom: 1px solid rgba(0, 0, 0, .2);
+    background-color: #d0f0fd;
+}
+
+.app-row {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    height: 100%;
+    overflow: auto;
+}
+
+.side-bar {
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 230px;
+    overflow: auto;
+}
+
+.app-container {
+    flex: 1;
+    background-image: linear-gradient(to right bottom, rgba(255, 255, 255, .9), rgba(255, 255, 255, .9)),
+             url(../../img/fondo.jpg);
+    height: 100%;
+}
+
+.header-component {
+    &__title {
+        display: flex; 
+        padding: .5rem 1rem;
+        align-items: center;
+        
+        &-description {
+            flex: 1;
+            font-size: 1rem;
+            color: $color-primary;
+            font-weight: 500;
+        }
+    }
+}
