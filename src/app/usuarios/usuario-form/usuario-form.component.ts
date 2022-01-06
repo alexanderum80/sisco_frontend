@@ -1,12 +1,12 @@
+import { TipoUsuariosService } from './../../shared/services/tipo-usuarios.service';
+import { SelectItem } from 'primeng/api';
+import { ActionClicked } from './../../shared/models/list-items';
 import { MutationActions } from './../../shared/models/mutation-response';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import { ETipoUsuarios } from './../shared/models/usuarios.model';
 import { Subscription } from 'rxjs';
-import { DivisionesQueryResponse } from './../../shared/models/divisiones';
-import { MaterialService } from '../../shared/services/material.service';
 import { MyErrorStateMatcher } from '../../angular-material/models/material-error-state-matcher';
-import { ISelectableOptions } from '../../shared/models/selectable-item';
-import { UsuariosMutationResponse, TipoUsuarios } from '../shared/models/usuarios.model';
+import { UsuariosMutationResponse } from '../shared/models/usuarios.model';
 import SweetAlert from 'sweetalert2';
 import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
 import { Apollo } from 'apollo-angular';
@@ -28,11 +28,9 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
 
   fg: FormGroup;
 
-  tipoUsuariosValues = TipoUsuarios;
+  divisionesValues: SelectItem[] = [];
 
-  divisionesValues: ISelectableOptions[];
-
-  cargosValues: ISelectableOptions[];
+  tipoUsuariosValues: SelectItem[] = [];
 
   matcher = new MyErrorStateMatcher();
 
@@ -42,15 +40,14 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
     private _usuarioSvc: UsuarioService,
     private _modalSvc: ModalService,
     private _apollo: Apollo,
-    private _materialSvc: MaterialService,
+    private _tipoUsuariosSvc: TipoUsuariosService,
     private _divisionesSvc: DivisionesService
   ) { }
 
   ngOnInit(): void {
     this.fg = this._usuarioSvc.fg;
-    this.action = toNumber(this.fg.controls['idUsuario'].value) === 0 ? 'Agregar' : 'Modificar';
 
-    this._getCargos();
+    this._getTipoUsuarios();
 
     this._getDivisiones();
 
@@ -61,14 +58,18 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
     this.subscription.forEach(subs => subs.unsubscribe());
   }
 
-  private _getCargos(): void {
+  private _getTipoUsuarios(): void {
     try {
-      this.cargosValues = TipoUsuarios.map(c => {
-        return {
-          value: c.value,
-          description: c.description
-        };
-      });
+      this.subscription.push(this._tipoUsuariosSvc.getAllTipoUsuarios().subscribe(response => {
+        const result = response.getAllTipoUsuarios;
+
+        this.tipoUsuariosValues = result.data.map((c: { IdTipo: any; TipoUsuario: any; }) => {
+          return {
+            value: c.IdTipo,
+            label: c.TipoUsuario
+          };
+        });
+      }));
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
@@ -95,10 +96,10 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
           });
         }
 
-        this.divisionesValues = result.data.map((data: { IdDivision: string; Division: string; }) => {
+        this.divisionesValues = result.data.map((d: { IdDivision: number; Division: string; }) => {
           return {
-            value: data.IdDivision,
-            description: data.IdDivision + '-' + data.Division
+            value: d.IdDivision,
+            label: d.IdDivision + '-' + d.Division
           };
         });
       }));
@@ -145,6 +146,17 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
 
   get isUsuarioAvanzado(): boolean {
     return this.fg.get('tipoUsuario')?.value === ETipoUsuarios['Usuario Avanzado'];
+  }
+
+  onActionClicked(action: string) {
+    switch (action) {
+      case ActionClicked.Save:
+        this.save();        
+        break;
+      case ActionClicked.Cancel:
+        this.closeModal();
+        break;
+    }
   }
 
   save(): void {

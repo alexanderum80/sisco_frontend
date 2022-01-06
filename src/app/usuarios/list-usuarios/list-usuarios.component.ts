@@ -1,3 +1,4 @@
+import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
 import { IUsuarioInfo } from './../../shared/models/usuarios';
 import { UsuarioFormComponent } from './../usuario-form/usuario-form.component';
 import { Subscription } from 'rxjs';
@@ -12,7 +13,7 @@ import { ModalService } from '../../shared/services/modal.service';
 import { UsuariosQueryResponse } from '../shared/models/usuarios.model';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { cloneDeep } from '@apollo/client/utilities';
-import { MenuItem } from 'primeng/api';
+import { isArray } from 'lodash';
 
 @Component({
   selector: 'app-usuarios',
@@ -26,15 +27,6 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
     { header: 'Usuario', field: 'Usuario', type: 'string' },
     { header: 'Tipo de Usuario', field: 'TipoUsuario.TipoUsuario', type: 'string' },
     { header: 'División', field: 'Division.Division', type: 'string' },
-  ];
-
-  menuItems: MenuItem[] = [
-    { id: '0', label: 'Editar', icon: 'mdi mdi-pencil', disabled: false, command: (event) => {
-      this.edit(event);
-    }},
-    { id: '1', label: 'Eliminar', icon: 'mdi mdi-delete-outline', disabled: false, command: (event) => {
-      this.delete(event);
-    }},
   ];
 
   usuarios: IUsuarioInfo[] = [];
@@ -94,25 +86,39 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  add(): void {
-    if (this.hasAdminPermission()) {
-      const inputData = {
-        idUsuario: '',
-        usuario: '',
-        contrasena: '',
-        tipoUsuario: '',
-        cambiarContrasena: false,
-        contrasenaAvanzada: '',
-        idDivision: this._usuarioSvc.usuario.IdDivision
-      };
-      this._usuarioSvc.fg.patchValue(inputData);
-      this._modalSvc.openModal(UsuarioFormComponent);
+  actionClicked(event: IActionItemClickedArgs) {
+    switch (event.action) {
+      case ActionClicked.Add:
+        this._add();
+        break;
+      case ActionClicked.Edit:
+        this._edit(event.item)
+        break;    
+      case ActionClicked.Delete:
+        this._delete(event.item)
+        break;
     }
   }
 
-  edit(menu: any): void {
+  private _add(): void {
     if (this.hasAdminPermission()) {
-      const idUsuario = menu.item.automationId.IdUsuario;
+      const inputData = {
+        idUsuario: null,
+        usuario: '',
+        contrasena: '',
+        tipoUsuario: null,
+        cambiarContrasena: false,
+        contrasenaAvanzada: '',
+        idDivision: this._usuarioSvc.usuario.Division.IdDivision
+      };
+      this._usuarioSvc.fg.patchValue(inputData);
+      this._modalSvc.openModal('Agregar Usuario', UsuarioFormComponent);
+    }
+  }
+
+  private _edit(data: any): void {
+    if (this.hasAdminPermission()) {
+      const idUsuario = data.IdUsuario;
 
       this.subscription.push(this._apollo.query<UsuariosQueryResponse>({
         query: usuariosApi.byId,
@@ -143,16 +149,16 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         this._usuarioSvc.fg.patchValue(inputData);
-        this._modalSvc.openModal(UsuarioFormComponent);
+        this._modalSvc.openModal('Modificar Usuario', UsuarioFormComponent);
       }));
     }
   }
 
-  delete(menu: any): void {
+  private _delete(data: any): void {
     if (this.hasAdminPermission()) {
       SweetAlert.fire({
         icon: 'question',
-        title: '¿Desea Eliminar el Usuario seleccionado?',
+        title: '¿Desea Eliminar el(los) Usuario(s) seleccionado(s)?',
         text: 'No se podrán deshacer los cambios.',
         showConfirmButton: true,
         confirmButtonText: 'Sí',
@@ -160,13 +166,13 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
         cancelButtonText: 'No'
       }).then(res => {
         if (res.value) {
-          const idUsuario = menu.item.automationId.IdUsuario;
+          const IDsToRemove: number[] = !isArray(data) ? [data.IdUsuario] :  data.map(d => { return d.IdUsuario });
 
-          const docsToRemove = [idUsuario];
+          // const IDsToRemove = [idUsuario];
 
           this.subscription.push(this._apollo.mutate<UsuariosMutationResponse>({
             mutation: usuariosApi.delete,
-            variables: { IDs: docsToRemove },
+            variables: { IDs: IDsToRemove },
             refetchQueries: ['GetAllUsuarios']
           }).subscribe(response => {
             const result = response.data?.deleteUsuario;

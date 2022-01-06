@@ -1,0 +1,10 @@
+query GetAllTipoUsuarios {
+	getAllTipoUsuarios {
+    success
+    data {
+      IdTipo
+      TipoUsuario
+    }
+    error
+  }
+}

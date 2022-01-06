@@ -1,6 +1,6 @@
-<app-modal [title]="action + ' Usuario'" [fg]="fg" (saveClicked)="save()">
+<app-add-edit-item (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg">
-    <div class="form__group m-t-10">
+    <div class="form__group">
       <png-input-text class="w-full mt-1" label="Usuario" labelWidth="90" [fg]="fg" control="usuario" [required]="true" autocomplete="off"></png-input-text>
     </div>
     <div class="form__group">
@@ -10,16 +10,16 @@
       <png-password class="w-full mt-1" label="Confirmar Contraseña" labelWidth="90" [fg]="fg" control="contrasenaConfirm" [required]="true" autocomplete="off"></png-password>
     </div>
     <div class="form__group">
-      <png-dropdown class="w-full" [fg]="fg" control="tipoUsuario" label="Tipo de Usuario" labelWidth="90" [optionsValues]="tipoUsuariosValues" placeholder="&lt;TODOS&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="tipoUsuario" label="Tipo de Usuario" labelWidth="90" [optionsValues]="tipoUsuariosValues" placeholder="&lt;Seleccione el Tipo de Usuario&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
     <div class="form__group">
-      <png-checkbox class="ml-2" [fg]="fg" control="cambiarContrasena" label="Cambiar contraseña en el próximo inicio de sesión."></png-checkbox>
+      <png-checkbox class="mt-1" [fg]="fg" control="cambiarContrasena" label="Cambiar contraseña en el próximo inicio de sesión."></png-checkbox>
     </div>
     <div class="form__group" *ngIf="isUsuarioAvanzado">
       <png-password class="w-full mt-1" label="Contraseña Avanzada" labelWidth="90" [fg]="fg" control="contrasenaAvanzada" [required]="true" autocomplete="off"></png-password>
     </div>
     <div class="form__group" *ngIf="isSuperAdmin">
-      <png-dropdown class="w-full" [fg]="fg" control="idDivision" label="División" labelWidth="90" [optionsValues]="divisionesValues" placeholder="&lt;TODOS&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="idDivision" label="División" labelWidth="90" [optionsValues]="divisionesValues" placeholder="&lt;Seleccione la División&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
   </form>
-</app-modal>
+</app-add-edit-item>
