@@ -32,6 +32,7 @@ export interface EmpleadosQueryResponse {
 }
 
 export interface EmpleadosMutationResponse {
-    saveEmpleado: IMutationResponse;
+    createEmpleado: IMutationResponse;
+    updateEmpleado: IMutationResponse;
     deleteEmpleado: IMutationResponse;
 }

@@ -1,3 +1,4 @@
+import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { TipoUsuariosService } from './../../shared/services/tipo-usuarios.service';
 import { SelectItem } from 'primeng/api';
 import { ActionClicked } from './../../shared/models/list-items';
@@ -41,7 +42,8 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
     private _modalSvc: ModalService,
     private _apollo: Apollo,
     private _tipoUsuariosSvc: TipoUsuariosService,
-    private _divisionesSvc: DivisionesService
+    private _divisionesSvc: DivisionesService,
+    private _sweetAlterSvc: SweetalertService
   ) { }
 
   ngOnInit(): void {
@@ -151,15 +153,15 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
   onActionClicked(action: string) {
     switch (action) {
       case ActionClicked.Save:
-        this.save();        
+        this._save();        
         break;
       case ActionClicked.Cancel:
-        this.closeModal();
+        this._closeModal();
         break;
     }
   }
 
-  save(): void {
+  private _save(): void {
     if (this.fg.controls['contrasena'].value !== this.fg.controls['contrasenaConfirm'].value) {
       SweetAlert.fire({
         icon: 'error',
@@ -201,16 +203,10 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
       }
 
       if (!result?.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: result?.error,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
-        });
+        return this._sweetAlterSvc.error(`Se produjo el siguiente error: ${ result?.error }`);
       }
 
-      this.closeModal();
+      this._closeModal();
 
       // this._materialSvc.openSnackBar(txtMessage);
       Swal.fire({
@@ -223,7 +219,7 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
     }));
   }
 
-  closeModal(): void {
+  private _closeModal(): void {
     this._modalSvc.closeModal();
   }
 

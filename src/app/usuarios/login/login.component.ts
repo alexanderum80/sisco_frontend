@@ -79,7 +79,7 @@ export class LoginComponent implements OnInit {
           this._usuarioSvc.fg.controls['contrasena'].setValue('');
           this._usuarioSvc.fg.controls['contrasenaConfirm'].setValue('');
 
-          this._modalSvc.openModal(ChangePasswordComponent);
+          this._modalSvc.openModal('Cambiar Contraseña', ChangePasswordComponent);
         } else {
           this._authSvc.login();
 

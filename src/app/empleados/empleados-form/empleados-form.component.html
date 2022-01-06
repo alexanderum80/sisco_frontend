@@ -1,13 +1,13 @@
-<app-modal [title]="action + ' Empleado'" [fg]="fg" (saveClicked)="save()">
+<app-add-edit-item (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg">
-    <div class="form__group m-t-10">
-      <am-input class="w-100" label="Empleado" [fg]="fg" control="empleado" placeholder="Empleado" [required]="true" autocomplete="off"></am-input>
+    <div class="form__group mt-1">
+      <png-input-text class="w-full mt-1" label="Empleado" labelWidth="90" [fg]="fg" control="empleado" [required]="true" autocomplete="off"></png-input-text>
     </div>
     <div class="form__group">
-      <am-select class="w-100" label="Cargo" [fg]="fg" control="cargo" [values]="cargosValues" placeholder="Cargo" [required]="true" autocomplete="off"></am-select>
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="cargo" label="Cargo" labelWidth="90" [optionsValues]="cargosValues" placeholder="&lt;Seleccione el Cargo&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
     <div class="form__group" *ngIf="isSuperAdmin">
-      <am-select class="w-100" label="División" [fg]="fg" control="division" [values]="divisionesValues" placeholder="División" [required]="true" autocomplete="off"></am-select>
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="division" label="División" labelWidth="90" [optionsValues]="divisionesValues" placeholder="&lt;Seleccione la División&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
   </form>
-</app-modal>
+</app-add-edit-item>

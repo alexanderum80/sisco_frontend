@@ -1,16 +1,16 @@
+import { ActionClicked } from './../../shared/models/list-items';
 import { CargosService } from './../../shared/services/cargos.service';
 import { MutationActions } from './../../shared/models/mutation-response';
 import { DivisionesService } from './../../shared/services/divisiones.service';
-import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import { toNumber } from 'lodash';
 import { ModalService } from './../../shared/services/modal.service';
 import { EmpleadosService } from './../shared/services/empleados.service';
 import { MyErrorStateMatcher } from '../../angular-material/models/material-error-state-matcher';
-import { ISelectableOptions } from './../../shared/models/selectable-item';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { SweetalertService } from '../../shared/services/sweetalert.service';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-empleados-form',
@@ -22,9 +22,9 @@ export class EmpleadosFormComponent implements OnInit {
 
   fg: FormGroup;
 
-  divisionesValues: ISelectableOptions[];
+  divisionesValues: SelectItem[] = [];
 
-  cargosValues: ISelectableOptions[];
+  cargosValues: SelectItem[] = [];
 
   matcher = new MyErrorStateMatcher();
 
@@ -58,7 +58,7 @@ export class EmpleadosFormComponent implements OnInit {
         this.cargosValues = result.data.map((data: { IdCargo: any; Cargo: any; }) => {
           return {
             value: data.IdCargo,
-            description: data.Cargo
+            label: data.Cargo
           };
         });
       }));
@@ -79,7 +79,7 @@ export class EmpleadosFormComponent implements OnInit {
         this.divisionesValues = result.data.map((data: { IdDivision: string; Division: string; }) => {
           return {
             value: data.IdDivision,
-            description: data.IdDivision + '-' + data.Division
+            label: data.IdDivision + '-' + data.Division
           };
         });
       }));
@@ -92,29 +92,42 @@ export class EmpleadosFormComponent implements OnInit {
     return this._usuarioSvc.hasSuperAdminPermission();
   }
 
-  save(): void {
+  onActionClicked(action: string) {
+    switch (action) {
+      case ActionClicked.Save:
+        this._save();        
+        break;
+      case ActionClicked.Cancel:
+        this._closeModal();
+        break;
+    }
+  }
+
+  private _save(): void {
     this._usuarioSvc.subscription.push(this._empleadosSvc.save().subscribe(response => {
-      const result = response.saveEmpleado;
+      let result;
+
+      let txtMessage;
+      if (this.action === 'Agregar') {
+        result = response.createEmpleado;
+        txtMessage = 'El Empleado se ha creado correctamente.';
+      } else {
+        result = response.updateEmpleado;
+        txtMessage = 'El Empleado se ha actualizado correctamente.';
+      }
 
       if (!result.success) {
         return this._sweetAlterSvc.error(`Se produjo el siguiente error: ${ result.error }`);
       }
 
-      let txtMessage;
-      if (this.action === 'Agregar') {
-        txtMessage = 'El Empleado se ha creado correctamente.';
-      } else {
-        txtMessage = 'El Empleado se ha actualizado correctamente.';
-      }
-
-      this.closeModal();
+      this._closeModal();
 
       // this._materialSvc.openSnackBar(txtMessage);
       this._sweetAlterSvc.success(txtMessage);
     }));
   }
 
-  closeModal(): void {
+  private _closeModal(): void {
     this._modalSvc.closeModal();
   }
 

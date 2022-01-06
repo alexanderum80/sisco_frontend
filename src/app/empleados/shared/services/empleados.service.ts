@@ -65,8 +65,10 @@ export class EmpleadosService {
           IdDivision: toNumber(this.fg.controls['division'].value),
         };
 
+        const mutation = empleadoInfo.IdEmpleado === 0 ? empleadosApi.create :  empleadosApi.update;
+
         this.subscription.push(this._apollo.mutate<EmpleadosMutationResponse>({
-          mutation: empleadosApi.save,
+          mutation:mutation,
           variables: { empleadoInfo },
           refetchQueries: ['GetAllEmpleados']
         }).subscribe(response => {
@@ -78,12 +80,12 @@ export class EmpleadosService {
     });
   }
 
-  delete(id: number): Observable<EmpleadosMutationResponse> {
+  delete(IDs: number[]): Observable<EmpleadosMutationResponse> {
     return new Observable<EmpleadosMutationResponse>(subscriber => {
       try {
         this.subscription.push(this._apollo.mutate<EmpleadosMutationResponse>({
           mutation: empleadosApi.delete,
-          variables: { id },
+          variables: { IDs },
           refetchQueries: ['GetAllEmpleados']
         }).subscribe(response => {
           subscriber.next(response.data || undefined);

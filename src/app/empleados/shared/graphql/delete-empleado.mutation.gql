@@ -1,5 +1,5 @@
-mutation DeleteEmpleado($id: Int!) {
-    deleteEmpleado(id: $id) {
+mutation DeleteEmpleado($IDs: [Int!]!) {
+    deleteEmpleado(IDs: $IDs) {
         success
         error
     }

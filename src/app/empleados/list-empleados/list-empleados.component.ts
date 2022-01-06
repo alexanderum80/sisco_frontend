@@ -1,3 +1,4 @@
+import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
 import { EmpleadosService } from './../shared/services/empleados.service';
 import { EmpleadosFormComponent } from './../empleados-form/empleados-form.component';
 import SweetAlert from 'sweetalert2';
@@ -7,7 +8,7 @@ import { ModalService } from './../../shared/services/modal.service';
 import { Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
-import { MenuItem } from 'primeng/api';
+import { isArray } from 'lodash';
 
 @Component({
   selector: 'app-list-empleados',
@@ -24,15 +25,6 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
   empleados: any[] = [];
 
   subscription: Subscription[] = [];
-
-  menuItems: MenuItem[] = [
-    { id: '0', label: 'Editar', icon: 'mdi mdi-pencil', disabled: false, command: (event) => {
-      this.edit(event);
-    }},
-    { id: '1', label: 'Eliminar', icon: 'mdi mdi-delete-outline', disabled: false, command: (event) => {
-      this.delete(event);
-    }},
-  ];
 
   constructor(
     private _modalSvc: ModalService,
@@ -85,33 +77,36 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  onClicked(values: any): void {
-    switch (values.action) {
-      case '0':
-        this.edit(values.element.IdEmpleado);
+  actionClicked(event: IActionItemClickedArgs) {
+    switch (event.action) {
+      case ActionClicked.Add:
+        this._add();
         break;
-      case '1':
-        this.delete(values.element.IdEmpleado);
+      case ActionClicked.Edit:
+        this._edit(event.item)
+        break;    
+      case ActionClicked.Delete:
+        this._delete(event.item)
         break;
     }
   }
 
-  add(): void {
+  private _add(): void {
     if (this.hasAdminPermission()) {
       const inputData = {
         idEmpleado: '',
         empleado: '',
-        cargo: '',
-        division: this._usuarioSvc.usuario.IdDivision
+        cargo: null,
+        division: this._usuarioSvc.usuario.Division.IdDivision
       };
       this._empleadoSvc.fg.patchValue(inputData);
-      this._modalSvc.openModal(EmpleadosFormComponent);
+      this._modalSvc.openModal('Agregar Empleado', EmpleadosFormComponent);
     }
   }
 
-  edit(menu: any): void {
+  private _edit(data: any): void {
     if (this.hasAdminPermission()) {
-      this.subscription.push(this._empleadoSvc.loadEmpleadoById(menu.item.automationId.IdEmpleado).subscribe(response => {
+      this.subscription.push(this._empleadoSvc.loadEmpleadoById(data.IdEmpleado).subscribe(response => {
         const result = response.getEmpleadoById;
 
         if (!result.success) {
@@ -134,16 +129,16 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
         };
 
         this._empleadoSvc.fg.patchValue(inputData);
-        this._modalSvc.openModal(EmpleadosFormComponent);
+        this._modalSvc.openModal('Modificar Empleado', EmpleadosFormComponent);
       }));
     }
   }
 
-  delete(menu: any): void {
+  private _delete(data: any): void {
     if (this.hasAdminPermission()) {
       SweetAlert.fire({
         icon: 'question',
-        title: '¿Desea Eliminar el Empleado seleccionado?',
+        title: '¿Desea Eliminar el(los) Empleado(s) seleccionado(s)?',
         text: 'No se podrán deshacer los cambios.',
         showConfirmButton: true,
         confirmButtonText: 'Sí',
@@ -151,7 +146,9 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
         cancelButtonText: 'No'
       }).then(res => {
         if (res.value) {
-          this._empleadoSvc.delete(menu.item.automationId.IdEmpleado).subscribe(response => {
+          const IDsToRemove: number[] = !isArray(data) ? [data.IdEmpleado] :  data.map(d => { return d.IdEmpleado });
+
+          this._empleadoSvc.delete(IDsToRemove).subscribe(response => {
             const result = response.deleteEmpleado;
 
             if (!result.success) {

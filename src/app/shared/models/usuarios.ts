@@ -11,6 +11,7 @@ export interface IUsuario {
     Usuario: string;
     IdTipoUsuario: number;
     IdDivision: number;
+    Division?: any;
     Contrasena?: string;
     ContrasenaAvanzada?: string;
     CambiarContrasena: boolean;

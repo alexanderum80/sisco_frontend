@@ -1,0 +1,6 @@
+mutation UpdateEmpleado($empleadoInfo: EmpleadoInput!) {
+    updateEmpleado(empleadoInfo: $empleadoInfo) {
+        success
+        error
+    }
+}
