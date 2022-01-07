@@ -1,3 +1,4 @@
+import { PrimeToolbarModule } from './toolbar/toolbar.module';
 import { PrimeProgressSpinnerModule } from './progress-spinner/progress-spinner.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -45,6 +46,7 @@ const modules = [
   PrimeTabViewModule,
   PrimeTableModule,
   PrimeToastModule,
+  PrimeToolbarModule,
   PrimeTooltipModule,
 ];
 
