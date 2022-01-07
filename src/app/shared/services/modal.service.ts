@@ -1,24 +1,29 @@
+import { MessageService } from 'primeng/api';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ModalService {
 
-    private _config = {
-        disableClose: true
-    };
+    ref: DynamicDialogRef;
 
     constructor(
-        private _dialog: MatDialog
+        public dialogSvc: DialogService, public messageSvc: MessageService
     ) {}
 
-    openModal(component: any): void {
-        this._dialog.open(component, this._config);
+    openModal(header: string, component: any): void {
+        this.ref = this.dialogSvc.open(component, {
+            header: header,
+            closable: false,
+            style: {"max-width": "90%" },
+            contentStyle: {"max-height": "90%", "overflow": "inherit"},
+            baseZIndex: 1000
+        });
     }
 
-    closeModal(): void {
-        this._dialog.closeAll();
+    closeModal(message?: string): void {
+        this.ref.close(message || null);
     }
 }
