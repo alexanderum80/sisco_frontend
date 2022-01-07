@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { IActionItemClickedArgs, ActionClicked } from './../../../models/list-items';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ITableColumns } from './table.model';
-import {get} from 'lodash';
+import { get } from 'lodash';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -15,9 +15,16 @@ export class TableComponent implements OnInit {
   @Input() filterData = true;
   @Input() paginator = true;
   @Input() loading = false;
-  @Input() menuItems: MenuItem[];
+  @Input() canEditDelete = false;
   @Input() groupField: string;
+  @Input() groupMode: 'subheader'|'rowspan' = 'subheader';
+  @Input() expandible = false;
 
+  @Output() actionClicked = new EventEmitter<IActionItemClickedArgs>()
+
+  selectedRow = [];
+
+  viewportHeight = 120;
   _ = get;
 
   constructor() { }
@@ -29,8 +36,26 @@ export class TableComponent implements OnInit {
     return this.columns.map(c => c.field);
   }
 
-  updateMetaData(data: any): void {
-    this.menuItems.map(m => m.automationId = data);
+  onActionClicked(action: string, data?: any) {
+    switch (action) {
+      case ActionClicked.Add:
+        this.actionClicked.emit({
+          action: 'add'
+        })
+        break;
+      case ActionClicked.Edit:
+        this.actionClicked.emit({
+          action: 'edit',
+          item: data || []
+        })
+        break;
+      case ActionClicked.Delete:
+        this.actionClicked.emit({
+          action: 'delete',
+          item: data || this.selectedRow
+        })
+        break;
+    }
   }
 
 }

@@ -1,3 +1,4 @@
+import { PrimeToolbarModule } from './../toolbar/toolbar.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TableComponent } from './table.component';
@@ -17,7 +18,8 @@ import { MenuModule } from 'primeng/menu';
     InputTextModule,
     CalendarModule,
     PrimeSlideMenuModule,
-    MenuModule
+    MenuModule,
+    PrimeToolbarModule
   ],
   exports: [
     TableModule,
