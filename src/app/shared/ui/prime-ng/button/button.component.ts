@@ -16,7 +16,7 @@ export class ButtonComponent implements OnInit {
   @Input() rounded = false;
   @Input() text = false;
   @Input() outlined = false;
-  @Input() size: 'small' | 'normal' | 'large' = 'normal';
+  @Input() size: 'normal' | 'large' = 'normal';
   @Input() loading = false;
   @Input() fullWidth = false;
   @Input() tooltip: string;
