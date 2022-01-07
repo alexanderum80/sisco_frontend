@@ -1,0 +1,6 @@
+mutation UpdateSupervisor($supervisorInfo: SupervisorInput!) {
+    updateSupervisor(supervisorInfo: $supervisorInfo) {
+        success
+        error
+    }
+}

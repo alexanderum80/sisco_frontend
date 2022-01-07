@@ -32,6 +32,7 @@ export interface SupervisoresQueryResponse {
 }
 
 export interface SupervisoresMutationResponse {
-    saveSupervisor: IMutationResponse;
+    createSupervisor: IMutationResponse;
+    updateSupervisor: IMutationResponse;
     deleteSupervisor: IMutationResponse;
 }

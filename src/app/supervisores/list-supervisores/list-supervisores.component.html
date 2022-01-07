@@ -1,3 +1,5 @@
-<app-list-item title="Supervisores" [canAddItem]="hasAdminPermission()" (OnAddClicked)="add()">
-  <png-table [columns]="columns" [data]="supervisores" [menuItems]="menuItems"></png-table>
+<app-list-item title="Supervisores">
+  <png-table [columns]="columns" [data]="supervisores" [canEditDelete]="hasAdminPermission()" (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
+
+<p-toast></p-toast>

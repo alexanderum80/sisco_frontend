@@ -1,8 +1,8 @@
+import { MessageService } from 'primeng/api';
 import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
 import { EmpleadosService } from './../shared/services/empleados.service';
 import { EmpleadosFormComponent } from './../empleados-form/empleados-form.component';
 import SweetAlert from 'sweetalert2';
-import { MaterialService } from './../../shared/services/material.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { ModalService } from './../../shared/services/modal.service';
 import { Subscription } from 'rxjs';
@@ -30,7 +30,7 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
     private _modalSvc: ModalService,
     private _usuarioSvc: UsuarioService,
     private _empleadoSvc: EmpleadosService,
-    private _materialSvc: MaterialService
+    private _msgSvc: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -100,7 +100,13 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
         division: this._usuarioSvc.usuario.Division.IdDivision
       };
       this._empleadoSvc.fg.patchValue(inputData);
+
       this._modalSvc.openModal('Agregar Empleado', EmpleadosFormComponent);
+      this._modalSvc.ref.onClose.subscribe((message: string) => {
+        if (message) {
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+        }
+      });
     }
   }
 
@@ -129,7 +135,13 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
         };
 
         this._empleadoSvc.fg.patchValue(inputData);
+
         this._modalSvc.openModal('Modificar Empleado', EmpleadosFormComponent);
+        this._modalSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          }
+        });
       }));
     }
   }
@@ -161,7 +173,7 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
               });
             }
 
-            this._materialSvc.openSnackBar('El Empleado se ha eliminado correctamente.');
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Empleado se ha eliminado correctamente.' })
           });
         }
       });

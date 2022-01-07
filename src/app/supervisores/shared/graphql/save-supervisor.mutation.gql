@@ -1,6 +1,0 @@
-mutation SaveSupervisor($supervisorInfo: SupervisorInput!) {
-    saveSupervisor(supervisorInfo: $supervisorInfo) {
-        success
-        error
-    }
-}

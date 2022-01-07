@@ -206,21 +206,12 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
         return this._sweetAlterSvc.error(`Se produjo el siguiente error: ${ result?.error }`);
       }
 
-      this._closeModal();
-
-      // this._materialSvc.openSnackBar(txtMessage);
-      Swal.fire({
-        position: 'top-right',
-        icon: 'success',
-        title: txtMessage,
-        showConfirmButton: false,
-        timer: 1500
-      });
+      this._closeModal(txtMessage);
     }));
   }
 
-  private _closeModal(): void {
-    this._modalSvc.closeModal();
+  private _closeModal(message?: string): void {
+    this._modalSvc.closeModal(message);
   }
 
 }

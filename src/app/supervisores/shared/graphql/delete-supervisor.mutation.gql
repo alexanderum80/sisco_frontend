@@ -1,5 +1,5 @@
-mutation DeleteSupervisor($id: Int!) {
-    deleteSupervisor(id: $id) {
+mutation DeleteSupervisor($IDs: [Int!]!) {
+    deleteSupervisor(IDs: $IDs) {
         success
         error
     }

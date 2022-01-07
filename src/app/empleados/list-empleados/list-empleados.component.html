@@ -1,3 +1,5 @@
 <app-list-item title="Empleados">
   <png-table [columns]="columns" [data]="empleados" [canEditDelete]="hasAdminPermission()" (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
+
+<p-toast></p-toast>

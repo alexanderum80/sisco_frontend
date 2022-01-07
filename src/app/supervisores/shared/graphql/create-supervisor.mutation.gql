@@ -1,0 +1,6 @@
+mutation CreateSupervisor($supervisorInfo: SupervisorInput!) {
+    createSupervisor(supervisorInfo: $supervisorInfo) {
+        success
+        error
+    }
+}

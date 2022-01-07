@@ -13,6 +13,7 @@ import { PrimeInputTextModule } from '../shared/ui/prime-ng/input-text/input-tex
 import { PrimePasswordModule } from '../shared/ui/prime-ng/password/password.module';
 import { PrimeDropdownModule } from '../shared/ui/prime-ng/dropdown/dropdown.module';
 import { PrimeCheckboxModule } from '../shared/ui/prime-ng/checkbox/checkbox.module';
+import { PrimeToastModule } from '../shared/ui/prime-ng/toast/toast.module';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { PrimeCheckboxModule } from '../shared/ui/prime-ng/checkbox/checkbox.mod
     PrimePasswordModule,
     PrimeInputTextModule,
     PrimeDropdownModule,
-    PrimeCheckboxModule
+    PrimeCheckboxModule,
+    PrimeToastModule
   ],
   declarations: [ListUsuariosComponent, UsuarioFormComponent, ChangePasswordComponent],
 })

@@ -106,8 +106,8 @@ export class EmpleadosFormComponent implements OnInit {
   private _save(): void {
     this._usuarioSvc.subscription.push(this._empleadosSvc.save().subscribe(response => {
       let result;
-
       let txtMessage;
+
       if (this.action === 'Agregar') {
         result = response.createEmpleado;
         txtMessage = 'El Empleado se ha creado correctamente.';
@@ -120,15 +120,12 @@ export class EmpleadosFormComponent implements OnInit {
         return this._sweetAlterSvc.error(`Se produjo el siguiente error: ${ result.error }`);
       }
 
-      this._closeModal();
-
-      // this._materialSvc.openSnackBar(txtMessage);
-      this._sweetAlterSvc.success(txtMessage);
+      this._closeModal(txtMessage);
     }));
   }
 
-  private _closeModal(): void {
-    this._modalSvc.closeModal();
+  private _closeModal(message?: string): void {
+    this._modalSvc.closeModal(message);
   }
 
 }

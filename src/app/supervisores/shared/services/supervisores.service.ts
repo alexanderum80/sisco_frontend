@@ -68,8 +68,10 @@ export class SupervisoresService {
           IdDivision: toNumber(this.fg.controls['division'].value),
         };
 
+        const mutation = supervisorInfo.IdSupervisor === 0 ? supervisoresApi.create : supervisoresApi.update;
+
         this.subscription.push(this._apollo.mutate<SupervisoresMutationResponse>({
-          mutation: supervisoresApi.save,
+          mutation: mutation,
           variables: { supervisorInfo },
           refetchQueries: ['GetAllSupervisores']
         }).subscribe(response => {
@@ -81,12 +83,12 @@ export class SupervisoresService {
     });
   }
 
-  delete(id: number): Observable<SupervisoresMutationResponse> {
+  delete(IDs: number[]): Observable<SupervisoresMutationResponse> {
     return new Observable<SupervisoresMutationResponse>(subscriber => {
       try {
         this.subscription.push(this._apollo.mutate<SupervisoresMutationResponse>({
           mutation: supervisoresApi.delete,
-          variables: { id },
+          variables: { IDs },
           refetchQueries: ['GetAllSupervisores']
         }).subscribe(response => {
           subscriber.next(response.data || undefined);

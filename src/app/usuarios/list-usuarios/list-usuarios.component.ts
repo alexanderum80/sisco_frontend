@@ -1,9 +1,9 @@
+import { MessageService } from 'primeng/api';
 import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
 import { IUsuarioInfo } from './../../shared/models/usuarios';
 import { UsuarioFormComponent } from './../usuario-form/usuario-form.component';
 import { Subscription } from 'rxjs';
 import { UsuarioService } from '../../shared/services/usuario.service';
-import { MaterialService } from '../../shared/services/material.service';
 import { UsuariosMutationResponse } from '../shared/models/usuarios.model';
 import SweetAlert from 'sweetalert2';
 import { QueryRef, Apollo } from 'apollo-angular';
@@ -37,7 +37,7 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
     private _apollo: Apollo,
     private _modalSvc: ModalService,
     private _usuarioSvc: UsuarioService,
-    private _materialSvc: MaterialService
+    private _msgSvc: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -112,7 +112,13 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
         idDivision: this._usuarioSvc.usuario.Division.IdDivision
       };
       this._usuarioSvc.fg.patchValue(inputData);
+      
       this._modalSvc.openModal('Agregar Usuario', UsuarioFormComponent);
+      this._modalSvc.ref.onClose.subscribe((message: string) => {
+        if (message) {
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+        }
+      });
     }
   }
 
@@ -149,7 +155,13 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
         };
 
         this._usuarioSvc.fg.patchValue(inputData);
+
         this._modalSvc.openModal('Modificar Usuario', UsuarioFormComponent);
+        this._modalSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          }
+        });      
       }));
     }
   }
@@ -187,7 +199,7 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
               });
             }
 
-            this._materialSvc.openSnackBar('El Usuario se ha eliminado correctamente.');
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Usuario se ha eliminado correctamente.' })
           }));
         }
       });
