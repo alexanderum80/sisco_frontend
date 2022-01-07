@@ -1,4 +1,4 @@
-<app-add-edit-item (actionClicked)="onActionClicked($event)">
+<app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg">
     <div class="form__group mt-1">
       <png-input-text class="w-full mt-1" label="Empleado" labelWidth="90" [fg]="fg" control="empleado" [required]="true" autocomplete="off"></png-input-text>

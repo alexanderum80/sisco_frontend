@@ -13,6 +13,7 @@ export class PasswordComponent implements OnInit {
   @Input() public label: string;
   @Input() public floatLabel = false;
   @Input() public placeholder: string;
+  @Input() public labelWidth: string;
   @Input() public required = false;
   @Input() public toggleMask = false;
   @Input() public feedback = false;
