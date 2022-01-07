@@ -1,15 +1,6 @@
-import { IMenuItem } from './menu-item';
-
-export interface IListItems {
-    id: string;
-    name: string;
-    description: string;
-    icon: string;
-}
-
 export interface IActionItemClickedArgs {
-    action: IMenuItem;
-    item: IListItems;
+    action: 'add' | 'edit' | 'delete' | 'save' | 'cancel' | 'yes' | 'no';
+    item?: any;
 }
 
 export const ActionClicked = {

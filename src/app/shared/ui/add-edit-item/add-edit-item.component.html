@@ -1,11 +1,11 @@
 <div class="item">
-  <png-card class="h-95 m-10">
-    <div class="item__edit-container">
+  <png-card class="m-2">
+    <div>
       <ng-content></ng-content>
     </div>
   </png-card>
   <div class="item__footer">
-    <png-button class="m-r-10 m-b-10" label="Aceptar" [style]="'primary'" [raised]="true" [disabled]="fg &amp;&amp; !fg.valid" (clicked)="save()"></png-button>
-    <png-button class="m-r-10 m-b-10" label="Cancelar" [style]="'secondary'" [raised]="true" (clicked)="cancel()"></png-button>
+    <png-button class="mr-2 mb-2" label="Aceptar" [style]="'primary'" [raised]="true" [disabled]="fg && !fg.valid" (clicked)="save()"></png-button>
+    <png-button class="mr-2 mb-2" label="Cancelar" [style]="'secondary'" [raised]="true" (clicked)="cancel()"></png-button>
   </div>
 </div>

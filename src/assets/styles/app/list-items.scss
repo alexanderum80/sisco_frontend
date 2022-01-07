@@ -19,23 +19,9 @@
         position: relative;
     }
 
-    &__edit-container {
-        height: calc(100% - 105px);
-        overflow: auto;
-        position: relative;
-        margin: 0 .5rem;
-    }
-
     &__footer {
         display: flex;
         justify-content: flex-end;
-    }
-
-    &__add-button {
-        position: absolute;
-        z-index: 99;
-        right: 1rem;
-        bottom: 1rem;
     }
 }
 
