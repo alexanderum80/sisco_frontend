@@ -89,13 +89,13 @@
                 <td *ngIf="groupMode === 'rowspan' && col.field !== groupField " [ngSwitch]="col.type" [class.text-right]="col.type === 'number' || col.type === 'decimal'">
                     <span *ngSwitchCase="'date'"> {{ rowData[col.field] | date }}</span>
                     <span *ngSwitchCase="'decimal'"> {{ rowData[col.field] | currency }}</span>
-                    <i *ngSwitchCase="'boolean'" class="pi" [ngClass]="{'true-icon pi-check-circle': rowData[col.field], 'false-icon pi-times-circle': !rowData[col.field]}"></i>
+                    <i *ngSwitchCase="'boolean'" class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': rowData[col.field], 'false-icon pi-times-circle text-pink-500': !rowData[col.field]}"></i>
                     <span *ngSwitchDefault> {{ _(rowData, col.field) }}</span>
                 </td>
                 <td *ngIf="groupMode !== 'rowspan' && col.field !== groupField " [ngSwitch]="col.type" [class.text-right]="col.type === 'number' || col.type === 'decimal'">
                     <span *ngSwitchCase="'date'"> {{ rowData[col.field] | date }}</span>
                     <span *ngSwitchCase="'decimal'"> {{ rowData[col.field] | currency }}</span>
-                    <i *ngSwitchCase="'boolean'" class="pi" [ngClass]="{'true-icon pi-check-circle': rowData[col.field], 'false-icon pi-times-circle': !rowData[col.field]}"></i>
+                    <i *ngSwitchCase="'boolean'" class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': rowData[col.field], 'false-icon pi-times-circle text-pink-500': !rowData[col.field]}"></i>
                     <span *ngSwitchDefault> {{ _(rowData, col.field) }}</span>
                 </td>
             </ng-container>

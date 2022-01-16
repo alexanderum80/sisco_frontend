@@ -7,7 +7,7 @@
         margin-right: 5px;
     }
 
-    p-dropdown, .p-dropdown, .p-inputtext, .p-password, .p-calendar {
+    p-dropdown, .p-dropdown, .p-inputtext, p-password, .p-password, .p-calendar {
         width: 100% !important;
     }
 
@@ -46,10 +46,10 @@
 
 .p-button {
     padding: 0.5rem 1rem !important;
+}
 
-    &:disabled {
-        cursor: not-allowed !important;
-    }
+.p-disabled {
+    cursor: not-allowed !important;
 }
 
 .p-button.p-button-icon-only.p-button-rounded {
@@ -89,7 +89,6 @@
 }
 
 .p-field-checkbox, .p-field-radiobutton {
-    margin-bottom: .5rem;
     display: flex;
     align-items: center;
 
