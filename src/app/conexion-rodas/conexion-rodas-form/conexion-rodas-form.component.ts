@@ -1,11 +1,11 @@
+import { ActionClicked } from './../../shared/models/list-items';
+import { SelectItem } from 'primeng/api';
 import { UnidadesService } from './../../unidades/shared/services/unidades.service';
 import { DatabasesService } from './../../shared/services/databases.service';
 import { MutationActions } from './../../shared/models/mutation-response';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import { MaterialService } from './../../shared/services/material.service';
 import { MyErrorStateMatcher } from '../../angular-material/models/material-error-state-matcher';
-import { UnidadesQueryResponse } from './../../unidades/shared/models/unidades.model';
-import { unidadesApi } from './../../unidades/shared/graphql/unidadesApi';
 import { toNumber } from 'lodash';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { FormGroup } from '@angular/forms';
@@ -22,9 +22,9 @@ import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
   styleUrls: ['./conexion-rodas-form.component.scss']
 })
 export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDestroy {
-  divisionesValues: ISelectableOptions[] = [];
-  unidadesValues: ISelectableOptions[] = [];
-  baseDatosValues: ISelectableOptions[] = [];
+  divisionesValues: SelectItem[] = [];
+  unidadesValues: SelectItem[] = [];
+  baseDatosValues: SelectItem[] = [];
 
   matcher = new MyErrorStateMatcher();
 
@@ -41,7 +41,6 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
     private _usuarioSvc: UsuarioService,
     private _conexionRodasSvc: ConexionRodasService,
     private _modalSvc: ModalService,
-    private _materialSvc: MaterialService,
     private _divisionesSvc: DivisionesService,
     private _unidadesSvc: UnidadesService,
     private _databasesSvc: DatabasesService,
@@ -68,22 +67,22 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
 
   private _subscribeToFgValueChange(): void {
     this.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
-      this.fg.controls['idUnidad'].setValue('');
+      this.fg.controls['idUnidad'].setValue(null);
       this._updateUnidadesValue(value);
     }));
 
     this.subscription.push(this.fg.controls['ip'].valueChanges.subscribe(() => {
-      this.fg.controls['baseDatos'].setValue('');
+      this.fg.controls['baseDatos'].setValue(null);
       this.baseDatosValues = [];
     }));
 
     this.subscription.push(this.fg.controls['usuario'].valueChanges.subscribe(() => {
-      this.fg.controls['baseDatos'].setValue('');
+      this.fg.controls['baseDatos'].setValue(null);
       this.baseDatosValues = [];
     }));
 
     this.subscription.push(this.fg.controls['contrasena'].valueChanges.subscribe(() => {
-      this.fg.controls['baseDatos'].setValue('');
+      this.fg.controls['baseDatos'].setValue(null);
       this.baseDatosValues = [];
     }));
   }
@@ -92,7 +91,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
     this.unidadesValues = this.unidadesList.filter(f => f.IdDivision === value).map(d => {
       return {
         value: d.IdUnidad,
-        description: d.IdUnidad + '-' + d.Nombre
+        label: d.IdUnidad + '-' + d.Nombre
       };
     });
   }
@@ -119,7 +118,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
         this.divisionesValues = result.data.map((d: { IdDivision: string; Division: string; }) => {
           return {
             value: d.IdDivision,
-            description: d.IdDivision + '-' + d.Division
+            label: d.IdDivision + '-' + d.Division
           };
         });
       }));
@@ -192,7 +191,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
         that.baseDatosValues = result.data.map((d: { name: any; }) => {
           return {
             value: d.name,
-            description: d.name
+            label: d.name
           };
         });
       }));
@@ -209,31 +208,46 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  save(): void {
+  onActionClicked(action: string) {
+    switch (action) {
+      case ActionClicked.Save:
+        this._save();        
+        break;
+      case ActionClicked.Cancel:
+        this._closeModal();
+        break;
+    }
+  }
+
+  private _save(): void {
     try {
-      this.subscription.push(this._conexionRodasSvc.save().subscribe(response => {
-        const result = response.saveContaConexion;
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+      this.subscription.push(this._conexionRodasSvc.save().subscribe({ 
+        next: (response: any) => {
+          let result;
+          let txtMessage;
 
-        let txtMessage;
-        if (this.action === 'Agregar') {
-          txtMessage = 'La Conexión se ha creado correctamente.';
-        } else {
-          txtMessage = 'La Conexión se ha actualizado correctamente.';
-        }
+          if (this.action === 'Agregar') {
+            result = response.createContaConexion;
+            txtMessage = 'La Conexión se ha creado correctamente.';
+          } else {
+            result = response.updateContaConexion;
+            txtMessage = 'La Conexión se ha actualizado correctamente.';
+          }
+          
+          if (!result.success) {
+            throw new Error(result.error);
+          }
 
-        this.closeModal();
-
-        this._materialSvc.openSnackBar(txtMessage);
-      }, error => { throw new Error(error); }));
+          this._closeModal(txtMessage);
+        }, 
+        error: (error) => { SweetAlert.fire({
+          icon: 'error',
+          title: 'ERROR',
+          text: error,
+          showConfirmButton: true,
+          confirmButtonText: 'Aceptar'
+        }); }
+      }));
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
@@ -245,8 +259,8 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  closeModal(): void {
-    this._modalSvc.closeModal();
+  private _closeModal(message?: string): void {
+    this._modalSvc.closeModal(message);
   }
 
 }

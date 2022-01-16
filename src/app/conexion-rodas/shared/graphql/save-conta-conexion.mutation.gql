@@ -1,6 +1,0 @@
-mutation SaveContaConexion($conexionInfo: ContaConexionInput!) {
-    saveContaConexion(conexionInfo: $conexionInfo) {
-        success
-        error
-    }
-}

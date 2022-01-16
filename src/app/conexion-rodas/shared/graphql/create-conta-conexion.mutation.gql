@@ -1,0 +1,6 @@
+mutation CreateContaConexion($conexionInfo: ContaConexionInput!) {
+    createContaConexion(conexionInfo: $conexionInfo) {
+        success
+        error
+    }
+}

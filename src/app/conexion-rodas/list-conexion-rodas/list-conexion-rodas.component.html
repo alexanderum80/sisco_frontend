@@ -1,3 +1,5 @@
-<app-list-item title="Conexiones al Rodas" [canAddItem]="hasAdminPermission()" (OnAddClicked)="add()">
-  <png-table [columns]="columns" [data]="conexionesRodas" [menuItems]="menuItems"></png-table>
+<app-list-item title="Conexiones al Rodas">
+  <png-table [columns]="columns" [data]="conexionesRodas" [canEditDelete]="hasAdminPermission()" (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
+
+<p-toast></p-toast>

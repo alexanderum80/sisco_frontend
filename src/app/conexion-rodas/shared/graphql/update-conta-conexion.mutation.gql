@@ -1,0 +1,6 @@
+mutation UpdateContaConexion($conexionInfo: ContaConexionInput!) {
+    updateContaConexion(conexionInfo: $conexionInfo) {
+        success
+        error
+    }
+}

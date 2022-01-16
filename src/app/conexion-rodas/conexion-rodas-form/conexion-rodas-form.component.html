@@ -1,29 +1,26 @@
-<app-modal [title]="action + ' Conexión al Rodas'" [fg]="fg" (saveClicked)="save()">
-  <form [formGroup]="fg">
-    <div class="form__group m-t-10">
-      <am-select class="w-100" label="División" [fg]="fg" control="idDivision" [values]="divisionesValues" [required]="true" [disabled]="!isAdminPermission"></am-select>
-    </div>
-    <div class="form__group m-t-10">
-      <am-select class="w-100" label="Centro" [fg]="fg" control="idUnidad" [values]="unidadesValues" [required]="true" [disabled]="!isAdminPermission"></am-select>
-    </div>
-    <div class="form__group m-t-10">
-      <mat-checkbox formControlName="consolidado" matInput="matInput" color="primary">Consolidado</mat-checkbox>
-    </div>
-    <div class="form__group m-t-10">
-      <am-input class="w-100" label="Servidor" [fg]="fg" control="ip" placeholder="Servidor" [required]="true" autocomplete="off"></am-input>
-    </div>
-    <div class="form__group m-t-10">
-      <am-input class="w-100" label="Usuario" [fg]="fg" control="usuario" placeholder="Usuario" [required]="true" autocomplete="off"></am-input>
+<app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
+  <form [formGroup]="fg" style="width: 350px;">
+    <div class="form__group">
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="idDivision" label="División" labelWidth="90" [optionsValues]="divisionesValues" placeholder="&lt;División&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
     <div class="form__group">
-      <am-input class="w-100" label="Contraseña" type="password" [fg]="fg" control="contrasena" placeholder="Contraseña" [required]="true" autocomplete="off"></am-input>
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="idUnidad" label="Centro" labelWidth="90" [optionsValues]="unidadesValues" placeholder="&lt;Unidad&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
-    <div class="form__group m-t-10">
-      <am-select class="flex" label="Base de Datos" [fg]="fg" control="baseDatos" [required]="true" [disabled]="loadingDataBase" [values]="baseDatosValues"></am-select>
-      <button mat-icon-button="mat-icon-button" aria-labelledby="aria-labelledby" [disabled]="loadingDataBase" matTooltip="Leer Bases de Datos del Servidor." (click)="refreshDataBases()">
-        <div class="mdi mdi-refresh" *ngIf="!loadingDataBase"></div>
-        <mat-spinner class="m-l-10 m-t-5" *ngIf="loadingDataBase" diameter="20"></mat-spinner>
-      </button>
+    <div class="form__group">
+      <png-checkbox class="w-full mt-1" label="Consolidado" [fg]="fg" control="consolidado"></png-checkbox>
+    </div>
+    <div class="form__group">
+      <png-input-text class="w-full mt-1" label="Servidor" labelWidth="90" [fg]="fg" control="ip" [required]="true" autocomplete="off"></png-input-text>
+    </div>
+    <div class="form__group">
+      <png-input-text class="w-full mt-1" label="Usuario" labelWidth="90" [fg]="fg" control="usuario" [required]="true" autocomplete="off"></png-input-text>
+    </div>
+    <div class="form__group">
+      <png-password class="w-full mt-1" label="Contraseña" labelWidth="90" [fg]="fg" control="contrasena" [required]="true" autocomplete="off"></png-password>
+    </div>
+    <div class="form__group">
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="baseDatos" label="Base de Datos" labelWidth="90" [optionsValues]="baseDatosValues" placeholder="&lt;Base de Datos&gt;" [required]="true" [disabled]="loadingDataBase" [filter]="true" [showClear]="true"></png-dropdown>
+      <png-button class="ml-2" icon="mdi mdi-refresh" [raised]="true" [rounded]="true" [text]="true" [disabled]="loadingDataBase" [raised]="true" [fullWidth]="true" [loading]="loadingDataBase" (clicked)="refreshDataBases()"></png-button>
     </div>
   </form>
-</app-modal>
+</app-add-edit-item>

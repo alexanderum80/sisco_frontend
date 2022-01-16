@@ -1,13 +1,12 @@
+import { MessageService } from 'primeng/api';
+import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { MaterialTableColumns } from './../../angular-material/models/mat-table.model';
-import { MaterialService } from './../../shared/services/material.service';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { ConexionRodasFormComponent } from './../conexion-rodas-form/conexion-rodas-form.component';
 import { ModalService } from './../../shared/services/modal.service';
 import SweetAlert from 'sweetalert2';
 import { UsuarioService } from '../../shared/services/usuario.service';
-import { sortBy } from 'lodash';
-import { MenuItem } from 'primeng/api';
+import { isArray, sortBy } from 'lodash';
 import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 
 @Component({
@@ -26,22 +25,13 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
     { header: 'Base de Datos', field: 'BaseDatos', type: 'string' },
   ];
 
-  menuItems: MenuItem[] = [
-    { id: '0', label: 'Editar', icon: 'mdi mdi-pencil', disabled: false, command: (event) => {
-      this.edit(event);
-    }},
-    { id: '1', label: 'Eliminar', icon: 'mdi mdi-delete-outline', disabled: false, command: (event) => {
-      this.delete(event);
-    }},
-  ];
-
   conexionesRodas: any[] = [];
 
   constructor(
     private _usuarioSvc: UsuarioService,
     private _modalSvc: ModalService,
     private _conexionRodasSvc: ConexionRodasService,
-    private _materialSvc: MaterialService
+    private _msgSvc: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -86,22 +76,41 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  add(): void {
+  actionClicked(event: IActionItemClickedArgs) {
+    switch (event.action) {
+      case ActionClicked.Add:
+        this._add();
+        break;
+      case ActionClicked.Edit:
+        this._edit(event.item)
+        break;    
+      case ActionClicked.Delete:
+        this._delete(event.item)
+        break;
+    }
+  }
+
+  private _add(): void {
     try {
       const dataInput = {
         id: '',
-        idUnidad: '',
+        idUnidad: null,
         consolidado: '',
         ip: '',
         usuario: '',
         contrasena: '',
-        baseDatos: '',
-        idDivision: this._usuarioSvc.usuario.IdDivision,
+        baseDatos: null,
+        idDivision: this._usuarioSvc.usuario.Division.IdDivision,
       };
 
       this._conexionRodasSvc.fg.patchValue(dataInput);
 
-      this._modalSvc.openModal(ConexionRodasFormComponent);
+      this._modalSvc.openModal('Agregar Conexión al Rodas', ConexionRodasFormComponent);
+      this._modalSvc.ref.onClose.subscribe((message: string) => {
+        if (message) {
+          this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+        }
+      });
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
@@ -113,10 +122,10 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  edit(menu: any): void {
+  private _edit(data: any): void {
     try {
       if (this.hasAdminPermission()) {
-      this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.loadConexionById(menu.item.automationId.Id).subscribe(response => {
+      this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.loadConexionById(data.Id).subscribe(response => {
           const result = response.getContaConexionById;
 
           if (!result.success) {
@@ -143,7 +152,12 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
           };
           this._conexionRodasSvc.fg.patchValue(dataInput);
 
-          this._modalSvc.openModal(ConexionRodasFormComponent);
+          this._modalSvc.openModal('Modificar Conexión al Rodas', ConexionRodasFormComponent);
+          this._modalSvc.ref.onClose.subscribe((message: string) => {
+            if (message) {
+              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+            }
+          });
         }));
       }
     } catch (err: any) {
@@ -157,12 +171,12 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  delete(menu: any): void {
+  private _delete(data: any): void {
     try {
       if (this.hasAdminPermission()) {
         SweetAlert.fire({
           icon: 'question',
-          title: '¿Desea Eliminar la Conexión seleccionada?',
+          title: '¿Desea Eliminar la(s) Conexión(es) seleccionada(s)?',
           text: 'No se podrán deshacer los cambios.',
           showConfirmButton: true,
           confirmButtonText: 'Sí',
@@ -170,7 +184,9 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
           cancelButtonText: 'No'
         }).then(res => {
           if (res.value) {
-            this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.delete(menu.item.automationId.Id).subscribe(response => {
+            const IDsToRemove: number[] = !isArray(data) ? [data.Id] :  data.map(d => { return d.Id });
+            
+            this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.delete(IDsToRemove).subscribe(response => {
               const result = response.deleteContaConexion;
 
               if (!result.success) {
@@ -183,7 +199,11 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
                 });
               }
 
-              this._materialSvc.openSnackBar('La Conexión se ha eliminado correctamente.');
+              this._modalSvc.ref.onClose.subscribe((message: string) => {
+                if (message) {
+                  this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'La Conexión se ha eliminado correctamente.' })
+                }
+              });
             }));
           }
         });

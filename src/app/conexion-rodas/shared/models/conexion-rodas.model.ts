@@ -3,13 +3,13 @@ import { IQueryResponse } from '../../../shared/models/query-response';
 
 export interface ConexionRodasQueryResponse {
     getAllContaConexiones: IQueryResponse;
-    getContaConexionesByDivision: IQueryResponse;
     getContaConexionById: IQueryResponse;
     estadoContaConexiones: IQueryResponse;
 }
 
 export interface ConexionRodasMutationResponse {
-    saveContaConexion: IMutationResponse;
+    createContaConexion: IMutationResponse;
+    updateContaConexion: IMutationResponse;
     deleteContaConexion: IMutationResponse;
 }
 
