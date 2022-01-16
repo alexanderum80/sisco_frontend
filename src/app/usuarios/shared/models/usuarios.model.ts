@@ -20,7 +20,6 @@ interface IUsuariosMutationResponse {
 
 export interface UsuariosQueryResponse {
     getAllUsuarios: IUsuariosQueryResponse;
-    getUsuariosByDivision: IUsuariosQueryResponse;
     getUsuarioById: IUsuarioQueryResponse;
     authenticateUsuario: IUsuarioQueryResponse;
 }

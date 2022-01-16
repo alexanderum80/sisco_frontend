@@ -10,6 +10,7 @@ export interface IUsuario {
     IdUsuario?: number;
     Usuario: string;
     IdTipoUsuario: number;
+    TipoUsuario?: any;
     IdDivision: number;
     Division?: any;
     Contrasena?: string;

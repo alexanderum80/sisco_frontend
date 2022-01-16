@@ -10,7 +10,7 @@
       <png-password class="w-full mt-1" label="Confirmar Contraseña" labelWidth="90" [fg]="fg" control="contrasenaConfirm" [required]="true" autocomplete="off"></png-password>
     </div>
     <div class="form__group">
-      <png-dropdown class="w-full mt-1" [fg]="fg" control="tipoUsuario" label="Tipo de Usuario" labelWidth="90" [optionsValues]="tipoUsuariosValues" placeholder="&lt;Seleccione el Tipo de Usuario&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="tipoUsuario" label="Tipo de Usuario" labelWidth="90" [optionsValues]="tipoUsuariosValues" placeholder="&lt;Tipo de Usuario&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
     <div class="form__group">
       <png-checkbox class="mt-1" [fg]="fg" control="cambiarContrasena" label="Cambiar contraseña en el próximo inicio de sesión."></png-checkbox>
@@ -19,7 +19,7 @@
       <png-password class="w-full mt-1" label="Contraseña Avanzada" labelWidth="90" [fg]="fg" control="contrasenaAvanzada" [required]="true" autocomplete="off"></png-password>
     </div>
     <div class="form__group" *ngIf="isSuperAdmin">
-      <png-dropdown class="w-full mt-1" [fg]="fg" control="idDivision" label="División" labelWidth="90" [optionsValues]="divisionesValues" placeholder="&lt;Seleccione la División&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="idDivision" label="División" labelWidth="90" [optionsValues]="divisionesValues" placeholder="&lt;División&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
   </form>
 </app-add-edit-item>

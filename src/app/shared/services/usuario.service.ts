@@ -1,10 +1,10 @@
-import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
+import { usuariosApi } from './../../usuarios/shared/graphql/usuarioActions.gql';
+import { ETipoUsuarios, UsuariosQueryResponse } from './../../usuarios/shared/models/usuarios.model';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { IUsuario } from '../models/usuarios';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { QueryRef } from 'apollo-angular';
-import { Observable } from 'rxjs';
+import { QueryRef, Apollo } from 'apollo-angular';
 
 import { Usuario } from '../models';
 import { Subscription } from 'rxjs';
@@ -34,7 +34,9 @@ export class UsuarioService {
         idDivision: new FormControl(''),
     });
 
-    constructor() { }
+    constructor(
+        private _apollo: Apollo
+    ) { }
 
     get usuario(): IUsuario {
         return this._usuario;
@@ -121,6 +123,26 @@ export class UsuarioService {
         if (!usuario) { return; }
         this._usuario = new Usuario(usuario);
         this._usuarioSubject.next(this._usuario);
+    }
+
+    autenticateUsuario(authVariables: any): Observable<UsuariosQueryResponse> {
+        return new Observable<UsuariosQueryResponse>(subscriber => {
+            this._apollo.query<UsuariosQueryResponse> ({
+                query: usuariosApi.authenticate,
+                variables: {
+                    usuario: authVariables.Usuario,
+                    passw: authVariables.Contrasena
+                },
+                fetchPolicy: 'network-only'
+            }).subscribe({
+                next: (response) => {
+                    subscriber.next(response.data);
+                },
+                error: (error) => { 
+                    subscriber.error(error);
+                }
+            });
+        })
     }
 
 }

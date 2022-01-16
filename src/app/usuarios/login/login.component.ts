@@ -1,17 +1,14 @@
+import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { NavigationService } from './../../navigation/shared/services/navigation.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { ChangePasswordComponent } from './../change-password/change-password.component';
 import { ModalService } from './../../shared/services/modal.service';
 import { Usuario } from '../../shared/models/usuarios';
-import { UsuariosQueryResponse } from '../shared/models/usuarios.model';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import SweetAlert from 'sweetalert2';
 import { Apollo } from 'apollo-angular';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
 import { ActivatedRoute } from '@angular/router';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -28,7 +25,8 @@ export class LoginComponent implements OnInit {
     private _route: ActivatedRoute,
     private _modalSvc: ModalService,
     private _usuarioSvc: UsuarioService,
-    private _navigateSvc: NavigationService
+    private _navigateSvc: NavigationService,
+    private _swalSvc: SweetalertService
   ) { }
 
   ngOnInit(): void {
@@ -49,56 +47,45 @@ export class LoginComponent implements OnInit {
         Contrasena: this.fg.controls['password'].value
       };
 
-      this._apollo.query<UsuariosQueryResponse> ({
-        query: usuariosApi.authenticate,
-        variables: {
-          usuario: authVariables.Usuario,
-          passw: authVariables.Contrasena
+      this._usuarioSvc.autenticateUsuario(authVariables).subscribe({
+        next: (response) => {
+          this.autenticando = false;
+
+          const result = response.authenticateUsuario;
+
+          if (!result.success) {
+            return this._swalSvc.error(result.error || '');
+          }
+          const usuario: Usuario = new Usuario(result.data);
+
+          this._usuarioSvc.updateUsuarioInfo(usuario);
+
+          if (usuario.CambiarContrasena) {
+            this._usuarioSvc.fg.controls['idUsuario'].setValue(usuario.IdUsuario);
+            this._usuarioSvc.fg.controls['usuario'].setValue(usuario.Usuario);
+            this._usuarioSvc.fg.controls['contrasena'].setValue('');
+            this._usuarioSvc.fg.controls['contrasenaConfirm'].setValue('');
+
+            this._modalSvc.openModal('Cambiar Contraseña', ChangePasswordComponent);
+          } else {
+            this._authSvc.login();
+
+            this._navigateSvc.navigateTo(this._navigateSvc.continueURL);
+          }
         },
-        fetchPolicy: 'network-only'
-      }).subscribe(response => {
-        this.autenticando = false;
-
-        const result = response.data.authenticateUsuario;
-
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'Error',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'OK'});
-        }
-        const usuario: Usuario = new Usuario(result.data);
-
-        this._usuarioSvc.updateUsuarioInfo(usuario);
-
-        if (usuario.CambiarContrasena) {
-          this._usuarioSvc.fg.controls['idUsuario'].setValue(usuario.IdUsuario);
-          this._usuarioSvc.fg.controls['usuario'].setValue(usuario.Usuario);
-          this._usuarioSvc.fg.controls['contrasena'].setValue('');
-          this._usuarioSvc.fg.controls['contrasenaConfirm'].setValue('');
-
-          this._modalSvc.openModal('Cambiar Contraseña', ChangePasswordComponent);
-        } else {
-          this._authSvc.login();
-
-          this._navigateSvc.navigateTo(this._navigateSvc.continueURL);
-        }
-      });
+        error: (err) => {
+          this.autenticando = false;
+          this._swalSvc.error(err);
+        }}
+      );
     } catch (err: any) {
       this.autenticando = false;
-      Swal.fire({
-        title: 'ERROR',
-        text: err,
-        confirmButtonText: 'Aceptar'
-      })
+      this._swalSvc.error(err);
     }
   }
 
   isFormValid(): boolean {
     return this.fg.controls['usuario'].value !== '' && this.fg.controls['password'].value !== '';
   }
-
 
 }
