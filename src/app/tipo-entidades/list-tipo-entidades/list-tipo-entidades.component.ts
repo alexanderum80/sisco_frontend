@@ -89,7 +89,7 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
           descripcion: '',
         };
         this._tipoEntidadesSvc.fg.patchValue(inputData);
-        this._modalSvc.openModal(TipoEntidadesFormComponent);
+        this._modalSvc.openModal('Agregar Tipo de Entidad', TipoEntidadesFormComponent);
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -137,7 +137,7 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
         };
 
         this._tipoEntidadesSvc.fg.patchValue(inputData);
-        this._modalSvc.openModal(TipoEntidadesFormComponent);
+        this._modalSvc.openModal('Editar Tipo de Entidad', TipoEntidadesFormComponent);
       }));
     } catch (err: any) {
       SweetAlert.fire({

@@ -4,10 +4,10 @@
       <png-input-text class="w-full mt-1" label="Empleado" labelWidth="90" [fg]="fg" control="empleado" [required]="true" autocomplete="off"></png-input-text>
     </div>
     <div class="form__group">
-      <png-dropdown class="w-full mt-1" [fg]="fg" control="cargo" label="Cargo" labelWidth="90" [optionsValues]="cargosValues" placeholder="&lt;Seleccione el Cargo&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="cargo" label="Cargo" labelWidth="90" [optionsValues]="cargosValues" placeholder="&lt;Cargo&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
     <div class="form__group" *ngIf="isSuperAdmin">
-      <png-dropdown class="w-full mt-1" [fg]="fg" control="division" label="División" labelWidth="90" [optionsValues]="divisionesValues" placeholder="&lt;Seleccione la División&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="division" label="División" labelWidth="90" [optionsValues]="divisionesValues" placeholder="&lt;División&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
   </form>
 </app-add-edit-item>

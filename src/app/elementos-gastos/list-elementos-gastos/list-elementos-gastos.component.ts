@@ -83,7 +83,7 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
           epigrafe: '',
         };
         this._elementosGastosSvc.fg.patchValue(inputData);
-        this._modalSvc.openModal(ElementosGastosFormComponent);
+        this._modalSvc.openModal('Agregar Elemento de Gasto', ElementosGastosFormComponent);
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -133,7 +133,7 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
       };
 
       this._elementosGastosSvc.fg.patchValue(inputData);
-      this._modalSvc.openModal(ElementosGastosFormComponent);
+      this._modalSvc.openModal('Modificar Elemento de Gasto', ElementosGastosFormComponent);
     }));
   }
 

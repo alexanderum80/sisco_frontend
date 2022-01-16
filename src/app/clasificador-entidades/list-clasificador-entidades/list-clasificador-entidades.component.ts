@@ -88,7 +88,7 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
           idTipoEntidad: '',
         };
         this._clasificadorEntidadesSvc.fg.patchValue(inputData);
-        this._modalSvc.openModal(ClasificadorEntidadesFormComponent);
+        this._modalSvc.openModal('Agregar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -137,7 +137,7 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
         };
 
         this._clasificadorEntidadesSvc.fg.patchValue(inputData);
-        this._modalSvc.openModal(ClasificadorEntidadesFormComponent);
+        this._modalSvc.openModal('Modificar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
       }));
     } catch (err: any) {
       SweetAlert.fire({

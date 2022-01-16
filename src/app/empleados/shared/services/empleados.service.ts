@@ -29,8 +29,9 @@ export class EmpleadosService {
         this.subscription.push(this._apollo.watchQuery<EmpleadosQueryResponse>({
           query: empleadosApi.all,
           fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(response => {
-          subscriber.next(response.data);
+        }).valueChanges.subscribe({
+          next: (response) => subscriber.next(response.data || undefined),
+          error: (err) => subscriber.error(err)
         }));
       } catch (err: any) {
         subscriber.error(err);
@@ -45,9 +46,12 @@ export class EmpleadosService {
           query: empleadosApi.byId,
           variables: { id },
           fetchPolicy: 'network-only'
-        }).subscribe(response => {
-          subscriber.next(response.data);
-          subscriber.complete();
+        }).subscribe({
+          next: (response) => {
+            subscriber.next(response.data || undefined),
+            subscriber.complete();
+          },
+          error: (err) => subscriber.error(err)
         }));
       } catch (err: any) {
         subscriber.error(err);
@@ -71,8 +75,9 @@ export class EmpleadosService {
           mutation:mutation,
           variables: { empleadoInfo },
           refetchQueries: ['GetAllEmpleados']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
+        }).subscribe({
+          next: (response) => subscriber.next(response.data || undefined),
+          error: (err) => subscriber.error(err)
         }));
       } catch (err: any) {
         subscriber.error(err);
@@ -87,15 +92,15 @@ export class EmpleadosService {
           mutation: empleadosApi.delete,
           variables: { IDs },
           refetchQueries: ['GetAllEmpleados']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
+        }).subscribe({
+          next: (response) => subscriber.next(response.data || undefined),
+          error: (err) => subscriber.error(err)
         }));
       } catch (err: any) {
         subscriber.error(err);
       }
     });
   }
-
 
   dispose(): void {
     this.subscription.forEach(subs => subs.unsubscribe());

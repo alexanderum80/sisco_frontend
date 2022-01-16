@@ -1,6 +1,5 @@
 import { toNumber } from 'lodash';
 import { supervisoresApi } from './../graphql/supervisores-api';
-import { UsuarioService } from './../../../shared/services/usuario.service';
 import { Apollo } from 'apollo-angular';
 import { SupervisoresQueryResponse, SupervisoresMutationResponse, ISupervisor } from './../models/supervisores.model';
 import { Observable, Subscription } from 'rxjs';
@@ -23,7 +22,6 @@ export class SupervisoresService {
 
   constructor(
     private _apollo: Apollo,
-    private _usuarioSvc: UsuarioService,
   ) { }
 
   loadAllSupervisores(): Observable<SupervisoresQueryResponse> {
@@ -32,8 +30,9 @@ export class SupervisoresService {
         this.subscription.push(this._apollo.watchQuery<SupervisoresQueryResponse>({
           query: supervisoresApi.all,
           fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(response => {
-          subscriber.next(response.data);
+        }).valueChanges.subscribe({
+          next: (response) => subscriber.next(response.data),
+          error: (err) => subscriber.error(err)
         }));
       } catch (err: any) {
         subscriber.error(err);
@@ -48,9 +47,12 @@ export class SupervisoresService {
           query: supervisoresApi.byId,
           variables: { id },
           fetchPolicy: 'network-only'
-        }).subscribe(response => {
-          subscriber.next(response.data);
-          subscriber.complete();
+        }).subscribe({
+          next: (response) => {
+            subscriber.next(response.data);
+            subscriber.complete();
+          },
+          error: (err) => subscriber.error(err)          
         }));
       } catch (err: any) {
         subscriber.error(err);
@@ -74,8 +76,9 @@ export class SupervisoresService {
           mutation: mutation,
           variables: { supervisorInfo },
           refetchQueries: ['GetAllSupervisores']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
+        }).subscribe({
+          next: (response) => subscriber.next(response.data || undefined),
+          error: (err) => subscriber.error(err)
         }));
       } catch (err: any) {
         subscriber.error(err);
@@ -90,8 +93,9 @@ export class SupervisoresService {
           mutation: supervisoresApi.delete,
           variables: { IDs },
           refetchQueries: ['GetAllSupervisores']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
+        }).subscribe({
+          next: (response) => subscriber.next(response.data || undefined),
+          error: (err) => subscriber.error(err)
         }));
       } catch (err: any) {
         subscriber.error(err);

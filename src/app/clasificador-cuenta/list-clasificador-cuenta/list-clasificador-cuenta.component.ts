@@ -108,7 +108,7 @@ export class ListClasificadorCuentaComponent implements OnInit, AfterViewInit, O
           crit3Consolidacion: '',
         };
         this._clasificadorCuentaSvc.fg.patchValue(inputData);
-        this._modalSvc.openModal(ClasificadorCuentaFormComponent);
+        this._modalSvc.openModal('Agregar Cuenta', ClasificadorCuentaFormComponent);
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -168,7 +168,7 @@ export class ListClasificadorCuentaComponent implements OnInit, AfterViewInit, O
             };
 
             this._clasificadorCuentaSvc.fg.patchValue(inputData);
-            this._modalSvc.openModal(ClasificadorCuentaFormComponent);
+            this._modalSvc.openModal('Modificar Cuenta', ClasificadorCuentaFormComponent);
           }, error => { throw new Error(error); })
         );
       }

@@ -77,7 +77,7 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
           epigrafe: '',
         };
         this._epigrafesSvc.fg.patchValue(inputData);
-        this._modalSvc.openModal(EpigrafesFormComponent);
+        this._modalSvc.openModal('Agregar Epígrafe', EpigrafesFormComponent);
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -122,7 +122,7 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
       };
 
       this._epigrafesSvc.fg.patchValue(inputData);
-      this._modalSvc.openModal(EpigrafesFormComponent);
+      this._modalSvc.openModal('Modificar Epígrafe', EpigrafesFormComponent);
     }));
   }
 
