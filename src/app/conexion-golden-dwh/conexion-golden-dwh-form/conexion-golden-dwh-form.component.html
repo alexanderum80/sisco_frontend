@@ -1,45 +1,39 @@
-<app-modal title="Configurar Conexión al Golden DWH" [fg]="fg" (saveClicked)="save()">
-  <form [formGroup]="fg">
-    <div class="form__group m-t-10">
-      <am-select class="w-100" label="División" [fg]="fg" control="idUnidad" [values]="divisionesValues" [required]="true"></am-select>
+<app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
+  <form [formGroup]="fg" style="width: 350px;">
+    <div class="form__group mt-1">
+      <png-dropdown class="w-100" [fg]="fg" control="idUnidad" label="División" labelWidth="100" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
     </div>
-    <mat-tab-group>
-      <mat-tab label="Golden Restaura">
-        <div class="form__group m-t-10">
-          <am-input class="w-100" label="Servidor" [fg]="fg" control="rest_ip" placeholder="Servidor" [required]="true" autocomplete="off"></am-input>
+    <p-tabView>
+      <p-tabPanel header="Golden Restaura">
+        <div class="form__group mt-1">
+          <png-input-text class="w-full mt-1" label="Servidor" labelWidth="90" [fg]="fg" control="rest_ip" [required]="true" autocomplete="off"></png-input-text>
         </div>
-        <div class="form__group m-t-10">
-          <am-input class="w-100" label="Usuario" [fg]="fg" control="rest_usuario" placeholder="Usuario" [required]="true" autocomplete="off"></am-input>
-        </div>
-        <div class="form__group">
-          <am-input class="w-100" label="Contraseña" type="password" [fg]="fg" control="rest_contrasena" placeholder="Contraseña" [required]="true" autocomplete="off"></am-input>
-        </div>
-        <div class="form__group m-t-10">
-          <am-select class="flex" label="Base de Datos" [fg]="fg" control="rest_baseDatos" [required]="true" [disabled]="loadingRestDataBase" [values]="baseDatosRestValues"></am-select>
-          <button mat-icon-button="mat-icon-button" aria-labelledby="aria-labelledby" [disabled]="loadingRestDataBase" matTooltip="Leer Bases de Datos del Servidor." (click)="refreshDataBases('Rest')">
-            <div class="mdi mdi-refresh" *ngIf="!loadingRestDataBase"></div>
-            <mat-spinner class="m-l-10 m-t-5" *ngIf="loadingRestDataBase" diameter="20"></mat-spinner>
-          </button>
-        </div>
-      </mat-tab>
-      <mat-tab label="Golden DWH">
-        <div class="form__group m-t-10">
-          <am-input class="w-100" label="Servidor" [fg]="fg" control="dwh_ip" placeholder="Servidor" [required]="true" autocomplete="off"></am-input>
-        </div>
-        <div class="form__group m-t-10">
-          <am-input class="w-100" label="Usuario" [fg]="fg" control="dwh_usuario" placeholder="Usuario" [required]="true" autocomplete="off"></am-input>
+        <div class="form__group mt-1">
+          <png-input-text class="w-full mt-1" label="Usuario" labelWidth="90" [fg]="fg" control="rest_usuario" [required]="true" autocomplete="off"></png-input-text>
         </div>
         <div class="form__group">
-          <am-input class="w-100" label="Contraseña" type="password" [fg]="fg" control="dwh_contrasena" placeholder="Contraseña" [required]="true" autocomplete="off"></am-input>
+          <png-password class="w-full mt-1" label="Contraseña" labelWidth="90" [fg]="fg" control="rest_contrasena" [required]="true" autocomplete="off"></png-password>
         </div>
-        <div class="form__group m-t-10">
-          <am-select class="flex" label="Base de Datos" [fg]="fg" control="dwh_baseDatos" [required]="true" [disabled]="loadingDWHDataBase" [values]="baseDatosDWHValues"></am-select>
-          <button mat-icon-button="mat-icon-button" aria-labelledby="aria-labelledby" [disabled]="loadingDWHDataBase" matTooltip="Leer Bases de Datos del Servidor." (click)="refreshDataBases('DWH')">
-            <div class="mdi mdi-refresh" *ngIf="!loadingDWHDataBase"></div>
-            <mat-spinner class="m-l-10 m-t-5" *ngIf="loadingDWHDataBase" diameter="20"></mat-spinner>
-          </button>
+        <div class="form__group mt-1">
+          <png-dropdown class="w-full mt-1" [fg]="fg" control="rest_baseDatos" label="Base de Datos" labelWidth="90" [optionsValues]="baseDatosRestValues" placeholder="&lt;Base de Datos&gt;" [required]="true" [disabled]="loadingRestDataBase" [filter]="true" [showClear]="true"></png-dropdown>
+          <png-button class="ml-2" icon="mdi mdi-refresh" [raised]="true" [rounded]="true" [text]="true" [disabled]="loadingRestDataBase" [raised]="true" [fullWidth]="true" [loading]="loadingRestDataBase" (clicked)="refreshDataBases('Rest')"></png-button>
         </div>
-      </mat-tab>
-    </mat-tab-group>
+      </p-tabPanel>
+      <p-tabPanel header="Golden DWH">
+        <div class="form__group mt-1">
+          <png-input-text class="w-full mt-1" label="Servidor" labelWidth="90" [fg]="fg" control="dwh_ip" [required]="true" autocomplete="off"></png-input-text>
+        </div>
+        <div class="form__group mt-1">
+          <png-input-text class="w-full mt-1" label="Usuario" labelWidth="90" [fg]="fg" control="dwh_usuario" [required]="true" autocomplete="off"></png-input-text>
+        </div>
+        <div class="form__group">
+          <png-password class="w-full mt-1" label="Contraseña" labelWidth="90" [fg]="fg" control="dwh_contrasena" [required]="true" autocomplete="off"></png-password>
+        </div>
+        <div class="form__group mt-1">
+          <png-dropdown class="w-full mt-1" [fg]="fg" control="dwh_baseDatos" label="Base de Datos" labelWidth="90" [optionsValues]="baseDatosDWHValues" placeholder="&lt;Base de Datos&gt;" [required]="true" [disabled]="loadingDWHDataBase" [filter]="true" [showClear]="true"></png-dropdown>
+          <png-button class="ml-2" icon="mdi mdi-refresh" [raised]="true" [rounded]="true" [text]="true" [disabled]="loadingDWHDataBase" [raised]="true" [fullWidth]="true" [loading]="loadingDWHDataBase" (clicked)="refreshDataBases('DWH')"></png-button>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
   </form>
-</app-modal>
+</app-add-edit-item>

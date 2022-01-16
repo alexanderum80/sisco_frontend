@@ -5,7 +5,6 @@ import { ConexionGoldenDwhService } from './shared/services/conexion-golden-dwh.
 import { ConexionGoldenDwhFormComponent } from './conexion-golden-dwh-form/conexion-golden-dwh-form.component';
 import { ModalService } from './../shared/services/modal.service';
 import { Component, OnInit } from '@angular/core';
-import { TipoUsuarios } from '../usuarios/shared/models/usuarios.model';
 import { NavigationService } from '../navigation/shared/services/navigation.service';
 
 @Component({
@@ -24,8 +23,9 @@ export class ConexionGoldenDwhComponent implements OnInit {
   ngOnInit(): void {
     this._setFgValues();
 
-    if (this._usuarioSvc.usuario.IdTipoUsuario === ETipoUsuarios.Administrador) {
-      this._modalSvc.openModal(ConexionGoldenDwhFormComponent);
+    if (this._usuarioSvc.usuario.TipoUsuario.IdTipo === ETipoUsuarios.Administrador) {
+      this._modalSvc.openModal('Actualizar Conexión al Golden DWH', ConexionGoldenDwhFormComponent);
+      this._modalSvc.ref.onClose.subscribe(() => this._navigationSvc.navigateTo(''))
     } else {
       SweetAlert.fire({
         icon: 'warning',
@@ -41,19 +41,15 @@ export class ConexionGoldenDwhComponent implements OnInit {
 
   private _setFgValues(): void {
     const fgValues = {
-      idUnidad: '',
+      idUnidad: null,
       dwh_ip: '',
       dwh_usuario: '',
       dwh_contrasena: '',
-      dwh_baseDatos: '',
+      dwh_baseDatos: null,
       rest_ip: '',
       rest_usuario: '',
       rest_contrasena: '',
-      rest_baseDatos: '',
-      dist_ip: '',
-      dist_usuario: '',
-      dist_contrasena: '',
-      dist_baseDatos: '',
+      rest_baseDatos: null,
     };
 
     this._conexionDWHSvc.fg.patchValue(fgValues);

@@ -1,6 +1,6 @@
+import { ActionClicked } from './../../shared/models/list-items';
 import { DatabasesService } from './../../shared/services/databases.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
-import { MaterialService } from './../../shared/services/material.service';
 import { ModalService } from './../../shared/services/modal.service';
 import { ConexionDWHMutationResponse, ConexionDWHQueryResponse } from './../shared/models/conexion-dwh.model';
 import { toNumber } from 'lodash';
@@ -9,11 +9,10 @@ import { ConexionGoldenDwhService } from './../shared/services/conexion-golden-d
 import { FormGroup } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs';
-import { ISelectableOptions } from './../../shared/models/selectable-item';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import SweetAlert from 'sweetalert2';
-import { MatDialogRef } from '@angular/material/dialog';
 import { conexionDWHApi } from '../shared/graphql/conexion-dwhActions';
+import { SelectItem } from 'primeng/api';
 
 const updateConexionDwhMutation = require('graphql-tag/loader!../shared/graphql/update-conexion-dwh.mutation.gql');
 
@@ -23,9 +22,9 @@ const updateConexionDwhMutation = require('graphql-tag/loader!../shared/graphql/
   styleUrls: ['./conexion-golden-dwh-form.component.scss']
 })
 export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, OnDestroy {
-  divisionesValues: ISelectableOptions[] = [];
-  baseDatosRestValues: ISelectableOptions[] = [];
-  baseDatosDWHValues: ISelectableOptions[] = [];
+  divisionesValues: SelectItem[] = [];
+  baseDatosRestValues: SelectItem[] = [];
+  baseDatosDWHValues: SelectItem[] = [];
 
   subscription: Subscription[] = [];
 
@@ -41,11 +40,7 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
     private _databasesSvc: DatabasesService,
     private _modalSvc: ModalService,
     public router: Router,
-    private _materialSvc: MaterialService,
-    public dialogRef: MatDialogRef<ConexionGoldenDwhFormComponent>
-  ) {
-    dialogRef.afterClosed().subscribe(() => router.navigateByUrl(''));
-  }
+  ) { }
 
   ngOnInit(): void {
     this.fg = this._conexionDWHSvc.fg;
@@ -79,7 +74,7 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
         this.divisionesValues = result.data.map((d: { IdDivision: string; Division: string; }) => {
           return {
             value: d.IdDivision,
-            description: d.IdDivision + '-' + d.Division
+            label: d.IdDivision + '-' + d.Division
           };
         });
       }));
@@ -103,33 +98,33 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
 
     // Golden DWH Tab
     this.subscription.push(this.fg.controls['dwh_ip'].valueChanges.subscribe(() => {
-      this.fg.controls['dwh_baseDatos'].setValue('');
+      this.fg.controls['dwh_baseDatos'].setValue(null);
       this.baseDatosDWHValues = [];
     }));
 
     this.subscription.push(this.fg.controls['dwh_usuario'].valueChanges.subscribe(() => {
-      this.fg.controls['dwh_baseDatos'].setValue('');
+      this.fg.controls['dwh_baseDatos'].setValue(null);
       this.baseDatosDWHValues = [];
     }));
 
     this.subscription.push(this.fg.controls['dwh_contrasena'].valueChanges.subscribe(() => {
-      this.fg.controls['dwh_baseDatos'].setValue('');
+      this.fg.controls['dwh_baseDatos'].setValue(null);
       this.baseDatosDWHValues = [];
     }));
 
     // Golden Restaura Tab
     this.subscription.push(this.fg.controls['rest_ip'].valueChanges.subscribe(() => {
-      this.fg.controls['rest_baseDatos'].setValue('');
+      this.fg.controls['rest_baseDatos'].setValue(null);
       this.baseDatosRestValues = [];
     }));
 
     this.subscription.push(this.fg.controls['rest_usuario'].valueChanges.subscribe(() => {
-      this.fg.controls['rest_baseDatos'].setValue('');
+      this.fg.controls['rest_baseDatos'].setValue(null);
       this.baseDatosRestValues = [];
     }));
 
     this.subscription.push(this.fg.controls['rest_contrasena'].valueChanges.subscribe(() => {
-      this.fg.controls['rest_baseDatos'].setValue('');
+      this.fg.controls['rest_baseDatos'].setValue(null);
       this.baseDatosRestValues = [];
     }));
   }
@@ -218,14 +213,14 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
           that.baseDatosDWHValues = result.data.map((d: { name: any; }) => {
             return {
               value: d.name,
-              description: d.name
+              label: d.name
             };
           });
         } else {
           that.baseDatosRestValues = result.data.map((d: { name: any; }) => {
             return {
               value: d.name,
-              description: d.name
+              label: d.name
             };
           });
         }
@@ -244,7 +239,18 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
     }
   }
 
-  save(): void {
+  onActionClicked(action: string) {
+    switch (action) {
+      case ActionClicked.Save:
+        this._save();        
+        break;
+      case ActionClicked.Cancel:
+        this._closeModal();
+        break;
+    }
+  }
+
+  private _save(): void {
     try {
       const inputData = {
         IdUnidad: toNumber(this.fg.controls['idUnidad'].value),
@@ -276,8 +282,6 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
         }
 
         this._modalSvc.closeModal();
-
-        this._materialSvc.openSnackBar('La Conexión se ha actualizado correctamente.');
       }));
     } catch (err: any) {
       SweetAlert.fire({
@@ -288,6 +292,10 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
         confirmButtonText: 'Aceptar'
       });
     }
+  }
+
+  private _closeModal(message?: string): void {
+    this._modalSvc.closeModal(message);
   }
 
 }
