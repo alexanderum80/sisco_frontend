@@ -38,8 +38,9 @@ export class ClasificadorCuentaService {
       this.subscription.push(this._apollo.watchQuery<ClasificadorCuentasQueryResponse>({
         query: clasificadorCuentaApi.all,
         fetchPolicy: 'network-only'
-      }).valueChanges.subscribe(response => {
-        subscriber.next(response.data);
+      }).valueChanges.subscribe({
+        next: (response) => subscriber.next(response.data),
+        error: (err) => subscriber.error(err)
       }));
     });
   }

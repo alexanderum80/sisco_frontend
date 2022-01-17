@@ -1,5 +1,5 @@
+import { ActionClicked } from './../../shared/models/list-items';
 import { ModalService } from './../../shared/services/modal.service';
-import { MaterialService } from './../../shared/services/material.service';
 import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tipo-entidades.service';
 import { MutationActions } from './../../shared/models/mutation-response';
 import { Subscription } from 'rxjs';
@@ -8,6 +8,7 @@ import { ISelectableOptions } from './../../shared/models/selectable-item';
 import { ClasificadorCuentaService } from './../shared/service/clasificador-cuenta.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-clasificador-cuenta-form',
@@ -18,23 +19,22 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
   action: MutationActions;
   fg: FormGroup;
 
-  naturalezaValues: ISelectableOptions[] = [
-    { value: 'D', description: 'Deudora' },
-    { value: 'A', description: 'Acreedora' },
+  naturalezaValues: SelectItem[] = [
+    { value: 'D', label: 'Deudora' },
+    { value: 'A', label: 'Acreedora' },
   ];
 
-  tipoClasificadorValues: ISelectableOptions[] = [
-    { value: 1, description: 'Consolidado' },
-    { value: 2, description: 'Centros' },
-    { value: 3, description: 'Complejos' },
+  tipoClasificadorValues: SelectItem[] = [
+    { value: 1, label: 'Consolidado' },
+    { value: 2, label: 'Centros' },
+    { value: 3, label: 'Complejos' },
   ];
 
-  tipoUnidadesValues: ISelectableOptions[] = [];
+  tipoUnidadesValues: SelectItem[] = [];
 
   subscription: Subscription[] = [];
 
   constructor(
-    private _materialSvc: MaterialService,
     private _modalSvc: ModalService,
     private _tipoEntidadesSvc: TipoEntidadesService,
     private _clasificadorSvc: ClasificadorCuentaService
@@ -68,7 +68,7 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
         this.tipoUnidadesValues = result.data.map((tipo: { Id: any; Entidades: any; }) => {
           return {
             value: tipo.Id,
-            description: tipo.Entidades
+            label: tipo.Entidades
           };
         });
       }, error => { throw new Error(error); }));
@@ -83,7 +83,18 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  save(): void {
+  onActionClicked(action: string) {
+    switch (action) {
+      case ActionClicked.Save:
+        this._save();        
+        break;
+      case ActionClicked.Cancel:
+        this._closeModal();
+        break;
+    }
+  }
+
+  private _save(): void {
     try {
       this.subscription.push(this._clasificadorSvc.save().subscribe(response => {
         const result = response.saveClasificadorCuenta;
@@ -105,9 +116,7 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
           txtMessage = 'La Cuenta se ha actualizado correctamente.';
         }
 
-        this.closeModal();
-
-        this._materialSvc.openSnackBar(txtMessage);
+        this._closeModal(txtMessage);
       }, error => { throw new Error(error); }));
     } catch (err: any) {
       SweetAlert.fire({
@@ -120,8 +129,8 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  closeModal(): void {
-    this._modalSvc.closeModal();
+  private _closeModal(message?: string): void {
+    this._modalSvc.closeModal(message);
   }
 
 }

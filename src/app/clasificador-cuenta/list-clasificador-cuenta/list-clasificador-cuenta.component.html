@@ -1,13 +1,15 @@
-<app-list-item title="Clasificador de Cuentas" [canAddItem]="hasAdvancedUserPermission()" (OnAddClicked)="add()">
-  <mat-tab-group class="h-100" #tabGroup>
-    <mat-tab label="Consolidado">
-      <am-table class="m-t-5" [columns]="displayedColumns" [data]="clasificadorCuentaConso" [menuItems]="menuItems" (clickAction)="onClicked($event)"></am-table>
-    </mat-tab>
-    <mat-tab label="Centro">
-      <am-table class="m-t-5" [columns]="displayedColumns" [data]="clasificadorCuentaCentro" [menuItems]="menuItems" (clickAction)="onClicked($event)"></am-table>
-    </mat-tab>
-    <mat-tab label="Complejo">
-      <am-table class="m-t-5" [columns]="displayedColumns" [data]="clasificadorCuentaComplejo" [menuItems]="menuItems" (clickAction)="onClicked($event)"></am-table>
-    </mat-tab>
-  </mat-tab-group>
+<app-list-item title="Clasificador de Cuentas">
+  <p-tabView class="h-full">
+    <p-tabPanel header="Consolidado">
+      <png-table [columns]="displayedColumns" [data]="clasificadorCuentaConso" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
+    </p-tabPanel>
+    <p-tabPanel header="Centro">
+      <png-table [columns]="displayedColumns" [data]="clasificadorCuentaCentro" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
+    </p-tabPanel>
+    <p-tabPanel header="Complejo">
+      <png-table [columns]="displayedColumns" [data]="clasificadorCuentaComplejo" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
+    </p-tabPanel>
+  </p-tabView>
 </app-list-item>
+
+<p-toast></p-toast>
