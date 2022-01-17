@@ -7,7 +7,7 @@
         margin-right: 5px;
     }
 
-    p-dropdown, .p-dropdown, .p-inputtext, p-password, .p-password, .p-calendar {
+    p-dropdown, .p-dropdown, .p-inputtext, p-password, .p-password, .p-calendar, p-multiselect, .p-multiselect {
         width: 100% !important;
     }
 
@@ -62,12 +62,12 @@
     width: 3rem !important;
 }
 
-.p-inputtext, .pi {
+.p-inputtext, .pi, .p-multiselect .p-multiselect-label {
     padding: 0.2rem !important;
     font-size: inherit !important;
 }
 
-.p-dropdown .p-dropdown-trigger {
+.p-dropdown .p-dropdown-trigger, .p-multiselect-trigger {
     width: 2rem !important;
 }
 
@@ -75,7 +75,7 @@
     right: 1.5rem !important;
 }
 
-.p-dropdown-panel .p-dropdown-items .p-dropdown-item {
+.p-dropdown-panel .p-dropdown-items .p-dropdown-item, .p-multiselect-item {
     padding: 0.5rem 1rem !important;
 }
 
@@ -109,6 +109,10 @@
             width: inherit !important;
         }
     }
+}
+
+.p-field-radiobutton {
+    margin-bottom: .3rem !important;
 }
 
 .p-datatable .p-datatable-thead > tr > th,

@@ -1,3 +1,4 @@
+import { PrimeMultiSelectModule } from './multi-select/multi-select.module';
 import { PrimeToolbarModule } from './toolbar/toolbar.module';
 import { PrimeProgressSpinnerModule } from './progress-spinner/progress-spinner.module';
 import { NgModule } from '@angular/core';
@@ -37,6 +38,7 @@ const modules = [
   PrimeInputMaskModule,
   PrimeInputTextModule,
   PrimeMenubarModule,
+  PrimeMultiSelectModule,
   PrimePanelModule,
   PrimePasswordModule,
   PrimeProgressSpinnerModule,
