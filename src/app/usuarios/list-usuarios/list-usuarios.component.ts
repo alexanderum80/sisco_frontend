@@ -1,6 +1,6 @@
 import { MessageService } from 'primeng/api';
 import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
-import { IUsuarioInfo } from './../../shared/models/usuarios';
+import { IUsuario } from './../../shared/models/usuarios';
 import { UsuarioFormComponent } from './../usuario-form/usuario-form.component';
 import { Subscription } from 'rxjs';
 import { UsuarioService } from '../../shared/services/usuario.service';
@@ -29,7 +29,7 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
     { header: 'División', field: 'Division.Division', type: 'string' },
   ];
 
-  usuarios: IUsuarioInfo[] = [];
+  usuarios: IUsuario[] = [];
 
   subscription: Subscription[] = [];
 

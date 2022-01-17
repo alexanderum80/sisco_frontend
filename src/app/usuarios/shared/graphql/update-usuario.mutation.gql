@@ -1,4 +1,4 @@
-mutation UpdateUsuario($usuarioInfo: UsuarioInput!) {
+mutation UpdateUsuario($usuarioInfo: UsuarioDTO!) {
    updateUsuario(usuarioInfo: $usuarioInfo) {
     success
     error

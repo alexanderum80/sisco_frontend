@@ -1,10 +1,3 @@
-export interface IUsuarioInfo {
-    IdUsuario?: number;
-    Usuario: string;
-    TipoUsuario: any;
-    Division: any;
-    Token?: string;
-}
 
 export interface IUsuario {
     IdUsuario?: number;

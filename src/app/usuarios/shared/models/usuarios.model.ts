@@ -1,15 +1,15 @@
-import { IUsuario, IUsuarioInfo } from '../../../shared/models/usuarios';
+import { IUsuario } from '../../../shared/models/usuarios';
 import { ISelectableOptions } from '../../../shared/models/selectable-item';
 
 interface IUsuarioQueryResponse {
     success: boolean;
-    data: IUsuarioInfo;
+    data: IUsuario;
     error?: string;
 }
 
 interface IUsuariosQueryResponse {
     success: boolean;
-    data: IUsuarioInfo[];
+    data: IUsuario[];
     error?: string;
 }
 
@@ -19,9 +19,9 @@ interface IUsuariosMutationResponse {
 }
 
 export interface UsuariosQueryResponse {
+    authenticateUsuario: IUsuarioQueryResponse;
     getAllUsuarios: IUsuariosQueryResponse;
     getUsuarioById: IUsuarioQueryResponse;
-    authenticateUsuario: IUsuarioQueryResponse;
 }
 
 export interface UsuariosMutationResponse {

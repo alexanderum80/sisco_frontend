@@ -5,14 +5,8 @@ query AuthenticateUsuario($usuario: String!, $passw: String!) {
       IdUsuario
       Usuario
       CambiarContrasena
-      TipoUsuario {
-        IdTipo
-        TipoUsuario
-      }
-      Division {
-        IdDivision
-        Division
-      }
+      IdTipoUsuario
+      IdDivision
       Token
     }
     error
