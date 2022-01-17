@@ -23,7 +23,7 @@ export class ConexionGoldenDwhComponent implements OnInit {
   ngOnInit(): void {
     this._setFgValues();
 
-    if (this._usuarioSvc.usuario.TipoUsuario.IdTipo === ETipoUsuarios.Administrador) {
+    if (this._usuarioSvc.usuario.IdTipoUsuario === ETipoUsuarios.Administrador) {
       this._modalSvc.openModal('Actualizar Conexión al Golden DWH', ConexionGoldenDwhFormComponent);
       this._modalSvc.ref.onClose.subscribe(() => this._navigationSvc.navigateTo(''))
     } else {

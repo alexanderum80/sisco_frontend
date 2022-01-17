@@ -15,7 +15,6 @@ import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
   styleUrls: ['./list-conexion-rodas.component.scss']
 })
 export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDestroy {
-
   columns: ITableColumns[] = [
     { header: 'División', field: 'Division', type: 'string' },
     { header: 'Unidad', field: 'Unidad', type: 'string' },
@@ -26,6 +25,8 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
   ];
 
   conexionesRodas: any[] = [];
+
+  loading = true;
 
   constructor(
     private _usuarioSvc: UsuarioService,
@@ -52,6 +53,8 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
   private _loadConexionesRodas(): void {
     try {
       this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.loadAllConexionesRodas().subscribe(response => {
+        this.loading = false;
+
         const result = response.getAllContaConexiones;
         if (!result.success) {
           return SweetAlert.fire({
@@ -66,6 +69,8 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
         this.conexionesRodas = sortBy(result.data, ['IdDivision', 'IdUnidad']);
       }));
     } catch (err: any) {
+      this.loading = false;
+      
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',

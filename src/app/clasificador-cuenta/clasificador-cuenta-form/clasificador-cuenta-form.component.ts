@@ -26,8 +26,8 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
 
   tipoClasificadorValues: SelectItem[] = [
     { value: 1, label: 'Consolidado' },
-    { value: 2, label: 'Centros' },
-    { value: 3, label: 'Complejos' },
+    { value: 2, label: 'Centro' },
+    { value: 3, label: 'Complejo' },
   ];
 
   tipoUnidadesValues: SelectItem[] = [];
