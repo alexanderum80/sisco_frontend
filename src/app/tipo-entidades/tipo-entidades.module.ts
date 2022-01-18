@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { TipoEntidadesRoutingModule } from './tipo-entidades-routing.module';
 import { ListTipoEntidadesComponent } from './list-tipo-entidades/list-tipo-entidades.component';
 import { TipoEntidadesFormComponent } from './tipo-entidades-form/tipo-entidades-form.component';
+import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { TipoEntidadesFormComponent } from './tipo-entidades-form/tipo-entidades
     ModalModule,
     TableModule,
     InputModule,
+    PrimeNgModule
   ]
 })
 export class TipoEntidadesModule { }

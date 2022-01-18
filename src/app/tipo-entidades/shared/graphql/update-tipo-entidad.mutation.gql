@@ -1,0 +1,6 @@
+mutation UpdateTipoEntidad($tipoEntidadInfo: TipoEntidadInput!) {
+    updateTipoEntidad(tipoEntidadInfo: $tipoEntidadInfo) {
+        success
+        error
+    }
+}

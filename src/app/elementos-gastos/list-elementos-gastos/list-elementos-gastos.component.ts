@@ -172,11 +172,7 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
                 });
               }
 
-              this._modalSvc.ref.onClose.subscribe((message: string) => {
-                if (message) {
-                  this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Elemento de Gasto se ha eliminado correctamente.' })
-                }
-              });
+              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Elemento de Gasto se ha eliminado correctamente.' })
             }));
           }
         });

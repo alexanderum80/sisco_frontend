@@ -68,8 +68,10 @@ export class TipoEntidadesService {
           Descripcion: this.fg.controls['descripcion'].value,
         };
 
+        const mutation = tipoEntidadInfo.Id === 0 ? tipoEntidadesApi.create : tipoEntidadesApi.update;
+
         this.subscription.push(this._apollo.mutate<TipoEntidadesMutationResponse>({
-          mutation: tipoEntidadesApi.save,
+          mutation: mutation,
           variables: { tipoEntidadInfo },
           refetchQueries: ['GetAllTipoEntidades']
         }).subscribe(response => {
@@ -81,12 +83,12 @@ export class TipoEntidadesService {
     });
   }
 
-  delete(id: number): Observable<TipoEntidadesMutationResponse> {
+  delete(IDs: number[]): Observable<TipoEntidadesMutationResponse> {
     return new Observable<TipoEntidadesMutationResponse>(subscriber => {
       try {
         this.subscription.push(this._apollo.mutate<TipoEntidadesMutationResponse>({
           mutation: tipoEntidadesApi.delete,
-          variables: { id },
+          variables: { IDs },
           refetchQueries: ['GetAllTipoEntidades']
         }).subscribe(response => {
           subscriber.next(response.data || undefined);

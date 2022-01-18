@@ -1,5 +1,5 @@
-mutation DeleteTipoEntidad($id: Int!) {
-    deleteTipoEntidad(id: $id) {
+mutation DeleteTipoEntidad($IDs: [Int!]!) {
+    deleteTipoEntidad(IDs: $IDs) {
         success
         error
     }

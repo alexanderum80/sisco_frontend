@@ -1,3 +1,4 @@
+import { ActionClicked } from './../../shared/models/list-items';
 import SweetAlert from 'sweetalert2';
 import { toNumber } from 'lodash';
 import { MutationActions } from './../../shared/models/mutation-response';
@@ -5,7 +6,6 @@ import { FormGroup } from '@angular/forms';
 import { MyErrorStateMatcher } from './../../angular-material/models/material-error-state-matcher';
 import { Subscription } from 'rxjs';
 import { ModalService } from './../../shared/services/modal.service';
-import { MaterialService } from './../../shared/services/material.service';
 import { TipoEntidadesService } from './../shared/services/tipo-entidades.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
@@ -25,7 +25,6 @@ export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private _modalSvc: ModalService,
-    private _materialSvc: MaterialService,
     private _tipoEntidadesSvc: TipoEntidadesService
   ) { }
 
@@ -38,9 +37,30 @@ export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
     this.subscription.forEach(subs => subs.unsubscribe());
   }
 
-  save(): void {
+  onActionClicked(action: string) {
+    switch (action) {
+      case ActionClicked.Save:
+        this._save();        
+        break;
+      case ActionClicked.Cancel:
+        this._closeModal();
+        break;
+    }
+  }
+
+  private _save(): void {
     this.subscription.push(this._tipoEntidadesSvc.save().subscribe(response => {
-      const result = response.saveTipoEntidad;
+      let result;
+      let txtMessage;
+
+      if (this.action === 'Agregar') {
+        result = response.createTipoEntidad;
+        txtMessage = 'El Tipo de Entidad se ha creado correctamente.';
+      } else {
+        result = response.updateTipoEntidad;
+        txtMessage = 'El Tipo de Entidad se ha actualizado correctamente.';
+      }
+      
       if (!result.success) {
         return SweetAlert.fire({
           icon: 'error',
@@ -51,21 +71,12 @@ export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
         });
       }
 
-      let txtMessage;
-      if (this.action === 'Agregar') {
-        txtMessage = 'El Tipo de Entidad se ha creado correctamente.';
-      } else {
-        txtMessage = 'El Tipo de Entidad se ha actualizado correctamente.';
-      }
-
-      this.closeModal();
-
-      this._materialSvc.openSnackBar(txtMessage);
+      this._closeModal(txtMessage);
     }));
   }
 
-  closeModal(): void {
-    this._modalSvc.closeModal();
+  private _closeModal(message?: string): void {
+    this._modalSvc.closeModal(message);
   }
 
 }

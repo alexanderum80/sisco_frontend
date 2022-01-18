@@ -7,6 +7,7 @@ export interface TipoEntidadesQueryResponse {
 }
 
 export interface TipoEntidadesMutationResponse {
-    saveTipoEntidad: IMutationResponse;
+    createTipoEntidad: IMutationResponse;
+    updateTipoEntidad: IMutationResponse;
     deleteTipoEntidad: IMutationResponse;
 }

@@ -1,0 +1,6 @@
+mutation CreateTipoEntidad($tipoEntidadInfo: TipoEntidadInput!) {
+    createTipoEntidad(tipoEntidadInfo: $tipoEntidadInfo) {
+        success
+        error
+    }
+}

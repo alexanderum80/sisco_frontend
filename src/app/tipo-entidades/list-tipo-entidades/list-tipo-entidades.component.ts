@@ -1,3 +1,5 @@
+import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
+import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { MaterialService } from './../../shared/services/material.service';
 import { TipoEntidadesService } from './../shared/services/tipo-entidades.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
@@ -6,7 +8,8 @@ import { MaterialTableColumns } from './../../angular-material/models/mat-table.
 import SweetAlert from 'sweetalert2';
 import { TipoEntidadesFormComponent } from './../tipo-entidades-form/tipo-entidades-form.component';
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
+import { isArray } from 'lodash';
 
 @Component({
   selector: 'app-list-tipo-entidades',
@@ -16,25 +19,16 @@ import { MenuItem } from 'primeng/api';
 export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDestroy {
   dataSource: any[];
 
-  displayedColumns: MaterialTableColumns[] = [
-    { name: 'Entidades', field: 'Entidades' },
-    { name: 'Descripción', field: 'Descripcion' },
-  ];
-
-  menuItems: MenuItem[] = [
-    { id: '0', label: 'Editar', icon: 'mdi mdi-pencil', disabled: false, command: (event) => {
-      this.edit(event);
-    }},
-    { id: '1', label: 'Eliminar', icon: 'mdi mdi-delete-outline', disabled: false, command: (event) => {
-      this.delete(event);
-    }},
+  displayedColumns: ITableColumns[] = [
+    { header: 'Entidades', field: 'Entidades', type: 'string' },
+    { header: 'Descripción', field: 'Descripcion', type: 'string' },
   ];
 
   constructor(
     private _modalSvc: ModalService,
-    private _materialSvc: MaterialService,
+    private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
-    private _tipoEntidadesSvc: TipoEntidadesService
+    private _tipoEntidadesSvc: TipoEntidadesService,
   ) { }
 
   ngOnInit(): void {
@@ -80,7 +74,21 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
     return this._usuarioSvc.hasAdvancedUserPermission();
   }
 
-  add(): void {
+  actionClicked(event: IActionItemClickedArgs) {
+    switch (event.action) {
+      case ActionClicked.Add:
+        this._add();
+        break;
+      case ActionClicked.Edit:
+        this._edit(event.item)
+        break;    
+      case ActionClicked.Delete:
+        this._delete(event.item)
+        break;
+    }
+  }
+
+  private _add(): void {
     try {
       if (this.hasAdvancedUserPermission()) {
         const inputData = {
@@ -89,7 +97,13 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
           descripcion: '',
         };
         this._tipoEntidadesSvc.fg.patchValue(inputData);
+        
         this._modalSvc.openModal('Agregar Tipo de Entidad', TipoEntidadesFormComponent);
+        this._modalSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          }
+        });      
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -102,18 +116,7 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  onClicked(values: any): void {
-    switch (values.action) {
-      case '0':
-        this.edit(values.element);
-        break;
-      case '1':
-        this.delete(values.element);
-        break;
-    }
-  }
-
-  edit(tipoEntidad: any): void {
+  private _edit(tipoEntidad: any): void {
     try {
       this._tipoEntidadesSvc.subscription.push(this._tipoEntidadesSvc.loadTipoEntidadById(tipoEntidad.Id).subscribe(response => {
         const result = response.getTipoEntidadById;
@@ -137,7 +140,13 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
         };
 
         this._tipoEntidadesSvc.fg.patchValue(inputData);
+
         this._modalSvc.openModal('Editar Tipo de Entidad', TipoEntidadesFormComponent);
+        this._modalSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          }
+        });
       }));
     } catch (err: any) {
       SweetAlert.fire({
@@ -150,7 +159,7 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  delete(tipoEntidad: any): void {
+  private _delete(data: any): void {
     try {
       if (this.hasAdvancedUserPermission()) {
         SweetAlert.fire({
@@ -163,7 +172,9 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
           cancelButtonText: 'No'
         }).then(res => {
           if (res.value) {
-            this._tipoEntidadesSvc.subscription.push(this._tipoEntidadesSvc.delete(tipoEntidad.Id).subscribe(response => {
+            const IDsToRemove: number[] = !isArray(data) ? [data.Id] :  data.map(d => { return d.Id });
+
+            this._tipoEntidadesSvc.subscription.push(this._tipoEntidadesSvc.delete(IDsToRemove).subscribe(response => {
               const result = response.deleteTipoEntidad;
 
               if (!result.success) {
@@ -176,7 +187,7 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
                 });
               }
 
-              this._materialSvc.openSnackBar('El Tipo de Entidad se ha eliminado correctamente.');
+              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Tipo de Entidad se ha eliminado correctamente.' })
             }));
           }
         });
