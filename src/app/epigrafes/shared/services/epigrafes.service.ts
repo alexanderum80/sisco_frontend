@@ -66,8 +66,10 @@ export class EpigrafesService {
           Epigrafe: this.fg.controls['epigrafe'].value,
         };
 
+        const mutation = epigrafeInfo.IdEpigafre === 0 ? epigrafesApi.create :  epigrafesApi.update;
+
         this.subscription.push(this._apollo.mutate<EpigrafesMutationResponse>({
-          mutation: epigrafesApi.save,
+          mutation: mutation,
           variables: { epigrafeInfo },
           refetchQueries: ['GetAllEpigrafes']
         }).subscribe(response => {
@@ -79,12 +81,12 @@ export class EpigrafesService {
     });
   }
 
-  delete(id: number): Observable<EpigrafesMutationResponse> {
+  delete(IDs: number[]): Observable<EpigrafesMutationResponse> {
     return new Observable<EpigrafesMutationResponse>(subscriber => {
       try {
         this.subscription.push(this._apollo.mutate<EpigrafesMutationResponse>({
           mutation: epigrafesApi.delete,
-          variables: { id },
+          variables: { IDs },
           refetchQueries: ['GetAllEpigrafes']
         }).subscribe(response => {
           subscriber.next(response.data || undefined);

@@ -1,3 +1,5 @@
 <app-list-item title="Epígrafes">
-  <am-table class="m-t-5" [columns]="displayedColumns" [data]="epigrafes" [menuItems]="menuItems" (clickAction)="onClicked($event)"></am-table>
+  <png-table [columns]="displayedColumns" [data]="epigrafes" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
+
+<p-toast></p-toast>

@@ -1,6 +1,6 @@
+import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { ActionClicked } from './../../shared/models/list-items';
 import { ModalService } from './../../shared/services/modal.service';
-import { MaterialService } from './../../shared/services/material.service';
-import SweetAlert from 'sweetalert2';
 import { MutationActions } from './../../shared/models/mutation-response';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
 import { Subscription } from 'rxjs';
@@ -20,8 +20,8 @@ export class EpigrafesFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private _modalSvc: ModalService,
-    private _materialSvc: MaterialService,
-    private _epigrafesSvc: EpigrafesService
+    private _epigrafesSvc: EpigrafesService,
+    private _sweetalterSvc: SweetalertService
   ) { }
 
   ngOnInit(): void {
@@ -34,31 +34,44 @@ export class EpigrafesFormComponent implements OnInit, OnDestroy {
     this.subscription.forEach(subs => subs.unsubscribe());
   }
 
-  save(): void {
-    this.subscription.push(this._epigrafesSvc.save().subscribe(response => {
-      const result = response.saveEpigrafe;
-      if (!result.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: result.error,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
-        });
-      }
+  onActionClicked(action: string) {
+    switch (action) {
+      case ActionClicked.Save:
+        this._save();        
+        break;
+      case ActionClicked.Cancel:
+        this._closeModal();
+        break;
+    }
+  }
 
-      let txtMessage;
+  private _save(): void {
+    try {
+      this.subscription.push(this._epigrafesSvc.save().subscribe(response => {
+        let result;
+        let txtMessage;
 
-      if (this.action === 'Agregar' ) {
-        txtMessage = 'El Epígrafe se ha creado correctamente.';
-      } else {
-        txtMessage = 'El Epígrafe se ha actualizado correctamente.';
-      }
+        if (this.action === 'Agregar' ) {
+          result = response.createEpigrafe;
+          txtMessage = 'El Epígrafe se ha creado correctamente.';
+        } else {
+          result = response.updateEpigrafe;
+          txtMessage = 'El Epígrafe se ha actualizado correctamente.';
+        }
+        
+        if (!result.success) {
+          return this._sweetalterSvc.error(result.error || '');
+        }
+  
+        this._modalSvc.closeModal(txtMessage);
+      }));
+    } catch (err: any) {
+      this._sweetalterSvc.error(err);
+    }
+  }
 
-      this._modalSvc.closeModal();
-
-      this._materialSvc.openSnackBar(txtMessage);
-    }));
+  private _closeModal(message?: string): void {
+    this._modalSvc.closeModal(message);
   }
 
 }

@@ -1,5 +1,5 @@
-mutation DeleteEpigrafe($id: Int!) {
-    deleteEpigrafe(id: $id) {
+mutation DeleteEpigrafe($IDs: [Int!]!) {
+    deleteEpigrafe(IDs: $IDs) {
         success
         error
     }

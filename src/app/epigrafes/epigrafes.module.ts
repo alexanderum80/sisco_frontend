@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { EpigrafesRoutingModule } from './epigrafes-routing.module';
 import { ListEpigrafesComponent } from './list-epigrafes/list-epigrafes.component';
 import { EpigrafesFormComponent } from './epigrafes-form/epigrafes-form.component';
+import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { EpigrafesFormComponent } from './epigrafes-form/epigrafes-form.componen
     SharedModule,
     ModalModule,
     InputModule,
-    TableModule
+    TableModule,
+    PrimeNgModule
   ]
 })
 export class EpigrafesModule { }

@@ -1,12 +1,13 @@
-import { MaterialService } from './../../shared/services/material.service';
+import { MessageService } from 'primeng/api';
+import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
+import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import SweetAlert from 'sweetalert2';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
 import { ModalService } from './../../shared/services/modal.service';
-import { MaterialTableColumns } from './../../angular-material/models/mat-table.model';
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { EpigrafesFormComponent } from '../epigrafes-form/epigrafes-form.component';
-import { MenuItem } from 'primeng/api';
+import { isArray } from 'lodash';
 
 @Component({
   selector: 'app-list-epigrafes',
@@ -16,22 +17,13 @@ import { MenuItem } from 'primeng/api';
 export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy {
   epigrafes: any[];
 
-  displayedColumns: MaterialTableColumns[] = [
-    { name: 'Epígrafe', field: 'Epigrafe' },
-  ];
-
-  menuItems: MenuItem[] = [
-    { id: '0', label: 'Editar', icon: 'mdi mdi-pencil', disabled: false, command: (event) => {
-      this.edit(event);
-    }},
-    { id: '1', label: 'Eliminar', icon: 'mdi mdi-delete-outline', disabled: false, command: (event) => {
-      this.delete(event);
-    }},
+  displayedColumns: ITableColumns[] = [
+    { header: 'Epígrafe', field: 'Epigrafe', type: 'string' },
   ];
 
   constructor(
     private _modalSvc: ModalService,
-    private _materialSvc: MaterialService,
+    private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _epigrafesSvc: EpigrafesService
   ) { }
@@ -69,7 +61,21 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
     return this._usuarioSvc.hasAdvancedUserPermission();
   }
 
-  add(): void {
+  actionClicked(event: IActionItemClickedArgs) {
+    switch (event.action) {
+      case ActionClicked.Add:
+        this._add();
+        break;
+      case ActionClicked.Edit:
+        this._edit(event.item)
+        break;    
+      case ActionClicked.Delete:
+        this._delete(event.item)
+        break;
+    }
+  }
+
+  private _add(): void {
     try {
       if (this.hasAdvancedUserPermission()) {
         const inputData = {
@@ -77,7 +83,13 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
           epigrafe: '',
         };
         this._epigrafesSvc.fg.patchValue(inputData);
+
         this._modalSvc.openModal('Agregar Epígrafe', EpigrafesFormComponent);
+        this._modalSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          }
+        });
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -90,18 +102,7 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
     }
   }
 
-  onClicked(values: any): void {
-    switch (values.action) {
-      case '0':
-        this.edit(values.element);
-        break;
-      case '1':
-        this.delete(values.element);
-        break;
-    }
-  }
-
-  edit(clasificador: any): void {
+  private _edit(clasificador: any): void {
     this._epigrafesSvc.subscription.push(this._epigrafesSvc.loadEpigrafeById(clasificador.IdEpigafre).subscribe(response => {
       const result = response.getEpigrafeById;
 
@@ -122,11 +123,17 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
       };
 
       this._epigrafesSvc.fg.patchValue(inputData);
+
       this._modalSvc.openModal('Modificar Epígrafe', EpigrafesFormComponent);
+      this._modalSvc.ref.onClose.subscribe((message: string) => {
+        if (message) {
+          this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+        }
+      });
     }));
   }
 
-  delete(clasificador: any): void {
+  private _delete(data: any): void {
     try {
       if (this.hasAdvancedUserPermission()) {
         SweetAlert.fire({
@@ -139,7 +146,9 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
           cancelButtonText: 'No'
         }).then(res => {
           if (res.value) {
-            this._epigrafesSvc.subscription.push(this._epigrafesSvc.delete(clasificador.IdEpigafre).subscribe(response => {
+            const IDsToRemove: number[] = !isArray(data) ? [data.IdEpigafre] :  data.map(d => { return d.IdEpigafre });
+
+            this._epigrafesSvc.subscription.push(this._epigrafesSvc.delete(IDsToRemove).subscribe(response => {
               const result = response.deleteEpigrafe;
 
               if (result.success === false) {
@@ -152,7 +161,7 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
                 });
               }
 
-              this._materialSvc.openSnackBar('El Epígrafe se ha eliminado correctamente.');
+              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Epígrafe se ha eliminado correctamente.' })
             }));
           }
         });

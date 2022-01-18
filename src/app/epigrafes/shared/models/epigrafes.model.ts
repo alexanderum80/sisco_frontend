@@ -7,6 +7,7 @@ export interface EpigrafesQueryResponse {
 }
 
 export interface EpigrafesMutationResponse {
-    saveEpigrafe: IMutationResponse;
+    createEpigrafe: IMutationResponse;
+    updateEpigrafe: IMutationResponse;
     deleteEpigrafe: IMutationResponse;
 }
