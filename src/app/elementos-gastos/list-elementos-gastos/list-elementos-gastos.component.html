@@ -1,3 +1,5 @@
-<app-list-item title="Elementos de Gastos" [canAddItem]="hasAdvancedUserPermission()" (OnAddClicked)="add()">
-  <am-table class="m-t-5" [columns]="displayedColumns" [data]="elementosGastos" [menuItems]="menuItems" (clickAction)="onClicked($event)"></am-table>
+<app-list-item title="Elementos de Gastos">
+  <png-table [columns]="displayedColumns" [data]="elementosGastos" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
+
+<p-toast></p-toast>

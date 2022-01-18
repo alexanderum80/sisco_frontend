@@ -1,3 +1,5 @@
+import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
+import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { MaterialService } from './../../shared/services/material.service';
 import SweetAlert from 'sweetalert2';
 import { ElementosGastosFormComponent } from './../elementos-gastos-form/elementos-gastos-form.component';
@@ -6,7 +8,8 @@ import { UsuarioService } from './../../shared/services/usuario.service';
 import { ModalService } from './../../shared/services/modal.service';
 import { MaterialTableColumns } from './../../angular-material/models/mat-table.model';
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, MessageService } from 'primeng/api';
+import { isArray } from 'lodash';
 
 @Component({
   selector: 'app-list-elementos-gastos',
@@ -16,24 +19,15 @@ import { MenuItem } from 'primeng/api';
 export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDestroy {
   elementosGastos: any[];
 
-  displayedColumns: MaterialTableColumns[] = [
-    { name: 'Elemento', field: 'Egasto' },
-    { name: 'Descripción', field: 'Descripcion' },
-    { name: 'Uso y Contenido', field: 'UsoContenido' },
-  ];
-
-  menuItems: MenuItem[] = [
-    { id: '0', label: 'Editar', icon: 'mdi mdi-pencil', disabled: false, command: (event) => {
-      this.edit(event);
-    }},
-    { id: '1', label: 'Eliminar', icon: 'mdi mdi-delete-outline', disabled: false, command: (event) => {
-      this.delete(event);
-    }},
+  displayedColumns: ITableColumns[] = [
+    { header: 'Elemento', field: 'Egasto', type: 'string' },
+    { header: 'Descripción', field: 'Descripcion', type: 'string' },
+    { header: 'Uso y Contenido', field: 'UsoContenido', type: 'string' },
   ];
 
   constructor(
     private _modalSvc: ModalService,
-    private _materialSvc: MaterialService,
+    private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _elementosGastosSvc: ElementosGastosService
   ) { }
@@ -71,7 +65,21 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
     return this._usuarioSvc.hasAdvancedUserPermission();
   }
 
-  add(): void {
+  actionClicked(event: IActionItemClickedArgs) {
+    switch (event.action) {
+      case ActionClicked.Add:
+        this._add();
+        break;
+      case ActionClicked.Edit:
+        this._edit(event.item)
+        break;    
+      case ActionClicked.Delete:
+        this._delete(event.item)
+        break;
+    }
+  }
+
+  private _add(): void {
     try {
       if (this.hasAdvancedUserPermission()) {
         const inputData = {
@@ -83,7 +91,13 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
           epigrafe: '',
         };
         this._elementosGastosSvc.fg.patchValue(inputData);
+
         this._modalSvc.openModal('Agregar Elemento de Gasto', ElementosGastosFormComponent);
+        this._modalSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          }
+        });
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -96,19 +110,8 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
-  onClicked(values: any): void {
-    switch (values.action) {
-      case '0':
-        this.edit(values.element);
-        break;
-      case '1':
-        this.delete(values.element);
-        break;
-    }
-  }
-
-  edit(elementosGastos: any): void {
-    this._elementosGastosSvc.subscription.push(this._elementosGastosSvc.loadElementoGastoById(elementosGastos.Egasto)
+  private _edit(data: any): void {
+    this._elementosGastosSvc.subscription.push(this._elementosGastosSvc.loadElementoGastoById(data.Egasto)
     .subscribe(response => {
       const result = response.getElementoGastoById;
       if (!result.success) {
@@ -133,11 +136,17 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
       };
 
       this._elementosGastosSvc.fg.patchValue(inputData);
+
       this._modalSvc.openModal('Modificar Elemento de Gasto', ElementosGastosFormComponent);
+      this._modalSvc.ref.onClose.subscribe((message: string) => {
+        if (message) {
+          this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+        }
+      });
     }));
   }
 
-  delete(elementoGasto: any): void {
+  private _delete(data: any): void {
     try {
       if (this.hasAdvancedUserPermission()) {
         SweetAlert.fire({
@@ -150,9 +159,9 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
           cancelButtonText: 'No'
         }).then(res => {
           if (res.value) {
-            const id = elementoGasto.Egasto;
+            const IDsToRemove: number[] = !isArray(data) ? [data.Egasto] :  data.map(d => { return d.Egasto });
 
-            this._elementosGastosSvc.subscription.push(this._elementosGastosSvc.delete(id).subscribe(response => {
+            this._elementosGastosSvc.subscription.push(this._elementosGastosSvc.delete(IDsToRemove).subscribe(response => {
               const result = response.deleteElementoGasto;
 
               if (result.success === false) {
@@ -165,7 +174,11 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
                 });
               }
 
-              this._materialSvc.openSnackBar('El Elemento de Gasto se ha eliminado correctamente.');
+              this._modalSvc.ref.onClose.subscribe((message: string) => {
+                if (message) {
+                  this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Elemento de Gasto se ha eliminado correctamente.' })
+                }
+              });
             }));
           }
         });

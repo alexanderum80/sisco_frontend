@@ -17,5 +17,6 @@
         <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
     </span>
     <small *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['required'] && (fg.controls[control].dirty || fg.controls[control].touched)" class="p-error">Este campo es obligatorio.</small>
-    <small *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['minLength'] && (fg.controls[control].dirty || fg.controls[control].touched)" class="p-error">Introduzca más caracteres.</small>
+    <small *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['minLength'] && (fg.controls[control].dirty || fg.controls[control].touched)" class="p-error">Muy pocos caracteres.</small>
+    <small *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['maxlength'] && (fg.controls[control].dirty || fg.controls[control].touched)" class="p-error">Demasiados caracteres.</small>
 </div>

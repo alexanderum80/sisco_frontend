@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ElementosGastosRoutingModule } from './elementos-gastos-routing.module';
 import { ListElementosGastosComponent } from './list-elementos-gastos/list-elementos-gastos.component';
 import { ElementosGastosFormComponent } from './elementos-gastos-form/elementos-gastos-form.component';
+import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
 
 @NgModule({
@@ -26,7 +27,8 @@ import { ElementosGastosFormComponent } from './elementos-gastos-form/elementos-
     InputModule,
     SelectModule,
     ModalModule,
-    SharedModule
+    SharedModule,
+    PrimeNgModule
   ]
 })
 export class ElementosGastosModule { }

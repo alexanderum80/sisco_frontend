@@ -1,15 +1,15 @@
-import { MaterialService } from './../../shared/services/material.service';
+import { ActionClicked } from './../../shared/models/list-items';
 import { ModalService } from './../../shared/services/modal.service';
 import SweetAlert from 'sweetalert2';
 import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tipo-entidades.service';
 import { ClasificadorCuentaService } from './../../clasificador-cuenta/shared/service/clasificador-cuenta.service';
 import { EpigrafesService } from './../../epigrafes/shared/services/epigrafes.service';
-import { ISelectableOptions } from './../../shared/models/selectable-item';
 import { ElementosGastosService } from './../shared/services/elementos-gastos.service';
 import { Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { MutationActions } from './../../shared/models/mutation-response';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-elementos-gastos-form',
@@ -20,9 +20,9 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
   action: MutationActions;
   fg: FormGroup;
 
-  tipoEntidadValues: ISelectableOptions[] = [];
-  cuentasValues: ISelectableOptions[] = [];
-  epigrafesValues: ISelectableOptions[] = [];
+  tipoEntidadValues: SelectItem[] = [];
+  cuentasValues: SelectItem[] = [];
+  epigrafesValues: SelectItem[] = [];
 
   subscription: Subscription[] = [];
 
@@ -32,7 +32,6 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
     private _epigrafesSvc: EpigrafesService,
     private _clasificadorCuentaSvc: ClasificadorCuentaService,
     private _modalSvc: ModalService,
-    private _materialSvc: MaterialService,
   ) { }
 
   ngOnInit(): void {
@@ -59,7 +58,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
           this.tipoEntidadValues = result.data.map((tipo: { Id: any; Entidades: any; }) => {
             return {
               value: tipo.Id,
-              description: tipo.Entidades
+              label: tipo.Entidades
             };
           });
         }
@@ -83,7 +82,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
           this.epigrafesValues = result.data.map((epigrafe: { IdEpigafre: any; Epigrafe: any; }) => {
             return {
               value: epigrafe.IdEpigafre,
-              description: epigrafe.Epigrafe
+              label: epigrafe.Epigrafe
             };
           });
         }
@@ -115,10 +114,10 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
         this.cuentasValues = res.getCuentasAgrupadas.data.map((cuenta: { Cuenta: any; }) => {
           return {
             value: cuenta.Cuenta,
-            description: cuenta.Cuenta
+            label: cuenta.Cuenta
           };
         });
-      }, error => { throw new Error(error); }));
+      }));
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
@@ -130,7 +129,18 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
-  save(): void {
+  onActionClicked(action: string) {
+    switch (action) {
+      case ActionClicked.Save:
+        this._save();        
+        break;
+      case ActionClicked.Cancel:
+        this._closeModal();
+        break;
+    }
+  }
+
+  private _save(): void {
     try {
       this._elementoGastoSvc.save().subscribe(response => {
         let result;
@@ -153,10 +163,8 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
           txtMessage = 'El Elemento de Gasto se ha actualizado correctamente.';
         }
 
-        this.closeModal();
-
-        this._materialSvc.openSnackBar(txtMessage);
-      }, error => { throw new Error(error); });
+        this._closeModal(txtMessage);
+      });
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
@@ -168,8 +176,8 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
-  closeModal(): void {
-    this._modalSvc.closeModal();
+  private _closeModal(message?: string): void {
+    this._modalSvc.closeModal(message);
   }
 
 }

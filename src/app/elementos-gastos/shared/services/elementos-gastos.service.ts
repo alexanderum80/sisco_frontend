@@ -1,21 +1,17 @@
-import { MutationActions } from './../../../shared/models/mutation-response';
 import { elementosGastosApi } from './../graphql/elementos-gastos.actions';
 import { ElementosGastosQueryResponse, ElementosGastosMutationResponse } from './../models/elementos-gastos.model';
-import { ModalService } from './../../../shared/services/modal.service';
-import { MaterialService } from './../../../shared/services/material.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
-import SweetAlert from 'sweetalert2';
 import { Apollo } from 'apollo-angular';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Subscription, Observable } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ElementosGastosService {
   fg: FormGroup = new FormGroup({
-    elemento: new FormControl(''),
+    elemento: new FormControl('', Validators.maxLength(5)),
     descripcion: new FormControl(''),
     usoContenido: new FormControl(''),
     tipoEntidad: new FormControl(''),
@@ -40,8 +36,9 @@ export class ElementosGastosService {
         this.subscription.push(this._apollo.watchQuery<ElementosGastosQueryResponse>({
           query: elementosGastosApi.all,
           fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(res => {
-          subscriber.next(res.data);
+        }).valueChanges.subscribe({
+          next: res => subscriber.next(res.data || undefined),
+          error: err => subscriber.error(err)
         }));
       } catch (err: any) {
         subscriber.error(err);
@@ -53,12 +50,15 @@ export class ElementosGastosService {
     return new Observable(subscriber => {
       try {
         this._apollo.query<ElementosGastosQueryResponse>({
-         query: elementosGastosApi.byId,
-         variables: { id },
-         fetchPolicy: 'network-only'
-       }).subscribe(response => {
-         subscriber.next(response.data);
-         subscriber.complete();
+          query: elementosGastosApi.byId,
+          variables: { id },
+          fetchPolicy: 'network-only'
+        }).subscribe({
+          next: response => { 
+            subscriber.next(response.data || undefined);
+            subscriber.complete();
+          },
+          error: err => subscriber.error(err)
         });
       } catch (err: any) {
         subscriber.error(err);
@@ -82,8 +82,9 @@ export class ElementosGastosService {
           mutation: elementosGastosApi.save,
           variables: { elementoGastoInfo },
           refetchQueries: ['GetAllElementosGastos']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
+        }).subscribe({
+          next: res => subscriber.next(res.data || undefined),
+          error: err => subscriber.error(err)
         }));
       } catch (err: any) {
         subscriber.error(err);
@@ -91,15 +92,16 @@ export class ElementosGastosService {
     });
   }
 
-  delete(id: string): Observable<ElementosGastosMutationResponse> {
+  delete(IDs: number[]): Observable<ElementosGastosMutationResponse> {
     return new Observable<ElementosGastosMutationResponse>(subscriber => {
       try {
         this.subscription.push(this._apollo.mutate<ElementosGastosMutationResponse>({
           mutation: elementosGastosApi.delete,
-          variables: { id },
+          variables: { IDs },
           refetchQueries: ['GetAllElementosGastos']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
+        }).subscribe({
+          next: res => subscriber.next(res.data || undefined),
+          error: err => subscriber.error(err)
         }));
       } catch (err: any) {
         subscriber.error(err);
