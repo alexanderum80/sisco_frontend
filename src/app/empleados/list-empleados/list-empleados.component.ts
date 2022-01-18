@@ -97,7 +97,7 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
         idEmpleado: '',
         empleado: '',
         cargo: null,
-        division: this._usuarioSvc.usuario.Division.IdDivision
+        division: this._usuarioSvc.usuario.IdDivision
       };
       this._empleadoSvc.fg.patchValue(inputData);
 

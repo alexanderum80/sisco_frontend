@@ -96,7 +96,7 @@ export class ListSupervisoresComponent implements OnInit, AfterViewInit, OnDestr
         idSupervisor: '',
         supervisor: '',
         cargo: null,
-        division: this._usuarioSvc.usuario.Division.IdDivision
+        division: this._usuarioSvc.usuario.IdDivision
       };
       this._supervisorSvc.fg.patchValue(inputData);
 

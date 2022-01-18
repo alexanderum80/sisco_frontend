@@ -109,7 +109,7 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
         tipoUsuario: null,
         cambiarContrasena: false,
         contrasenaAvanzada: '',
-        idDivision: this._usuarioSvc.usuario.Division.IdDivision
+        idDivision: this._usuarioSvc.usuario.IdDivision
       };
       this._usuarioSvc.fg.patchValue(inputData);
       

@@ -16,8 +16,8 @@ import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 })
 export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDestroy {
   columns: ITableColumns[] = [
-    { header: 'División', field: 'Division', type: 'string' },
-    { header: 'Unidad', field: 'Unidad', type: 'string' },
+    { header: 'División', field: 'Division.Division', type: 'string' },
+    { header: 'Unidad', field: 'Unidad.Nombre', type: 'string' },
     { header: 'Consolidado', field: 'Consolidado', type: 'boolean' },
     { header: 'IP', field: 'IpRodas', type: 'string' },
     { header: 'Usuario', field: 'Usuario', type: 'string' },
@@ -105,7 +105,7 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
         usuario: '',
         contrasena: '',
         baseDatos: null,
-        idDivision: this._usuarioSvc.usuario.Division.IdDivision,
+        idDivision: this._usuarioSvc.usuario.IdDivision,
       };
 
       this._conexionRodasSvc.fg.patchValue(dataInput);
