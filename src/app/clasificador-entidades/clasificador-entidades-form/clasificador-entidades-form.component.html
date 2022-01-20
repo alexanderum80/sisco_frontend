@@ -1,10 +1,10 @@
-<app-modal [title]="action + ' Clasificador de Entidad'" [fg]="fg" (saveClicked)="save()">
-  <form [formGroup]="fg">
-    <div class="form__group m-t-10">
-      <am-select class="w-100" label="Unidad" [fg]="fg" control="idUnidad" [values]="unidadesValues" [required]="true" autocomplete="off"></am-select>
+<app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
+  <form [formGroup]="fg" class="w-25rem">
+    <div class="form__group">
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="idUnidad" label="Unidad" labelWidth="90" [optionsValues]="unidadesValues" placeholder="&lt;Unidad&gt;" [required]="true" [disabled]="action === 'edit'" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
     <div class="form__group">
-      <am-select class="w-100" label="Tipo Entidad" [fg]="fg" control="idTipoEntidad" [values]="tipoEntidadesValues" [required]="true" autocomplete="off"></am-select>
+      <png-dropdown class="w-full mt-1" [fg]="fg" control="idTipoEntidad" label="Tipo Entidad" labelWidth="90" [optionsValues]="tipoEntidadesValues" placeholder="&lt;Tipo Entidad&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
     </div>
   </form>
-</app-modal>
+</app-add-edit-item>

@@ -1,0 +1,6 @@
+mutation CreateClasificadorEntidad($clasificadorEntidadInfo: ClasificadorEntidadInput!) {
+    createClasificadorEntidad(clasificadorEntidadInfo: $clasificadorEntidadInfo) {
+        success
+        error
+    }
+}

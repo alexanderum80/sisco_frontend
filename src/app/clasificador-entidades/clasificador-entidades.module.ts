@@ -9,6 +9,7 @@ import { ClasificadorEntidadesRoutingModule } from './clasificador-entidades-rou
 import { ListClasificadorEntidadesComponent } from './list-clasificador-entidades/list-clasificador-entidades.component';
 import { ClasificadorEntidadesFormComponent } from './clasificador-entidades-form/clasificador-entidades-form.component';
 import { ModalModule } from '../angular-material/modal/modal.module';
+import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { ModalModule } from '../angular-material/modal/modal.module';
     SharedModule,
     ModalModule,
     TableModule,
-    SelectModule
+    SelectModule,
+    PrimeNgModule
   ]
 })
 export class ClasificadorEntidadesModule { }

@@ -1,3 +1,5 @@
 <app-list-item title="Clasificador de Entidades">
-  <am-table [columns]="displayedColumns" [data]="dataSource" [menuItems]="menuItems" (clickAction)="onClicked($event)"></am-table>
+  <png-table [columns]="displayedColumns" [data]="dataSource" [loading]="loading" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
+
+<p-toast></p-toast>

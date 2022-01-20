@@ -1,7 +1,6 @@
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { ModalService } from './../../shared/services/modal.service';
-import { MutationActions } from './../../shared/models/mutation-response';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
 import { Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
@@ -13,7 +12,8 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   styleUrls: ['./epigrafes-form.component.scss']
 })
 export class EpigrafesFormComponent implements OnInit, OnDestroy {
-  action: MutationActions;
+  action: ActionClicked;
+
   fg: FormGroup;
 
   subscription: Subscription[] = [];
@@ -27,14 +27,14 @@ export class EpigrafesFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.fg = this._epigrafesSvc.fg;
 
-    this.action = this.fg.controls['idEpigrafe'].value === 0 ? 'Agregar' : 'Modificar';
+    this.action = this.fg.controls['idEpigrafe'].value === 0 ? ActionClicked.Add : ActionClicked.Edit;
   }
 
   ngOnDestroy(): void {
     this.subscription.forEach(subs => subs.unsubscribe());
   }
 
-  onActionClicked(action: string) {
+  onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
         this._save();        
@@ -51,7 +51,7 @@ export class EpigrafesFormComponent implements OnInit, OnDestroy {
         let result;
         let txtMessage;
 
-        if (this.action === 'Agregar' ) {
+        if (this.action === ActionClicked.Add ) {
           result = response.createEpigrafe;
           txtMessage = 'El Epígrafe se ha creado correctamente.';
         } else {

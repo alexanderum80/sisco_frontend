@@ -3,12 +3,12 @@ export interface IActionItemClickedArgs {
     item?: any;
 }
 
-export const ActionClicked = {
-    Add: 'add',
-    Edit: 'edit',
-    Delete: 'delete',
-    Save: 'save',
-    Cancel: 'cancel',
-    Yes: 'yes',
-    No: 'no'
+export enum ActionClicked {
+    Add = 'add',
+    Edit = 'edit',
+    Delete = 'delete',
+    Save = 'save',
+    Cancel = 'cancel',
+    Yes = 'yes',
+    No = 'no'
 };

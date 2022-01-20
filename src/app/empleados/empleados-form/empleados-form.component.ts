@@ -1,12 +1,10 @@
 import { ActionClicked } from './../../shared/models/list-items';
 import { CargosService } from './../../shared/services/cargos.service';
-import { MutationActions } from './../../shared/models/mutation-response';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import { toNumber } from 'lodash';
 import { ModalService } from './../../shared/services/modal.service';
 import { EmpleadosService } from './../shared/services/empleados.service';
-import { MyErrorStateMatcher } from '../../angular-material/models/material-error-state-matcher';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { SweetalertService } from '../../shared/services/sweetalert.service';
@@ -18,15 +16,13 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./empleados-form.component.scss']
 })
 export class EmpleadosFormComponent implements OnInit {
-  action: MutationActions;
+  action: ActionClicked;
 
   fg: FormGroup;
 
   divisionesValues: SelectItem[] = [];
 
   cargosValues: SelectItem[] = [];
-
-  matcher = new MyErrorStateMatcher();
 
   constructor(
     private _usuarioSvc: UsuarioService,
@@ -39,7 +35,7 @@ export class EmpleadosFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.fg = this._empleadosSvc.fg;
-    this.action = toNumber(this.fg.controls['idEmpleado'].value) === 0 ? 'Agregar' : 'Modificar';
+    this.action = toNumber(this.fg.controls['idEmpleado'].value) === 0 ? ActionClicked.Add : ActionClicked.Edit;
 
     this._getCargos();
 
@@ -92,7 +88,7 @@ export class EmpleadosFormComponent implements OnInit {
     return this._usuarioSvc.hasSuperAdminPermission();
   }
 
-  onActionClicked(action: string) {
+  onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
         this._save();        
@@ -108,7 +104,7 @@ export class EmpleadosFormComponent implements OnInit {
       let result;
       let txtMessage;
 
-      if (this.action === 'Agregar') {
+      if (this.action === ActionClicked.Add) {
         result = response.createEmpleado;
         txtMessage = 'El Empleado se ha creado correctamente.';
       } else {

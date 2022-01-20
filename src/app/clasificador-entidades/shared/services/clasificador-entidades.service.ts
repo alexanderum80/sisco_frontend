@@ -1,3 +1,4 @@
+import { ActionClicked } from './../../../shared/models/list-items';
 import { ClasificadorEntidadesQueryResponse, ClasificadorEntidadesMutationResponse } from './../models/clasificador-entidades.model';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { Apollo } from 'apollo-angular';
@@ -32,8 +33,9 @@ export class ClasificadorEntidadesService {
         this.subscription.push(this._apollo.watchQuery<ClasificadorEntidadesQueryResponse>({
           query: clasificadorEntidadesApi.all,
           fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(res => {
-          subscriber.next(res.data);
+        }).valueChanges.subscribe({
+          next: res => subscriber.next(res.data),
+          error: err => subscriber.error(err)
       }));
       } catch (err: any) {
         subscriber.error(err);
@@ -58,7 +60,7 @@ export class ClasificadorEntidadesService {
     });
   }
 
-  save(): Observable<ClasificadorEntidadesMutationResponse> {
+  save(action: ActionClicked): Observable<ClasificadorEntidadesMutationResponse> {
     return new Observable<ClasificadorEntidadesMutationResponse>(subscriber => {
       try {
         const clasificadorEntidadInfo = {
@@ -66,8 +68,10 @@ export class ClasificadorEntidadesService {
           IdTipoEntidad: this.fg.controls['idTipoEntidad'].value,
         };
 
+        const mutation = action === ActionClicked.Add ? clasificadorEntidadesApi.create : clasificadorEntidadesApi.update;
+
         this.subscription.push(this._apollo.mutate<ClasificadorEntidadesMutationResponse>({
-          mutation: clasificadorEntidadesApi.save,
+          mutation: mutation,
           variables: { clasificadorEntidadInfo },
           refetchQueries: ['GetAllClasificadorEntidades']
         }).subscribe(response => {
@@ -79,12 +83,12 @@ export class ClasificadorEntidadesService {
     });
   }
 
-  delete(idUnidad: number): Observable<ClasificadorEntidadesMutationResponse> {
+  delete(IDs: number[]): Observable<ClasificadorEntidadesMutationResponse> {
     return new Observable<ClasificadorEntidadesMutationResponse>(subscriber => {
       try {
         this.subscription.push(this._apollo.mutate<ClasificadorEntidadesMutationResponse>({
           mutation: clasificadorEntidadesApi.delete,
-          variables: { idUnidad },
+          variables: { IDs },
           refetchQueries: ['GetAllClasificadorEntidades']
         }).subscribe(response => {
           subscriber.next(response.data || undefined);

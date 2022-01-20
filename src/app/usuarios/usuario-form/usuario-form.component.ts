@@ -2,11 +2,9 @@ import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { TipoUsuariosService } from './../../shared/services/tipo-usuarios.service';
 import { SelectItem } from 'primeng/api';
 import { ActionClicked } from './../../shared/models/list-items';
-import { MutationActions } from './../../shared/models/mutation-response';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import { ETipoUsuarios } from './../shared/models/usuarios.model';
 import { Subscription } from 'rxjs';
-import { MyErrorStateMatcher } from '../../angular-material/models/material-error-state-matcher';
 import { UsuariosMutationResponse } from '../shared/models/usuarios.model';
 import SweetAlert from 'sweetalert2';
 import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
@@ -25,15 +23,13 @@ import Swal from 'sweetalert2';
   styleUrls: ['./usuario-form.component.scss']
 })
 export class UsuarioFormComponent implements OnInit, OnDestroy {
-  action: MutationActions;
+  action: ActionClicked;
 
   fg: FormGroup;
 
   divisionesValues: SelectItem[] = [];
 
   tipoUsuariosValues: SelectItem[] = [];
-
-  matcher = new MyErrorStateMatcher();
 
   subscription: Subscription[] = [];
 
@@ -150,7 +146,7 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
     return this.fg.get('tipoUsuario')?.value === ETipoUsuarios['Usuario Avanzado'];
   }
 
-  onActionClicked(action: string) {
+  onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
         this._save();        

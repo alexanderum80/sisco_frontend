@@ -1,5 +1,5 @@
-mutation DeleteClasificadorEntidad($idUnidad: Int!) {
-    deleteClasificadorEntidad(idUnidad: $idUnidad) {
+mutation DeleteClasificadorEntidad($IDs: [Int!]!) {
+    deleteClasificadorEntidad(IDs: $IDs) {
         success
         error
     }

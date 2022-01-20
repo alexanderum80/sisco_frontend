@@ -239,7 +239,7 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
     }
   }
 
-  onActionClicked(action: string) {
+  onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
         this._save();        

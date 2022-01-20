@@ -7,7 +7,6 @@ import { EpigrafesService } from './../../epigrafes/shared/services/epigrafes.se
 import { ElementosGastosService } from './../shared/services/elementos-gastos.service';
 import { Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
-import { MutationActions } from './../../shared/models/mutation-response';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 
@@ -17,7 +16,8 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./elementos-gastos-form.component.scss']
 })
 export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDestroy {
-  action: MutationActions;
+  action: ActionClicked;
+
   fg: FormGroup;
 
   tipoEntidadValues: SelectItem[] = [];
@@ -37,7 +37,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
   ngOnInit(): void {
     this.fg = this._elementoGastoSvc.fg;
 
-    this.action = this.fg.controls['elemento'].value === '' ? 'Agregar' : 'Modificar';
+    this.action = this.fg.controls['elemento'].value === '' ? ActionClicked.Add : ActionClicked.Edit;
   }
 
   ngAfterViewInit(): void {
@@ -129,7 +129,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
     }
   }
 
-  onActionClicked(action: string) {
+  onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
         this._save();        
@@ -157,7 +157,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
         }
 
         let txtMessage;
-        if (this.action === 'Agregar' ) {
+        if (this.action === ActionClicked.Add ) {
           txtMessage = 'El Elemento de Gasto se ha creado correctamente.';
         } else {
           txtMessage = 'El Elemento de Gasto se ha actualizado correctamente.';

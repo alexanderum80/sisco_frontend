@@ -1,9 +1,7 @@
 import { ActionClicked } from './../../shared/models/list-items';
 import SweetAlert from 'sweetalert2';
 import { toNumber } from 'lodash';
-import { MutationActions } from './../../shared/models/mutation-response';
 import { FormGroup } from '@angular/forms';
-import { MyErrorStateMatcher } from './../../angular-material/models/material-error-state-matcher';
 import { Subscription } from 'rxjs';
 import { ModalService } from './../../shared/services/modal.service';
 import { TipoEntidadesService } from './../shared/services/tipo-entidades.service';
@@ -15,11 +13,9 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   styleUrls: ['./tipo-entidades-form.component.scss']
 })
 export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
-  action: MutationActions;
+  action: ActionClicked;
 
   fg: FormGroup;
-
-  matcher = new MyErrorStateMatcher();
 
   subscription: Subscription[] = [];
 
@@ -30,14 +26,14 @@ export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fg = this._tipoEntidadesSvc.fg;
-    this.action = toNumber(this.fg.controls['id'].value) === 0 ? 'Agregar' : 'Modificar';
+    this.action = toNumber(this.fg.controls['id'].value) === 0 ? ActionClicked.Add : ActionClicked.Edit;
   }
 
   ngOnDestroy(): void {
     this.subscription.forEach(subs => subs.unsubscribe());
   }
 
-  onActionClicked(action: string) {
+  onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
         this._save();        
@@ -53,7 +49,7 @@ export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
       let result;
       let txtMessage;
 
-      if (this.action === 'Agregar') {
+      if (this.action === ActionClicked.Add) {
         result = response.createTipoEntidad;
         txtMessage = 'El Tipo de Entidad se ha creado correctamente.';
       } else {

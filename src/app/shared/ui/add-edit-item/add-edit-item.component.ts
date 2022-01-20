@@ -9,7 +9,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class AddEditItemComponent implements OnInit {
   @Input() fg: FormGroup;
-  @Output() actionClicked = new EventEmitter<string>();
+  @Output() actionClicked = new EventEmitter<ActionClicked>();
 
   formGroup: FormGroup;
 

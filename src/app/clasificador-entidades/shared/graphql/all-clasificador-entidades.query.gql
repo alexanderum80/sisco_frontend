@@ -3,7 +3,7 @@ query GetAllClasificadorEntidades {
         success
         data {
             IdUnidad
-            Unidad
+            Unidad 
             IdTipoEntidad
             TipoEntidad
         }

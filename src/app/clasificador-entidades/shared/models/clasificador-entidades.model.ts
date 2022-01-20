@@ -7,6 +7,7 @@ export interface ClasificadorEntidadesQueryResponse {
 }
 
 export interface ClasificadorEntidadesMutationResponse {
-    saveClasificadorEntidad: IMutationResponse;
+    createClasificadorEntidad: IMutationResponse;
+    updateClasificadorEntidad: IMutationResponse;
     deleteClasificadorEntidad: IMutationResponse;
 }

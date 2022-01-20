@@ -8,7 +8,6 @@ query GetAllUnidades {
             Subdivision
             IdDivision
             Division
-            Abierta
         }
         error
     }

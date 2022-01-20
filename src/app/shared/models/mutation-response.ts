@@ -3,5 +3,3 @@ export interface IMutationResponse {
     data?: string;
     error?: string;
 }
-
-export type MutationActions = 'Agregar' | 'Modificar' | 'Eliminar';

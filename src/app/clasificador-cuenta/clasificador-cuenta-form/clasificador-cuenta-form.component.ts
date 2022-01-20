@@ -1,10 +1,8 @@
 import { ActionClicked } from './../../shared/models/list-items';
 import { ModalService } from './../../shared/services/modal.service';
 import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tipo-entidades.service';
-import { MutationActions } from './../../shared/models/mutation-response';
 import { Subscription } from 'rxjs';
 import SweetAlert from 'sweetalert2';
-import { ISelectableOptions } from './../../shared/models/selectable-item';
 import { ClasificadorCuentaService } from './../shared/service/clasificador-cuenta.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -16,7 +14,7 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./clasificador-cuenta-form.component.scss']
 })
 export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
-  action: MutationActions;
+  action: ActionClicked;
   fg: FormGroup;
 
   naturalezaValues: SelectItem[] = [
@@ -43,7 +41,7 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.fg = this._clasificadorSvc.fg;
 
-    this.action = this.fg.controls['cuenta'].value === '' ? 'Agregar' : 'Modificar';
+    this.action = this.fg.controls['cuenta'].value === '' ? ActionClicked.Add : ActionClicked.Edit;
 
     this._loadTipoUnidades();
   }
@@ -83,7 +81,7 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
     }
   }
 
-  onActionClicked(action: string) {
+  onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
         this._save();        
@@ -110,7 +108,7 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
 
         let txtMessage;
 
-        if (this.action === 'Agregar') {
+        if (this.action === ActionClicked.Add) {
           txtMessage = 'La Cuenta se ha creado correctamente.';
         } else {
           txtMessage = 'La Cuenta se ha actualizado correctamente.';

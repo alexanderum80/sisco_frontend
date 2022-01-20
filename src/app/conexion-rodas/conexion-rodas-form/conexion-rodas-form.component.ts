@@ -2,10 +2,7 @@ import { ActionClicked } from './../../shared/models/list-items';
 import { SelectItem } from 'primeng/api';
 import { UnidadesService } from './../../unidades/shared/services/unidades.service';
 import { DatabasesService } from './../../shared/services/databases.service';
-import { MutationActions } from './../../shared/models/mutation-response';
 import { DivisionesService } from './../../shared/services/divisiones.service';
-import { MaterialService } from './../../shared/services/material.service';
-import { MyErrorStateMatcher } from '../../angular-material/models/material-error-state-matcher';
 import { toNumber } from 'lodash';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { FormGroup } from '@angular/forms';
@@ -26,10 +23,8 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
   unidadesValues: SelectItem[] = [];
   baseDatosValues: SelectItem[] = [];
 
-  matcher = new MyErrorStateMatcher();
-
   unidadesList: any[] = [];
-  action: MutationActions;
+  action: ActionClicked;
 
   fg: FormGroup;
 
@@ -48,8 +43,8 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
 
   ngOnInit(): void {
     this.fg = this._conexionRodasSvc.fg;
-    this.action = toNumber(this.fg.controls['idUnidad'].value) === 0 ? 'Agregar' : 'Modificar';
-    if (this.action === 'Modificar') {
+    this.action = toNumber(this.fg.controls['idUnidad'].value) === 0 ? ActionClicked.Add : ActionClicked.Edit;
+    if (this.action === ActionClicked.Edit) {
       this.refreshDataBases();
     }
 
@@ -208,7 +203,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
     }
   }
 
-  onActionClicked(action: string) {
+  onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
         this._save();        
@@ -226,7 +221,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
           let result;
           let txtMessage;
 
-          if (this.action === 'Agregar') {
+          if (this.action === ActionClicked.Add) {
             result = response.createContaConexion;
             txtMessage = 'La Conexión se ha creado correctamente.';
           } else {

@@ -1,12 +1,13 @@
+import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
+import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
 import { ClasificadorEntidadesFormComponent } from './../clasificador-entidades-form/clasificador-entidades-form.component';
 import SweetAlert from 'sweetalert2';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
-import { MaterialService } from './../../shared/services/material.service';
 import { ModalService } from './../../shared/services/modal.service';
-import { MaterialTableColumns } from './../../angular-material/models/mat-table.model';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MessageService } from 'primeng/api';
+import { isArray } from 'lodash';
 
 @Component({
   selector: 'app-list-clasificador-entidades',
@@ -16,23 +17,16 @@ import { MenuItem } from 'primeng/api';
 export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit, OnDestroy {
   dataSource: any[];
 
-  displayedColumns: MaterialTableColumns[] = [
-    { name: 'Unidad', field: 'Unidad' },
-    { name: 'Tipo de Entidad', field: 'TipoEntidad' },
+  displayedColumns: ITableColumns[] = [
+    { header: 'Unidad', field: 'Unidad', type: 'string' },
+    { header: 'Tipo de Entidad', field: 'TipoEntidad', type: 'string' },
   ];
 
-  menuItems: MenuItem[] = [
-    { id: '0', label: 'Editar', icon: 'mdi mdi-pencil', disabled: false, command: (event) => {
-      this.edit(event);
-    }},
-    { id: '1', label: 'Eliminar', icon: 'mdi mdi-delete-outline', disabled: false, command: (event) => {
-      this.delete(event);
-    }},
-  ];
+  loading = true;
 
   constructor(
     private _modalSvc: ModalService,
-    private _materialSvc: MaterialService,
+    private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService
   ) { }
@@ -46,22 +40,38 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
 
   private _loadAllTipoEntidades(): void {
     try {
-      this._clasificadorEntidadesSvc.subscription.push(this._clasificadorEntidadesSvc.loadAllClasificadorEntidades().subscribe(response => {
-        const result = response.getAllClasificadorEntidades;
+      this._clasificadorEntidadesSvc.subscription.push(this._clasificadorEntidadesSvc.loadAllClasificadorEntidades().subscribe({
+        next: response => {
+          this.loading = false;
 
-        if (!result.success) {
-          return SweetAlert.fire({
+          const result = response.getAllClasificadorEntidades;
+
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: `Ocurrió el siguiente error: ${ result.error }`,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar'
+            });
+          }
+
+          this.dataSource = result.data;
+        },
+        error: err => {
+          this.loading = false;
+          SweetAlert.fire({
             icon: 'error',
             title: 'ERROR',
-            text: `Ocurrió el siguiente error: ${ result.error }`,
+            text: `Ocurrió el siguiente error: ${ err }`,
             showConfirmButton: true,
             confirmButtonText: 'Aceptar'
           });
         }
-
-        this.dataSource = result.data;
       }));
     } catch (err: any) {
+      this.loading = false;
+      
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
@@ -80,15 +90,35 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
     return this._usuarioSvc.hasAdvancedUserPermission();
   }
 
-  add(): void {
+  actionClicked(event: IActionItemClickedArgs) {
+    switch (event.action) {
+      case ActionClicked.Add:
+        this._add();
+        break;
+      case ActionClicked.Edit:
+        this._edit(event.item)
+        break;    
+      case ActionClicked.Delete:
+        this._delete(event.item)
+        break;
+    }
+  }
+
+  private _add(): void {
     try {
       if (this.hasAdvancedUserPermission()) {
         const inputData = {
-          idUnidad: '',
-          idTipoEntidad: '',
+          idUnidad: null,
+          idTipoEntidad: null,
         };
         this._clasificadorEntidadesSvc.fg.patchValue(inputData);
+
         this._modalSvc.openModal('Agregar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
+        this._modalSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          }
+        });
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -101,18 +131,7 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
     }
   }
 
-  onClicked(values: any): void {
-    switch (values.action) {
-      case '0':
-        this.edit(values.element);
-        break;
-      case '1':
-        this.delete(values.element);
-        break;
-    }
-  }
-
-  edit(clasificadorEntidad: any): void {
+  private _edit(clasificadorEntidad: any): void {
     try {
       this._clasificadorEntidadesSvc.subscription.push(
         this._clasificadorEntidadesSvc.loadClasificadorEntidad(clasificadorEntidad.IdUnidad)
@@ -135,9 +154,14 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
           idUnidad: data.IdUnidad,
           idTipoEntidad: data.IdTipoEntidad,
         };
-
         this._clasificadorEntidadesSvc.fg.patchValue(inputData);
+
         this._modalSvc.openModal('Modificar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
+        this._modalSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          }
+        });
       }));
     } catch (err: any) {
       SweetAlert.fire({
@@ -150,7 +174,7 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
     }
   }
 
-  delete(clasificadorEntidad: any): void {
+  private _delete(data: any): void {
     try {
       if (this.hasAdvancedUserPermission()) {
         SweetAlert.fire({
@@ -163,8 +187,10 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
           cancelButtonText: 'No'
         }).then(res => {
           if (res.value) {
+            const IDsToRemove: number[] = !isArray(data) ? [data.Id] :  data.map(d => { return d.Id });
+
             this._clasificadorEntidadesSvc.subscription.push(
-              this._clasificadorEntidadesSvc.delete(clasificadorEntidad.IdUnidad).subscribe(response => {
+              this._clasificadorEntidadesSvc.delete(IDsToRemove).subscribe(response => {
               const result = response.deleteClasificadorEntidad;
 
               if (!result.success) {
@@ -177,7 +203,7 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
                 });
               }
 
-              this._materialSvc.openSnackBar('El Clasificador de Entidad se ha eliminado correctamente.');
+              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Clasificador de Entidad se ha eliminado correctamente.' })
             }));
           }
         });

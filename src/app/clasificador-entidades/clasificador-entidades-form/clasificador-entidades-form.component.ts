@@ -1,16 +1,14 @@
+import { ActionClicked } from './../../shared/models/list-items';
 import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tipo-entidades.service';
 import { UnidadesService } from './../../unidades/shared/services/unidades.service';
-import { ISelectableOptions } from './../../shared/models/selectable-item';
 import SweetAlert from 'sweetalert2';
 import { toNumber } from 'lodash';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
-import { MaterialService } from './../../shared/services/material.service';
 import { ModalService } from './../../shared/services/modal.service';
-import { MyErrorStateMatcher } from './../../angular-material/models/material-error-state-matcher';
 import { FormGroup } from '@angular/forms';
-import { MutationActions } from './../../shared/models/mutation-response';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-clasificador-entidades-form',
@@ -18,20 +16,17 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./clasificador-entidades-form.component.scss']
 })
 export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
-  unidadesValues: ISelectableOptions[] = [];
-  tipoEntidadesValues: ISelectableOptions[] = [];
+  unidadesValues: SelectItem[] = [];
+  tipoEntidadesValues: SelectItem[] = [];
 
-  action: MutationActions;
+  action: ActionClicked;
 
   fg: FormGroup;
-
-  matcher = new MyErrorStateMatcher();
 
   subscription: Subscription[] = [];
 
   constructor(
     private _modalSvc: ModalService,
-    private _materialSvc: MaterialService,
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService,
     private _unidadesSvc: UnidadesService,
     private _tipoEntidadesSvc: TipoEntidadesService
@@ -39,7 +34,7 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fg = this._clasificadorEntidadesSvc.fg;
-    this.action = toNumber(this.fg.controls['idUnidad'].value) === 0 ? 'Agregar' : 'Modificar';
+    this.action = toNumber(this.fg.controls['idUnidad'].value) === 0 ? ActionClicked.Add : ActionClicked.Edit;
 
     this._loadUnidades();
     this._loadTipoEntidades();
@@ -65,7 +60,7 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
       this.unidadesValues = result.data.map((unidad: { IdUnidad: string; Nombre: string; }) => {
         return {
           value: unidad.IdUnidad,
-          description: unidad.IdUnidad + '-' + unidad.Nombre
+          label: unidad.IdUnidad + '-' + unidad.Nombre
         };
       });
     });
@@ -87,15 +82,27 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
       this.tipoEntidadesValues = result.data.map((tipoEntidad: { Id: any; Entidades: any; }) => {
         return {
           value: tipoEntidad.Id,
-          description: tipoEntidad.Entidades
+          label: tipoEntidad.Entidades
         };
       });
     });
   }
 
-  save(): void {
-    this.subscription.push(this._clasificadorEntidadesSvc.save().subscribe(response => {
-      const result = response.saveClasificadorEntidad;
+  onActionClicked(action: ActionClicked) {
+    switch (action) {
+      case ActionClicked.Save:
+        this._save();        
+        break;
+      case ActionClicked.Cancel:
+        this._closeModal();
+        break;
+    }
+  }
+
+  private _save(): void {
+    this.subscription.push(this._clasificadorEntidadesSvc.save(this.action).subscribe(response => {
+      const result = this.action === ActionClicked.Add ? response.createClasificadorEntidad : response.updateClasificadorEntidad;
+
       if (!result.success) {
         return SweetAlert.fire({
           icon: 'error',
@@ -107,20 +114,18 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
       }
 
       let txtMessage;
-      if (this.action === 'Agregar') {
+      if (this.action === ActionClicked.Add) {
         txtMessage = 'El Clasificador de Entidad se ha creado correctamente.';
       } else {
         txtMessage = 'El Clasificador de Entidad se ha actualizado correctamente.';
       }
 
-      this.closeModal();
-
-      this._materialSvc.openSnackBar(txtMessage);
+      this._closeModal(txtMessage);
     }));
   }
 
-  closeModal(): void {
-    this._modalSvc.closeModal();
+  private _closeModal(message?: string): void {
+    this._modalSvc.closeModal(message);
   }
 
 }
