@@ -3,15 +3,24 @@ query GetAllComprobarExpresiones {
         success
         data {
             Id
-            Expresion
-            Operador
-            ExpresionC
+            IdExpresion
+          	Expresion {
+              IdExpresion
+              Expresion
+            }
+            IdOperador
+          	Operador {
+              Id
+              Operador
+            }
+            IdExpresionC
+            ExpresionC {
+              IdExpresion
+              Expresion
+            }
             Centro
             Complejo
             Con
-            ExpresionDesc
-            ExpresionDesc_C
-            OperadorDesc
         }
         error
     }

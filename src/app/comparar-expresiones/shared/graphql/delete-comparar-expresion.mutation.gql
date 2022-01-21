@@ -1,5 +1,5 @@
-mutation DeleteComprobarExpresion($id: Int!) {
-    deleteComprobarExpresion(id: $id) {
+mutation DeleteComprobarExpresion($IDs: [Int!]!) {
+    deleteComprobarExpresion(IDs: $IDs) {
         success
         error
     }

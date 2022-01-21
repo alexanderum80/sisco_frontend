@@ -14,6 +14,8 @@ import { SelectItem } from 'primeng/api';
   styleUrls: ['./comparar-expresiones-form.component.scss']
 })
 export class CompararExpresionesFormComponent implements OnInit {
+  action: ActionClicked;
+
   fg: FormGroup;
 
   expresionesValues: SelectItem[] = [];
@@ -30,6 +32,8 @@ export class CompararExpresionesFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.action = this._compararExpresionesSvc.fg.controls['id'].value === 0 ? ActionClicked.Add : ActionClicked.Edit;
+
     this._loadExpresiones();
     this._loadOperadores();
   }
@@ -89,23 +93,16 @@ export class CompararExpresionesFormComponent implements OnInit {
 
   private _save(): void {
     try {
-      const payload = {
-        Id: this.fg.controls['id'].value,
-        Expresion: this.fg.controls['expresion'].value,
-        Operador: this.fg.controls['operador'].value,
-        ExpresionC: this.fg.controls['expresionC'].value,
-        Centro: this.fg.controls['centro'].value,
-        Complejo: this.fg.controls['complejo'].value,
-        Con: this.fg.controls['consolidado'].value,
-      };
-
-      this._compararExpresionesSvc.saveCompararExpresion(payload).subscribe(response => {
-        const result = response.saveComprobarExpresion;
+      this._compararExpresionesSvc.save().subscribe(response => {
+        const result = this.action === ActionClicked.Add ? response.createComprobarExpresion : response.updateComprobarExpresion;
+         
         if (!result.success) {
           throw new Error(result.error);
         }
 
-        this._dinamicDialogSvc.close();
+        let txtMessage = `La comparación de la expresión se ha ${ this.action === ActionClicked.Add ? 'creado' : 'actualizado' } correctamente.`
+
+        this._dinamicDialogSvc.close(txtMessage);
       });
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ha ocurrido el siguiente error: ${ err }`);

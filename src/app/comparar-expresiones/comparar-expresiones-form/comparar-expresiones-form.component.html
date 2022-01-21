@@ -1,22 +1,26 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
-  <form class="flex" [formGroup]="fg">
-    <div class="form__group">
-      <png-dropdown class="w-20rem" [fg]="fg" control="expresion" [floatLabel]="true" [optionsValues]="expresionesValues" placeholder="Expresión" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+  <form class="flex flex-column" [formGroup]="fg">
+    <div class="flex">
+      <div class="form__group">
+        <png-dropdown class="w-20rem" [fg]="fg" control="expresion" [floatLabel]="true" [optionsValues]="expresionesValues" placeholder="Expresión" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+      </div>
+      <div class="form__group"> 
+        <png-dropdown class="w-8rem ml-2" [fg]="fg" control="operador" [floatLabel]="true" [optionsValues]="operadoresValues" placeholder="Operador" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+      </div>
+      <div class="form__group">
+        <png-dropdown class="w-20rem ml-2" [fg]="fg" control="expresionC" [floatLabel]="true" [optionsValues]="expresionesValues" placeholder="Expresión" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+      </div>
     </div>
-    <div class="form__group"> 
-      <png-dropdown class="w-10rem ml-2" [fg]="fg" control="operador" [floatLabel]="true" [optionsValues]="operadoresValues" placeholder="Operador" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
-    </div>
-    <div class="form__group">
-      <png-dropdown class="w-20rem ml-2" [fg]="fg" control="expresionC" [floatLabel]="true" [optionsValues]="expresionesValues" placeholder="Expresión" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
-    </div>
-    <div class="form__group">
-      <png-checkbox class="ml-2" [fg]="fg" control="centro" label="Centro"></png-checkbox>
-    </div>
-    <div class="form__group">
-      <png-checkbox class="ml-2" [fg]="fg" control="complejo" label="Complejo"></png-checkbox>
-    </div>
-    <div class="form__group">
-      <png-checkbox class="ml-2" [fg]="fg" control="consolidado" label="Consolidado"></png-checkbox>
+    <div class="flex">
+      <div class="form__group">
+        <png-checkbox [fg]="fg" control="centro" label="Centro"></png-checkbox>
+      </div>
+      <div class="form__group">
+        <png-checkbox class="ml-5" [fg]="fg" control="complejo" label="Complejo"></png-checkbox>
+      </div>
+      <div class="form__group">
+        <png-checkbox class="ml-5" [fg]="fg" control="consolidado" label="Consolidado"></png-checkbox>
+      </div>
     </div>
   </form>
 </app-add-edit-item>

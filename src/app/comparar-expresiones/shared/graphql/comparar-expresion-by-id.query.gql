@@ -3,15 +3,12 @@ query GetComprobarExpresionById($id: Int!) {
         success
         data {
             Id
-            Expresion
-            Operador
-            ExpresionC
+            IdExpresion
+            IdOperador
+            IdExpresionC
             Centro
             Complejo
             Con
-            ExpresionDesc
-            ExpresionDesc_C
-            OperadorDesc
         }
         error
     }

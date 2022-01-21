@@ -113,12 +113,7 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
         });
       }
 
-      let txtMessage;
-      if (this.action === ActionClicked.Add) {
-        txtMessage = 'El Clasificador de Entidad se ha creado correctamente.';
-      } else {
-        txtMessage = 'El Clasificador de Entidad se ha actualizado correctamente.';
-      }
+      let txtMessage = `El Clasificador de Entidad se ha ${ this.action === ActionClicked.Add ? 'creado' : 'actualizado' } correctamente.`
 
       this._closeModal(txtMessage);
     }));

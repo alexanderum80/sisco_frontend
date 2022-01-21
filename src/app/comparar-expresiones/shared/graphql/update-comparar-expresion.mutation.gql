@@ -1,0 +1,6 @@
+mutation UpdateComprobarExpresion($comprobarExpresionInput: ContaComprobarExpresionesInput!) {
+    updateComprobarExpresion(comprobarExpresionInput: $comprobarExpresionInput) {
+        success
+        error
+    }
+}

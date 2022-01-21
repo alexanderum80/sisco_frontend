@@ -37,7 +37,7 @@ export class CompararExpresionesService {
     this.fg.patchValue(payload);
   }
 
-  loadAllCompararExpresiones(): Observable<ComprobarExpresionesQueryResponse> {
+  loadAll(): Observable<ComprobarExpresionesQueryResponse> {
     return new Observable<ComprobarExpresionesQueryResponse>(subscriber => {
       try {
         this.subscription.push(this._apollo.watchQuery<ComprobarExpresionesQueryResponse>({
@@ -52,7 +52,7 @@ export class CompararExpresionesService {
     });
   }
 
-  loadCompararExpresion(id: number): Observable<ComprobarExpresionesQueryResponse> {
+  loadOne(id: number): Observable<ComprobarExpresionesQueryResponse> {
     return new Observable<ComprobarExpresionesQueryResponse>(subscriber => {
       try {
         this.subscription.push(this._apollo.watchQuery<ComprobarExpresionesQueryResponse>({
@@ -69,12 +69,24 @@ export class CompararExpresionesService {
     });
   }
 
-  saveCompararExpresion(comprobarExpresionInput: any): Observable<ComprobarExpresionesMutation> {
+  save(): Observable<ComprobarExpresionesMutation> {
     return new Observable<ComprobarExpresionesMutation>(subscriber => {
       try {
+        const payload = {
+          Id: this.fg.controls['id'].value,
+          IdExpresion: this.fg.controls['expresion'].value,
+          IdOperador: this.fg.controls['operador'].value,
+          IdExpresionC: this.fg.controls['expresionC'].value,
+          Centro: this.fg.controls['centro'].value,
+          Complejo: this.fg.controls['complejo'].value,
+          Con: this.fg.controls['consolidado'].value,
+        };
+
+        const mutation = payload.Id === 0 ? compararExpresionesApi.create : compararExpresionesApi.update;
+
         this.subscription.push(this._apollo.mutate<ComprobarExpresionesMutation>({
-          mutation: compararExpresionesApi.save,
-          variables: { comprobarExpresionInput },
+          mutation: mutation,
+          variables: { comprobarExpresionInput: payload },
           refetchQueries: ['GetAllComprobarExpresiones']
         }).subscribe(response => {
           subscriber.next(response.data || undefined);
@@ -85,12 +97,12 @@ export class CompararExpresionesService {
     });
   }
 
-  deleteCompararExpresion(id: number): Observable<ComprobarExpresionesMutation> {
+  delete(IDs: number[]): Observable<ComprobarExpresionesMutation> {
     return new Observable<ComprobarExpresionesMutation>(subscriber => {
       try {
         this.subscription.push(this._apollo.mutate<ComprobarExpresionesMutation>({
           mutation: compararExpresionesApi.delete,
-          variables: { id },
+          variables: { IDs },
           refetchQueries: ['GetAllComprobarExpresiones']
         }).subscribe(response => {
           subscriber.next(response.data || undefined);

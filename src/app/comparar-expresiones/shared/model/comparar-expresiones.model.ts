@@ -2,15 +2,15 @@ import { IMutationResponse } from './../../../shared/models/mutation-response';
 
 interface IComprobarExpresiones {
     Id: number;
-    Expresion: number;
-    Operador: string;
-    ExpresionC: number;
+    IdExpresion: number;
+    IdOperador: string;
+    IdExpresionC: number;
     Centro: boolean;
     Complejo: boolean;
     Con: boolean;
-    ExpresionDesc?: string;
-    ExpresionDesc_C?: string;
-    OperadorDesc?: string;
+    Expresion?: any;
+    ExpresionC?: any;
+    Operador?: any;
 }
 
 interface IComprobarExpresionQueryResponse {
@@ -31,6 +31,7 @@ export interface ComprobarExpresionesQueryResponse {
 }
 
 export interface ComprobarExpresionesMutation {
-    saveComprobarExpresion: IMutationResponse;
+    createComprobarExpresion: IMutationResponse;
+    updateComprobarExpresion: IMutationResponse;
     deleteComprobarExpresion: IMutationResponse;
 }
