@@ -51,7 +51,7 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
     }
   }
 
-  onActionClicked(event: any): void {
+  onActionClicked(event: ActionClicked): void {
     switch (event) {
       case ActionClicked.Save:
         this._save();

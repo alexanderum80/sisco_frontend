@@ -1,5 +1,5 @@
 import { ActionClicked } from './../../shared/models/list-items';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import SweetAlert from 'sweetalert2';
 import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tipo-entidades.service';
 import { ClasificadorCuentaService } from './../../clasificador-cuenta/shared/service/clasificador-cuenta.service';
@@ -31,7 +31,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
     private _tipoEntidadesSvc: TipoEntidadesService,
     private _epigrafesSvc: EpigrafesService,
     private _clasificadorCuentaSvc: ClasificadorCuentaService,
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
   ) { }
 
   ngOnInit(): void {
@@ -177,7 +177,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private _closeModal(message?: string): void {
-    this._modalSvc.closeModal(message);
+    this._dinamicDialogSvc.close(message);
   }
 
 }

@@ -1,3 +1,4 @@
+import { DinamicDialogService } from 'src/app/shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { TipoUsuariosService } from './../../shared/services/tipo-usuarios.service';
 import { SelectItem } from 'primeng/api';
@@ -9,13 +10,11 @@ import { UsuariosMutationResponse } from '../shared/models/usuarios.model';
 import SweetAlert from 'sweetalert2';
 import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
 import { Apollo } from 'apollo-angular';
-import { ModalService } from '../../shared/services/modal.service';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { IUsuario } from 'src/app/shared/models';
 import { toNumber } from 'lodash';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-usuario-form',
@@ -35,7 +34,7 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
 
   constructor(
     private _usuarioSvc: UsuarioService,
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _apollo: Apollo,
     private _tipoUsuariosSvc: TipoUsuariosService,
     private _divisionesSvc: DivisionesService,
@@ -207,7 +206,7 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
   }
 
   private _closeModal(message?: string): void {
-    this._modalSvc.closeModal(message);
+    this._dinamicDialogSvc.close(message);
   }
 
 }

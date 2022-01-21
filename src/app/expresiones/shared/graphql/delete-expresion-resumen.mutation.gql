@@ -1,5 +1,5 @@
-mutation DeleteExpresionResumen($id: Int!) {
-    deleteExpresionResumen(id: $id) {
+mutation DeleteExpresionResumen($IDs: [Int!]!) {
+    deleteExpresionResumen(IDs: $IDs) {
         success
         error
     }

@@ -1,5 +1,5 @@
+import { DinamicDialogService } from 'src/app/shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { FormGroup } from '@angular/forms';
-import { ModalService } from '../../shared/services/modal.service';
 import { Component, OnInit, Input, Output, EventEmitter, Inject } from '@angular/core';
 
 @Component({
@@ -13,7 +13,7 @@ export class ModalComponent implements OnInit {
   @Output() saveClicked = new EventEmitter<boolean>();
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
   ) { }
 
   ngOnInit(): void {
@@ -24,7 +24,7 @@ export class ModalComponent implements OnInit {
   }
 
   closeModal(): void {
-    this._modalSvc.closeModal();
+    this._dinamicDialogSvc.close();
   }
 
   isFormValid(): boolean {

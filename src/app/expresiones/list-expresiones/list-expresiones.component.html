@@ -1,3 +1,5 @@
 <app-list-item title="Expresiones">
-  <png-table [columns]="columns" [data]="expresiones" [canEditDelete]="true"></png-table>
+  <png-table [columns]="columns" [data]="expresiones" [canEditDelete]="true" (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
+
+<p-toast></p-toast>

@@ -1,5 +1,5 @@
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { ActionClicked } from './../../shared/models/list-items';
-import { ModalService } from './../../shared/services/modal.service';
 import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tipo-entidades.service';
 import { Subscription } from 'rxjs';
 import SweetAlert from 'sweetalert2';
@@ -33,7 +33,7 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
   subscription: Subscription[] = [];
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _tipoEntidadesSvc: TipoEntidadesService,
     private _clasificadorSvc: ClasificadorCuentaService
   ) { }
@@ -128,7 +128,7 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
   }
 
   private _closeModal(message?: string): void {
-    this._modalSvc.closeModal(message);
+    this._dinamicDialogSvc.close(message);
   }
 
 }

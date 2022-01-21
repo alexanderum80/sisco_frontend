@@ -4,7 +4,7 @@ import { ClasificadorEntidadesFormComponent } from './../clasificador-entidades-
 import SweetAlert from 'sweetalert2';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { isArray } from 'lodash';
@@ -25,7 +25,7 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
   loading = true;
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService
@@ -113,8 +113,8 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
         };
         this._clasificadorEntidadesSvc.fg.patchValue(inputData);
 
-        this._modalSvc.openModal('Agregar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
-        this._modalSvc.ref.onClose.subscribe((message: string) => {
+        this._dinamicDialogSvc.open('Agregar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
@@ -156,8 +156,8 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
         };
         this._clasificadorEntidadesSvc.fg.patchValue(inputData);
 
-        this._modalSvc.openModal('Modificar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
-        this._modalSvc.ref.onClose.subscribe((message: string) => {
+        this._dinamicDialogSvc.open('Modificar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }

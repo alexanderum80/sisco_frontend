@@ -14,6 +14,7 @@ export class ExpresionesService {
     descripcion: new FormControl(''),
     acumulado: new FormControl(false),
     operacionesInternas: new FormControl(false),
+    centralizada: new FormControl(false)
   });
 
   subscription: Subscription[] = [];
@@ -29,6 +30,7 @@ export class ExpresionesService {
     this.fg.controls['descripcion'].setValue('');
     this.fg.controls['acumulado'].setValue(false);
     this.fg.controls['operacionesInternas'].setValue(false);
+    this.fg.controls['centralizada'].setValue(false);
   }
 
   loadAllExpresionesResumen(): Observable<ExpresionesQueryResponse> {
@@ -98,8 +100,10 @@ export class ExpresionesService {
   saveExpresion(payload: any): Observable<ExpresionesMutationResponse> {
     return new Observable<ExpresionesMutationResponse>(subscriber => {
       try {
+        const mutation = payload.ExpresionResumen.IdExpresion === 0 ? expresionesApi.create : expresionesApi.update;
+
         this.subscription.push(this._apollo.mutate<ExpresionesMutationResponse>({
-          mutation: expresionesApi.save,
+          mutation: mutation,
           variables: { expresionInput: payload },
           refetchQueries: ['GetAllExpresionesResumen']
         }).subscribe(response => {
@@ -111,12 +115,12 @@ export class ExpresionesService {
     });
   }
 
-  deleteExpresionResumen(id: number): Observable<ExpresionesMutationResponse> {
+  deleteExpresionResumen(IDs: number[]): Observable<ExpresionesMutationResponse> {
     return new Observable<ExpresionesMutationResponse>(subscriber => {
       try {
         this.subscription.push(this._apollo.mutate<ExpresionesMutationResponse>({
           mutation: expresionesApi.deleteResumen,
-          variables: { id },
+          variables: { IDs },
           refetchQueries: ['GetAllExpresionesResumen']
         }).subscribe(response => {
           subscriber.next(response.data || undefined);

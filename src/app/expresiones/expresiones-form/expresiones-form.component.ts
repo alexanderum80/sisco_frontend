@@ -98,7 +98,7 @@ export class ExpresionesFormComponent implements OnInit {
 
   addCuenta(): void {
     this.expresionesDetalle.push({
-      id: 0,
+      id: 90000 + this.expresionesDetalle.length,
       IdExpresion: 0,
       Cta: '',
       SubCta: '',
@@ -107,8 +107,8 @@ export class ExpresionesFormComponent implements OnInit {
       Crit3: '',
       Signo: '+',
       PorCiento: '100',
-      TipoValor: this.tipoValorValues[0].value || 0,
-      TipoValorDesc: this.tipoValorValues[0].label || ''
+      TipoValor: this.tipoValorValues[0]?.value || 0,
+      TipoValorDesc: this.tipoValorValues[0]?.label || ''
     });
   }
 
@@ -145,13 +145,13 @@ export class ExpresionesFormComponent implements OnInit {
     this.expresionesDetalle[index].TipoValorDesc = tipoValor?.label;
   }
 
-  onActionClicked(event: any): void {
+  onActionClicked(event: ActionClicked): void {
     switch (event) {
       case ActionClicked.Save:
         this._save();
         break;
       case ActionClicked.Cancel:
-        this._dinamicDialogSvc.close();
+        this._closeModal();
         break;
     }
   }
@@ -164,6 +164,7 @@ export class ExpresionesFormComponent implements OnInit {
         Descripcion: this.fg.controls['descripcion'].value,
         Acumulado: this.fg.controls['acumulado'].value,
         OperacionesInternas: this.fg.controls['operacionesInternas'].value,
+        Centralizada: this.fg.controls['centralizada'].value,
       };
       const ExpresionesDetalle = this.expresionesDetalle.map(exp => {
         return {
@@ -186,12 +187,13 @@ export class ExpresionesFormComponent implements OnInit {
       };
 
       this._expresionesSvc.saveExpresion(payload).subscribe(response => {
-        const result = response.saveExpresion;
+        const result = ExpresionResumen.IdExpresion === 0 ? response.createExpresion : response.updateExpresion;
+        const txtMessage = `La Expresión se ha ${ ExpresionResumen.IdExpresion === 0 ? 'creado' : 'actualizado' } correctamente.`;
         if (!result.success) {
           throw new Error(result.error);
         }
 
-        this._dinamicDialogSvc.close();
+        this._dinamicDialogSvc.close(txtMessage);
       });
     } catch (err: any) {
       Swal.fire({
@@ -202,6 +204,10 @@ export class ExpresionesFormComponent implements OnInit {
         confirmButtonText: 'Aceptar'
       });
     }
+  }
+
+   private _closeModal(message?: string): void {
+    this._dinamicDialogSvc.close(message);
   }
 
 }

@@ -1,6 +1,6 @@
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { ActionClicked } from './../../shared/models/list-items';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
 import { Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
@@ -19,7 +19,7 @@ export class EpigrafesFormComponent implements OnInit, OnDestroy {
   subscription: Subscription[] = [];
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _epigrafesSvc: EpigrafesService,
     private _sweetalterSvc: SweetalertService
   ) { }
@@ -63,7 +63,7 @@ export class EpigrafesFormComponent implements OnInit, OnDestroy {
           return this._sweetalterSvc.error(result.error || '');
         }
   
-        this._modalSvc.closeModal(txtMessage);
+        this._dinamicDialogSvc.close(txtMessage);
       }));
     } catch (err: any) {
       this._sweetalterSvc.error(err);
@@ -71,7 +71,7 @@ export class EpigrafesFormComponent implements OnInit, OnDestroy {
   }
 
   private _closeModal(message?: string): void {
-    this._modalSvc.closeModal(message);
+    this._dinamicDialogSvc.close(message);
   }
 
 }

@@ -3,7 +3,7 @@ import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/lis
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { ConexionRodasFormComponent } from './../conexion-rodas-form/conexion-rodas-form.component';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import SweetAlert from 'sweetalert2';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import { isArray, sortBy } from 'lodash';
@@ -30,7 +30,7 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
 
   constructor(
     private _usuarioSvc: UsuarioService,
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _conexionRodasSvc: ConexionRodasService,
     private _msgSvc: MessageService
   ) { }
@@ -110,8 +110,8 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
 
       this._conexionRodasSvc.fg.patchValue(dataInput);
 
-      this._modalSvc.openModal('Agregar Conexión al Rodas', ConexionRodasFormComponent);
-      this._modalSvc.ref.onClose.subscribe((message: string) => {
+      this._dinamicDialogSvc.open('Agregar Conexión al Rodas', ConexionRodasFormComponent);
+      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
           this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
@@ -157,8 +157,8 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
           };
           this._conexionRodasSvc.fg.patchValue(dataInput);
 
-          this._modalSvc.openModal('Modificar Conexión al Rodas', ConexionRodasFormComponent);
-          this._modalSvc.ref.onClose.subscribe((message: string) => {
+          this._dinamicDialogSvc.open('Modificar Conexión al Rodas', ConexionRodasFormComponent);
+          this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
             if (message) {
               this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
             }
@@ -204,7 +204,7 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
                 });
               }
 
-              this._modalSvc.ref.onClose.subscribe((message: string) => {
+              this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
                 if (message) {
                   this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'La Conexión se ha eliminado correctamente.' })
                 }

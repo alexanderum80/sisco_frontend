@@ -4,7 +4,7 @@ import { UnidadesService } from './../../unidades/shared/services/unidades.servi
 import SweetAlert from 'sweetalert2';
 import { toNumber } from 'lodash';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
@@ -26,7 +26,7 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
   subscription: Subscription[] = [];
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService,
     private _unidadesSvc: UnidadesService,
     private _tipoEntidadesSvc: TipoEntidadesService
@@ -125,7 +125,7 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
   }
 
   private _closeModal(message?: string): void {
-    this._modalSvc.closeModal(message);
+    this._dinamicDialogSvc.close(message);
   }
 
 }

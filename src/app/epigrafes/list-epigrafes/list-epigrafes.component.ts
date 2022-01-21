@@ -4,7 +4,7 @@ import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import SweetAlert from 'sweetalert2';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { EpigrafesFormComponent } from '../epigrafes-form/epigrafes-form.component';
 import { isArray } from 'lodash';
@@ -22,7 +22,7 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
   ];
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _epigrafesSvc: EpigrafesService
@@ -84,8 +84,8 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
         };
         this._epigrafesSvc.fg.patchValue(inputData);
 
-        this._modalSvc.openModal('Agregar Epígrafe', EpigrafesFormComponent);
-        this._modalSvc.ref.onClose.subscribe((message: string) => {
+        this._dinamicDialogSvc.open('Agregar Epígrafe', EpigrafesFormComponent);
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
@@ -124,8 +124,8 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
 
       this._epigrafesSvc.fg.patchValue(inputData);
 
-      this._modalSvc.openModal('Modificar Epígrafe', EpigrafesFormComponent);
-      this._modalSvc.ref.onClose.subscribe((message: string) => {
+      this._dinamicDialogSvc.open('Modificar Epígrafe', EpigrafesFormComponent);
+      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
           this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }

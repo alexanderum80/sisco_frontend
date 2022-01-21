@@ -8,7 +8,7 @@ import SweetAlert from 'sweetalert2';
 import { ClasificadorCuentaFormComponent } from './../clasificador-cuenta-form/clasificador-cuenta-form.component';
 import { ClasificadorCuentaService } from './../shared/service/clasificador-cuenta.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 
 @Component({
@@ -36,7 +36,7 @@ export class ListClasificadorCuentaComponent implements OnInit, AfterViewInit, O
   loading = true;
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
     private _sweetalertSvc: SweetalertService,
     private _clasificadorCuentaSvc: ClasificadorCuentaService,
@@ -125,8 +125,8 @@ export class ListClasificadorCuentaComponent implements OnInit, AfterViewInit, O
           crit3Consolidacion: '',
         };
         this._clasificadorCuentaSvc.fg.patchValue(inputData);
-        this._modalSvc.openModal('Agregar Cuenta', ClasificadorCuentaFormComponent);
-        this._modalSvc.ref.onClose.subscribe((message: string) => {
+        this._dinamicDialogSvc.open('Agregar Cuenta', ClasificadorCuentaFormComponent);
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
               this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
@@ -179,8 +179,8 @@ export class ListClasificadorCuentaComponent implements OnInit, AfterViewInit, O
             };
 
             this._clasificadorCuentaSvc.fg.patchValue(inputData);
-            this._modalSvc.openModal('Modificar Cuenta', ClasificadorCuentaFormComponent);
-            this._modalSvc.ref.onClose.subscribe((message: string) => {
+            this._dinamicDialogSvc.open('Modificar Cuenta', ClasificadorCuentaFormComponent);
+            this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
               if (message) {
                   this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
               }

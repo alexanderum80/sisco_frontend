@@ -4,7 +4,7 @@ import { EmpleadosService } from './../shared/services/empleados.service';
 import { EmpleadosFormComponent } from './../empleados-form/empleados-form.component';
 import SweetAlert from 'sweetalert2';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
@@ -27,7 +27,7 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
   subscription: Subscription[] = [];
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
     private _empleadoSvc: EmpleadosService,
     private _msgSvc: MessageService
@@ -101,8 +101,8 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
       };
       this._empleadoSvc.fg.patchValue(inputData);
 
-      this._modalSvc.openModal('Agregar Empleado', EmpleadosFormComponent);
-      this._modalSvc.ref.onClose.subscribe((message: string) => {
+      this._dinamicDialogSvc.open('Agregar Empleado', EmpleadosFormComponent);
+      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
@@ -136,8 +136,8 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
 
         this._empleadoSvc.fg.patchValue(inputData);
 
-        this._modalSvc.openModal('Modificar Empleado', EmpleadosFormComponent);
-        this._modalSvc.ref.onClose.subscribe((message: string) => {
+        this._dinamicDialogSvc.open('Modificar Empleado', EmpleadosFormComponent);
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
               this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }

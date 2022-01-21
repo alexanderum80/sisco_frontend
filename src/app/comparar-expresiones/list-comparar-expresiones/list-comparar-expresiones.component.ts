@@ -74,7 +74,7 @@ export class ListCompararExpresionesComponent implements OnInit, AfterViewInit, 
   add(): void {
     try {
       this._compararExpresionesSvc.inicializarFg();
-      this._dinamicDialogSvc.open(CompararExpresionesFormComponent, 'Agregar Comparación de Expresión');
+      this._dinamicDialogSvc.open('Agregar Comparación de Expresión', CompararExpresionesFormComponent);
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
     }
@@ -102,7 +102,7 @@ export class ListCompararExpresionesComponent implements OnInit, AfterViewInit, 
 
         this._compararExpresionesSvc.fg.patchValue(inputValue);
 
-        this._dinamicDialogSvc.open(CompararExpresionesFormComponent, 'Editar Comparación de Expresión');
+        this._dinamicDialogSvc.open('Editar Comparación de Expresión', CompararExpresionesFormComponent);
       });
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);

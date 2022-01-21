@@ -1,7 +1,7 @@
 import { ActionClicked } from './../../shared/models/list-items';
 import { DatabasesService } from './../../shared/services/databases.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { ConexionDWHMutationResponse, ConexionDWHQueryResponse } from './../shared/models/conexion-dwh.model';
 import { toNumber } from 'lodash';
 import { Router } from '@angular/router';
@@ -38,7 +38,7 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
     private _apollo: Apollo,
     private _divisionesSvc: DivisionesService,
     private _databasesSvc: DatabasesService,
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     public router: Router,
   ) { }
 
@@ -281,7 +281,7 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
           });
         }
 
-        this._modalSvc.closeModal();
+        this._dinamicDialogSvc.close();
       }));
     } catch (err: any) {
       SweetAlert.fire({
@@ -295,7 +295,7 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
   }
 
   private _closeModal(message?: string): void {
-    this._modalSvc.closeModal(message);
+    this._dinamicDialogSvc.close(message);
   }
 
 }

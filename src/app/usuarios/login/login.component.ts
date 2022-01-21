@@ -2,7 +2,7 @@ import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { NavigationService } from './../../navigation/shared/services/navigation.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { ChangePasswordComponent } from './../change-password/change-password.component';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Usuario } from '../../shared/models/usuarios';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { Apollo } from 'apollo-angular';
@@ -23,7 +23,7 @@ export class LoginComponent implements OnInit {
     private _apollo: Apollo,
     private _authSvc: AuthenticationService,
     private _route: ActivatedRoute,
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
     private _navigateSvc: NavigationService,
     private _swalSvc: SweetalertService
@@ -66,7 +66,7 @@ export class LoginComponent implements OnInit {
             this._usuarioSvc.fg.controls['contrasena'].setValue('');
             this._usuarioSvc.fg.controls['contrasenaConfirm'].setValue('');
 
-            this._modalSvc.openModal('Cambiar Contraseña', ChangePasswordComponent);
+            this._dinamicDialogSvc.open('Cambiar Contraseña', ChangePasswordComponent);
           } else {
             this._authSvc.login();
 

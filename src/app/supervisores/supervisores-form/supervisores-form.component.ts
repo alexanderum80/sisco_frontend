@@ -4,7 +4,7 @@ import { CargosService } from './../../shared/services/cargos.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import SweetAlert from 'sweetalert2';
 import { toNumber } from 'lodash';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SupervisoresService } from './../shared/services/supervisores.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
 import { FormGroup } from '@angular/forms';
@@ -32,7 +32,7 @@ export class SupervisoresFormComponent implements OnInit, OnDestroy {
     private _divisionesSvc: DivisionesService,
     private _supervisoresSvc: SupervisoresService,
     private _cargosSvc: CargosService,
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
   ) { }
 
   ngOnInit(): void {
@@ -157,7 +157,7 @@ export class SupervisoresFormComponent implements OnInit, OnDestroy {
   }
 
   private _closeModal(message?: string): void {
-    this._modalSvc.closeModal(message);
+    this._dinamicDialogSvc.close(message);
   }
 
 }

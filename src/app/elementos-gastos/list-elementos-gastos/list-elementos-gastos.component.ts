@@ -4,7 +4,7 @@ import SweetAlert from 'sweetalert2';
 import { ElementosGastosFormComponent } from './../elementos-gastos-form/elementos-gastos-form.component';
 import { ElementosGastosService } from './../shared/services/elementos-gastos.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { isArray } from 'lodash';
@@ -24,7 +24,7 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
   ];
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _elementosGastosSvc: ElementosGastosService
@@ -90,8 +90,8 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
         };
         this._elementosGastosSvc.fg.patchValue(inputData);
 
-        this._modalSvc.openModal('Agregar Elemento de Gasto', ElementosGastosFormComponent);
-        this._modalSvc.ref.onClose.subscribe((message: string) => {
+        this._dinamicDialogSvc.open('Agregar Elemento de Gasto', ElementosGastosFormComponent);
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
@@ -135,8 +135,8 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
 
       this._elementosGastosSvc.fg.patchValue(inputData);
 
-      this._modalSvc.openModal('Modificar Elemento de Gasto', ElementosGastosFormComponent);
-      this._modalSvc.ref.onClose.subscribe((message: string) => {
+      this._dinamicDialogSvc.open('Modificar Elemento de Gasto', ElementosGastosFormComponent);
+      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
           this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }

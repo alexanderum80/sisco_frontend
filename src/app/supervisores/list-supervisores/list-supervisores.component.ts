@@ -2,7 +2,7 @@ import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/lis
 import { SupervisoresService } from './../shared/services/supervisores.service';
 import { MaterialService } from './../../shared/services/material.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { SupervisoresFormComponent } from '../supervisores-form/supervisores-form.component';
 import { MessageService } from 'primeng/api';
@@ -26,7 +26,7 @@ export class ListSupervisoresComponent implements OnInit, AfterViewInit, OnDestr
   supervisores: any;
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
     private _supervisorSvc: SupervisoresService,
     private _materialSvc: MaterialService,
@@ -100,8 +100,8 @@ export class ListSupervisoresComponent implements OnInit, AfterViewInit, OnDestr
       };
       this._supervisorSvc.fg.patchValue(inputData);
 
-      this._modalSvc.openModal('Agregar Supervisor', SupervisoresFormComponent);
-      this._modalSvc.ref.onClose.subscribe((message: string) => {
+      this._dinamicDialogSvc.open('Agregar Supervisor', SupervisoresFormComponent);
+      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
@@ -135,9 +135,9 @@ export class ListSupervisoresComponent implements OnInit, AfterViewInit, OnDestr
 
         this._supervisorSvc.fg.patchValue(inputData);
 
-        this._modalSvc.openModal('Modificar Supervisor', SupervisoresFormComponent);
+        this._dinamicDialogSvc.open('Modificar Supervisor', SupervisoresFormComponent);
 
-        this._modalSvc.ref.onClose.subscribe((message: string) => {
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
               this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }

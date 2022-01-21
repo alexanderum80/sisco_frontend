@@ -1,0 +1,6 @@
+mutation UpdateExpresion($expresionInput: ContaExpresionInput!) {
+    updateExpresion(expresionInput: $expresionInput) {
+        success
+        error
+    }
+}

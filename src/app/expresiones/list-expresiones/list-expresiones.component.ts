@@ -1,5 +1,5 @@
-import { MenuItem } from 'primeng/api';
-import { ActionClicked } from './../../shared/models/list-items';
+import { MessageService } from 'primeng/api';
+import { ActionClicked, IActionItemClickedArgs } from './../../shared/models/list-items';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
 import { cloneDeep } from '@apollo/client/utilities';
@@ -8,6 +8,7 @@ import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 import { ExpresionesFormComponent } from '../expresiones-form/expresiones-form.component';
 import { ExpresionesService } from '../shared/services/expresiones.service';
 import { DinamicDialogService } from '../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
+import { isArray } from 'lodash';
 
 @Component({
   selector: 'app-list-expresiones',
@@ -26,19 +27,11 @@ export class ListExpresionesComponent implements OnInit, AfterViewInit, OnDestro
 
   subscription: Subscription[] = [];
 
-  menuItems: MenuItem[] = [
-    { id: '0', label: 'Editar', icon: 'mdi mdi-pencil', disabled: false, command: (event) => {
-      this.edit(event);
-    }},
-    { id: '1', label: 'Eliminar', icon: 'mdi mdi-delete-outline', disabled: false, command: (event) => {
-      this.delete(event);
-    }},
-  ];
-
   constructor(
     private _expresionesSvc: ExpresionesService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _sweetAlertSvc: SweetalertService
+    private _sweetAlertSvc: SweetalertService,
+    private _msgSvc: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -69,19 +62,39 @@ export class ListExpresionesComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-  add(): void {
+  actionClicked(event: IActionItemClickedArgs) {
+    switch (event.action) {
+      case ActionClicked.Add:
+        this._add();
+        break;
+      case ActionClicked.Edit:
+        this._edit(event.item)
+        break;    
+      case ActionClicked.Delete:
+        this._delete(event.item)
+        break;
+    }
+  }
+
+  private _add(): void {
     try {
       this._expresionesSvc.inicializarFg();
-      this._dinamicDialogSvc.open(ExpresionesFormComponent, 'Agregar Expresión');
+
+      this._dinamicDialogSvc.open('Agregar Expresión', ExpresionesFormComponent);
+      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        if (message) {
+          this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+        }
+      });
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
     }
   }
 
-  edit(menu: any): void {
+  private _edit(data: any): void {
     try {
       this._expresionesSvc.inicializarFg();
-      this._expresionesSvc.loadExpresionResumenById(menu.item.automationId.IdExpresion).subscribe(response => {
+      this._expresionesSvc.loadExpresionResumenById(data.IdExpresion).subscribe(response => {
         const result = response.getExpresionResumenById;
 
         if (!result.success) {
@@ -98,23 +111,32 @@ export class ListExpresionesComponent implements OnInit, AfterViewInit, OnDestro
 
         this._expresionesSvc.fg.patchValue(inputValue);
 
-        this._dinamicDialogSvc.open(ExpresionesFormComponent, 'Editar Expresión');
+        this._dinamicDialogSvc.open('Editar Expresión', ExpresionesFormComponent);
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          }
+        });
       });
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
     }
   }
 
-  delete(menu: any): void {
+  private _delete(data: any): void {
     try {
-      this._sweetAlertSvc.question('¿Desea Eliminar la Expresión seleccionada?').then(res => {
+      this._sweetAlertSvc.question('¿Desea Eliminar la(s) Expresión(es) seleccionada(s)?').then(res => {
         if (res === ActionClicked.Yes) {
-          this._expresionesSvc.deleteExpresionResumen(menu.item.automationId.IdExpresion).subscribe(response => {
+          const IDsToRemove: number[] = !isArray(data) ? [data.IdExpresion] :  data.map(d => { return d.IdExpresion });
+
+          this._expresionesSvc.deleteExpresionResumen(IDsToRemove).subscribe(response => {
             const result = response.deleteExpresionResumen;
 
             if (!result.success) {
               throw new Error(result.error);
             }
+
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'La Expresión se ha eliminado correctamente.' })
           });
         }
       });

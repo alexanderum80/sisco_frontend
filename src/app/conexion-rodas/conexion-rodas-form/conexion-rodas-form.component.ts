@@ -6,7 +6,7 @@ import { DivisionesService } from './../../shared/services/divisiones.service';
 import { toNumber } from 'lodash';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { FormGroup } from '@angular/forms';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Subscription } from 'rxjs';
 import SweetAlert from 'sweetalert2';
 import { ISelectableOptions } from './../../shared/models/selectable-item';
@@ -35,7 +35,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
   constructor(
     private _usuarioSvc: UsuarioService,
     private _conexionRodasSvc: ConexionRodasService,
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _divisionesSvc: DivisionesService,
     private _unidadesSvc: UnidadesService,
     private _databasesSvc: DatabasesService,
@@ -255,7 +255,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
   }
 
   private _closeModal(message?: string): void {
-    this._modalSvc.closeModal(message);
+    this._dinamicDialogSvc.close(message);
   }
 
 }

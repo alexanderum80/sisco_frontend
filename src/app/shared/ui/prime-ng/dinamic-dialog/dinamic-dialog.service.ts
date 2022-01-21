@@ -6,28 +6,24 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 })
 export class DinamicDialogService {
 
-  ref: DynamicDialogRef | undefined;
+  ref: DynamicDialogRef;
 
   constructor(
     private _dialogSvc: DialogService
   ) { }
 
-  public open(component: any, header: string): void {
+  open(header: string, component: any): void {
     this.ref = this._dialogSvc.open(component, {
-      header,
-      contentStyle: {'max-height': '80%', overflow: 'auto'},
-      baseZIndex: 10000
-    });
-
-    this.ref.onClose.subscribe(() => {
-      this.ref = undefined;
+      header: header,
+      closable: false,
+      style: {"max-width": "90%" },
+      contentStyle: {"max-height": "90%", "overflow": "inherit"},
+      baseZIndex: 1000
     });
   }
 
-  public close(): void {
-    if (this.ref) {
-      this.ref.close();
-    }
+  close(message?: string): void {
+    this.ref.close(message || null);
   }
 
 }

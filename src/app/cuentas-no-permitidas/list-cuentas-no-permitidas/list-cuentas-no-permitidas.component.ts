@@ -78,7 +78,7 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
   add(): void {
     try {
       this._cuentasNoPermitidasSvc.inicializarFg();
-      this._dinamicDialogSvc.open(CuentasNoPermitidasFormComponent, 'Agregar Cuenta no Permitida');
+      this._dinamicDialogSvc.open('Agregar Cuenta no Permitida', CuentasNoPermitidasFormComponent);
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
     }
@@ -106,7 +106,7 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
 
         this._cuentasNoPermitidasSvc.fg.patchValue(inputValue);
 
-        this._dinamicDialogSvc.open(CuentasNoPermitidasFormComponent, 'Editar Cuenta no Permitida');
+        this._dinamicDialogSvc.open('Editar Cuenta no Permitida',CuentasNoPermitidasFormComponent);
       });
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);

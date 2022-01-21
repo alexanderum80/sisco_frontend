@@ -1,6 +1,0 @@
-mutation SaveExpresion($expresionInput: ContaExpresionInput!) {
-    saveExpresion(expresionInput: $expresionInput) {
-        success
-        error
-    }
-}

@@ -1,5 +1,5 @@
 import { AuthenticationService } from './../../shared/services/authentication.service';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { NavigationService } from './../../navigation/shared/services/navigation.service';
 import { MaterialService } from './../../shared/services/material.service';
 import { UsuariosMutationResponse } from './../shared/models/usuarios.model';
@@ -27,7 +27,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     private _apollo: Apollo,
     private _materialSvc: MaterialService,
     private _navigationSvc: NavigationService,
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _authSvc: AuthenticationService,
   ) { }
 
@@ -74,7 +74,7 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
 
       this._authSvc.login();
 
-      this._modalSvc.closeModal();
+      this._dinamicDialogSvc.close();
 
       this._navigationSvc.navigateTo(this._navigationSvc.continueURL);
 

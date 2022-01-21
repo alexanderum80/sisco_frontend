@@ -3,7 +3,7 @@ import SweetAlert from 'sweetalert2';
 import { toNumber } from 'lodash';
 import { FormGroup } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { TipoEntidadesService } from './../shared/services/tipo-entidades.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
@@ -20,7 +20,7 @@ export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
   subscription: Subscription[] = [];
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _tipoEntidadesSvc: TipoEntidadesService
   ) { }
 
@@ -72,7 +72,7 @@ export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
   }
 
   private _closeModal(message?: string): void {
-    this._modalSvc.closeModal(message);
+    this._dinamicDialogSvc.close(message);
   }
 
 }

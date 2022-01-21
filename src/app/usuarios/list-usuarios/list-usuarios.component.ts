@@ -1,3 +1,4 @@
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { MessageService } from 'primeng/api';
 import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
 import { IUsuario } from './../../shared/models/usuarios';
@@ -9,7 +10,6 @@ import SweetAlert from 'sweetalert2';
 import { QueryRef, Apollo } from 'apollo-angular';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
-import { ModalService } from '../../shared/services/modal.service';
 import { UsuariosQueryResponse } from '../shared/models/usuarios.model';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { cloneDeep } from '@apollo/client/utilities';
@@ -35,7 +35,7 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(
     private _apollo: Apollo,
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
     private _msgSvc: MessageService
   ) { }
@@ -113,8 +113,8 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
       };
       this._usuarioSvc.fg.patchValue(inputData);
       
-      this._modalSvc.openModal('Agregar Usuario', UsuarioFormComponent);
-      this._modalSvc.ref.onClose.subscribe((message: string) => {
+      this._dinamicDialogSvc.open('Agregar Usuario', UsuarioFormComponent);
+      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
@@ -156,8 +156,8 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this._usuarioSvc.fg.patchValue(inputData);
 
-        this._modalSvc.openModal('Modificar Usuario', UsuarioFormComponent);
-        this._modalSvc.ref.onClose.subscribe((message: string) => {
+        this._dinamicDialogSvc.open('Modificar Usuario', UsuarioFormComponent);
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
               this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }

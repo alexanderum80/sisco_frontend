@@ -3,7 +3,7 @@ import { CargosService } from './../../shared/services/cargos.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import { toNumber } from 'lodash';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { EmpleadosService } from './../shared/services/empleados.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
@@ -28,7 +28,7 @@ export class EmpleadosFormComponent implements OnInit {
     private _usuarioSvc: UsuarioService,
     private _empleadosSvc: EmpleadosService,
     private _cargosSvc: CargosService,
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _divisionesSvc: DivisionesService,
     private _sweetAlterSvc: SweetalertService
   ) { }
@@ -121,7 +121,7 @@ export class EmpleadosFormComponent implements OnInit {
   }
 
   private _closeModal(message?: string): void {
-    this._modalSvc.closeModal(message);
+    this._dinamicDialogSvc.close(message);
   }
 
 }

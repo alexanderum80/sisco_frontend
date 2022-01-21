@@ -3,7 +3,7 @@ import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { MaterialService } from './../../shared/services/material.service';
 import { TipoEntidadesService } from './../shared/services/tipo-entidades.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
-import { ModalService } from './../../shared/services/modal.service';
+import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { MaterialTableColumns } from './../../angular-material/models/mat-table.model';
 import SweetAlert from 'sweetalert2';
 import { TipoEntidadesFormComponent } from './../tipo-entidades-form/tipo-entidades-form.component';
@@ -25,7 +25,7 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
   ];
 
   constructor(
-    private _modalSvc: ModalService,
+    private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _tipoEntidadesSvc: TipoEntidadesService,
@@ -98,8 +98,8 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
         };
         this._tipoEntidadesSvc.fg.patchValue(inputData);
         
-        this._modalSvc.openModal('Agregar Tipo de Entidad', TipoEntidadesFormComponent);
-        this._modalSvc.ref.onClose.subscribe((message: string) => {
+        this._dinamicDialogSvc.open('Agregar Tipo de Entidad', TipoEntidadesFormComponent);
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
@@ -141,8 +141,8 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
 
         this._tipoEntidadesSvc.fg.patchValue(inputData);
 
-        this._modalSvc.openModal('Editar Tipo de Entidad', TipoEntidadesFormComponent);
-        this._modalSvc.ref.onClose.subscribe((message: string) => {
+        this._dinamicDialogSvc.open('Editar Tipo de Entidad', TipoEntidadesFormComponent);
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }

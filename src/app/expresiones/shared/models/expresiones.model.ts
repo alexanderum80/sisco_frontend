@@ -66,6 +66,7 @@ export interface ExpresionesQueryResponse {
 }
 
 export interface ExpresionesMutationResponse {
-    saveExpresion: IMutationResponse;
+    createExpresion: IMutationResponse;
+    updateExpresion: IMutationResponse;
     deleteExpresionResumen: IMutationResponse;
 }
