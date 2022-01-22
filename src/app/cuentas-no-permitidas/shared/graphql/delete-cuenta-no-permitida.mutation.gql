@@ -1,5 +1,5 @@
-mutation DeleteNoUsarEnCuenta($id: Int!) {
-    deleteNoUsarEnCuenta(id: $id) {
+mutation DeleteNoUsarEnCuenta($IDs: [Int!]!) {
+    deleteNoUsarEnCuenta(IDs: $IDs) {
         success
         error
     }

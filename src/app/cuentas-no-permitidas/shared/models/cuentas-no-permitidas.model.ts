@@ -28,6 +28,7 @@ export interface CuentasNoPermitidasQueryResponse {
 }
 
 export interface CuentasNoPermitidasMutation {
-    saveNoUsarEnCuenta: IMutationResponse;
+    createNoUsarEnCuenta: IMutationResponse;
+    updateNoUsarEnCuenta: IMutationResponse;
     deleteNoUsarEnCuenta: IMutationResponse;
 }

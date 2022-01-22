@@ -100,7 +100,7 @@ export class CompararExpresionesFormComponent implements OnInit {
           throw new Error(result.error);
         }
 
-        let txtMessage = `La comparación de la expresión se ha ${ this.action === ActionClicked.Add ? 'creado' : 'actualizado' } correctamente.`
+        let txtMessage = `La Comparación de la Expresión se ha ${ this.action === ActionClicked.Add ? 'creado' : 'actualizado' } correctamente.`
 
         this._dinamicDialogSvc.close(txtMessage);
       });

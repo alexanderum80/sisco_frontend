@@ -1,3 +1,5 @@
 <app-list-item title="Cuentas no Permitidas">
-  <png-table [columns]="columns" [data]="cuentasNoPermitidas" [canEditDelete]="true" [loading]="loading"></png-table>
+  <png-table [columns]="columns" [data]="cuentasNoPermitidas" [canEditDelete]="true" [loading]="loading" (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
+
+<p-toast></p-toast>

@@ -70,12 +70,24 @@ export class CuentasNoPermitidasService {
     });
   }
 
-  saveCuentaNoPermitida(noUsarEnCuentaInput: any): Observable<CuentasNoPermitidasMutation> {
+  saveCuentaNoPermitida(): Observable<CuentasNoPermitidasMutation> {
     return new Observable<CuentasNoPermitidasMutation>(subscriber => {
       try {
+        const payload = {
+          Id: this.fg.controls['id'].value,
+          Codigo: this.fg.controls['codigo'].value,
+          Cta: this.fg.controls['cta'].value,
+          SubCta: this.fg.controls['subcta'].value,
+          Crit1: this.fg.controls['crit1'].value,
+          Crit2: this.fg.controls['crit2'].value,
+          Crit3: this.fg.controls['crit3'].value,
+        };
+
+        const mutation = payload.Id === 0 ? cuentasNoPermitidasApi.create : cuentasNoPermitidasApi.update;
+
         this.subscription.push(this._apollo.mutate<CuentasNoPermitidasMutation>({
-          mutation: cuentasNoPermitidasApi.save,
-          variables: { noUsarEnCuentaInput },
+          mutation: mutation,
+          variables: { noUsarEnCuentaInput: payload },
           refetchQueries: ['GetAllNoUsarEnCuenta']
         }).subscribe(response => {
           subscriber.next(response.data || undefined);
@@ -86,12 +98,12 @@ export class CuentasNoPermitidasService {
     });
   }
 
-  deleteCuentaNoPermitida(id: number): Observable<CuentasNoPermitidasMutation> {
+  deleteCuentaNoPermitida(IDs: number[]): Observable<CuentasNoPermitidasMutation> {
     return new Observable<CuentasNoPermitidasMutation>(subscriber => {
       try {
         this.subscription.push(this._apollo.mutate<CuentasNoPermitidasMutation>({
           mutation: cuentasNoPermitidasApi.delete,
-          variables: { id },
+          variables: { IDs },
           refetchQueries: ['GetAllNoUsarEnCuenta']
         }).subscribe(response => {
           subscriber.next(response.data || undefined);

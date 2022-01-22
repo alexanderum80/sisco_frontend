@@ -1,0 +1,6 @@
+mutation UpdateNoUsarEnCuenta($noUsarEnCuentaInput: ContaNoUsarEnCuentaInput!) {
+    updateNoUsarEnCuenta(noUsarEnCuentaInput: $noUsarEnCuentaInput) {
+        success
+        error
+    }
+}

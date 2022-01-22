@@ -141,7 +141,7 @@ export class ListCompararExpresionesComponent implements OnInit, AfterViewInit, 
               throw new Error(result.error);
             }
 
-            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'La comparación se ha eliminado Satisfactoriamente.' })
+            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'La Comparación se ha eliminado Satisfactoriamente.' })
           });
         }
       });

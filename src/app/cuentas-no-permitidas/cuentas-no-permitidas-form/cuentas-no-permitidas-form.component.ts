@@ -13,6 +13,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./cuentas-no-permitidas-form.component.scss']
 })
 export class CuentasNoPermitidasFormComponent implements OnInit {
+  action: ActionClicked;
+
   fg: FormGroup;
 
   centrosValues: SelectItem[] = [];
@@ -27,6 +29,7 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.action = this.fg.controls['id'].value === 0 ? ActionClicked.Add : ActionClicked.Edit;
     this._loadCentros();
   }
 
@@ -64,23 +67,15 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
 
   private _save(): void {
     try {
-      const payload = {
-        Id: this.fg.controls['id'].value,
-        Codigo: this.fg.controls['codigo'].value,
-        Cta: this.fg.controls['cta'].value,
-        SubCta: this.fg.controls['subcta'].value,
-        Crit1: this.fg.controls['crit1'].value,
-        Crit2: this.fg.controls['crit2'].value,
-        Crit3: this.fg.controls['crit3'].value,
-      };
+      this._cuentasNoPermitidasSvc.saveCuentaNoPermitida().subscribe(response => {
+        const result = this.action === ActionClicked.Add ? response.createNoUsarEnCuenta : response.updateNoUsarEnCuenta;
 
-      this._cuentasNoPermitidasSvc.saveCuentaNoPermitida(payload).subscribe(response => {
-        const result = response.saveNoUsarEnCuenta;
         if (!result.success) {
           throw new Error(result.error);
         }
 
-        this._dinamicDialogSvc.close();
+        let txtMessage = `La Cuenta no Permitida se ha ${ this.action === ActionClicked.Add ? 'creado' : 'actualizado' } correctamente.`
+        this._dinamicDialogSvc.close(txtMessage);
       });
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ha ocurrido el siguiente error: ${ err }`);
