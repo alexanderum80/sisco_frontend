@@ -1,4 +1,4 @@
-mutation CreateContaConexion($conexionInfo: ContaConexionInput!) {
+mutation CreateContaConexion($conexionInfo: ContaConexionDTO!) {
     createContaConexion(conexionInfo: $conexionInfo) {
         success
         error

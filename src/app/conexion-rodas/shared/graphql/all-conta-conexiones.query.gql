@@ -4,15 +4,9 @@ query GetAllContaConexiones {
         data {
             Id
             IdUnidad
-            Unidad {
-                IdUnidad
-                Nombre
-            }
+            Unidad 
             IdDivision
-            Division {
-                IdDivision
-                Division
-            }
+            Division 
             Consolidado
             IpRodas
             Usuario

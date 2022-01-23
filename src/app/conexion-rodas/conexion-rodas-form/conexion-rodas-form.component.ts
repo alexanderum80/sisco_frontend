@@ -23,7 +23,6 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
   unidadesValues: SelectItem[] = [];
   baseDatosValues: SelectItem[] = [];
 
-  unidadesList: any[] = [];
   action: ActionClicked;
 
   fg: FormGroup;
@@ -49,10 +48,10 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
     }
 
     this._getDivisiones();
-    this._getUnidades();
   }
-
+  
   ngAfterViewInit(): void {
+    this._getUnidades();
     this._subscribeToFgValueChange();
   }
 
@@ -63,7 +62,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
   private _subscribeToFgValueChange(): void {
     this.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
       this.fg.controls['idUnidad'].setValue(null);
-      this._updateUnidadesValue(value);
+      this._getUnidades();
     }));
 
     this.subscription.push(this.fg.controls['ip'].valueChanges.subscribe(() => {
@@ -80,15 +79,6 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
       this.fg.controls['baseDatos'].setValue(null);
       this.baseDatosValues = [];
     }));
-  }
-
-  private _updateUnidadesValue(value: number): void {
-    this.unidadesValues = this.unidadesList.filter(f => f.IdDivision === value).map(d => {
-      return {
-        value: d.IdUnidad,
-        label: d.IdUnidad + '-' + d.Nombre
-      };
-    });
   }
 
   get isAdminPermission(): boolean {
@@ -130,9 +120,15 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
 
   private _getUnidades(): void {
     try {
-      const that = this;
-      this.subscription.push(this._unidadesSvc.getAllUnidades().subscribe(response => {
-        const result = response.getAllUnidades;
+      this.unidadesValues = [];
+      const idDivision = this.fg.controls['idDivision'].value;
+
+      if (!idDivision) {
+        return;
+      }
+
+      this.subscription.push(this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe(response => {
+        const result = response.getUnidadesByIdDivision;
 
         if (!result.success) {
           return SweetAlert.fire({
@@ -144,9 +140,12 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
           });
         }
 
-        that.unidadesList = result.data;
-
-        this._updateUnidadesValue(this.fg.controls['idDivision'].value);
+        this.unidadesValues = result.data.map((d: { IdUnidad: number, Nombre: string}) => {
+          return {
+            value: d.IdUnidad,
+            label: d.IdUnidad + '-' + d.Nombre
+          };
+        });
       }));
     } catch (err: any) {
       SweetAlert.fire({

@@ -96,8 +96,8 @@ export class ClasificadorCuentaService {
           SeUtiliza: this.fg.controls['seUtiliza'].value.join(', '),
           Terminal: this.fg.controls['terminal'].value,
           Crit1Consolidacion: this.fg.controls['crit1Consolidacion'].value,
-          Crit3Consolidacion: this.fg.controls['crit2Consolidacion'].value,
-          Crit2Consolidacion: this.fg.controls['crit3Consolidacion'].value,
+          Crit2Consolidacion: this.fg.controls['crit2Consolidacion'].value,
+          Crit3Consolidacion: this.fg.controls['crit3Consolidacion'].value,
         };
 
         this.subscription.push(this._apollo.mutate<ClasificadorCuentasMutationResponse>({

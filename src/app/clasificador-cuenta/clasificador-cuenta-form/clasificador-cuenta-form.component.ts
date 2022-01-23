@@ -115,7 +115,7 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
         }
 
         this._closeModal(txtMessage);
-      }, error => { throw new Error(error); }));
+      }));
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',

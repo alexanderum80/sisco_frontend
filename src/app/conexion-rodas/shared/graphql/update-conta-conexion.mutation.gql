@@ -1,4 +1,4 @@
-mutation UpdateContaConexion($conexionInfo: ContaConexionInput!) {
+mutation UpdateContaConexion($conexionInfo: ContaConexionDTO!) {
     updateContaConexion(conexionInfo: $conexionInfo) {
         success
         error

@@ -5,10 +5,7 @@ query GetUnidadesByIdDivision($idDivision: Int!) {
             IdUnidad
             Nombre
             IdSubdivision
-            Subdivision
             IdDivision
-            Division
-            Abierta
         }
         error
     }

@@ -22,13 +22,13 @@
     <div class="conciliacion-detalle shadow-1 mt-2">
       <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
         <p-tabPanel header="Análisis de Asientos">
-          <png-table [columns]="displayedColumnsConciliacion" [data]="dataSourceAsientos" [paginator]="false" groupField="Consulta"></png-table>
+          <png-table [columns]="displayedColumnsConciliacion" [data]="dataSourceAsientos" [paginator]="false" [filterData]="false" groupField="Consulta"></png-table>
         </p-tabPanel>
         <p-tabPanel header="Chequeo de expresiones">
-          <png-table [columns]="displayedColumnsExpresiones" [data]="dataSourceExpresiones" [paginator]="false"></png-table>
+          <png-table [columns]="displayedColumnsExpresiones" [data]="dataSourceExpresiones" [paginator]="false" [filterData]="false"></png-table>
         </p-tabPanel>
         <p-tabPanel header="Chequeo de valores">
-          <png-table [columns]="displayedColumnsValores" [data]="dataSourceValores" [paginator]="false"></png-table>
+          <png-table [columns]="displayedColumnsValores" [data]="dataSourceValores" [paginator]="false" [filterData]="false"></png-table>
         </p-tabPanel>
         <p-tabPanel header="Análisis del Clasificador">
           <png-table [columns]="displayedColumnsClasificador" [data]="dataSourceClasificador" [filterData]="false"></png-table>
