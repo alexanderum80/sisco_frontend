@@ -3,14 +3,14 @@ import * as moment from 'moment';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
-// pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
 @Injectable({
   providedIn: 'root'
 })
 export class PdfmakeService {
 
-  constructor() { }
+  constructor() { 
+    (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
+  }
 
   public generatePdf(documentDefinition: any, action = 'open'): void {
     switch (action) {

@@ -9,7 +9,7 @@ import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } fr
 import { PdfmakeService } from './../shared/services/pdfmake.service';
 import { toNumber } from 'lodash';
 import SweetAlert from 'sweetalert2';
-import { MatTabGroup } from '@angular/material/tabs';
+import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
 
 const parteAtrasosQuery = require('graphql-tag/loader!./shared/graphql/parte-atrasos.query.gql');
 
@@ -19,14 +19,27 @@ const parteAtrasosQuery = require('graphql-tag/loader!./shared/graphql/parte-atr
   styleUrls: ['./parte-atraso.component.scss']
 })
 export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('tabGroup') tabGroup: MatTabGroup;
-
   selectedTabViewIndex = 0;
+
+  displayedColumnsParteAtraso: ITableColumns[] = [
+    { header: 'Unidad', field: 'Unidad', type: 'string' },
+    { header: 'Atraso Restaurador', field: 'AtrasoRest', type: 'string' },
+    { header: 'Atraso DWH', field: 'AtrasoDWH', type: 'string' },
+    { header: 'Atraso Distribuidor', field: 'AtrasoDist', type: 'string' },
+    { header: 'Atraso Empresa', field: 'AtrasoEmp', type: 'string' },
+  ];
+  displayedColumnsDatosIdGam: ITableColumns[] = [
+    { header: 'Año', field: 'Ano', type: 'string' },
+    { header: 'Mes', field: 'Mes', type: 'string' },
+    { header: 'Fecha', field: 'Fecha', type: 'date' },
+    { header: 'Versión Golden', field: 'Version', type: 'string' },
+    { header: 'Versión UtilNet', field: 'vUtilnet', type: 'string' },
+    { header: 'Última Circular', field: 'UltimaCircular', type: 'string' },
+    { header: 'Período Restaurado', field: 'PeriodoRestaurado', type: 'string' },
+  ];
 
   dataSourceParteAtraso = [];
   dataSourceDatosIdGam = [];
-  displayedColumnsParteAtraso = ['Unidad', 'AtrasoRest', 'AtrasoDWH', 'AtrasoDist', 'AtrasoEmp'];
-  displayedColumnsDatosIdGam = ['Ano', 'Mes', 'Fecha', 'Version', 'vUtilnet', 'UltimaCircular', 'PeriodoRestaurado'];
 
   divisionesValues: SelectItem[] = [];
   loading = false;
@@ -100,10 +113,6 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
     return this.fg.valid;
   }
 
-  isGroup(index: any, item: { isGroupBy: boolean; }): boolean {
-    return item.isGroupBy;
-  }
-
   calcular(): void {
     try {
       this.loading = true;
@@ -129,9 +138,7 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
         }
 
         this.dataSourceParteAtraso = JSON.parse(_parteAtrasos.data);
-        this._parteAtrasoSvc.getFormattedDetalleParteAtraso(JSON.parse(_datosIdGAM.data)).then(data => {
-          this.dataSourceDatosIdGam = data;
-        });
+        this.dataSourceDatosIdGam = JSON.parse(_datosIdGAM.data);
       }));
     } catch (err: any) {
       this.loading = false;
@@ -161,7 +168,7 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   reporte(): void {
-    switch (this.tabGroup.selectedIndex) {
+    switch (this.selectedTabViewIndex) {
       case 0:
         this._reporteParteAtraso();
         break;

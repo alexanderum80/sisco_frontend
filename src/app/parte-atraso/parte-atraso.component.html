@@ -8,90 +8,16 @@
     <div class="parte-atraso-detalle shadow-1">
       <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
         <p-tabPanel header="Parte de Atrasos">
-          <table class="w-100 mat-elevation-z2" mat-table="mat-table" [dataSource]="dataSourceParteAtraso">
-            <ng-container matColumnDef="Unidad">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Unidad</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Unidad }}</td>
-            </ng-container>
-            <ng-container matColumnDef="AtrasoRest">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Atraso Restaurador</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.AtrasoRest }}</td>
-            </ng-container>
-            <ng-container matColumnDef="AtrasoDWH">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Atraso DWH</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.AtrasoDWH }}</td>
-            </ng-container>
-            <ng-container matColumnDef="AtrasoDist">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Atraso Distribuidor</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.AtrasoDist }}</td>
-            </ng-container>
-            <ng-container matColumnDef="AtrasoEmp">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Atraso Empresa</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.AtrasoEmp }}</td>
-            </ng-container>
-            <ng-container>
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef> </th>
-              <td mat-cell="mat-cell" *matCellDef="let data"> 
-                <mat-icon>home</mat-icon>
-              </td>
-            </ng-container><!-- Header row first group -->
-            <ng-container matColumnDef="header-row-first-group">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef [attr.colspan]="1"></th>
-            </ng-container><!-- Header row division -->
-            <ng-container matColumnDef="header-row-division">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef [style.text-align]="'center'" [attr.colspan]="2">División</th>
-            </ng-container><!-- Header row empresa -->
-            <ng-container matColumnDef="header-row-empresa">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef [attr.colspan]="2">Empresa</th>
-            </ng-container>
-            <tr mat-header-row="mat-header-row" *matHeaderRowDef="['header-row-first-group', 'header-row-division', 'header-row-empresa']">                              </tr>
-            <tr mat-header-row="mat-header-row" *matHeaderRowDef="displayedColumnsParteAtraso; sticky: true"></tr>
-            <tr class="element-row" mat-row="mat-row" *matRowDef="let row; columns: displayedColumnsParteAtraso;"></tr>
-          </table>
+          <png-table [columns]="displayedColumnsParteAtraso" [data]="dataSourceParteAtraso" [paginator]="false"></png-table>
         </p-tabPanel>
         <p-tabPanel header="Detalle de las Salvas">
-          <table class="w-100 mat-elevation-z2" mat-table="mat-table" [dataSource]="dataSourceDatosIdGam">
-            <ng-container matColumnDef="Ano">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Año</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Ano }}</td>
-            </ng-container>
-            <ng-container matColumnDef="Mes">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Mes</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Mes }}</td>
-            </ng-container>
-            <ng-container matColumnDef="Fecha">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Fecha</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Fecha }| date:'dd/MM/yyyy' }</td>
-            </ng-container>
-            <ng-container matColumnDef="Version">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Versión Golden</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Version }}</td>
-            </ng-container>
-            <ng-container matColumnDef="vUtilnet">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Versión UtilNet</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.vUtilnet }}</td>
-            </ng-container>
-            <ng-container matColumnDef="UltimaCircular">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Última Circular</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.UltimaCircular }}</td>
-            </ng-container>
-            <ng-container matColumnDef="PeriodoRestaurado">
-              <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Período Restaurado</th>
-              <td mat-cell="mat-cell" *matCellDef="let data">{{ data.PeriodoRestaurado }}</td>
-            </ng-container>
-            <tr mat-header-row="mat-header-row" *matHeaderRowDef="displayedColumnsDatosIdGam; sticky: true"></tr>
-            <tr class="element-row" mat-row="mat-row" *matRowDef="let row; columns: displayedColumnsDatosIdGam;"></tr>
-            <ng-container matColumnDef="groupHeader">
-              <td colspan="999" mat-cell="mat-cell" *matCellDef="let groupBy"><strong>{{ groupBy.field }}: {{ groupBy.value }}</strong></td>
-            </ng-container>
-            <tr mat-row="mat-row" *matRowDef="let row; columns: ['groupHeader']; when: isGroup"></tr>
-          </table>
+          <png-table [columns]="displayedColumnsDatosIdGam" [data]="dataSourceDatosIdGam" groupField="Unidad" [paginator]="false"></png-table>
         </p-tabPanel>
       </p-tabView>
     </div>
     <div class="item__footer m-t-10">
-      <am-button class="m-r-10" label="Calcular" type="raised-button" color="primary" [disabled]="!fg.valid" (clicked)="calcular()"></am-button>
-      <am-button class="m-r-10" label="Reporte" type="raised-button" [disabled]="dataSourceParteAtraso.length === 0" (clicked)="reporte()"></am-button>
+      <png-button class="mr-1" label="Calcular" icon="mdi mdi-file-check-outline" [disabled]="!fg.valid" (clicked)="calcular()"></png-button>
+      <png-button class="m-r-10" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSourceParteAtraso.length" (clicked)="reporte()"></png-button>
     </div>
   </png-panel>
 </div>

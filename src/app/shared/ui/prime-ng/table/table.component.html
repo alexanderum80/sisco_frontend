@@ -86,15 +86,15 @@
             <td *ngIf="rowgroup && groupMode === 'rowspan'" [attr.rowspan]="rowspan">
                 <span class="p-text-bold p-ml-2">{{_(rowData, groupField)}}</span>
             </td>
-            <ng-container  *ngFor="let col of columns">
+            <ng-container *ngFor="let col of columns">
                 <td *ngIf="groupMode === 'rowspan' && col.field !== groupField " [ngSwitch]="col.type" [class.text-right]="col.type === 'number' || col.type === 'decimal'">
-                    <span *ngSwitchCase="'date'"> {{ rowData[col.field] | date }}</span>
+                    <span *ngSwitchCase="'date'"> {{ rowData[col.field] | date: 'dd/MM/yyyy' }}</span>
                     <span *ngSwitchCase="'decimal'"> {{ rowData[col.field] | currency }}</span>
                     <i *ngSwitchCase="'boolean'" class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': rowData[col.field], 'false-icon pi-times-circle text-pink-500': !rowData[col.field]}"></i>
                     <span *ngSwitchDefault> {{ _(rowData, col.field) }}</span>
                 </td>
                 <td *ngIf="groupMode !== 'rowspan' && col.field !== groupField " [ngSwitch]="col.type" [class.text-right]="col.type === 'number' || col.type === 'decimal'">
-                    <span *ngSwitchCase="'date'"> {{ rowData[col.field] | date }}</span>
+                    <span *ngSwitchCase="'date'"> {{ rowData[col.field] | date: 'dd/MM/yyyy' }}</span>
                     <span *ngSwitchCase="'decimal'"> {{ rowData[col.field] | currency }}</span>
                     <i *ngSwitchCase="'boolean'" class="pi" [ngClass]="{'true-icon pi-check-circle text-green-500': rowData[col.field], 'false-icon pi-times-circle text-pink-500': !rowData[col.field]}"></i>
                     <span *ngSwitchDefault> {{ _(rowData, col.field) }}</span>

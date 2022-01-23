@@ -1,6 +1,6 @@
 import { DateFormatEnum, LocaleFormatEnum } from './../../../shared/models/date-range';
 import { formatDate } from '@angular/common';
-import { sortBy } from 'lodash';
+import { sortBy, uniqBy } from 'lodash';
 import { Injectable } from '@angular/core';
 
 @Injectable()
@@ -65,68 +65,19 @@ export class ParteAtrasoService {
     return returnValue;
   }
 
-  public async getFormattedDetalleParteAtraso(data: any[]): Promise<any> {
-    let _idCentro = 0;
-
-    const result: any[] = [];
-
-    if (data && data.length) {
-      data = sortBy(data, ['IdUnidad', 'Ano', 'Mes']);
-      data.forEach(element => {
-        if (element.IdUnidad !== _idCentro) {
-          result.push({
-              field: 'Unidad',
-              value: element.Unidad,
-              IdUnidad: element.IdUnidad,
-              isGroupBy: true
-          });
-
-          _idCentro = element.IdUnidad;
-        }
-
-        result.push({
-          IdUnidad: element.IdUnidad,
-          Ano: element.Ano,
-          Mes: element.Mes,
-          Fecha: element.Fecha,
-          Version: element.Version,
-          vUtilnet: element.vUtilnet,
-          UltimaCircular: element.UltimaCircular,
-          PeriodoRestaurado: this._processPeriodoRestaurado(element.PeriodoRestaurado)
-        });
-      });
-    }
-
-    return result;
-  }
-
-  private _processPeriodoRestaurado(periodo: string): string {
-    if (!periodo) {
-      return '';
-    }
-
-    const _periodos = periodo.split('.');
-    const _periodoIni = _periodos[0].substr(6, 2) + '/' + _periodos[0].substr(4, 2) + '/' + _periodos[0].substr(0, 4);
-    const _periodoFin = _periodos[1].substr(6, 2) + '/' + _periodos[1].substr(4, 2) + '/' + _periodos[1].substr(0, 4);
-
-    return _periodoIni + ' - ' + _periodoFin;
-  }
-
   public async getDetalleParteAtrasoDefinition(detalleAtrasosData: any): Promise<any> {
     const definition: any[] = [];
 
-    const groupData = detalleAtrasosData.filter((d: { isGroupBy: any; }) => d.isGroupBy);
+    const unidades = uniqBy(detalleAtrasosData, 'IdUnidad');
 
-    groupData.forEach((element: { field: string; value: string; IdUnidad: any; }) => {
-      if (element.field) {
-        definition.push({
-          text: element.field + ': ' + element.value,
-          bold: true,
-          margin: [0, 10, 0, 0]
-        });
-      }
+    unidades.forEach((u: any) => {
+      definition.push({
+        text: 'Unidad: ' + u.Unidad,
+        bold: true,
+        margin: [0, 10, 0, 0]
+      });
 
-      const data = detalleAtrasosData.filter((f: { IdUnidad: any; isGroupBy: any; }) => f.IdUnidad === element.IdUnidad && !f.isGroupBy);
+      const data = detalleAtrasosData.filter((f: { IdUnidad: string }) => f.IdUnidad === u.IdUnidad);
 
       if (data.length) {
         definition.push(this._getDetalleParteAtrasoTable(data));

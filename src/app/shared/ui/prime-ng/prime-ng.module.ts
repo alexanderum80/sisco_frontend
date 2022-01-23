@@ -71,7 +71,12 @@ export class PrimeNgModule {
       endsWith: 'Termina con',
       equals: 'Igual',
       notEquals: 'No es igual',
-      noFilter: 'Sin filtro'
+      noFilter: 'Sin filtro',
+      dateIs: 'Fecha es',
+      dateIsNot: 'Fecha no es',
+      dateAfter: 'Fecha después de',
+      dateBefore: 'Fecha antes de',
+      dateFormat: 'Formato de fecha',      
     });
    }
  }
