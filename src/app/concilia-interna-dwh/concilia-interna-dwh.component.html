@@ -1,97 +1,84 @@
 <png-progress-spinner *ngIf="loading"></png-progress-spinner>
 
 <div class="content">
-  <!-- <app-close-button></app-close-button> -->
-  <png-card class="h-100 w-100" title="Conciliación Interna Golden DWH">
+  <png-panel class="h-full w-full" header="Conciliación Interna Golden DWH">
     <form [formGroup]="fg">
-      <div class="flex p-10">
-        <mat-card class="p-10 flex" layout="column">
-          <div class="float-title">Centro a Analizar</div>
+      <div class="flex">
+        <p-fieldset legend="Centro a Analizar">
           <div class="form__group">
-            <am-select class="w-100" label="División" [fg]="fg" control="idDivision" [required]="true" [values]="divisionesValues"></am-select>
+            <png-dropdown class="w-20rem" [fg]="fg" control="idDivision" label="División" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
           </div>
           <div class="form__group">
-            <am-select class="w-100" label="Subdivisión" [fg]="fg" control="idSubdivision" [values]="subdivisionesValues"></am-select>
+            <png-dropdown class="w-20rem" [fg]="fg" control="idSubdivision" label="Subdivisión" [optionsValues]="subdivisionesValues" placeholder="<TODAS>" [filter]="true" [showClear]="true"></png-dropdown>
           </div>
           <div class="form__group">
-            <am-select class="w-100" label="Unidad" [fg]="fg" control="idUnidad" [values]="unidadesValues"></am-select>
+            <png-dropdown class="w-20rem" [fg]="fg" control="idUnidad" label="Unidad" [optionsValues]="unidadesValues" placeholder="<TODAS>" [filter]="true" [showClear]="true"></png-dropdown>
           </div>
-        </mat-card>
-        <mat-card class="p-10 flex m-l-20" layout="column">
-          <div class="float-title">Centro Emisor/Receptor</div>
+        </p-fieldset>
+        <p-fieldset class="ml-3" legend="Centro Origen / Destino">
           <div class="form__group">
-            <am-select class="w-100" label="División" [fg]="fg" control="idDivisionOD" [required]="true" [disabled]="true" [values]="divisionesODValues"></am-select>
-          </div>
-          <div class="form__group">
-            <am-select class="w-100" label="Subdivisión" [fg]="fg" control="idSubdivisionOD" [values]="subdivisionesODValues"></am-select>
+            <png-dropdown class="w-20rem" [fg]="fg" control="idDivisionOD" label="División" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [disabled]="true" [showClear]="true"></png-dropdown>
           </div>
           <div class="form__group">
-            <am-select class="w-100" label="Unidad" [fg]="fg" control="idUnidadOD" [values]="unidadesODValues"></am-select>
-          </div>
-        </mat-card>
-        <div class="m-l-20" layout="column">
-          <div class="form__group">
-            <am-date-picker class="flex" [fg]="fg" label="Fecha Inicial" control="fechaInicial" [disabled]="true"></am-date-picker>
+            <png-dropdown class="w-20rem" [fg]="fg" control="idSubdivisionOD" label="Subdivisión" [optionsValues]="subdivisionesValues" placeholder="<TODAS>" [filter]="true" [showClear]="true"></png-dropdown>
           </div>
           <div class="form__group">
-            <am-date-picker class="flex" [fg]="fg" label="Fecha Final" control="fechaFinal" [disabled]="true"></am-date-picker>
+            <png-dropdown class="w-20rem" [fg]="fg" control="idUnidadOD" label="Unidad" [optionsValues]="unidadesODValues" placeholder="<TODAS>" [filter]="true" [showClear]="true"></png-dropdown>
+          </div>
+        </p-fieldset>
+        <div class="ml-3 mt-2" layout="column">
+          <div class="form__group">
+            <png-calendar class="w-100" [fg]="fg" label="Fecha Inicial" labelWidth="100" control="fechaInicial"[required]="true"></png-calendar>
+          </div>
+          <div class="form__group">
+            <png-calendar class="w-100" [fg]="fg" label="Fecha Final" labelWidth="100" control="fechaFinal" [required]="true"></png-calendar>
           </div>
           <div class="m-l-10 m-t-10">
-            <am-checkbox label="Mostrar solo Diferencias" [fg]="fg" control="soloDiferencias"></am-checkbox>
+            <png-checkbox class="mt-1 ml-3" [fg]="fg" control="soloDiferencias" label="Mostrar solo Diferencias"></png-checkbox>
           </div>
         </div>
       </div>
     </form>
-    <mat-card class="conciliacion-detalle">           
-      <table class="w-100 mat-elevation-z2" mat-table="mat-table" [dataSource]="dataSource">
-        <ng-container matColumnDef="Documento">
-          <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Documento</th>
-          <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Documento }}</td>
-          <td mat-footer-cell="mat-footer-cell" *matFooterCellDef><strong>TOTAL GENERAL</strong></td>
-        </ng-container>
-        <ng-container matColumnDef="Emisor">
-          <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Emisor</th>
-          <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Emisor }}</td>
-          <td mat-footer-cell="mat-footer-cell" *matFooterCellDef></td>
-        </ng-container>
-        <ng-container matColumnDef="FechaE">
-          <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Fecha Emisión</th>
-          <td mat-cell="mat-cell" *matCellDef="let data">{{ data.FechaE | date:'dd/MM/yyyy' }}</td>
-          <td mat-footer-cell="mat-footer-cell" *matFooterCellDef></td>
-        </ng-container>
-        <ng-container matColumnDef="ImporteE">
-          <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Importe Emisor</th>
-          <td mat-cell="mat-cell" *matCellDef="let data">{{ data.ImporteE | currency }}</td>
-          <td mat-footer-cell="mat-footer-cell" *matFooterCellDef><strong>{{ getTotalImporteE() | currency}}</strong></td>
-        </ng-container>
-        <ng-container matColumnDef="Receptor">
-          <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Receptor</th>
-          <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Receptor }}</td>
-          <td mat-footer-cell="mat-footer-cell" *matFooterCellDef></td>
-        </ng-container>
-        <ng-container matColumnDef="FechaR">
-          <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Fecha Recepción</th>
-          <td mat-cell="mat-cell" *matCellDef="let data">{{ data.FechaR | date:'dd/MM/yyyy' }}</td>
-          <td mat-footer-cell="mat-footer-cell" *matFooterCellDef></td>
-        </ng-container>
-        <ng-container matColumnDef="ImporteR">
-          <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Importe Receptor</th>
-          <td mat-cell="mat-cell" *matCellDef="let data">{{ data.ImporteR | currency }}</td>
-          <td mat-footer-cell="mat-footer-cell" *matFooterCellDef><strong>{{ getTotalImporteR() | currency}}</strong></td>
-        </ng-container>
-        <ng-container matColumnDef="Diferencia">
-          <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Diferencia</th>
-          <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Diferencia | currency }}</td>
-          <td mat-footer-cell="mat-footer-cell" *matFooterCellDef><strong>{{ getTotalDiferencia() | currency}}</strong></td>
-        </ng-container>
-        <tr mat-header-row="mat-header-row" *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr class="element-row" mat-row="mat-row" *matRowDef="let row; columns: displayedColumns;"></tr>
-        <tr mat-footer-row="mat-footer-row" *matFooterRowDef="displayedColumns">  </tr>
-      </table>
-    </mat-card>
-    <div class="item__footer m-t-10">
-      <am-button class="m-r-10 m-b-10" label="Conciliar" type="raised-button" color="primary" [disabled]="!fg.valid" (clicked)="conciliar()"></am-button>
-      <am-button class="m-r-10 m-b-10" label="Reporte" type="raised-button" [disabled]="dataSource.length === 0" (clicked)="reporte()"></am-button>
+    <div class="conciliacion-detalle shadow-1 mt-2">          
+      <p-table [value]="dataSource" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+            <tr>
+              <th>Documento</th>
+              <th>Emisor</th>
+              <th>Fecha Emisión</th>
+              <th class="text-right">Importe Emisor</th>
+              <th>Receptor</th>
+              <th>Fecha Recepción</th>
+              <th class="text-right">Importe Receptor</th>
+              <th class="text-right">Diferencia</th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-concilia>
+            <tr>
+              <td>{{ concilia.Documento }}</td>
+              <td>{{ concilia.Emisor }}</td>
+              <td>{{ concilia.FechaE | date: 'dd/MM/yyyy' }}</td>
+              <td class="text-right">{{ concilia.ImporteE | currency: 'USD' }}</td>
+              <td>{{ concilia.Receptor }}</td>
+              <td>{{ concilia.FechaR | date: 'dd/MM/yyyy' }}</td>
+              <td class="text-right">{{ concilia.ImporteR | currency: 'USD' }}</td>
+              <td class="text-right">{{ concilia.Diferencia | currency: 'USD' }}</td>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <tr>
+              <td colspan="3">TOTAL</td>
+              <td class="text-right">{{ totalEmisor | currency: 'USD' }}</td>
+              <td colspan="2"></td>
+              <td class="text-right">{{ totalReceptor | currency: 'USD' }}</td>
+              <td class="text-right">{{ totalDiferencia | currency: 'USD' }}</td>
+            </tr>
+        </ng-template>
+      </p-table> 
     </div>
-  </png-card>
+    <div class="item__footer mt-2">
+      <png-button class="m-r-10" label="Conciliar" [style]="'primary'" icon="mdi mdi-file-check-outline" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
+      <png-button class="m-r-10" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSource.length" (clicked)="reporte()"></png-button>
+    </div>
+  </png-panel>
 </div>

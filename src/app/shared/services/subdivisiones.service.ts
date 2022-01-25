@@ -3,7 +3,8 @@ import { Apollo } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-const subdivisionesQuery = require('graphql-tag/loader!../graphql/subdivisiones.query.gql');
+const allSubdivisionesQuery = require('graphql-tag/loader!../graphql/subdivisiones.query.gql');
+const subdivisionesByIdDivisionQuery = require('graphql-tag/loader!../graphql/subdivisiones-by-idDivision.query.gql');
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,23 @@ export class SubdivisionesService {
     return new Observable<SubdivisionesQueryResponse>(subscriber => {
       try {
         this._apollo.query<SubdivisionesQueryResponse>({
-          query: subdivisionesQuery,
+          query: allSubdivisionesQuery,
+          fetchPolicy: 'network-only'
+        }).subscribe(response => {
+          subscriber.next(response.data);
+        });
+      } catch (err: any) {
+        subscriber.error(err);
+      }
+    });
+  }
+
+  getSubdivisionesByIdDivision(idDivision: number): Observable<SubdivisionesQueryResponse> {
+    return new Observable<SubdivisionesQueryResponse>(subscriber => {
+      try {
+        this._apollo.query<SubdivisionesQueryResponse>({
+          query: subdivisionesByIdDivisionQuery,
+          variables: { idDivision },
           fetchPolicy: 'network-only'
         }).subscribe(response => {
           subscriber.next(response.data);

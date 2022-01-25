@@ -1,3 +1,4 @@
+import { PrimeFieldsetModule } from './fieldset/fieldset.module';
 import { PrimeMultiSelectModule } from './multi-select/multi-select.module';
 import { PrimeToolbarModule } from './toolbar/toolbar.module';
 import { PrimeProgressSpinnerModule } from './progress-spinner/progress-spinner.module';
@@ -25,6 +26,7 @@ import { PrimeConfirmPopupModule } from './confirm-popup/confirm-popup.module';
 import { PrimeTabViewModule } from './tab-view/tab-view.module';
 import { PrimeCardModule } from './card/card.module';
 import { PrimeToastModule } from './toast/toast.module';
+import { PrimeInputTextareaModule } from './input-textarea/input-textarea.module';
 
 const modules = [
   PrimeButtonModule,
@@ -35,8 +37,10 @@ const modules = [
   PrimeDialogModule,
   PrimeDinamicDialogModule,
   PrimeDropdownModule,
+  PrimeFieldsetModule,
   PrimeInputMaskModule,
   PrimeInputTextModule,
+  PrimeInputTextareaModule,
   PrimeMenubarModule,
   PrimeMultiSelectModule,
   PrimePanelModule,

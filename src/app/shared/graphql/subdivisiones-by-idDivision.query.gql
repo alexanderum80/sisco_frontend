@@ -1,0 +1,11 @@
+query GetSubdivisionesByIdDivision($idDivision: Int!){
+  getSubdivisionesByIdDivision(idDivision: $idDivision) {
+    success
+    data {
+      IdSubdivision
+      Subdivision
+      IdDivision
+    }
+    error
+  }
+}

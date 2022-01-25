@@ -1,13 +1,13 @@
-<am-spinner *ngIf="loading"></am-spinner>
+<png-progress-spinner *ngIf="loading"></png-progress-spinner>
+
 <div class="content">
-  <!-- <app-close-button></app-close-button> -->
-  <am-card class="h-100 w-100" title="Golden DWH vs Rodas">
+  <png-panel class="h-100 w-100" header="Golden DWH vs Rodas">
     <form [formGroup]="fg">
-      <mat-card class="m-1">
+      <p-card>
         <div class="flex p-10">
-          <mat-card class="tipo-centro-container">
+          <p-card class="tipo-centro-container">
             <png-radio-button [fg]="fg" control="tipoCentro" [items]="tipoCentrosValues"></png-radio-button>
-          </mat-card>
+          </p-card>
           <div class="unidad-container flex m-l-20" layout="column">
             <div class="form__group">
               <png-dropdown class="w-100" [fg]="fg" control="idDivision" label="División" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
@@ -24,7 +24,7 @@
               </div>
             </div>
           </div>
-          <div class="empleados-container w-50 m-l-20" layout="column">
+          <div class="empleados-container w-50 ml-2" layout="column">
             <div class="form__group">
               <png-dropdown class="w-100" [fg]="fg" control="idEmpleado" label="Empleado" [optionsValues]="empleadosValues" placeholder="(Opcional)" [filter]="true" [showClear]="true"></png-dropdown>
             </div>
@@ -36,201 +36,147 @@
             </div>
           </div>
         </div>
-      </mat-card>
+      </p-card>
     </form>
-    <mat-card class="conciliacion-detalle m-1">
-      <mat-tab-group class="h-100" #tabGroup>
-        <mat-tab label="Conciliación">
-          <mat-card class="m-1">
-            <mat-card-title class="bold">Análisis de Inventario</mat-card-title>
-            <mat-card-content> 
-              <table class="w-100 mat-elevation-z2" mat-table="mat-table" [dataSource]="dataSourceInventario">
-                <ng-container matColumnDef="Unidad" *ngIf="isConsolidado">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Unidad</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Unidad === 'TOTAL'">{{ data.Unidad }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef><strong>TOTAL GENERAL</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="Almacen" *ngIf="!isConsolidado">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Piso</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.Almacen }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>TOTAL GENERAL</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="Cuenta" *ngIf="!isConsolidado">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Cuenta</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Cuenta }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef></td>
-                </ng-container>
-                <ng-container matColumnDef="CuentaMN" *ngIf="!isConsolidado">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Cuenta MN</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data">{{ data.CuentaMN }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef></td>
-                </ng-container>
-                <ng-container matColumnDef="SaldoGolden">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Saldo Golden</th>
-                  <td class="right" mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.SaldoGolden | currency }}</td>
-                  <td class="right" mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalInvSaldoGolden() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="SaldoRestaurador">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Saldo Restaurador</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.SaldoRestaurador | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalInvSaldoRestaurador() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="DifGoldenRest">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Dif. Golden Rest.</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.DifGoldenRest | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalInvDifGoldenRest() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="SaldoDistribuidor">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Saldo Distribuidor</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.SaldoDistribuidor | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalInvSaldoDistribuidor() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="DifGoldenDist">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Dif. Golden Dist.</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.DifGoldenDist | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalInvDifGoldenDist() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="SaldoRodas">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Saldo Rodas</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.SaldoRodas | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalInvSaldoRodas() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="DifGoldenRodas">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Dif. Golden Rodas</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.DifGoldenRodas | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalInvDifGoldenRodas() | currency}}</strong></td>
-                </ng-container>
-                <tr mat-header-row="mat-header-row" *matHeaderRowDef="displayedColumnsConciliacion"></tr>
-                <tr class="element-row" mat-row="mat-row" *matRowDef="let row; columns: displayedColumnsConciliacion;"></tr>
-                <tr mat-footer-row="mat-footer-row" *matFooterRowDef="displayedColumnsConciliacion">  </tr>
-                <ng-container matColumnDef="groupHeader">
-                  <td colspan="999" mat-cell="mat-cell" *matCellDef="let groupBy"><strong>{{ groupBy.field }}: {{groupBy.value}}</strong></td>
-                </ng-container>
-                <tr mat-row="mat-row" *matRowDef="let row; columns: ['groupHeader']; when: isGroup"></tr>
-              </table>
-            </mat-card-content>
-          </mat-card>
-          <mat-card class="m-1">
-            <mat-card-title class="bold">Análisis de Ventas</mat-card-title>
-            <mat-card-content> 
-              <table class="w-100 mat-elevation-z2" mat-table="mat-table" [dataSource]="dataSourceVenta">
-                <ng-container matColumnDef="Unidad" *ngIf="isConsolidado">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Unidad</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Unidad === 'TOTAL'">{{ data.Unidad }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef><strong>TOTAL GENERAL</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="Almacen" *ngIf="!isConsolidado">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Piso</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.Almacen }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef><strong>TOTAL GENERAL</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="Cuenta" *ngIf="!isConsolidado">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Cuenta</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Cuenta }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef></td>
-                </ng-container>
-                <ng-container matColumnDef="CuentaMN" *ngIf="!isConsolidado">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Cuenta MN</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data">{{ data.CuentaMN }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef></td>
-                </ng-container>
-                <ng-container matColumnDef="SaldoGolden">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Saldo Golden</th>
-                  <td class="right" mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.SaldoGolden | currency }}</td>
-                  <td class="right" mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalVtaSaldoGolden() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="SaldoRestaurador">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Saldo Restaurador</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.SaldoRestaurador | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalVtaSaldoRestaurador() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="DifGoldenRest">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Dif. Golden Rest.</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.DifGoldenRest | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalVtaDifGoldenRest() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="SaldoDistribuidor">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Saldo Distribuidor</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.SaldoDistribuidor | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalVtaSaldoDistribuidor() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="DifGoldenDist">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Dif. Golden Dist.</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.DifGoldenDist | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalVtaDifGoldenDist() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="SaldoRodas">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Saldo Rodas</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.SaldoRodas | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalVtaSaldoRodas() | currency}}</strong></td>
-                </ng-container>
-                <ng-container matColumnDef="DifGoldenRodas">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Dif. Golden Rodas</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data" [class.bold]="data.Almacen === 'TOTAL'">{{ data.DifGoldenRodas | currency }}</td>
-                  <td mat-footer-cell="mat-footer-cell" *matFooterCellDef> <strong>{{ getTotalVtaDifGoldenRodas() | currency}}</strong></td>
-                </ng-container>
-                <tr mat-header-row="mat-header-row" *matHeaderRowDef="displayedColumnsConciliacion"></tr>
-                <tr class="element-row" mat-row="mat-row" *matRowDef="let row; columns: displayedColumnsConciliacion;"></tr>
-                <tr mat-footer-row="mat-footer-row" *matFooterRowDef="displayedColumnsConciliacion">  </tr>
-                <ng-container matColumnDef="groupHeader">
-                  <td colspan="999" mat-cell="mat-cell" *matCellDef="let groupBy"><strong>{{ groupBy.field }}: {{groupBy.value}}</strong></td>
-                </ng-container>
-                <tr mat-row="mat-row" *matRowDef="let row; columns: ['groupHeader']; when: isGroup"></tr>
-              </table>
-            </mat-card-content>
-          </mat-card>
-        </mat-tab>
-        <mat-tab label="Nota">
-          <div class="m-10">
-            <am-textarea label="Nota" [fg]="fg" control="nota" placeholder="Nota explicativa sobre los descuadres."></am-textarea>
-          </div>
-        </mat-tab>
-        <mat-tab label="Almacenes del Golden vs Rodas" [disabled]="isConsolidado">
-          <mat-card class="m-1">
-            <mat-card-title>Análisis de Almacenes</mat-card-title>
-            <mat-card-content> 
-              <table class="w-100 mat-elevation-z2" mat-table="mat-table" [dataSource]="dataSourceAlmacenes">
-                <ng-container matColumnDef="IdUnidad">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Unidad</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data">{{ data.IdUnidad }}</td>
-                </ng-container>
-                <ng-container matColumnDef="Almacen">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Almacén</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Almacen }}</td>
-                </ng-container>
-                <ng-container matColumnDef="CuentaG">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Cuenta Golden</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data">{{ data.CuentaG }}</td>
-                </ng-container>
-                <ng-container matColumnDef="CuentaGMN">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Cuenta Golden MN</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data">{{ data.CuentaGMN }}</td>
-                </ng-container>
-                <ng-container matColumnDef="CuentaR">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Cuenta Rodas</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data">{{ data.CuentaR }}</td>
-                </ng-container>
-                <ng-container matColumnDef="CuentaRMN">
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Cuenta Rodas MN</th>
-                  <td mat-cell="mat-cell" *matCellDef="let data">{{ data.CuentaRMN }}</td>
-                </ng-container>
-                <ng-container>
-                  <th mat-header-cell="mat-header-cell" *matHeaderCellDef> </th>
-                  <td mat-cell="mat-cell" *matCellDef="let data"> 
-                    <mat-icon>home</mat-icon>
-                  </td>
-                </ng-container>
-                <tr mat-header-row="mat-header-row" *matHeaderRowDef="displayedColumnsAlmacenes"></tr>
-                <tr class="element-row" mat-row="mat-row" *matRowDef="let row; columns: displayedColumnsAlmacenes;"></tr>
-              </table>
-            </mat-card-content>
-          </mat-card>
-        </mat-tab>
-      </mat-tab-group>
-      <div class="item__footer m-t-10">
+    <div class="conciliacion-detalle shadow-1 mt-2">
+      <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
+        <p-tabPanel header="Conciliación">
+          <p-card class="m-1">
+            <ng-template pTemplate="header">Análisis de Inventario</ng-template>
+            <p-table [value]="dataSourceInventario" sortField="IdUnidad" sortMode="single" rowGroupMode="subheader" groupRowsBy="IdUnidad">
+              <ng-template pTemplate="header">
+                  <tr>
+                    <th *ngIf="isConsolidado">Unidad</th>
+                    <th *ngIf="!isConsolidado">Piso</th>
+                    <th *ngIf="!isConsolidado">Cuenta</th>
+                    <th class="text-right">Saldo Golden</th>
+                    <th class="text-right">Saldo Restaurador</th>
+                    <th class="text-right">Dif. Golden - Rest.</th>
+                    <th class="text-right">Saldo Distribuidor</th>
+                    <th class="text-right">Dif. Golden - Dist.</th>
+                    <th class="text-right">Saldo Rodas</th>
+                    <th class="text-right">Dif. Golden - Rodas</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="groupheader" let-inventario *ngIf="!isConsolidado">
+                <tr pRowGroupHeader>
+                    <td colspan="12">
+                        <span class="font-bold ml-2">{{ inventario.Unidad }}</span>
+                    </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-inventario>
+                  <tr>
+                    <td *ngIf="isConsolidado">{{ inventario.Unidad }}</td>
+                    <td *ngIf="!isConsolidado">{{ inventario.Almacen }}</td>
+                    <td *ngIf="!isConsolidado">{{ inventario.Cuenta }}</td>
+                    <td class="text-right">{{ inventario.SaldoGolden | currency: 'USD' }}</td>
+                    <td class="text-right">{{ inventario.SaldoRestaurador | currency: 'USD' }}</td>
+                    <td class="text-right">{{ inventario.DifGoldenRest | currency: 'USD' }}</td>
+                    <td class="text-right">{{ inventario.SaldoDistribuidor | currency: 'USD' }}</td>
+                    <td class="text-right">{{ inventario.DifGoldenDist | currency: 'USD' }}</td>
+                    <td class="text-right">{{ inventario.SaldoRodas | currency: 'USD' }}</td>
+                    <td class="text-right">{{ inventario.DifGoldenRodas | currency: 'USD' }}</td>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="footer">
+                  <tr>
+                    <td [attr.colspan]="isConsolidado ? '1' : '2'">TOTAL</td>
+                    <td class="text-right">{{ totalInvGolden | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalInvRest | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalInvDifGoldenRest | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalInvDist | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalInvDifGoldenDist | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalInvRodas | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalInvDifGoldenRodas | currency: 'USD' }}</td>
+                  </tr>
+              </ng-template>
+            </p-table> 
+          </p-card>
+          <p-card class="m-1">
+            <ng-template pTemplate="header">Análisis de Ventas</ng-template>
+            <p-table [value]="dataSourceVenta" sortField="IdUnidad" rowGroupMode="subheader" groupRowsBy="IdUnidad" responsiveLayout="scroll">
+              <ng-template pTemplate="header">
+                  <tr>
+                    <th *ngIf="isConsolidado">Unidad</th>
+                    <th *ngIf="!isConsolidado">Piso</th>
+                    <th *ngIf="!isConsolidado">Cuenta</th>
+                    <th class="text-right">Saldo Golden</th>
+                    <th class="text-right">Saldo Restaurador</th>
+                    <th class="text-right">Dif. Golden - Rest.</th>
+                    <th class="text-right">Saldo Distribuidor</th>
+                    <th class="text-right">Dif. Golden - Dist.</th>
+                    <th class="text-right">Saldo Rodas</th>
+                    <th class="text-right">Dif. Golden - Rodas</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="groupheader" let-venta *ngIf="!isConsolidado">
+                <tr pRowGroupHeader>
+                    <td colspan="12">
+                        <span class="font-bold ml-2">{{ venta.Unidad }}</span>
+                    </td>
+                </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-venta>
+                  <tr>
+                    <td *ngIf="isConsolidado">{{ venta.Unidad }}</td>
+                    <td *ngIf="!isConsolidado">{{ venta.Almacen }}</td>
+                    <td *ngIf="!isConsolidado">{{ venta.Cuenta }}</td>
+                    <td class="text-right">{{ venta.SaldoGolden | currency: 'USD' }}</td>
+                    <td class="text-right">{{ venta.SaldoRestaurador | currency: 'USD' }}</td>
+                    <td class="text-right">{{ venta.DifGoldenRest | currency: 'USD' }}</td>
+                    <td class="text-right">{{ venta.SaldoDistribuidor | currency: 'USD' }}</td>
+                    <td class="text-right">{{ venta.DifGoldenDist | currency: 'USD' }}</td>
+                    <td class="text-right">{{ venta.SaldoRodas | currency: 'USD' }}</td>
+                    <td class="text-right">{{ venta.DifGoldenRodas | currency: 'USD' }}</td>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="footer">
+                  <tr>
+                    <td [attr.colspan]="isConsolidado ? '1' : '2'">TOTAL</td>
+                    <td class="text-right">{{ totalVtaGolden | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalVtaRest | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalVtaDifGoldenRest | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalVtaDist | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalVtaDifGoldenDist | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalVtaRodas | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalVtaDifGoldenRodas | currency: 'USD' }}</td>
+                  </tr>
+              </ng-template>
+            </p-table> 
+          </p-card>
+        </p-tabPanel>
+        <p-tabPanel header="Nota">
+          <png-input-textarea class="w-full mt-1" label="Nota" [fg]="fg" control="nota" autocomplete="off"></png-input-textarea>
+        </p-tabPanel>
+        <p-tabPanel header="Almacenes del Golden vs Rodas" [disabled]="isConsolidado">
+          <p-card class="m-1">
+            <ng-template pTemplate="header">Análisis de Almacenes</ng-template>
+            <p-table [value]="dataSourceAlmacenes" responsiveLayout="scroll">
+              <ng-template pTemplate="header">
+                  <tr>
+                    <th>Unidad</th>
+                    <th>Almacén</th>
+                    <th>Cuenta Golden</th>
+                    <th>Cuenta Rodas</th>
+                  </tr>
+              </ng-template>
+              <ng-template pTemplate="body" let-alm>
+                  <tr>
+                    <td>{{ alm.IdUnidad }}</td>
+                    <td>{{ alm.Almacen }}</td>
+                    <td>{{ alm.CuentaG }}</td>
+                    <td>{{ alm.CuentaR }}</td>
+                  </tr>
+              </ng-template>
+            </p-table> 
+          </p-card>
+        </p-tabPanel>
+      </p-tabView>
+      <div class="item__footer mt-2">
         <png-button class="m-r-10 m-b-10" label="Conciliar" icon="pi-check" tooltip="Calcular la Conciliación." [raised]="true" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
-        <png-button class="m-r-10 m-b-10" label="Reporte" [raised]="true" icon="pi-print" [disabled]="dataSourceInventario.data.length === 0" (clicked)="reporte()"></png-button>
+        <png-button class="m-r-10 m-b-10" label="Reporte" [raised]="true" icon="pi-print" [disabled]="dataSourceInventario.length === 0" (clicked)="reporte()"></png-button>
       </div>
-    </mat-card>
-  </am-card>
+    </div>
+  </png-panel>
 </div>

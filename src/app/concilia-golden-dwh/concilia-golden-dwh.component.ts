@@ -2,7 +2,6 @@ import { SelectItem } from 'primeng/api';
 import { SupervisoresService } from './../supervisores/shared/services/supervisores.service';
 import { EmpleadosService } from './../empleados/shared/services/empleados.service';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
-import { MatTabGroup } from '@angular/material/tabs';
 import { DivisionesService } from './../shared/services/divisiones.service';
 import { PdfmakeService } from './../shared/services/pdfmake.service';
 import { toNumber } from 'lodash';
@@ -11,8 +10,8 @@ import { ConciliaGoldenDwhService } from './shared/services/concilia-golden-dwh.
 import { FormGroup } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
-import SweetAlert from 'sweetalert2';
+import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
+import Swal from 'sweetalert2';
 import * as moment from 'moment';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -34,8 +33,6 @@ const DISPLAYED_COLUMNS_CONSOLIDADO = ['Unidad',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy {
-  @ViewChild('tabGroup') tabGroup: MatTabGroup;
-
   divisionesValues: SelectItem[] = [];
   centrosValues: SelectItem[] = [];
   empleadosValues: SelectItem[] = [];
@@ -43,13 +40,32 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
   displayedColumnsConciliacion = DISPLAYED_COLUMNS_CENTRO;
   displayedColumnsAlmacenes = ['IdUnidad', 'Almacen', 'CuentaG', 'CuentaR'];
-  rodasDWHInventarioVentas: any[] = [];
-  dataSourceInventario = new MatTableDataSource();
-  dataSourceVenta = new MatTableDataSource();
+
+  rodasDWHInventarioVentas = [];
+  dataSourceInventario = [];
+  dataSourceVenta = [];
   dataSourceAlmacenes = [];
+
+  totalInvGolden = 0;
+  totalInvRest = 0;
+  totalInvDifGoldenRest = 0;
+  totalInvDist = 0;
+  totalInvDifGoldenDist = 0;
+  totalInvRodas = 0;
+  totalInvDifGoldenRodas = 0;
+
+  totalVtaGolden = 0;
+  totalVtaRest = 0;
+  totalVtaDifGoldenRest = 0;
+  totalVtaDist = 0;
+  totalVtaDifGoldenDist = 0;
+  totalVtaRodas = 0;
+  totalVtaDifGoldenRodas = 0;
 
   isConsolidado = false;
   loading = false;
+
+  selectedTabViewIndex = 0;
 
   unidadesList: any[] = [];
 
@@ -149,9 +165,25 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
   private _inicializarDatos(): void {
     this.rodasDWHInventarioVentas = [];
-    this.dataSourceInventario = new MatTableDataSource();
-    this.dataSourceVenta = new MatTableDataSource();
+    this.dataSourceInventario = [];
+    this.dataSourceVenta = [];
     this.dataSourceAlmacenes = [];
+
+    this.totalInvGolden = 0;
+    this.totalInvRest = 0;
+    this.totalInvDifGoldenRest = 0;
+    this.totalInvDist = 0;
+    this.totalInvDifGoldenDist = 0;
+    this.totalInvRodas = 0;
+    this.totalInvDifGoldenRodas = 0;
+  
+    this.totalVtaGolden = 0;
+    this.totalVtaRest = 0;
+    this.totalVtaDifGoldenRest = 0;
+    this.totalVtaDist = 0;
+    this.totalVtaDifGoldenDist = 0;
+    this.totalVtaRodas = 0;
+    this.totalVtaDifGoldenRodas = 0;
   }
 
   private _getDivisiones(): void {
@@ -160,7 +192,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         const result = response.getAllDivisiones;
 
         if (!result.success) {
-          return SweetAlert.fire({
+          return Swal.fire({
             icon: 'error',
             title: 'ERROR',
             text: result.error,
@@ -177,7 +209,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         });
       }));
     } catch (err: any) {
-      SweetAlert.fire({
+      Swal.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
@@ -200,7 +232,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         const result = response.getUnidadesByIdDivision;
 
         if (!result.success) {
-          return SweetAlert.fire({
+          return Swal.fire({
             icon: 'error',
             title: 'ERROR',
             text: result.error,
@@ -218,7 +250,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         });
       }));
     } catch (err: any) {
-      SweetAlert.fire({
+      Swal.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
@@ -234,7 +266,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         const result = response.getAllEmpleados;
 
         if (!result.success) {
-          return SweetAlert.fire({
+          return Swal.fire({
             icon: 'error',
             title: 'ERROR',
             text: result.error,
@@ -251,7 +283,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         });
       }));
     } catch (err: any) {
-      SweetAlert.fire({
+      Swal.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
@@ -267,7 +299,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         const result = response.getAllSupervisores;
 
         if (!result.success) {
-          return SweetAlert.fire({
+          return Swal.fire({
             icon: 'error',
             title: 'ERROR',
             text: result.error,
@@ -284,9 +316,23 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         });
       }));
     } catch (err: any) {
-      SweetAlert.fire({
+      Swal.fire({
         icon: 'error',
         title: 'ERROR',
+        text: err,
+        showConfirmButton: true,
+        confirmButtonText: 'Aceptar'
+      });
+    }
+  }
+
+  handleTabViewChange(event: any): void {
+    try {
+      this.selectedTabViewIndex = event.index;
+    } catch (err: any) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
         text: err,
         showConfirmButton: true,
         confirmButtonText: 'Aceptar'
@@ -306,7 +352,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
       };
 
       if (conciliaDWHInput.tipoCentro === 2) {
-        SweetAlert.fire({
+        Swal.fire({
           icon: 'question',
           title: `Para obtener la información Consolidada, se debe haber terminado la Contabilidad del Consolidado del período
               ${ conciliaDWHInput.periodo.toString() }/${ conciliaDWHInput.annio.toString() } .`,
@@ -323,6 +369,8 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
       }
 
       this.loading = true;
+      
+      this._inicializarDatos();
 
       this.subscription.push(this._apollo.query<ConciliaDWHQueryResponse>({
         query: conciliaDWHQuery,
@@ -334,7 +382,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         const result = response.data.conciliaDWH;
 
         if (!result.success) {
-          return SweetAlert.fire({
+          return Swal.fire({
             icon: 'error',
             title: 'ERROR',
             text: result.error,
@@ -343,23 +391,33 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
           });
         }
         this.rodasDWHInventarioVentas = JSON.parse(result.data.RodasDWHInventarioVentas.data);
-
-        const dataInventario = this.rodasDWHInventarioVentas ? this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Inventario') : [];
-        this._conciliaDWHSvc.getFormattedConciliaDWH(dataInventario, conciliaDWHInput.tipoCentro.toString()).then(res => {
-          this.dataSourceInventario = new MatTableDataSource(res);
-        });
-
-        const dataVenta = this.rodasDWHInventarioVentas ? this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Ventas') : [];
-        this._conciliaDWHSvc.getFormattedConciliaDWH(dataVenta, conciliaDWHInput.tipoCentro.toString()).then(res => {
-          this.dataSourceVenta = new MatTableDataSource(res);
-        });
+        this.dataSourceInventario = this.rodasDWHInventarioVentas.filter((f: { Tipo: string}) => f.Tipo === 'Inventario');
+        this.dataSourceInventario.forEach((i: any) => {
+          this.totalInvGolden += i.SaldoGolden;
+          this.totalInvRest += i.SaldoRestaurador;
+          this.totalInvDifGoldenRest += i.DifGoldenRest;
+          this.totalInvDist += i.SaldoDistribuidor;
+          this.totalInvDifGoldenDist += i.DifGoldenDist;
+          this.totalInvRodas += i.SaldoRodas;
+          this.totalInvDifGoldenRodas += i.DifGoldenRodas;
+        })
+        this.dataSourceVenta = this.rodasDWHInventarioVentas.filter((f: { Tipo: string}) => f.Tipo === 'Ventas');
+        this.dataSourceVenta.forEach((v: any) => {
+          this.totalVtaGolden += v.SaldoGolden;
+          this.totalVtaRest += v.SaldoRestaurador;
+          this.totalVtaDifGoldenRest += v.DifGoldenRest;
+          this.totalVtaDist += v.SaldoDistribuidor;
+          this.totalVtaDifGoldenDist += v.DifGoldenDist;
+          this.totalVtaRodas += v.SaldoRodas;
+          this.totalVtaDifGoldenRodas += v.DifGoldenRodas;
+        })
 
         this.dataSourceAlmacenes = JSON.parse(result.data.RodasDWHAlmacenes.data);
       }));
     } catch (err: any) {
       this.loading = false;
 
-      SweetAlert.fire({
+      Swal.fire({
         icon: 'error',
         title: 'Error',
         text: err,
@@ -369,96 +427,8 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
     }
   }
 
-  isGroup(index: any, item: any): boolean {
-    return item.isGroupBy;
-  }
-
-  getTotalInvSaldoGolden(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Inventario' && f.Almacen !== 'TOTAL')
-                                  .map(t => t.SaldoGolden || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalInvSaldoRestaurador(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Inventario' && f.Almacen !== 'TOTAL')
-                                  .map(t => t.SaldoRestaurador || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalInvDifGoldenRest(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Inventario' && f.Almacen !== 'TOTAL')
-                                  .map(t => t.DifGoldenRest || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalInvSaldoDistribuidor(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Inventario' && f.Almacen !== 'TOTAL')
-                                  .map(t => t.SaldoDistribuidor || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalInvDifGoldenDist(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Inventario' && f.Almacen !== 'TOTAL')
-                                  .map(t => t.DifGoldenDist || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalInvSaldoRodas(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Inventario' && f.Almacen !== 'TOTAL')
-                                  .map(t => t.SaldoRodas || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalInvDifGoldenRodas(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Inventario' && f.Almacen !== 'TOTAL')
-                                  .map(t => t.DifGoldenRodas || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalVtaSaldoGolden(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Venta' && f.Almacen !== 'TOTAL')
-                              .map(t => t.SaldoGolden || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalVtaSaldoRestaurador(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Venta' && f.Almacen !== 'TOTAL')
-                              .map(t => t.SaldoRestaurador || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalVtaDifGoldenRest(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Venta' && f.Almacen !== 'TOTAL')
-                              .map(t => t.DifGoldenRest || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalVtaSaldoDistribuidor(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Venta' && f.Almacen !== 'TOTAL')
-                              .map(t => t.SaldoDistribuidor || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalVtaDifGoldenDist(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Venta' && f.Almacen !== 'TOTAL')
-                              .map(t => t.DifGoldenDist || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalVtaSaldoRodas(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Venta' && f.Almacen !== 'TOTAL')
-                              .map(t => t.SaldoRodas || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
-  getTotalVtaDifGoldenRodas(): number {
-    return this.rodasDWHInventarioVentas && this.rodasDWHInventarioVentas.length ?
-          this.rodasDWHInventarioVentas.filter(f => f.Tipo === 'Venta' && f.Almacen !== 'TOTAL')
-                              .map(t => t.DifGoldenRodas || 0).reduce((acc, value) => acc + value, 0) : 0;
-  }
-
   reporte(): void {
-    switch (this.tabGroup.selectedIndex) {
+    switch (this.selectedTabViewIndex) {
       case 2:
         this.reporteAlmacenes();
         break;
@@ -493,7 +463,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      SweetAlert.fire({
+      Swal.fire({
         icon: 'error',
         title: 'Error',
         text: err,
@@ -528,7 +498,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      SweetAlert.fire({
+      Swal.fire({
         icon: 'error',
         title: 'Error',
         text: err,

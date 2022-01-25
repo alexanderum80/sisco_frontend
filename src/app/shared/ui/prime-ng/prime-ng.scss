@@ -28,6 +28,12 @@
     }
 }
 
+.p-fieldset {
+    .p-fieldset-legend, .p-fieldset-content {
+       padding: .5rem !important;
+    }
+}
+
 .p-float-label label {
     margin-top: -.3rem !important;
 }

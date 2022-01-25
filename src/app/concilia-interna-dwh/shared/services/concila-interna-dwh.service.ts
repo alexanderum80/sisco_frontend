@@ -25,12 +25,12 @@ export class ConcilaInternaDwhService {
 
   public inicializarFormGroup(): void {
     const inputValues = {
-      idDivision: '',
-      idSubdivision: '',
-      idUnidad: '',
-      idDivisionOD: '',
-      idSubdivisionOD: '',
-      idUnidadOD: '',
+      idDivision: null,
+      idSubdivision: null,
+      idUnidad: null,
+      idDivisionOD: null,
+      idSubdivisionOD: null,
+      idUnidadOD: null,
       fechaInicial: new Date(),
       fechaFinal: new Date(),
       soloDiferencias: true,

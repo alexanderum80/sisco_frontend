@@ -3,13 +3,14 @@ import { SubdivisionesService } from './../shared/services/subdivisiones.service
 import { DivisionesService } from './../shared/services/divisiones.service';
 import { PdfmakeService } from './../shared/services/pdfmake.service';
 import { ConciliaInternaDWHQueryResponse } from './shared/models/concilia-interna-dwh.model';
-import { ISelectableOptions } from './../shared/models/selectable-item';
 import SweetAlert from 'sweetalert2';
 import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs';
 import { ConcilaInternaDwhService } from './shared/services/concila-interna-dwh.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { SelectItem } from 'primeng/api';
+import { cloneDeep } from 'lodash';
 
 const conciliaInternaDWHQuery = require('graphql-tag/loader!./shared/graphql/concilia-interna-dwh.query.gql');
 
@@ -21,19 +22,18 @@ const conciliaInternaDWHQuery = require('graphql-tag/loader!./shared/graphql/con
 export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
   fg: FormGroup;
 
-  divisionesValues: ISelectableOptions[] = [];
-  subdivisionesValues: ISelectableOptions[] = [];
-  unidadesValues: ISelectableOptions[] = [];
-  divisionesODValues: ISelectableOptions[] = [];
-  subdivisionesODValues: ISelectableOptions[] = [];
-  unidadesODValues: ISelectableOptions[] = [];
-
-  subdivisionesList: any[] = [];
-  unidadesList: any[] = [];
+  divisionesValues: SelectItem[] = [];
+  subdivisionesValues: SelectItem[] = [];
+  unidadesValues: SelectItem[] = [];
+  unidadesODValues: SelectItem[] = [];
 
   displayedColumns = ['Documento', 'Emisor', 'FechaE', 'ImporteE', 'Receptor', 'FechaR', 'ImporteR', 'Diferencia'];
 
   dataSource: any[] = [];
+
+  totalEmisor = 0;
+  totalReceptor = 0;
+  totalDiferencia = 0;
 
   subscription: Subscription[] = [];
 
@@ -57,8 +57,6 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
   
   ngAfterViewInit(): void {
     this._getDivisiones();
-    this._getSubdivisiones();
-    this._getUnidades();
   }
 
   private _getDivisiones(): void {
@@ -79,13 +77,7 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
         this.divisionesValues = result.data.map((d: { IdDivision: string; Division: string; }) => {
           return {
             value: d.IdDivision,
-            description: d.IdDivision + '-' + d.Division
-          };
-        });
-        this.divisionesODValues = result.data.map((d: { IdDivision: string; Division: string; }) => {
-          return {
-            value: d.IdDivision,
-            description: d.IdDivision + '-' + d.Division
+            label: d.IdDivision + '-' + d.Division
           };
         });
       }));
@@ -102,8 +94,14 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
 
   private _getSubdivisiones(): void {
     try {
-      this.subscription.push(this._subdivisionesSvc.getAllSubdivisiones().subscribe(response => {
-        const result = response.getAllSubdivisiones;
+      const idDivision = this.fg.controls['idDivision'].value;
+
+      if (!idDivision) {
+        return;
+      }
+
+      this.subscription.push(this._subdivisionesSvc.getSubdivisionesByIdDivision(idDivision).subscribe(response => {
+        const result = response.getSubdivisionesByIdDivision;
 
         if (!result.success) {
           return SweetAlert.fire({
@@ -115,7 +113,12 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
           });
         }
 
-        this.subdivisionesList = result.data;
+        this.subdivisionesValues = result.data.map((d: any) => {
+          return {
+            value: d.IdSubdivision,
+            label: d.IdSubdivision + '-' + d.Subdivision
+          }
+        });
       }));
     } catch (err: any) {
       SweetAlert.fire({
@@ -128,10 +131,15 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private _getUnidades(): void {
+  private _getUnidades(origenDestino: boolean): void {
     try {
-      this.subscription.push(this._unidadesSvc.getAllUnidades().subscribe(response => {
-        const result = response.getAllUnidades;
+      const idSubdivision = origenDestino ? this.fg.controls['idSubdivisionOD'].value : this.fg.controls['idSubdivision'].value;
+      if (!idSubdivision) {
+        return;
+      }
+
+      this.subscription.push(this._unidadesSvc.getUnidadesByIdSubdivision(idSubdivision).subscribe(response => {
+        const result = response.getUnidadesByIdSubdivision;
 
         if (!result.success) {
           return SweetAlert.fire({
@@ -143,7 +151,21 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
           });
         }
 
-        this.unidadesList = result.data;
+        if (origenDestino) {
+          this.unidadesODValues = result.data.map((u: any) => {
+            return {
+              value: u.IdUnidad,
+              label: u.IdUnidad + '-' + u.Nombre
+            }
+          });
+        } else {
+          this.unidadesValues = result.data.map((u: any) => {
+            return {
+              value: u.IdUnidad,
+              label: u.IdUnidad + '-' + u.Nombre
+            }
+          });
+        }
       }));
     } catch (err: any) {
       SweetAlert.fire({
@@ -159,53 +181,31 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
   private _subscribeToFgValueChanges(): void {
     this.fg.valueChanges.subscribe(() => {
       this.dataSource = [];
+      this._calcularTotales();
     });
 
     // Centro a analizar
     this.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
       this.fg.controls['idDivisionOD'].setValue(value);
-      this.fg.controls['idSubdivision'].setValue('');
-
-      this.subdivisionesValues = this.subdivisionesList.filter(f => f.IdDivision === value).map(s => {
-        return {
-          value: s.IdSubdivision,
-          description: s.IdSubdivision + '-' + s.Subdivision
-        };
-      });
+      this.fg.controls['idSubdivision'].setValue(null);
+      
+      this.subdivisionesValues = [];
+      this._getSubdivisiones();
     }));
 
     this.subscription.push(this.fg.controls['idSubdivision'].valueChanges.subscribe(value => {
-      this.fg.controls['idUnidad'].setValue('');
+      this.fg.controls['idUnidad'].setValue(null);
 
-      this.unidadesValues = this.unidadesList.filter(f => f.IdSubdivision === value).map(s => {
-        return {
-          value: s.IdUnidad,
-          description: s.IdUnidad + '-' + s.Nombre
-        };
-      });
+      this.unidadesValues = [];
+      this._getUnidades(false);
     }));
 
     // Centro Origen/Destino
-    this.subscription.push(this.fg.controls['idDivisionOD'].valueChanges.subscribe(value => {
-      this.fg.controls['idSubdivisionOD'].setValue('');
-
-      this.subdivisionesODValues = this.subdivisionesList.filter(f => f.IdDivision === value).map(s => {
-        return {
-          value: s.IdSubdivision,
-          description: s.IdSubdivision + '-' + s.Subdivision
-        };
-      });
-    }));
-
     this.subscription.push(this.fg.controls['idSubdivisionOD'].valueChanges.subscribe(value => {
-      this.fg.controls['idUnidadOD'].setValue('');
+      this.fg.controls['idUnidadOD'].setValue(null);
 
-      this.unidadesODValues = this.unidadesList.filter(f => f.IdSubdivision === value).map(s => {
-        return {
-          value: s.IdUnidad,
-          description: s.IdUnidad + '-' + s.Nombre
-        };
-      });
+      this.unidadesODValues = [];
+      this._getUnidades(true);
     }));
   }
 
@@ -259,6 +259,7 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
         }
 
         this.dataSource = result.data;
+        this._calcularTotales();
       }));
     } catch (err: any) {
       SweetAlert.fire({
@@ -269,6 +270,14 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
         confirmButtonText: 'Aceptar'
       });
     }
+  }
+
+  private _calcularTotales() {
+    this.dataSource.forEach(element => {
+      this.totalEmisor += element.ImporteE;
+      this.totalReceptor += element.ImporteR;
+      this.totalDiferencia += element.Diferencia;
+    });
   }
 
   async reporte(): Promise<any> {
