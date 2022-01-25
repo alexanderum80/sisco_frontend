@@ -23,6 +23,7 @@ export const MenuItems: MenuItem[] = [
       disabled: true,
       title: 'Concilia el Golden2000 con la Contabilidad.',
     },
+    { separator: true },
     {
       label: 'CashFlow',
       icon: 'mdi mdi-cash-usd-outline',
@@ -44,6 +45,7 @@ export const MenuItems: MenuItem[] = [
       disabled: true,
       title: 'Concilia el Parte de Venta de División con la Contabilidad.',
     },
+    { separator: true },
     {
       label: 'Activos Fijos Tangibles',
       icon: 'mdi mdi-home-city',
@@ -72,6 +74,7 @@ export const MenuItems: MenuItem[] = [
       disabled: true,
       title: 'Concilia los Utiles y Herramientas con la Contabilidad.',
     },
+    { separator: true },
     {
       label: 'Nóminas',
       icon: 'mdi mdi-account-cash',
@@ -79,6 +82,7 @@ export const MenuItems: MenuItem[] = [
       disabled: true,
       title: 'Concilia las Nóminas con la Contabilidad.',
     },
+    { separator: true },
     {
       label: 'PC POS',
       icon: 'mdi mdi-cash-register',
