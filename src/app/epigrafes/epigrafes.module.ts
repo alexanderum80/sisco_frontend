@@ -1,9 +1,5 @@
-import { EpigrafesService } from './shared/services/epigrafes.service';
-import { InputModule } from './../angular-material/input/input.module';
-import { ModalModule } from './../angular-material/modal/modal.module';
 import { SharedModule } from './../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { TableModule } from './../angular-material/table/table.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -24,9 +20,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    ModalModule,
-    InputModule,
-    TableModule,
     PrimeNgModule
   ]
 })

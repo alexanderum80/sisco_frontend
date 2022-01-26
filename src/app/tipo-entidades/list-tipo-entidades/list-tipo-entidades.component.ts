@@ -1,14 +1,12 @@
 import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
-import { MaterialService } from './../../shared/services/material.service';
 import { TipoEntidadesService } from './../shared/services/tipo-entidades.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { MaterialTableColumns } from './../../angular-material/models/mat-table.model';
 import SweetAlert from 'sweetalert2';
 import { TipoEntidadesFormComponent } from './../tipo-entidades-form/tipo-entidades-form.component';
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
-import { MenuItem, MessageService } from 'primeng/api';
+import { MessageService } from 'primeng/api';
 import { isArray } from 'lodash';
 
 @Component({

@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { EmpleadosRoutingModule } from './empleados-routing.module';
 import { ListEmpleadosComponent } from './list-empleados/list-empleados.component';
 import { EmpleadosFormComponent } from './empleados-form/empleados-form.component';
-import { AngularMaterialComponentsModule } from '../angular-material/angular-material.module';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
 
@@ -18,7 +17,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     ReactiveFormsModule,
     EmpleadosRoutingModule,
     SharedModule,
-    AngularMaterialComponentsModule,
     PrimeNgModule,
   ]
 })

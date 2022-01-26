@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { SupervisoresRoutingModule } from './supervisores-routing.module';
 import { ListSupervisoresComponent } from './list-supervisores/list-supervisores.component';
 import { SupervisoresFormComponent } from './supervisores-form/supervisores-form.component';
-import { AngularMaterialComponentsModule } from '../angular-material/angular-material.module';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
 
@@ -18,7 +17,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    AngularMaterialComponentsModule,
     PrimeNgModule
   ]
 })

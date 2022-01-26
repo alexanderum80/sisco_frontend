@@ -1,9 +1,5 @@
-import { SelectModule } from './../angular-material/select/select.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { InputModule } from './../angular-material/input/input.module';
-import { TableModule } from './../angular-material/table/table.module';
 import { SharedModule } from './../shared/shared.module';
-import { ModalModule } from './../angular-material/modal/modal.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -23,10 +19,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     ElementosGastosRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    TableModule,
-    InputModule,
-    SelectModule,
-    ModalModule,
     SharedModule,
     PrimeNgModule
   ]

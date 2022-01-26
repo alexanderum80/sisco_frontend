@@ -1,4 +1,5 @@
-import { AngularMaterialComponentsModule } from './angular-material/angular-material.module';
+import { PrimeMenubarModule } from './shared/ui/prime-ng/menubar/menubar.module';
+import { PrimeButtonModule } from './shared/ui/prime-ng/button/button.module';
 import { NavigationModule } from './navigation/navigation.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -11,8 +12,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StartComponent } from './shared/ui/start/start.component';
 import { GraphQLModule } from './graphql.module';
 import { ErrorInterceptor } from './shared/helpers/error.interceptor';
-import { PrimeNgModule } from './shared/ui/prime-ng/prime-ng.module';
 import { JwtInterceptor } from './shared/helpers/jwt.interceptor';
+import { PrimeCardModule } from './shared/ui/prime-ng/card/card.module';
+import { PrimeInputTextModule } from './shared/ui/prime-ng/input-text/input-text.module';
+import { PrimePasswordModule } from './shared/ui/prime-ng/password/password.module';
 
 @NgModule({
   declarations: [
@@ -27,11 +30,13 @@ import { JwtInterceptor } from './shared/helpers/jwt.interceptor';
     ReactiveFormsModule,
     AppRoutingModule,
 
-    // Angular Material
-    AngularMaterialComponentsModule,
-
     // Prime NG
-    PrimeNgModule,
+    // PrimeNgModule,
+    PrimeCardModule,
+    PrimeInputTextModule,
+    PrimePasswordModule,
+    PrimeButtonModule,
+    PrimeMenubarModule,
 
     // Apollo
     HttpClientModule, // provides HttpClient for HttpLink

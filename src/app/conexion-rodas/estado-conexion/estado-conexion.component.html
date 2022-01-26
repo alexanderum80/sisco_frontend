@@ -1,29 +1,16 @@
-<am-spinner *ngIf="loading"></am-spinner>
+<png-progress-spinner *ngIf="loading"></png-progress-spinner>
+
 <div class="content">
-  <!-- <app-close-button></app-close-button> -->
-  <am-card class="h-100 w-100" title="Estado de las Conexiones al Rodas">
+  <png-panel class="h-full w-full" header="Estado de las Conexiones">
     <form class="form-division" [formGroup]="fg">
-      <am-select label="División" [fg]="fg" control="idDivision" [required]="true" [values]="divisionesValues"></am-select>
+      <png-dropdown class="w-20rem" [fg]="fg" control="idDivision" label="División" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
     </form>
-    <mat-card class="chequea-conexion-detalle m-5">
-      <mat-card-content>
-        <table class="w-100 mat-elevation-z2" mat-table="mat-table" [dataSource]="dataSource">
-          <ng-container matColumnDef="Unidad">
-            <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Unidad</th>
-            <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Unidad }}</td>
-          </ng-container>
-          <ng-container matColumnDef="Estado">
-            <th mat-header-cell="mat-header-cell" *matHeaderCellDef>Estado</th>
-            <td mat-cell="mat-cell" *matCellDef="let data">{{ data.Estado }}</td>
-          </ng-container>
-          <tr mat-header-row="mat-header-row" *matHeaderRowDef="displayedColumns"></tr>
-          <tr class="element-row" mat-row="mat-row" *matRowDef="let row; columns: displayedColumns;" [class.estado-incorrecto]="isEstadoIncorrecto(row)"></tr>
-        </table>
-      </mat-card-content>
-    </mat-card>
+    <png-card class="chequea-conexion-detalle m-5">
+      <png-table [columns]="columns" [data]="dataSource" [canEditDelete]="false"></png-table>
+    </png-card>
     <div class="item__footer m-t-10">
-      <am-button class="m-r-10 m-b-10" label="Calcular" type="raised-button" color="primary" [disabled]="!fg.valid" (clicked)="calcular()"></am-button>
-      <am-button class="m-r-10 m-b-10" label="Reporte" type="raised-button" [disabled]="dataSource.length === 0" (clicked)="reporte()"></am-button>
+      <png-button class="m-r-10 m-b-10" label="Conciliar" icon="pi-check" tooltip="Calcular la Conciliación." [raised]="true" [disabled]="!fg.valid" (clicked)="calcular()"></png-button>
+      <png-button class="m-r-10 m-b-10" label="Reporte" [style]="'secondary'" [raised]="true" icon="pi-print" [disabled]="dataSource.length === 0" (clicked)="reporte()"></png-button>
     </div>
-  </am-card>
+  </png-panel>
 </div>

@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { ClasificadorCuentaRoutingModule } from './clasificador-cuenta-routing.module';
 import { ListClasificadorCuentaComponent } from './list-clasificador-cuenta/list-clasificador-cuenta.component';
 import { ClasificadorCuentaFormComponent } from './clasificador-cuenta-form/clasificador-cuenta-form.component';
-import { AngularMaterialComponentsModule } from '../angular-material/angular-material.module';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
 
@@ -21,7 +20,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     ReactiveFormsModule,
     ClasificadorCuentaRoutingModule,
     SharedModule,
-    AngularMaterialComponentsModule,
     PrimeNgModule
   ]
 })

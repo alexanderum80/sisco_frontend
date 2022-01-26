@@ -1,5 +1,4 @@
 import { ConciliaContabilidadService } from './shared/services/concilia-contabilidad.service';
-import { AngularMaterialComponentsModule } from './../angular-material/angular-material.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
@@ -19,7 +18,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     ConciliaContabilidadRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    AngularMaterialComponentsModule,
     SharedModule,
     PrimeNgModule,
   ],

@@ -1,6 +1,3 @@
-import { InputModule } from './../angular-material/input/input.module';
-import { TableModule } from './../angular-material/table/table.module';
-import { ModalModule } from './../angular-material/modal/modal.module';
 import { SharedModule } from './../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
@@ -23,9 +20,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    ModalModule,
-    TableModule,
-    InputModule,
     PrimeNgModule
   ]
 })

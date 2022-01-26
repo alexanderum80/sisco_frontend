@@ -1,4 +1,3 @@
-import { AngularMaterialComponentsModule } from '../angular-material/angular-material.module';
 import { SharedModule } from './../shared/shared.module';
 import { ConciliaGoldenDwhComponent } from './concilia-golden-dwh.component';
 import { NgModule } from '@angular/core';
@@ -17,7 +16,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     ConciliaGoldenDwhRoutingModule,
     FormsModule,
     ReactiveFormsModule,
-    AngularMaterialComponentsModule,
     SharedModule,
     PrimeNgModule,
   ],

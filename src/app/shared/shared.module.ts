@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 // import { AgGridModule } from 'ag-grid-angular';
 import { AddEditItemComponent } from './ui/add-edit-item/add-edit-item.component';
 import { CloseButtonComponent } from './ui/close-button/close-button.component';
-import { AngularMaterialComponentsModule } from '../angular-material/angular-material.module';
 import { PrimeNgModule } from './ui/prime-ng/prime-ng.module';
 
 @NgModule({
@@ -21,7 +20,6 @@ import { PrimeNgModule } from './ui/prime-ng/prime-ng.module';
     FormsModule,
     ReactiveFormsModule,
     NavigationModule,
-    AngularMaterialComponentsModule,
     MatTooltipModule,
     PrimeNgModule
     // AgGridModule

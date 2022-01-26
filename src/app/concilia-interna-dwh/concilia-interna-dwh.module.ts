@@ -1,6 +1,5 @@
 import { SharedModule } from './../shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AngularMaterialComponentsModule } from './../angular-material/angular-material.module';
 import { ConciliaInternaDwhComponent } from './concilia-interna-dwh.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -16,7 +15,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     FormsModule,
     ReactiveFormsModule,
     ConciliaInternaDwhRoutingModule,
-    AngularMaterialComponentsModule,
     SharedModule,
     PrimeNgModule
   ],

@@ -1,32 +1,29 @@
 import { UsuarioInfoComponent } from './usuario-info/usuario-info.component';
-import { MoreVertComponent } from './more-vert/more-vert.component';
-import { TopMenuComponent } from './top-menu/top-menu.component';
+// import { MoreVertComponent } from './more-vert/more-vert.component';
+// import { TopMenuComponent } from './top-menu/top-menu.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NotificationsComponent } from './notifications/notifications.component';
-import { AngularMaterialComponentsModule } from '../angular-material/angular-material.module';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuModule } from 'primeng/menu';
 import { PrimeButtonModule } from '../shared/ui/prime-ng/button/button.module';
 
 @NgModule({
   declarations: [
-    TopMenuComponent,
-    MoreVertComponent,
+    // TopMenuComponent,
+    // MoreVertComponent,
     UsuarioInfoComponent,
-    NotificationsComponent,
+    // NotificationsComponent,
   ],
   imports: [
     CommonModule,
-    AngularMaterialComponentsModule,
     MenubarModule,
     MenuModule,
     PrimeButtonModule,
   ],
   exports: [
-    TopMenuComponent,
-    MoreVertComponent,
-    NotificationsComponent,
+    // TopMenuComponent,
+    // MoreVertComponent,
+    // NotificationsComponent,
     UsuarioInfoComponent
   ]
 })

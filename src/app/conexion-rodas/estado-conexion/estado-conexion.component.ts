@@ -1,3 +1,4 @@
+import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import { ConexionRodasService } from '../shared/services/conexion-rodas.service';
 import { PdfmakeService } from '../../shared/services/pdfmake.service';
@@ -6,10 +7,10 @@ import { toNumber } from 'lodash';
 import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ISelectableOptions } from '../../shared/models/selectable-item';
 import { Component, OnInit } from '@angular/core';
 import SweetAlert from 'sweetalert2';
 import { conexionRodasApi } from '../shared/graphql/conexion-rodasActions';
+import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-estado-conexion',
@@ -17,10 +18,13 @@ import { conexionRodasApi } from '../shared/graphql/conexion-rodasActions';
   styleUrls: ['./estado-conexion.component.scss']
 })
 export class EstadoConexionRodasComponent implements OnInit {
+  columns: ITableColumns[] = [
+    { header: 'Unidad', field: 'Unidad', type: 'string' },
+    { header: 'Estado', field: 'Estado', type: 'string' },
+  ];
   dataSource = [];
-  displayedColumns = ['Unidad', 'Estado'];
 
-  divisionesValues: ISelectableOptions[] = [];
+  divisionesValues: SelectItem[] = [];
   loading = false;
 
   fg: FormGroup = new FormGroup({
@@ -170,7 +174,7 @@ export class EstadoConexionRodasComponent implements OnInit {
   }
 
   get divisionDescription(): string {
-    return this.divisionesValues.find(f => f.value === this.fg.controls['idDivision'].value)?.description || '';
+    return this.divisionesValues.find(f => f.value === this.fg.controls['idDivision'].value)?.label || '';
   }
 
 }

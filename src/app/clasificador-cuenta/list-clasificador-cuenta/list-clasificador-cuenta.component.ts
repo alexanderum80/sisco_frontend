@@ -2,7 +2,6 @@ import { MessageService } from 'primeng/api';
 import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
-import { MaterialTableColumns } from './../../angular-material/models/mat-table.model';
 import { TiposClasificadorCuenta } from './../shared/models/clasificador-cuenta.model';
 import SweetAlert from 'sweetalert2';
 import { ClasificadorCuentaFormComponent } from './../clasificador-cuenta-form/clasificador-cuenta-form.component';
