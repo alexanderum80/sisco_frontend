@@ -1,7 +1,7 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg" style="width: 350px;">
     <div class="form__group mt-1">
-      <png-dropdown class="w-100" [fg]="fg" control="idUnidad" label="División" labelWidth="100" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown class="w-full" [fg]="fg" control="idUnidad" label="División" labelWidth="100" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
     </div>
     <p-tabView>
       <p-tabPanel header="Golden Restaura">

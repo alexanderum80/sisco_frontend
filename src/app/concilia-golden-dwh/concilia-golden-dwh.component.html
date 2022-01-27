@@ -1,37 +1,37 @@
 <png-progress-spinner *ngIf="loading"></png-progress-spinner>
 
 <div class="content">
-  <png-panel class="h-100 w-100" header="Golden DWH vs Rodas">
+  <png-panel class="h-full w-full" header="Golden DWH vs Rodas">
     <form [formGroup]="fg">
       <p-card>
         <div class="flex p-10">
           <p-card class="tipo-centro-container">
             <png-radio-button [fg]="fg" control="tipoCentro" [items]="tipoCentrosValues"></png-radio-button>
           </p-card>
-          <div class="unidad-container flex m-l-20" layout="column">
+          <div class="unidad-container flex flex-column ml-3">
             <div class="form__group">
-              <png-dropdown class="w-100" [fg]="fg" control="idDivision" label="División" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+              <png-dropdown class="w-full" [fg]="fg" control="idDivision" label="División" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
             </div>
             <div class="form__group">
-              <png-dropdown class="w-100" [fg]="fg" control="idCentro" label="Centro" [optionsValues]="centrosValues" placeholder="Seleccione el Centro" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+              <png-dropdown class="w-full" [fg]="fg" control="idCentro" label="Centro" [optionsValues]="centrosValues" placeholder="Seleccione el Centro" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
             </div>
             <div class="form__group">
               <div class="flex">
-                <png-calendar class="w-100" [fg]="fg" label="Período" control="periodo" view="month" dateFormat="MM/yy" [required]="true"></png-calendar>
-                <div class="m-l-20">
+                <png-calendar class="w-full" [fg]="fg" label="Período" control="periodo" view="month" dateFormat="MM/yy" [required]="true"></png-calendar>
+                <div class="ml-3">
                   <png-checkbox [fg]="fg" control="isComplejo" label="Complejo" [disabled]="true"></png-checkbox>
                 </div>
               </div>
             </div>
           </div>
-          <div class="empleados-container w-50 ml-2" layout="column">
+          <div class="empleados-container w-50 ml-2 flex flex-column">
             <div class="form__group">
-              <png-dropdown class="w-100" [fg]="fg" control="idEmpleado" label="Empleado" [optionsValues]="empleadosValues" placeholder="(Opcional)" [filter]="true" [showClear]="true"></png-dropdown>
+              <png-dropdown class="w-full" [fg]="fg" control="idEmpleado" label="Empleado" [optionsValues]="empleadosValues" placeholder="(Opcional)" [filter]="true" [showClear]="true"></png-dropdown>
             </div>
             <div class="form__group">
-              <png-dropdown class="w-100" [fg]="fg" control="idSupervisor" label="Supervisor" [optionsValues]="supervisoresValues" placeholder="(Opcional)" [filter]="true" [showClear]="true"></png-dropdown>
+              <png-dropdown class="w-full" [fg]="fg" control="idSupervisor" label="Supervisor" [optionsValues]="supervisoresValues" placeholder="(Opcional)" [filter]="true" [showClear]="true"></png-dropdown>
             </div>
-            <div class="m-l-5 m-t-5">
+            <div class="ml-1 mt-1">
               <png-checkbox [fg]="fg" control="ventasAcumuladas" label="Ventas Acumuladas" [defaultValue]="true"> </png-checkbox>
             </div>
           </div>
@@ -174,8 +174,8 @@
         </p-tabPanel>
       </p-tabView>
       <div class="item__footer mt-2">
-        <png-button class="m-r-10 m-b-10" label="Conciliar" icon="pi-check" tooltip="Calcular la Conciliación." [raised]="true" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
-        <png-button class="m-r-10 m-b-10" label="Reporte" [style]="'secondary'" [raised]="true" icon="pi-print" [disabled]="dataSourceInventario.length === 0" (clicked)="reporte()"></png-button>
+        <png-button class="mr-2 mb-2" label="Conciliar" icon="pi-check" tooltip="Calcular la Conciliación." [raised]="true" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
+        <png-button class="mr-2 mb-2" label="Reporte" [style]="'secondary'" [raised]="true" icon="pi-print" [disabled]="dataSourceInventario.length === 0" (clicked)="reporte()"></png-button>
       </div>
     </div>
   </png-panel>

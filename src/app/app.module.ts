@@ -1,3 +1,4 @@
+import { AuthGuard } from './shared/services/auth-guard.service';
 import { PrimeMenubarModule } from './shared/ui/prime-ng/menubar/menubar.module';
 import { PrimeButtonModule } from './shared/ui/prime-ng/button/button.module';
 import { NavigationModule } from './navigation/navigation.module';
@@ -16,6 +17,11 @@ import { JwtInterceptor } from './shared/helpers/jwt.interceptor';
 import { PrimeCardModule } from './shared/ui/prime-ng/card/card.module';
 import { PrimeInputTextModule } from './shared/ui/prime-ng/input-text/input-text.module';
 import { PrimePasswordModule } from './shared/ui/prime-ng/password/password.module';
+import { UsuarioService } from './shared/services/usuario.service';
+import { AuthenticationService } from './shared/services/authentication.service';
+import { SweetalertService } from './shared/services/sweetalert.service';
+import { DinamicDialogService } from './shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
+import { DialogService } from 'primeng/dynamicdialog';
 
 @NgModule({
   declarations: [
@@ -44,9 +50,15 @@ import { PrimePasswordModule } from './shared/ui/prime-ng/password/password.modu
     // App modules
     NavigationModule,
     GraphQLModule,
+    NavigationModule
   ],
   providers: [
-    // AgGridService,
+    UsuarioService,
+    AuthenticationService,
+    SweetalertService,
+    AuthGuard,
+    DialogService,
+    DinamicDialogService,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],

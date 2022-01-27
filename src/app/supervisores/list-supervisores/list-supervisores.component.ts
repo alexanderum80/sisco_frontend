@@ -1,6 +1,5 @@
 import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
 import { SupervisoresService } from './../shared/services/supervisores.service';
-import { MaterialService } from './../../shared/services/material.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
@@ -29,7 +28,6 @@ export class ListSupervisoresComponent implements OnInit, AfterViewInit, OnDestr
     private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
     private _supervisorSvc: SupervisoresService,
-    private _materialSvc: MaterialService,
     private _msgSvc: MessageService
   ) { }
 

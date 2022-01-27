@@ -26,14 +26,14 @@
             <png-dropdown class="w-20rem" [fg]="fg" control="idUnidadOD" label="Unidad" [optionsValues]="unidadesODValues" placeholder="<TODAS>" [filter]="true" [showClear]="true"></png-dropdown>
           </div>
         </p-fieldset>
-        <div class="ml-3 mt-2" layout="column">
+        <div class="ml-3 mt-2 flex flex-column">
           <div class="form__group">
-            <png-calendar class="w-100" [fg]="fg" label="Fecha Inicial" labelWidth="100" control="fechaInicial"[required]="true"></png-calendar>
+            <png-calendar class="w-full" [fg]="fg" label="Fecha Inicial" labelWidth="100" control="fechaInicial"[required]="true"></png-calendar>
           </div>
           <div class="form__group">
-            <png-calendar class="w-100" [fg]="fg" label="Fecha Final" labelWidth="100" control="fechaFinal" [required]="true"></png-calendar>
+            <png-calendar class="w-full" [fg]="fg" label="Fecha Final" labelWidth="100" control="fechaFinal" [required]="true"></png-calendar>
           </div>
-          <div class="m-l-10 m-t-10">
+          <div class="ml-2 mt-2">
             <png-checkbox class="mt-1 ml-3" [fg]="fg" control="soloDiferencias" label="Mostrar solo Diferencias"></png-checkbox>
           </div>
         </div>
@@ -77,8 +77,8 @@
       </p-table> 
     </div>
     <div class="item__footer mt-2">
-      <png-button class="m-r-10" label="Conciliar" [style]="'primary'" icon="mdi mdi-file-check-outline" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
-      <png-button class="m-r-10" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSource.length" (clicked)="reporte()"></png-button>
+      <png-button class="mr-2" label="Conciliar" [style]="'primary'" icon="mdi mdi-file-check-outline" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
+      <png-button class="mr-2" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSource.length" (clicked)="reporte()"></png-button>
     </div>
   </png-panel>
 </div>

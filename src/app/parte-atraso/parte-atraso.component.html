@@ -1,7 +1,7 @@
 <png-progress-spinner *ngIf="loading"></png-progress-spinner>
 
 <div class="content">
-  <png-panel class="h-100 w-100" header="Parte de Atrasos Golden DWH">
+  <png-panel class="h-full w-full" header="Parte de Atrasos Golden DWH">
     <form class="form-division mb-3" [formGroup]="fg">
       <png-dropdown class="w-20rem" [fg]="fg" control="idDivision" label="División" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
     </form>
@@ -15,9 +15,9 @@
         </p-tabPanel>
       </p-tabView>
     </div>
-    <div class="item__footer m-t-10">
+    <div class="item__footer mt-2">
       <png-button class="mr-1" label="Calcular" icon="mdi mdi-file-check-outline" [disabled]="!fg.valid" (clicked)="calcular()"></png-button>
-      <png-button class="m-r-10" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSourceParteAtraso.length" (clicked)="reporte()"></png-button>
+      <png-button class="mr-2" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSourceParteAtraso.length" (clicked)="reporte()"></png-button>
     </div>
   </png-panel>
 </div>
