@@ -12,7 +12,6 @@
     sortMode="single" 
     [rowGroupMode]="groupMode" 
     [groupRowsBy]="groupField"
-    responsiveLayout="scroll"
     styleClass="p-datatable-gridlines"
     [paginator]="paginator" 
     [(selection)]="selectedRow"
@@ -32,11 +31,11 @@
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
             </th>
             <ng-container *ngFor="let col of columns" >
-                <th *ngIf="groupMode === 'rowspan'" [class.text-right]="col.type === 'number' || col.type === 'decimal'" [pSortableColumn]="col.field" [style.width]="col.type === 'boolean' ? '100px' : 'auto'" pResizableColumn>
+                <th *ngIf="groupMode === 'rowspan'" [class.text-right]="col.type === 'number' || col.type === 'decimal'" [pSortableColumn]="col.field" [ngStyle]="{'width': col.width || 'auto'}" [style.width]="col.type === 'boolean' ? '100px' : 'auto'" pResizableColumn>
                     {{ col.header }}
                     <p-sortIcon [field]="col.field"></p-sortIcon>
                 </th>
-                <th *ngIf="groupMode !== 'rowspan' && col.field !== groupField " [class.text-right]="col.type === 'number' || col.type === 'decimal'" [pSortableColumn]="col.field" [style.width]="col.type === 'boolean' ? '100px' : 'auto'" pResizableColumn>
+                <th *ngIf="groupMode !== 'rowspan' && col.field !== groupField " [class.text-right]="col.type === 'number' || col.type === 'decimal'" [pSortableColumn]="col.field" [ngStyle]="{'width': col.width || 'auto'}" [style.width]="col.type === 'boolean' ? '100px' : 'auto'" pResizableColumn>
                     {{ col.header }}
                     <p-sortIcon [field]="col.field"></p-sortIcon>
                 </th>
@@ -46,7 +45,7 @@
         <tr *ngIf="filterData">
             <th *ngIf="canEditDelete" class="menu-select-cell"></th>            
             <ng-container *ngFor="let col of columns" >
-                <th *ngIf="groupMode === 'rowspan'  " [ngSwitch]="col.type">
+                <th *ngIf="groupMode === 'rowspan'  " [ngSwitch]="col.type" [ngStyle]="{'width': col.width || 'auto'}">
                     <p-columnFilter *ngSwitchCase="'date'" type="date" [field]="col.field" matchMode="is" class="w-full">
                         <ng-template pTemplate="filter" let-filter="filterCallback">
                             <p-calendar (onSelect)="filter($event)" dateFormat="dd/mm/yy"></p-calendar>
@@ -55,7 +54,7 @@
                     <p-columnFilter *ngSwitchCase="'boolean'" type="boolean" [field]="col.field" matchMode="is" class="w-full"></p-columnFilter>
                     <p-columnFilter *ngSwitchDefault type="text" [field]="col.field" matchMode="contains" class="w-full"></p-columnFilter>
                 </th>
-                <th *ngIf="groupMode !== 'rowspan' && col.field !== groupField " [ngSwitch]="col.type">
+                <th *ngIf="groupMode !== 'rowspan' && col.field !== groupField " [ngSwitch]="col.type" [ngStyle]="{'width': col.width || 'auto'}">
                     <p-columnFilter *ngSwitchCase="'date'" type="date" [field]="col.field" matchMode="is" class="w-full">
                         <ng-template pTemplate="filter" let-filter="filterCallback">
                             <p-calendar (onSelect)="filter($event)" dateFormat="dd/mm/yy"></p-calendar>

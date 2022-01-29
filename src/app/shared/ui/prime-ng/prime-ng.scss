@@ -54,7 +54,7 @@
     padding: 0.5rem 1rem !important;
 }
 
-.p-disabled {
+.p-disabled, .p-button:disabled {
     cursor: not-allowed !important;
 }
 
@@ -218,5 +218,9 @@ p-slidemenu {
     .p-dialog-content {
         padding: 0 !important;
     }
+}
 
+.p-column-filter-row .p-column-filter-menu-button, 
+.p-column-filter-row .p-column-filter-clear-button {
+    margin-left: 0 !important;
 }

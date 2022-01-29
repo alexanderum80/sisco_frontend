@@ -4,7 +4,7 @@
   <png-panel class="h-full w-full" header="Golden DWH vs Rodas">
     <form [formGroup]="fg">
       <p-card>
-        <div class="flex p-10">
+        <div class="flex p-1">
           <p-card class="tipo-centro-container">
             <png-radio-button [fg]="fg" control="tipoCentro" [items]="tipoCentrosValues"></png-radio-button>
           </p-card>
@@ -18,13 +18,13 @@
             <div class="form__group">
               <div class="flex">
                 <png-calendar class="w-full" [fg]="fg" label="Período" control="periodo" view="month" dateFormat="MM/yy" [required]="true"></png-calendar>
-                <div class="ml-3">
+                <div class="ml-3 mt-1">
                   <png-checkbox [fg]="fg" control="isComplejo" label="Complejo" [disabled]="true"></png-checkbox>
                 </div>
               </div>
             </div>
           </div>
-          <div class="empleados-container w-50 ml-2 flex flex-column">
+          <div class="empleados-container w-20rem ml-2 flex flex-column">
             <div class="form__group">
               <png-dropdown class="w-full" [fg]="fg" control="idEmpleado" label="Empleado" [optionsValues]="empleadosValues" placeholder="(Opcional)" [filter]="true" [showClear]="true"></png-dropdown>
             </div>
@@ -174,8 +174,8 @@
         </p-tabPanel>
       </p-tabView>
       <div class="item__footer mt-2">
-        <png-button class="mr-2 mb-2" label="Conciliar" icon="pi-check" tooltip="Calcular la Conciliación." [raised]="true" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
-        <png-button class="mr-2 mb-2" label="Reporte" [style]="'secondary'" [raised]="true" icon="pi-print" [disabled]="dataSourceInventario.length === 0" (clicked)="reporte()"></png-button>
+        <png-button class="mr-1" label="Conciliar" icon="pi-check" tooltip="Calcular la Conciliación." [raised]="true" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
+        <png-button class="mr-2" label="Reporte" [style]="'secondary'" [raised]="true" icon="pi-print" [disabled]="dataSourceInventario.length === 0" (clicked)="reporte()"></png-button>
       </div>
     </div>
   </png-panel>

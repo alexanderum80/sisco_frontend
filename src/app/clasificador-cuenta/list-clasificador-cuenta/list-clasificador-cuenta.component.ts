@@ -23,7 +23,7 @@ export class ListClasificadorCuentaComponent implements OnInit, AfterViewInit, O
   displayedColumns: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cuenta', type: 'string' },
     { header: 'SubCuenta', field: 'SubCuenta', type: 'string' },
-    { header: 'Descripción', field: 'Descripcion', type: 'string' },
+    { header: 'Descripción', field: 'Descripcion', type: 'string', width: '350px' },
     { header: 'Naturaleza', field: 'Naturaleza', type: 'string' },
     { header: 'Obligación', field: 'Obligacion', type: 'boolean' },
     { header: 'Terminal', field: 'Terminal', type: 'boolean' },

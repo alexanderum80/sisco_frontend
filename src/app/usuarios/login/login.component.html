@@ -1,5 +1,5 @@
 <p-card class="login">
-  <form [formGroup]="fg" class="form__login">
+  <form [formGroup]="fg" class="form__login" (ngSubmit)="iniciar()">
     <div class="form__group">
       <png-input-text class="w-full" [fg]="fg" control="usuario" label="Usuario" [floatLabel]="true"></png-input-text>
     </div>
@@ -7,7 +7,8 @@
       <png-password class="w-full" [fg]="fg" control="password" label="Contraseña" [floatLabel]="true"></png-password>
     </div>
     <div class="pt-2">
-      <png-button class="w-full" label="Entrar" [disabled]="!isFormValid() || autenticando" [raised]="true" [fullWidth]="true" [loading]="autenticando" (clicked)="iniciar()"></png-button>
+      <button pButton type="submit" label="Entrar" [disabled]="!isFormValid() || autenticando" [loading]="autenticando" class="w-full"></button>
+      <!-- <png-button class="w-full" label="Entrar" [disabled]="!isFormValid() || autenticando" [raised]="true" [fullWidth]="true" [loading]="autenticando" (clicked)="iniciar()"></png-button> -->
     </div>
   </form>
 </p-card>

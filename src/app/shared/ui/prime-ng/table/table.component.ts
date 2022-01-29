@@ -19,7 +19,7 @@ export class TableComponent implements OnInit {
   @Input() groupField: string;
   @Input() groupMode: 'subheader'|'rowspan' = 'subheader';
   @Input() expandible = false;
-  @Input() resizableColumns = true;
+  @Input() resizableColumns = false;
 
   @Output() actionClicked = new EventEmitter<IActionItemClickedArgs>()
 
