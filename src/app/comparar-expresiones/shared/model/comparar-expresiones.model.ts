@@ -8,6 +8,8 @@ interface IComprobarExpresiones {
     Centro: boolean;
     Complejo: boolean;
     Con: boolean;
+    Centralizada: boolean;
+    IdDivision: number;
     Expresion?: any;
     ExpresionC?: any;
     Operador?: any;

@@ -138,7 +138,7 @@ export class ListExpresionesComponent implements OnInit, AfterViewInit, OnDestro
           if (this._usuarioSvc.usuario.IdDivision !== 100 && this._usuarioSvc.usuario.IdTipoUsuario !== ETipoUsuarios['Usuario Avanzado']) {
             const _centralizada: any[] = data.filter((f: { Centralizada: boolean }) => f.Centralizada === true);
             if (_centralizada.length) {
-              return this._sweetAlertSvc.warning('No tiene permisos para eliminar Expresiones Centralizadas. Seleccione sólo sus definiciones.');
+              return this._sweetAlertSvc.warning('No tiene permisos para eliminar Expresiones Centralizadas. Seleccione sólo sus Expresiones.');
             }
           }
   

@@ -21,6 +21,8 @@ query GetAllComprobarExpresiones {
             Centro
             Complejo
             Con
+            Centralizada
+            IdDivision
         }
         error
     }

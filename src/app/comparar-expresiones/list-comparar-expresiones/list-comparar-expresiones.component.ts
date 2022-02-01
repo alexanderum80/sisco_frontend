@@ -1,10 +1,11 @@
+import { UsuarioService } from './../../shared/services/usuario.service';
+import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
 import { ActionClicked, IActionItemClickedArgs } from './../../shared/models/list-items';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { MessageService } from 'primeng/api';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { CompararExpresionesService } from '../shared/services/comparar-expresiones.service';
 import { cloneDeep } from '@apollo/client/utilities';
 import { CompararExpresionesFormComponent } from '../comparar-expresiones-form/comparar-expresiones-form.component';
@@ -24,13 +25,13 @@ export class ListCompararExpresionesComponent implements OnInit, AfterViewInit, 
     { header: 'Centro', field: 'Centro', type: 'boolean' },
     { header: 'Complejo', field: 'Complejo', type: 'boolean' },
     { header: 'Consolidado', field: 'Con', type: 'boolean' },
+    { header: 'Centralizada', field: 'Centralizada', type: 'boolean' },
   ];
 
   compararExpresiones: any[] = [];
 
-  subscription: Subscription[] = [];
-
   constructor(
+    private _usuarioSvc: UsuarioService,
     private _compararExpresionesSvc: CompararExpresionesService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _sweetAlertSvc: SweetalertService,
@@ -45,13 +46,13 @@ export class ListCompararExpresionesComponent implements OnInit, AfterViewInit, 
   }
 
   ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
+    this._compararExpresionesSvc.dispose();
     this.compararExpresiones = [];
   }
 
   private _getCompararExpresiones(): void {
     try {
-      this.subscription.push(this._compararExpresionesSvc.loadAll().subscribe(response => {
+      this._compararExpresionesSvc.subscription.push(this._compararExpresionesSvc.loadAll().subscribe(response => {
         const result = response.getAllComprobarExpresiones;
 
         if (result.success === false) {
@@ -84,11 +85,11 @@ export class ListCompararExpresionesComponent implements OnInit, AfterViewInit, 
       this._compararExpresionesSvc.inicializarFg();
 
       this._dinamicDialogSvc.open('Agregar Comparación de Expresión', CompararExpresionesFormComponent);
-      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+      this._compararExpresionesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
           this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
-      });
+      }));
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
     }
@@ -96,8 +97,12 @@ export class ListCompararExpresionesComponent implements OnInit, AfterViewInit, 
 
   private _edit(data: any): void {
     try {
+      if (this._usuarioSvc.usuario.IdDivision !== 100 && this._usuarioSvc.usuario.IdTipoUsuario !== ETipoUsuarios['Usuario Avanzado'] && data.Centralizada) {
+        return this._sweetAlertSvc.warning('No tiene permisos para modificar una Comparación Centralizada.');
+      }
+      
       this._compararExpresionesSvc.inicializarFg();
-      this._compararExpresionesSvc.loadOne(data.Id).subscribe(response => {
+      this._compararExpresionesSvc.subscription.push(this._compararExpresionesSvc.loadOne(data.Id).subscribe(response => {
         const result = response.getComprobarExpresionById;
 
         if (!result.success) {
@@ -112,17 +117,19 @@ export class ListCompararExpresionesComponent implements OnInit, AfterViewInit, 
           centro: result.data.Centro,
           complejo: result.data.Complejo,
           consolidado: result.data.Con,
+          centralizada: result.data.Centralizada,
+          idDivision: result.data.IdDivision,
         };
 
         this._compararExpresionesSvc.fg.patchValue(inputValue);
 
         this._dinamicDialogSvc.open('Editar Comparación de Expresión', CompararExpresionesFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._compararExpresionesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });
-      });
+        }));
+      }));
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
     }
@@ -132,9 +139,18 @@ export class ListCompararExpresionesComponent implements OnInit, AfterViewInit, 
     try {
       this._sweetAlertSvc.question('¿Desea Eliminar la(s) Comparación(es) seleccionada(s)?').then(res => {
         if (res === ActionClicked.Yes) {
-          const IDsToRemove: number[] = !isArray(data) ? [data.Id] :  data.map(d => { return d.Id });
+          data = isArray(data) ? data : [data];
 
-          this._compararExpresionesSvc.delete(IDsToRemove).subscribe(response => {
+          if (this._usuarioSvc.usuario.IdDivision !== 100 && this._usuarioSvc.usuario.IdTipoUsuario !== ETipoUsuarios['Usuario Avanzado']) {
+            const _centralizada: any[] = data.filter((f: { Centralizada: boolean }) => f.Centralizada === true);
+            if (_centralizada.length) {
+              return this._sweetAlertSvc.warning('No tiene permisos para eliminar Comparaciones Centralizadas. Seleccione sólo sus comparaciones.');
+            }
+          }
+          
+          const IDsToRemove: number[] = data.map((d: { Id: number }) => { return d.Id });
+
+          this._compararExpresionesSvc.subscription.push(this._compararExpresionesSvc.delete(IDsToRemove).subscribe(response => {
             const result = response.deleteComprobarExpresion;
 
             if (!result.success) {
@@ -142,7 +158,7 @@ export class ListCompararExpresionesComponent implements OnInit, AfterViewInit, 
             }
 
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'La Comparación se ha eliminado Satisfactoriamente.' })
-          });
+          }));
         }
       });
     } catch (err: any) {

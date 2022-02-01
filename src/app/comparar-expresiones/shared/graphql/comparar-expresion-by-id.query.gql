@@ -9,6 +9,8 @@ query GetComprobarExpresionById($id: Int!) {
             Centro
             Complejo
             Con
+            Centralizada
+            IdDivision
         }
         error
     }

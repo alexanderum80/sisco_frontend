@@ -1,3 +1,4 @@
+import { UsuarioService } from './../../../shared/services/usuario.service';
 import { compararExpresionesApi } from './../graphql/comparar-expresiones-api';
 import { Apollo } from 'apollo-angular';
 import { ComprobarExpresionesMutation, ComprobarExpresionesQueryResponse } from './../model/comparar-expresiones.model';
@@ -15,12 +16,15 @@ export class CompararExpresionesService {
     centro: new FormControl(false),
     complejo: new FormControl(false),
     consolidado: new FormControl(false),
+    centralizada: new FormControl(false),
+    idDivision: new FormControl(0),
   });
 
   subscription: Subscription[] = [];
 
   constructor(
     private _apollo: Apollo,
+    private _usuarioSvc: UsuarioService,
   ) { }
 
   inicializarFg(): void {
@@ -32,6 +36,8 @@ export class CompararExpresionesService {
       centro: false,
       complejo: false,
       consolidado: false,
+      centralizada: false,
+      idDivision: this._usuarioSvc.usuario.IdDivision,
     };
 
     this.fg.patchValue(payload);
@@ -80,6 +86,8 @@ export class CompararExpresionesService {
           Centro: this.fg.controls['centro'].value,
           Complejo: this.fg.controls['complejo'].value,
           Con: this.fg.controls['consolidado'].value,
+          Centralizada: this.fg.controls['centralizada'].value,
+          IdDivision: this.fg.controls['idDivision'].value,
         };
 
         const mutation = payload.Id === 0 ? compararExpresionesApi.create : compararExpresionesApi.update;
@@ -111,5 +119,9 @@ export class CompararExpresionesService {
         subscriber.error(err);
       }
     });
+  }
+
+  dispose() {
+    this.subscription.forEach(subs => subs.unsubscribe());
   }
 }

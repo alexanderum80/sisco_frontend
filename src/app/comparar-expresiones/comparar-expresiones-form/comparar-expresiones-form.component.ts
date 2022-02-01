@@ -40,7 +40,7 @@ export class CompararExpresionesFormComponent implements OnInit {
 
   private _loadExpresiones(): void {
     try {
-      this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
+      this._compararExpresionesSvc.subscription.push(this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
         const result = response.getAllExpresionesResumen;
 
         if (!result.success) {
@@ -53,7 +53,7 @@ export class CompararExpresionesFormComponent implements OnInit {
             label: e.Expresion
           };
         });
-      });
+      }));
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
     }
@@ -61,7 +61,7 @@ export class CompararExpresionesFormComponent implements OnInit {
 
   private _loadOperadores(): void {
     try {
-      this._operadoresSvc.getCargos().subscribe(response => {
+      this._compararExpresionesSvc.subscription.push(this._operadoresSvc.getCargos().subscribe(response => {
         const result = response.getAllOperadores;
 
         if (!result.success) {
@@ -74,7 +74,7 @@ export class CompararExpresionesFormComponent implements OnInit {
             label: o.Operador
           };
         });
-      });
+      }));
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
     }
@@ -93,7 +93,7 @@ export class CompararExpresionesFormComponent implements OnInit {
 
   private _save(): void {
     try {
-      this._compararExpresionesSvc.save().subscribe(response => {
+      this._compararExpresionesSvc.subscription.push(this._compararExpresionesSvc.save().subscribe(response => {
         const result = this.action === ActionClicked.Add ? response.createComprobarExpresion : response.updateComprobarExpresion;
          
         if (!result.success) {
@@ -103,7 +103,7 @@ export class CompararExpresionesFormComponent implements OnInit {
         let txtMessage = `La Comparación de la Expresión se ha ${ this.action === ActionClicked.Add ? 'creado' : 'actualizado' } correctamente.`
 
         this._dinamicDialogSvc.close(txtMessage);
-      });
+      }));
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ha ocurrido el siguiente error: ${ err }`);
     }
