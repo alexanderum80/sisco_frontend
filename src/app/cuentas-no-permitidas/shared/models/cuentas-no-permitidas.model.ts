@@ -8,6 +8,8 @@ interface ICuentasNoPermitidas {
     Crit1: string;
     Crit2: string;
     Crit3: string;
+    Centralizada: boolean;
+    IdDivision: number;
 }
 
 interface ICuentaNoPermitidaQueryResponse {

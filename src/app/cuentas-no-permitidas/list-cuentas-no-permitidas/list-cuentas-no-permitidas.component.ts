@@ -1,3 +1,5 @@
+import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
+import { UsuarioService } from './../../shared/services/usuario.service';
 import { ActionClicked, IActionItemClickedArgs } from './../../shared/models/list-items';
 import { cloneDeep } from '@apollo/client/utilities';
 import { CuentasNoPermitidasService } from './../shared/services/cuentas-no-permitidas.service';
@@ -6,7 +8,6 @@ import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/
 import { MessageService } from 'primeng/api';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { CuentasNoPermitidasFormComponent } from '../cuentas-no-permitidas-form/cuentas-no-permitidas-form.component';
 import { isArray } from 'lodash';
 
@@ -22,11 +23,10 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
     { header: 'Crit1', field: 'Crit1', type: 'string' },
     { header: 'Crit2', field: 'Crit2', type: 'string' },
     { header: 'Crit3', field: 'Crit3', type: 'string' },
+    { header: 'Centralizada', field: 'Centralizada', type: 'boolean' },
   ];
 
   cuentasNoPermitidas: any[] = [];
-
-  subscription: Subscription[] = [];
 
   loading = true;
 
@@ -35,6 +35,7 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
     private _dinamicDialogSvc: DinamicDialogService,
     private _sweetAlertSvc: SweetalertService,
     private _msgSvc: MessageService,
+    private _usuarioSvc: UsuarioService,
   ) { }
 
   ngOnInit(): void {
@@ -45,13 +46,13 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
   }
 
   ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
     this.cuentasNoPermitidas = [];
+    this._cuentasNoPermitidasSvc.dispose();
   }
 
   private _getCuentasNoPermitidas(): void {
     try {
-      this.subscription.push(this._cuentasNoPermitidasSvc.loadAllCuentasNoPermitidas().subscribe(response => {
+      this._cuentasNoPermitidasSvc.subscription.push(this._cuentasNoPermitidasSvc.loadAllCuentasNoPermitidas().subscribe(response => {
         this.loading = false;
 
         const result = response.getAllNoUsarEnCuenta;
@@ -87,11 +88,11 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
       this._cuentasNoPermitidasSvc.inicializarFg();
 
       this._dinamicDialogSvc.open('Agregar Cuenta no Permitida', CuentasNoPermitidasFormComponent);
-      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+      this._cuentasNoPermitidasSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
           this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
-      });
+      }));
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
     }
@@ -99,6 +100,10 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
 
   private _edit(data: any): void {
     try {
+      if (this._usuarioSvc.usuario.IdDivision !== 100 && this._usuarioSvc.usuario.IdTipoUsuario !== ETipoUsuarios['Usuario Avanzado'] && data.Centralizada) {
+        return this._sweetAlertSvc.warning('No tiene permisos para modificar una Cuenta no Permitida Centralizada.');
+      }
+      
       this._cuentasNoPermitidasSvc.inicializarFg();
       this._cuentasNoPermitidasSvc.loadCuentaNoPermitida(data.Id).subscribe(response => {
         const result = response.getNoUsarEnCuentaById;
@@ -115,16 +120,18 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
           crit1: result.data.Crit1,
           crit2: result.data.Crit2,
           crit3: result.data.Crit3,
+          centralizada: result.data.Centralizada,
+          idDivision: result.data.IdDivision,
         };
 
         this._cuentasNoPermitidasSvc.fg.patchValue(inputValue);
 
         this._dinamicDialogSvc.open('Editar Cuenta no Permitida',CuentasNoPermitidasFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._cuentasNoPermitidasSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });
+        }));
       });
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
@@ -135,7 +142,16 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
     try {
       this._sweetAlertSvc.question('¿Desea Eliminar la(s) Cuenta(s) no Permitida(s) seleccionada(s)?').then(res => {
         if (res === ActionClicked.Yes) {
-          const IDsToRemove: number[] = !isArray(data) ? [data.Id] :  data.map(d => { return d.Id });
+          data = isArray(data) ? data : [data];
+
+          if (this._usuarioSvc.usuario.IdDivision !== 100 && this._usuarioSvc.usuario.IdTipoUsuario !== ETipoUsuarios['Usuario Avanzado']) {
+            const _centralizada: any[] = data.filter((f: { Centralizada: boolean }) => f.Centralizada === true);
+            if (_centralizada.length) {
+              return this._sweetAlertSvc.warning('No tiene permisos para eliminar Cuentas no Permitidas Centralizadas. Seleccione sólo sus Cuentas no Permitidas.');
+            }
+          }
+          
+          const IDsToRemove: number[] = data.map((d: { Id: number }) => { return d.Id });
           
           this._cuentasNoPermitidasSvc.deleteCuentaNoPermitida(IDsToRemove).subscribe(response => {
             const result = response.deleteNoUsarEnCuenta;

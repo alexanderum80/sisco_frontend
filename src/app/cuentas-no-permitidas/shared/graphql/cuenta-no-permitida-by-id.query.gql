@@ -9,6 +9,8 @@ query GetNoUsarEnCuentaById($id: Int!) {
             Crit1
             Crit2
             Crit3
+            Centralizada
+            IdDivision
         }
         error
     }

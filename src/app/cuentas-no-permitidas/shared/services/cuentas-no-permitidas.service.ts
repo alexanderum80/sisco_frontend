@@ -1,3 +1,4 @@
+import { UsuarioService } from './../../../shared/services/usuario.service';
 import { CuentasNoPermitidasMutation } from '../models/cuentas-no-permitidas.model';
 import { cuentasNoPermitidasApi } from '../graphql/cuentas-no-permitidas-api';
 import { Apollo } from 'apollo-angular';
@@ -16,12 +17,15 @@ export class CuentasNoPermitidasService {
     crit1: new FormControl(''),
     crit2: new FormControl(''),
     crit3: new FormControl(''),
+    centralizada: new FormControl(false),
+    idDivision: new FormControl(0),
   });
 
   subscription: Subscription[] = [];
 
   constructor(
     private _apollo: Apollo,
+    private _usuarioSvc: UsuarioService,
   ) { }
 
   inicializarFg(): void {
@@ -33,6 +37,8 @@ export class CuentasNoPermitidasService {
       crit1: '',
       crit2: '',
       crit3: '',
+      centralizada: false,
+      idDivision: this._usuarioSvc.usuario.IdDivision,
     };
 
     this.fg.patchValue(payload);
@@ -81,6 +87,8 @@ export class CuentasNoPermitidasService {
           Crit1: this.fg.controls['crit1'].value,
           Crit2: this.fg.controls['crit2'].value,
           Crit3: this.fg.controls['crit3'].value,
+          Centralizada: this.fg.controls['centralizada'].value,
+          IdDivision: this.fg.controls['idDivision'].value,
         };
 
         const mutation = payload.Id === 0 ? cuentasNoPermitidasApi.create : cuentasNoPermitidasApi.update;
@@ -112,5 +120,9 @@ export class CuentasNoPermitidasService {
         subscriber.error(err);
       }
     });
+  }
+
+  dispose(): void {
+    this.subscription.forEach(subs => subs.unsubscribe());
   }
 }
