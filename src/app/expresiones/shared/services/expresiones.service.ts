@@ -1,3 +1,4 @@
+import { UsuarioService } from './../../../shared/services/usuario.service';
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
@@ -14,13 +15,15 @@ export class ExpresionesService {
     descripcion: new FormControl(''),
     acumulado: new FormControl(false),
     operacionesInternas: new FormControl(false),
-    centralizada: new FormControl(false)
+    centralizada: new FormControl(false),
+    idDivision: new FormControl(0),
   });
 
   subscription: Subscription[] = [];
 
   constructor(
     private _apollo: Apollo,
+    private _usuarioSvc: UsuarioService,
   ) { }
 
   inicializarFg(): void {
@@ -31,6 +34,7 @@ export class ExpresionesService {
     this.fg.controls['acumulado'].setValue(false);
     this.fg.controls['operacionesInternas'].setValue(false);
     this.fg.controls['centralizada'].setValue(false);
+    this.fg.controls['idDivision'].setValue(this._usuarioSvc.usuario.IdDivision);
   }
 
   loadAllExpresionesResumen(): Observable<ExpresionesQueryResponse> {
@@ -131,7 +135,7 @@ export class ExpresionesService {
     });
   }
 
-  unsubscribe(): void {
+  dispose(): void {
     this.subscription.forEach(subs => subs.unsubscribe());
   }
 }

@@ -165,6 +165,7 @@ export class ExpresionesFormComponent implements OnInit {
         Acumulado: this.fg.controls['acumulado'].value,
         OperacionesInternas: this.fg.controls['operacionesInternas'].value,
         Centralizada: this.fg.controls['centralizada'].value,
+        IdDivision: this.fg.controls['idDivision'].value,
       };
       const ExpresionesDetalle = this.expresionesDetalle.map(exp => {
         return {

@@ -18,6 +18,7 @@ interface IExpresionResumen {
     Acumulado: boolean;
     OperacionesInternas: boolean;
     Centralizada: boolean;
+    IdDivision: number;
 }
 
 interface IExpresionResumenQueryResponse {
