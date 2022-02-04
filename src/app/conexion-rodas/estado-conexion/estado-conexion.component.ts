@@ -2,14 +2,10 @@ import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import { ConexionRodasService } from '../shared/services/conexion-rodas.service';
 import { PdfmakeService } from '../../shared/services/pdfmake.service';
-import { ConexionRodasQueryResponse } from '../shared/models/conexion-rodas.model';
 import { toNumber } from 'lodash';
-import { Apollo } from 'apollo-angular';
-import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import SweetAlert from 'sweetalert2';
-import { conexionRodasApi } from '../shared/graphql/conexion-rodasActions';
 import { SelectItem } from 'primeng/api';
 
 @Component({
@@ -17,7 +13,7 @@ import { SelectItem } from 'primeng/api';
   templateUrl: './estado-conexion.component.html',
   styleUrls: ['./estado-conexion.component.scss']
 })
-export class EstadoConexionRodasComponent implements OnInit {
+export class EstadoConexionRodasComponent implements OnInit, OnDestroy {
   columns: ITableColumns[] = [
     { header: 'Unidad', field: 'Unidad', type: 'string' },
     { header: 'Estado', field: 'Estado', type: 'string' },
@@ -31,10 +27,7 @@ export class EstadoConexionRodasComponent implements OnInit {
     idDivision: new FormControl('', Validators.required)
   });
 
-  subscription: Subscription[] = [];
-
   constructor(
-    private _apollo: Apollo,
     private _divisionesSvc: DivisionesService,
     private _conexionRodasSvc: ConexionRodasService,
     private _pdfMakeSvc: PdfmakeService,
@@ -46,9 +39,13 @@ export class EstadoConexionRodasComponent implements OnInit {
     this._subscribeToFgChanges();
   }
 
+  ngOnDestroy(): void {
+    this._conexionRodasSvc.dispose();
+  }
+
   private _getDivisiones(): void {
     try {
-      this.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
+      this._conexionRodasSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
         const result = response.getAllDivisiones;
 
         if (!result.success) {
@@ -80,7 +77,7 @@ export class EstadoConexionRodasComponent implements OnInit {
   }
 
   private _subscribeToFgChanges(): void {
-    this.subscription.push(this.fg.valueChanges.subscribe(() => {
+    this._conexionRodasSvc.subscription.push(this.fg.valueChanges.subscribe(() => {
       this.dataSource = [];
     }));
   }
@@ -95,13 +92,9 @@ export class EstadoConexionRodasComponent implements OnInit {
 
       const idDivision = toNumber(this.fg.controls['idDivision'].value);
 
-      this.subscription.push(this._apollo.query<ConexionRodasQueryResponse>({
-        query: conexionRodasApi.estado,
-        variables: { idDivision },
-        fetchPolicy: 'network-only'
-      }).subscribe(response => {
+      this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.estadoConexion(idDivision).subscribe(response => {
         this.loading = false;
-        const result = response.data.estadoContaConexiones;
+        const result = response.estadoContaConexiones;
 
         if (!result.success) {
           return SweetAlert.fire({

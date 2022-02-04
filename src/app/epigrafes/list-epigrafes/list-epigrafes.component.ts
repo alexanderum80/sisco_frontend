@@ -35,6 +35,10 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
     this._loadEpigrafes();
   }
 
+  ngOnDestroy(): void {
+    this._epigrafesSvc.dispose();
+  }
+
   private _loadEpigrafes(): void {
     this._epigrafesSvc.subscription.push(this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
       const result = response.getAllEpigrafes;
@@ -51,10 +55,6 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
 
       this.epigrafes = result.data;
     }));
-  }
-
-  ngOnDestroy(): void {
-    this._epigrafesSvc.dispose();
   }
 
   hasAdvancedUserPermission(): boolean {
@@ -85,11 +85,11 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
         this._epigrafesSvc.fg.patchValue(inputData);
 
         this._dinamicDialogSvc.open('Agregar Epígrafe', EpigrafesFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._epigrafesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });
+        }));
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -125,11 +125,11 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
       this._epigrafesSvc.fg.patchValue(inputData);
 
       this._dinamicDialogSvc.open('Modificar Epígrafe', EpigrafesFormComponent);
-      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+      this._epigrafesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
           this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
-      });
+      }));
     }));
   }
 

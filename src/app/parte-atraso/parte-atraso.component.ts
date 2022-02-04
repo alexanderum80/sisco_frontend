@@ -11,8 +11,6 @@ import { toNumber } from 'lodash';
 import SweetAlert from 'sweetalert2';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
 
-const parteAtrasosQuery = require('graphql-tag/loader!./shared/graphql/parte-atrasos.query.gql');
-
 @Component({
   selector: 'app-parte-atraso',
   templateUrl: './parte-atraso.component.html',
@@ -44,20 +42,17 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   divisionesValues: SelectItem[] = [];
   loading = false;
 
-  fg: FormGroup = new FormGroup({
-    idDivision: new FormControl(null)
-  });
-
-  subscription: Subscription[] = [];
+  fg: FormGroup;
 
   constructor(
-    private _apollo: Apollo,
     private _divisionesSvc: DivisionesService,
     private _parteAtrasoSvc: ParteAtrasoService,
     private _pdfMakeSvc: PdfmakeService,
   ) { }
 
   ngOnInit(): void {
+    this.fg = this._parteAtrasoSvc.fg;
+    
     this._subscribeToFgChanges();
   }
   
@@ -66,12 +61,12 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.map(s => s.unsubscribe());
+    this._parteAtrasoSvc.dispose();
   }
 
   private _getDivisiones(): void {
     try {
-      this.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
+      this._parteAtrasoSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
         const result = response.getAllDivisiones;
 
         if (!result.success) {
@@ -103,7 +98,7 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private _subscribeToFgChanges(): void {
-    this.subscription.push(this.fg.valueChanges.subscribe(() => {
+    this._parteAtrasoSvc.subscription.push(this.fg.valueChanges.subscribe(() => {
       this.dataSourceParteAtraso = [];
       this.dataSourceDatosIdGam = [];
     }));
@@ -117,15 +112,9 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
     try {
       this.loading = true;
 
-      const idDivision = toNumber(this.fg.controls['idDivision'].value);
-
-      this.subscription.push(this._apollo.query<ParteAtrasosQueryResponse>({
-        query: parteAtrasosQuery,
-        variables: { idDivision },
-        fetchPolicy: 'network-only'
-      }).subscribe(response => {
+      this._parteAtrasoSvc.subscription.push(this._parteAtrasoSvc.calcular().subscribe(response => {
         this.loading = false;
-        const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } = response.data;
+        const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } = response;
 
         if (!_parteAtrasos.success || !_datosIdGAM.success) {
           return SweetAlert.fire({

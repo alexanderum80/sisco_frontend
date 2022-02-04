@@ -5,26 +5,10 @@ import { UnidadesService } from './../unidades/shared/services/unidades.service'
 import { DivisionesService } from './../shared/services/divisiones.service';
 import { PdfmakeService } from './../shared/services/pdfmake.service';
 import { toNumber } from 'lodash';
-import { ConciliaDWHQueryResponse } from './shared/models/concilia-dwh.model';
 import { ConciliaGoldenDwhService } from './shared/services/concilia-golden-dwh.service';
 import { FormGroup } from '@angular/forms';
-import { Apollo } from 'apollo-angular';
-import { Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
 import Swal from 'sweetalert2';
-import * as moment from 'moment';
-import { MatTableDataSource } from '@angular/material/table';
-
-const conciliaDWHQuery = require('graphql-tag/loader!./shared/graphql/concilia-dwh.query.gql');
-
-const DISPLAYED_COLUMNS_CENTRO = ['Almacen', 'Cuenta',
-                                'SaldoGolden', 'SaldoRestaurador', 'DifGoldenRest',
-                                'SaldoDistribuidor', 'DifGoldenDist',
-                                'SaldoRodas', 'DifGoldenRodas'];
-const DISPLAYED_COLUMNS_CONSOLIDADO = ['Unidad',
-                                'SaldoGolden', 'SaldoRestaurador', 'DifGoldenRest',
-                                'SaldoDistribuidor', 'DifGoldenDist',
-                                'SaldoRodas', 'DifGoldenRodas'];
 
 @Component({
   selector: 'app-concilia-golden-dwh',
@@ -37,9 +21,6 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
   centrosValues: SelectItem[] = [];
   empleadosValues: SelectItem[] = [];
   supervisoresValues: SelectItem[] = [];
-
-  displayedColumnsConciliacion = DISPLAYED_COLUMNS_CENTRO;
-  displayedColumnsAlmacenes = ['IdUnidad', 'Almacen', 'CuentaG', 'CuentaR'];
 
   rodasDWHInventarioVentas = [];
   dataSourceInventario = [];
@@ -74,14 +55,11 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
     { value: '1', label: 'Consolidado'},
   ];
 
-  subscription: Subscription[] = [];
-
   fg: FormGroup;
 
   myDatepicker: any;
 
   constructor(
-    private _apollo: Apollo,
     private _divisionesSvc: DivisionesService,
     private _unidadesSvc: UnidadesService,
     private _empleadosSvc: EmpleadosService,
@@ -108,7 +86,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
   }
 
   ngOnDestroy(): void {
-    this.subscription.forEach(subsc => subsc.unsubscribe());
+    this._conciliaDWHSvc.subscription.forEach(subsc => subsc.unsubscribe());
   }
 
   private _inicializarFg(): void {
@@ -129,22 +107,21 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
   private _subscribeToFgValueChanges(): void {
     // TipoCentro
-    this.subscription.push(this.fg.controls['tipoCentro'].valueChanges.subscribe(value => {
-      this.displayedColumnsConciliacion = value === '0' ? DISPLAYED_COLUMNS_CENTRO : DISPLAYED_COLUMNS_CONSOLIDADO;
+    this._conciliaDWHSvc.subscription.push(this.fg.controls['tipoCentro'].valueChanges.subscribe(value => {
       this.isConsolidado = value === '1';
 
       this._inicializarDatos();
     }));
 
     // IdDivision
-    this.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
+    this._conciliaDWHSvc.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
       this.fg.controls['idCentro'].setValue(null);
 
       this._getUnidades(value);
     }));
 
     // IdCentro
-    this.subscription.push(this.fg.controls['idCentro'].valueChanges.subscribe(value => {
+    this._conciliaDWHSvc.subscription.push(this.fg.controls['idCentro'].valueChanges.subscribe(value => {
       this.fg.controls['isComplejo'].setValue(false);
 
       const subordinados = this.unidadesList.filter(f => f.IdSubdivision === value && f.Abierta === true);
@@ -154,11 +131,11 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
       this._inicializarDatos();
     }));
 
-    this.subscription.push(this.fg.controls['periodo'].valueChanges.subscribe(value => {
+    this._conciliaDWHSvc.subscription.push(this.fg.controls['periodo'].valueChanges.subscribe(value => {
       this._inicializarDatos();
     }));
 
-    this.subscription.push(this.fg.controls['ventasAcumuladas'].valueChanges.subscribe(value => {
+    this._conciliaDWHSvc.subscription.push(this.fg.controls['ventasAcumuladas'].valueChanges.subscribe(value => {
       this._inicializarDatos();
     }));
   }
@@ -188,7 +165,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
   private _getDivisiones(): void {
     try {
-      this.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
+      this._conciliaDWHSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
         const result = response.getAllDivisiones;
 
         if (!result.success) {
@@ -228,7 +205,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         return;
       }
 
-      this.subscription.push(this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe(response => {
+      this._conciliaDWHSvc.subscription.push(this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe(response => {
         const result = response.getUnidadesByIdDivision;
 
         if (!result.success) {
@@ -262,7 +239,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
   private _getEmpleados(): void {
     try {
-      this.subscription.push(this._empleadosSvc.loadAllEmpleados().subscribe(response => {
+      this._conciliaDWHSvc.subscription.push(this._empleadosSvc.loadAllEmpleados().subscribe(response => {
         const result = response.getAllEmpleados;
 
         if (!result.success) {
@@ -295,7 +272,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
   private _getSupervisores(): void {
     try {
-      this.subscription.push(this._supervisoresSvc.loadAllSupervisores().subscribe(response => {
+      this._conciliaDWHSvc.subscription.push(this._supervisoresSvc.loadAllSupervisores().subscribe(response => {
         const result = response.getAllSupervisores;
 
         if (!result.success) {
@@ -342,20 +319,10 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
   conciliar(): void {
     try {
-      const conciliaDWHInput = {
-        idDivision: toNumber(this.fg.controls['idDivision'].value),
-        idCentro: toNumber(this.fg.controls['idCentro'].value),
-        periodo: toNumber(moment(this.fg.controls['periodo'].value).format('MM')),
-        annio: toNumber(moment(this.fg.controls['periodo'].value).format('YYYY')),
-        tipoCentro: toNumber(this.fg.controls['tipoCentro'].value),
-        ventasAcumuladas: this.fg.controls['ventasAcumuladas'].value,
-      };
-
-      if (conciliaDWHInput.tipoCentro === 2) {
+      if (toNumber(this.fg.controls['tipoCentro'].value) === 2) {
         Swal.fire({
           icon: 'question',
-          title: `Para obtener la información Consolidada, se debe haber terminado la Contabilidad del Consolidado del período
-              ${ conciliaDWHInput.periodo.toString() }/${ conciliaDWHInput.annio.toString() } .`,
+          title: `Para obtener la información Consolidada, se debe haber terminado la Contabilidad del Consolidado del período.`,
           text: '¿Desea continuar con la Conciliación del Consolidado?',
           showConfirmButton: true,
           confirmButtonText: 'Sí',
@@ -372,14 +339,10 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
       
       this._inicializarDatos();
 
-      this.subscription.push(this._apollo.query<ConciliaDWHQueryResponse>({
-        query: conciliaDWHQuery,
-        variables: { conciliaDWHInput },
-        fetchPolicy: 'network-only'
-      }).subscribe(response => {
+      this._conciliaDWHSvc.subscription.push(this._conciliaDWHSvc.conciliar().subscribe(response => {
         this.loading = false;
 
-        const result = response.data.conciliaDWH;
+        const result = response.conciliaDWH;
 
         if (!result.success) {
           return Swal.fire({

@@ -6,9 +6,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ConexionRodasService {
   fg = new FormGroup({
     id: new FormControl(''),
@@ -95,6 +93,17 @@ export class ConexionRodasService {
         subscriber.next(response.data || undefined);
       }));
     });
+  }
+
+  estadoConexion(idDivision: number): Observable<ConexionRodasQueryResponse> {
+    return new Observable<ConexionRodasQueryResponse>(subscriber => {
+      this._apollo.query<ConexionRodasQueryResponse>({
+        query: conexionRodasApi.estado,
+        variables: { idDivision },
+        fetchPolicy: 'network-only'
+      }).subscribe(response => {
+      });
+    })
   }
 
   public async getEstadoConexionDefinition(data: any): Promise<any> {

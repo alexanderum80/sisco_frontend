@@ -76,7 +76,7 @@
         </ng-template>
       </p-table> 
     </div>
-    <div class="item__footer mt-2">
+    <div class="flex justify-content-end mt-2">
       <png-button class="mr-1" label="Conciliar" [style]="'primary'" icon="mdi mdi-file-check-outline" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
       <png-button class="mr-2" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSource.length" (clicked)="reporte()"></png-button>
     </div>

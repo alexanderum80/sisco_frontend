@@ -31,8 +31,6 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   usuarios: IUsuario[] = [];
 
-  subscription: Subscription[] = [];
-
   constructor(
     private _apollo: Apollo,
     private _dinamicDialogSvc: DinamicDialogService,
@@ -48,7 +46,7 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
+    this._usuarioSvc.subscription.forEach(subs => subs.unsubscribe());
   }
 
   hasAdminPermission(): boolean {
@@ -57,7 +55,7 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _getUsuarios(): void {
     try {
-      this.subscription.push(this._apollo.watchQuery<UsuariosQueryResponse>({
+      this._usuarioSvc.subscription.push(this._apollo.watchQuery<UsuariosQueryResponse>({
           query: usuariosApi.all,
           fetchPolicy: 'network-only'
         }).valueChanges.subscribe(({data}) => {
@@ -114,11 +112,11 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
       this._usuarioSvc.fg.patchValue(inputData);
       
       this._dinamicDialogSvc.open('Agregar Usuario', UsuarioFormComponent);
-      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+      this._usuarioSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
-      });
+      }));
     }
   }
 
@@ -126,7 +124,7 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.hasAdminPermission()) {
       const idUsuario = data.IdUsuario;
 
-      this.subscription.push(this._apollo.query<UsuariosQueryResponse>({
+      this._usuarioSvc.subscription.push(this._apollo.query<UsuariosQueryResponse>({
         query: usuariosApi.byId,
         variables: { id: idUsuario },
         fetchPolicy: 'network-only'
@@ -157,11 +155,11 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
         this._usuarioSvc.fg.patchValue(inputData);
 
         this._dinamicDialogSvc.open('Modificar Usuario', UsuarioFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._usuarioSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
               this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });      
+        }));      
       }));
     }
   }
@@ -180,9 +178,7 @@ export class ListUsuariosComponent implements OnInit, AfterViewInit, OnDestroy {
         if (res.value) {
           const IDsToRemove: number[] = !isArray(data) ? [data.IdUsuario] :  data.map(d => { return d.IdUsuario });
 
-          // const IDsToRemove = [idUsuario];
-
-          this.subscription.push(this._apollo.mutate<UsuariosMutationResponse>({
+          this._usuarioSvc.subscription.push(this._apollo.mutate<UsuariosMutationResponse>({
             mutation: usuariosApi.delete,
             variables: { IDs: IDsToRemove },
             refetchQueries: ['GetAllUsuarios']

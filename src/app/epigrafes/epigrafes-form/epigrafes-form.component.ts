@@ -2,7 +2,6 @@ import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
-import { Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 
@@ -11,12 +10,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   templateUrl: './epigrafes-form.component.html',
   styleUrls: ['./epigrafes-form.component.scss']
 })
-export class EpigrafesFormComponent implements OnInit, OnDestroy {
+export class EpigrafesFormComponent implements OnInit {
   action: ActionClicked;
 
   fg: FormGroup;
-
-  subscription: Subscription[] = [];
 
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
@@ -28,10 +25,6 @@ export class EpigrafesFormComponent implements OnInit, OnDestroy {
     this.fg = this._epigrafesSvc.fg;
 
     this.action = this.fg.controls['idEpigrafe'].value === 0 ? ActionClicked.Add : ActionClicked.Edit;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
   }
 
   onActionClicked(action: ActionClicked) {
@@ -47,7 +40,7 @@ export class EpigrafesFormComponent implements OnInit, OnDestroy {
 
   private _save(): void {
     try {
-      this.subscription.push(this._epigrafesSvc.save().subscribe(response => {
+      this._epigrafesSvc.subscription.push(this._epigrafesSvc.save().subscribe(response => {
         let result;
         let txtMessage;
 

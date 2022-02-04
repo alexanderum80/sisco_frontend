@@ -8,15 +8,14 @@ import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/
 import { SupervisoresService } from './../shared/services/supervisores.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-supervisores-form',
   templateUrl: './supervisores-form.component.html',
   styleUrls: ['./supervisores-form.component.scss'],
 })
-export class SupervisoresFormComponent implements OnInit, OnDestroy {
+export class SupervisoresFormComponent implements OnInit {
   action: ActionClicked;
 
   fg: FormGroup;
@@ -24,8 +23,6 @@ export class SupervisoresFormComponent implements OnInit, OnDestroy {
   divisionesValues: SelectItem[] = [];
 
   cargosValues: SelectItem[] = [];
-
-  subscription: Subscription[] = [];
 
   constructor(
     private _usuarioSvc: UsuarioService,
@@ -44,13 +41,9 @@ export class SupervisoresFormComponent implements OnInit, OnDestroy {
     this._getDivisiones();
   }
 
-  ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
-  }
-
   private _getCargos(): void {
     try {
-      this.subscription.push(this._cargosSvc.getCargos().subscribe(response => {
+      this._supervisoresSvc.subscription.push(this._cargosSvc.getCargos().subscribe(response => {
         const result = response.getAllCargos;
 
         if (!result.success) {
@@ -83,7 +76,7 @@ export class SupervisoresFormComponent implements OnInit, OnDestroy {
 
   private _getDivisiones(): void {
     try {
-      this.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
+      this._supervisoresSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
         const result = response.getAllDivisiones;
 
         if (!result.success) {
@@ -130,7 +123,7 @@ export class SupervisoresFormComponent implements OnInit, OnDestroy {
   }
 
   private _save(): void {
-    this.subscription.push(this._supervisoresSvc.save().subscribe(response => {
+    this._supervisoresSvc.subscription.push(this._supervisoresSvc.save().subscribe(response => {
       let result;
       let txtMessage;
 

@@ -6,9 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import SweetAlert from 'sweetalert2';
 import { clasificadorCuentaApi } from '../graphql/clasificador-cuenta.actions';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ClasificadorCuentaService {
   fg: FormGroup = new FormGroup({
     cuenta: new FormControl(''),

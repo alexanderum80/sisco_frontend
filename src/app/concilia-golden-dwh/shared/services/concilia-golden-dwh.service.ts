@@ -1,6 +1,13 @@
+import { Apollo } from 'apollo-angular';
+import { Observable, Subscription } from 'rxjs';
 import { numberFormatter } from './../../../shared/models/number';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
+import { ConciliaDWHQueryResponse } from '../models/concilia-dwh.model';
+import { toNumber } from 'lodash';
+import * as moment from 'moment';
+
+const conciliaDWHQuery = require('graphql-tag/loader!../graphql/concilia-dwh.query.gql');
 
 @Injectable()
 export class ConciliaGoldenDwhService {
@@ -17,7 +24,32 @@ export class ConciliaGoldenDwhService {
     nota: new FormControl(''),
   });
 
-  constructor() { }
+  subscription: Subscription[] = [];
+
+  constructor(
+    private _apollo: Apollo
+  ) { }
+
+  conciliar(): Observable<ConciliaDWHQueryResponse> {
+    const conciliaDWHInput = {
+      idDivision: toNumber(this.fg.controls['idDivision'].value),
+      idCentro: toNumber(this.fg.controls['idCentro'].value),
+      periodo: toNumber(moment(this.fg.controls['periodo'].value).format('MM')),
+      annio: toNumber(moment(this.fg.controls['periodo'].value).format('YYYY')),
+      tipoCentro: toNumber(this.fg.controls['tipoCentro'].value),
+      ventasAcumuladas: this.fg.controls['ventasAcumuladas'].value,
+    };
+
+    return new Observable<ConciliaDWHQueryResponse>(subscriber => {
+      this._apollo.query<ConciliaDWHQueryResponse>({
+        query: conciliaDWHQuery,
+        variables: { conciliaDWHInput },
+        fetchPolicy: 'network-only'
+      }).subscribe(response => {
+        subscriber.next(response.data);
+      });
+    })
+  }
 
   public async getConciliacionDefinition(conciliaData: any, tipoCentro: string, ventasAcumuladas: boolean): Promise<any> {
     const _conciliaData = await this.getFormattedConciliaDWH(conciliaData, tipoCentro);
@@ -513,5 +545,8 @@ export class ConciliaGoldenDwhService {
     return returnValue;
   }
 
+  dispose(): void {
+    this.subscription.forEach(subs => subs.unsubscribe());
+  }
 
 }

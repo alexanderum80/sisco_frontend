@@ -57,7 +57,7 @@ export class SweetalertService {
   warning(message: string): void {
     Swal.fire({
       icon: 'warning',
-      title: 'Información',
+      title: 'Advertencia',
       text: message,
       confirmButtonText: 'Aceptar',
     });

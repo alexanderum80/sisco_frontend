@@ -1,12 +1,16 @@
+import { ConciliaContabilidadMutationReponse } from './../models/concilia-contabilidad.model';
+import { Apollo } from 'apollo-angular';
+import { Subscription, Observable } from 'rxjs';
 import { SelectItem } from 'primeng/api';
 import { FormGroup, FormControl } from '@angular/forms';
 import { numberFormatter } from './../../../shared/models/number';
 import { Injectable } from '@angular/core';
-import { uniq } from 'lodash';
+import { uniq, toNumber } from 'lodash';
+import { ConciliaContabilidadQueryResponse } from '../models/concilia-contabilidad.model';
+import { conciliaContabilidadApi } from '../graphql/concilia-contabilidad-api';
+import * as moment from 'moment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ConciliaContabilidadService {
 
   fg: FormGroup = new FormGroup({
@@ -14,12 +18,27 @@ export class ConciliaContabilidadService {
     idCentro: new FormControl(''),
     tipoEntidad: new FormControl(''),
     periodo: new FormControl(''),
-    apertura: new FormControl(false),
-    cierre: new FormControl(false),
     nota: new FormControl(''),
   });
 
-  constructor() { }
+  subscription: Subscription[] = [];
+
+  constructor(
+    private _apollo: Apollo
+  ) { }
+
+  inicializarFg() {
+    const today = new Date();
+    const fgValues = {
+      tipoCentro: '0',
+      idCentro: null,
+      tipoEntidad: null,
+      periodo: new Date(today.getFullYear(), today.getMonth(), 0),
+      nota: '',
+    };
+
+    this.fg.patchValue(fgValues);
+  }
 
   public async getCentro(idUnidad: number, unidadesList: SelectItem[]): Promise<any> {
     const definition = [];
@@ -47,6 +66,43 @@ export class ConciliaContabilidadService {
     });
 
     return definition;
+  }
+
+  public conciliar(): Observable<ConciliaContabilidadQueryResponse> {
+    const conciliaContaInput = {
+      idCentro: toNumber(this.fg.controls['idCentro'].value),
+      periodo: toNumber(moment(this.fg.controls['periodo'].value).format('MM')),
+      annio: toNumber(moment(this.fg.controls['periodo'].value).format('YYYY')),
+      tipoCentro: toNumber(this.fg.controls['tipoCentro'].value),
+      tipoEntidad: toNumber(this.fg.controls['tipoEntidad'].value),
+    };
+
+    return new Observable<ConciliaContabilidadQueryResponse>(subscriber => {
+      this._apollo.query<ConciliaContabilidadQueryResponse>({
+        query: conciliaContabilidadApi.concilia,
+        variables: { conciliaContaInput },
+        fetchPolicy: 'network-only'
+      }).subscribe(response => {
+        subscriber.next(response.data)
+      });
+    });
+  }
+
+  public iniciarSaldo(): Observable<ConciliaContabilidadMutationReponse> {
+    const iniciarSaldosInput = {
+      idCentro: toNumber(this.fg.controls['idCentro'].value),
+      consolidado: this.fg.controls['tipoCentro'].value === 2,
+      annio: toNumber(moment(this.fg.controls['periodo'].value).format('YYYY')),
+    };
+
+    return new Observable<ConciliaContabilidadMutationReponse>(subscriber => {
+      this._apollo.mutate<ConciliaContabilidadMutationReponse>({
+        mutation: conciliaContabilidadApi.inciarSaldo,
+        variables: { iniciarSaldosInput },
+      }).subscribe(response => {
+        subscriber.next(response.data || undefined)
+      });
+    });
   }
 
   public async getReporteAsientoDefinition(data: any): Promise<any> {
@@ -347,6 +403,10 @@ export class ConciliaContabilidadService {
     );
 
     return definition;
+  }
+
+  dispose() {
+    this.subscription.forEach(subs => subs.unsubscribe());
   }
 
 }

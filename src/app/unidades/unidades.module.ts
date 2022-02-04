@@ -10,6 +10,6 @@ import { ListUnidadesComponent } from './list-unidades/list-unidades.component';
   imports: [
     CommonModule,
     UnidadesRoutingModule
-  ]
+  ],
 })
 export class UnidadesModule { }

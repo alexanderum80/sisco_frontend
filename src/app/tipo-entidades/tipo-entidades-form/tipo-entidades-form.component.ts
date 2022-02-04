@@ -2,7 +2,6 @@ import { ActionClicked } from './../../shared/models/list-items';
 import SweetAlert from 'sweetalert2';
 import { toNumber } from 'lodash';
 import { FormGroup } from '@angular/forms';
-import { Subscription } from 'rxjs';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { TipoEntidadesService } from './../shared/services/tipo-entidades.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
@@ -12,12 +11,10 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
   templateUrl: './tipo-entidades-form.component.html',
   styleUrls: ['./tipo-entidades-form.component.scss']
 })
-export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
+export class TipoEntidadesFormComponent implements OnInit {
   action: ActionClicked;
 
   fg: FormGroup;
-
-  subscription: Subscription[] = [];
 
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
@@ -27,10 +24,6 @@ export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.fg = this._tipoEntidadesSvc.fg;
     this.action = toNumber(this.fg.controls['id'].value) === 0 ? ActionClicked.Add : ActionClicked.Edit;
-  }
-
-  ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
   }
 
   onActionClicked(action: ActionClicked) {
@@ -45,7 +38,7 @@ export class TipoEntidadesFormComponent implements OnInit, OnDestroy {
   }
 
   private _save(): void {
-    this.subscription.push(this._tipoEntidadesSvc.save().subscribe(response => {
+    this._tipoEntidadesSvc.subscription.push(this._tipoEntidadesSvc.save().subscribe(response => {
       let result;
       let txtMessage;
 

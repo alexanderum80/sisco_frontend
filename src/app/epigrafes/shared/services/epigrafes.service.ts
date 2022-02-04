@@ -6,9 +6,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class EpigrafesService {
   fg: FormGroup = new FormGroup({
     idEpigrafe: new FormControl(0),

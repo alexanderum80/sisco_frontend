@@ -1,17 +1,11 @@
 import { ClasificadorEntidadesService } from './../clasificador-entidades/shared/services/clasificador-entidades.service';
 import { TipoEntidadesService } from './../tipo-entidades/shared/services/tipo-entidades.service';
-import { ConciliaContabilidadMutationReponse, ConciliaContabilidadQueryResponse } from './shared/models/concilia-contabilidad.model';
-import { toNumber } from 'lodash';
 import { PdfmakeService } from './../shared/services/pdfmake.service';
 import { ConciliaContabilidadService } from './shared/services/concilia-contabilidad.service';
-import { Apollo } from 'apollo-angular';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, ViewChild, ChangeDetectorRef, AfterContentChecked, OnDestroy, AfterViewInit } from '@angular/core';
-import { Subscription } from 'rxjs';
-import * as moment from 'moment';
+import { Component, OnInit, ViewChild, ChangeDetectorRef, OnDestroy, AfterViewInit } from '@angular/core';
 import { MenuItem, SelectItem } from 'primeng/api';
-import { conciliaContabilidadApi } from './shared/graphql/concilia-contabilidad-api';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
 import { cloneDeep } from '@apollo/client/utilities';
 import { TabView } from 'primeng/tabview';
@@ -93,8 +87,6 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
     { value: '2', label: 'Consolidado'},
   ];
 
-  subscription: Subscription[] = [];
-
   fg: FormGroup;
 
   myDatepicker: any;
@@ -103,15 +95,14 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
     { label: 'Inicializar Datos', icon: 'mdi mdi-restart', command: () => {
       this.iniciarSaldos();
     }},
-    { separator: true },
-    { label: 'Conciliar Apertura', icon: 'mdi mdi-calendar-multiple-check', command: () => {
-    }},
-    { label: 'Conciliar Cierre', icon: 'mdi mdi-calendar-check', command: () => {
-    }}
+    // { separator: true },
+    // { label: 'Conciliar Apertura', icon: 'mdi mdi-calendar-multiple-check', command: () => {
+    // }},
+    // { label: 'Conciliar Cierre', icon: 'mdi mdi-calendar-check', command: () => {
+    // }}
   ];
 
   constructor(
-    private _apollo: Apollo,
     private _unidadesSvc: UnidadesService,
     private _tipoEntidadesSvc: TipoEntidadesService,
     private _clasifEntidadesSvc: ClasificadorEntidadesService,
@@ -122,7 +113,7 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
 
   ngOnInit(): void {
     this.fg = this._conciliaContabSvc.fg;
-    this._inicializarFg();
+    this._conciliaContabSvc.inicializarFg();
     this._subscribeToFgValueChanges();
 
     this._changeDedectionRef.detectChanges();
@@ -134,31 +125,16 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
   }
 
   ngOnDestroy(): void {
-    this.subscription.forEach(subsc => subsc.unsubscribe());
-  }
-
-  private _inicializarFg(): void {
-    const today = new Date();
-    const fgValues = {
-      tipoCentro: '0',
-      idCentro: null,
-      tipoEntidad: null,
-      periodo: new Date(today.getFullYear(), today.getMonth(), 0),
-      apertura: null,
-      cierre: false,
-      nota: '',
-    };
-
-    this.fg.patchValue(fgValues);
+    this._conciliaContabSvc.dispose();
   }
 
   private _subscribeToFgValueChanges(): void {
-    this.subscription.push(this.fg.valueChanges.subscribe(value => {
+    this._conciliaContabSvc.subscription.push(this.fg.valueChanges.subscribe(value => {
       this._inicializarDatos();
     }));
 
     // TipoCentro
-    this.subscription.push(this.fg.controls['tipoCentro'].valueChanges.subscribe(value => {
+    this._conciliaContabSvc.subscription.push(this.fg.controls['tipoCentro'].valueChanges.subscribe(value => {
       this.isConsolidado = value === '2';
       if (value === '2') {
         this.fg.controls['tipoEntidad'].setValue(1);
@@ -173,7 +149,7 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
     }));
 
     // IdCentro
-    this.subscription.push(this.fg.controls['idCentro'].valueChanges.subscribe(value => {
+    this._conciliaContabSvc.subscription.push(this.fg.controls['idCentro'].valueChanges.subscribe(value => {
       if (this.fg.get('tipoCentro')?.value === '2') {
         this.fg.controls['tipoEntidad'].setValue(1);
       } else if (value) {
@@ -193,7 +169,7 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
 
   private _getUnidades(): void {
     try {
-      this.subscription.push(this._unidadesSvc.getAllUnidades().subscribe(response => {
+      this._conciliaContabSvc.subscription.push(this._unidadesSvc.getAllUnidades().subscribe(response => {
         const result = response.getAllUnidades;
 
         if (!result.success) {
@@ -226,7 +202,7 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
 
   private _getTipoEntidades(): void {
     try {
-      this.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
+      this._conciliaContabSvc.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
         const result = response.getAllTipoEntidades;
 
         if (!result.success) {
@@ -258,7 +234,7 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
   }
 
   private _updateTipoEntidad(idUnidad: number): void {
-    this.subscription.push(this._clasifEntidadesSvc.loadClasificadorEntidad(idUnidad).subscribe(response => {
+    this._conciliaContabSvc.subscription.push(this._clasifEntidadesSvc.loadClasificadorEntidad(idUnidad).subscribe(response => {
       const result = response.getClasificadorEntidad;
 
       if (!result.success) {
@@ -277,24 +253,13 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
 
   conciliar(): void {
     try {
-      const conciliaContaInput = {
-        idCentro: toNumber(this.fg.controls['idCentro'].value),
-        periodo: toNumber(moment(this.fg.controls['periodo'].value).format('MM')),
-        annio: toNumber(moment(this.fg.controls['periodo'].value).format('YYYY')),
-        tipoCentro: toNumber(this.fg.controls['tipoCentro'].value),
-        tipoEntidad: toNumber(this.fg.controls['tipoEntidad'].value),
-      };
 
       this.loading = true;
 
-      this.subscription.push(this._apollo.query<ConciliaContabilidadQueryResponse>({
-        query: conciliaContabilidadApi.concilia,
-        variables: { conciliaContaInput },
-        fetchPolicy: 'network-only'
-      }).subscribe(response => {
+      this._conciliaContabSvc.subscription.push(this._conciliaContabSvc.conciliar().subscribe(response => {
         this.loading = false;
 
-        const result = response.data.conciliaContabilidad;
+        const result = response.conciliaContabilidad;
 
         this.dataSourceClasificador = JSON.parse(result.data.ReporteClasificador.data) || [];
 
@@ -327,17 +292,8 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
 
   iniciarSaldos(): void {
     try {
-      const iniciarSaldosInput = {
-        idCentro: toNumber(this.fg.controls['idCentro'].value),
-        consolidado: this.fg.controls['tipoCentro'].value === 2,
-        annio: toNumber(moment(this.fg.controls['periodo'].value).format('YYYY')),
-      };
-
-      this.subscription.push(this._apollo.mutate<ConciliaContabilidadMutationReponse>({
-        mutation: conciliaContabilidadApi.inciarSaldo,
-        variables: { iniciarSaldosInput },
-      }).subscribe(response => {
-        const result = response.data?.iniciarSaldos;
+      this._conciliaContabSvc.subscription.push(this._conciliaContabSvc.iniciarSaldo().subscribe(response => {
+        const result = response.iniciarSaldos;
 
         if (result?.success) {
           return Swal.fire({

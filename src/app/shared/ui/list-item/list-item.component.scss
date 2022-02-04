@@ -1,0 +1,13 @@
+.item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: white;
+
+    &__container {
+        height: 100%;
+        // overflow: auto;
+        position: relative;
+    }
+}

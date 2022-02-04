@@ -8,9 +8,8 @@ import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs';
 import { ConcilaInternaDwhService } from './shared/services/concila-interna-dwh.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { SelectItem } from 'primeng/api';
-import { cloneDeep } from 'lodash';
 
 const conciliaInternaDWHQuery = require('graphql-tag/loader!./shared/graphql/concilia-interna-dwh.query.gql');
 
@@ -19,7 +18,7 @@ const conciliaInternaDWHQuery = require('graphql-tag/loader!./shared/graphql/con
   templateUrl: './concilia-interna-dwh.component.html',
   styleUrls: ['./concilia-interna-dwh.component.scss']
 })
-export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
+export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDestroy {
   fg: FormGroup;
 
   divisionesValues: SelectItem[] = [];
@@ -34,8 +33,6 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
   totalEmisor = 0;
   totalReceptor = 0;
   totalDiferencia = 0;
-
-  subscription: Subscription[] = [];
 
   loading = false;
 
@@ -59,9 +56,13 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
     this._getDivisiones();
   }
 
+  ngOnDestroy(): void {
+      this._conciliarInternaDWHSvc.dispose();
+  }
+
   private _getDivisiones(): void {
     try {
-      this.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
+      this._conciliarInternaDWHSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
         const result = response.getAllDivisiones;
 
         if (!result.success) {
@@ -100,7 +101,7 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
         return;
       }
 
-      this.subscription.push(this._subdivisionesSvc.getSubdivisionesByIdDivision(idDivision).subscribe(response => {
+      this._conciliarInternaDWHSvc.subscription.push(this._subdivisionesSvc.getSubdivisionesByIdDivision(idDivision).subscribe(response => {
         const result = response.getSubdivisionesByIdDivision;
 
         if (!result.success) {
@@ -138,7 +139,7 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
         return;
       }
 
-      this.subscription.push(this._unidadesSvc.getUnidadesByIdSubdivision(idSubdivision).subscribe(response => {
+      this._conciliarInternaDWHSvc.subscription.push(this._unidadesSvc.getUnidadesByIdSubdivision(idSubdivision).subscribe(response => {
         const result = response.getUnidadesByIdSubdivision;
 
         if (!result.success) {
@@ -185,7 +186,7 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
     });
 
     // Centro a analizar
-    this.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
+    this._conciliarInternaDWHSvc.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
       this.fg.controls['idDivisionOD'].setValue(value);
       this.fg.controls['idSubdivision'].setValue(null);
       
@@ -193,7 +194,7 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
       this._getSubdivisiones();
     }));
 
-    this.subscription.push(this.fg.controls['idSubdivision'].valueChanges.subscribe(value => {
+    this._conciliarInternaDWHSvc.subscription.push(this.fg.controls['idSubdivision'].valueChanges.subscribe(value => {
       this.fg.controls['idUnidad'].setValue(null);
 
       this.unidadesValues = [];
@@ -201,7 +202,7 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
     }));
 
     // Centro Origen/Destino
-    this.subscription.push(this.fg.controls['idSubdivisionOD'].valueChanges.subscribe(value => {
+    this._conciliarInternaDWHSvc.subscription.push(this.fg.controls['idSubdivisionOD'].valueChanges.subscribe(value => {
       this.fg.controls['idUnidadOD'].setValue(null);
 
       this.unidadesODValues = [];
@@ -240,7 +241,7 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
         SoloDiferencias: this.fg.controls['soloDiferencias'].value
       };
 
-      this.subscription.push(this._apollo.query<ConciliaInternaDWHQueryResponse>({
+      this._conciliarInternaDWHSvc.subscription.push(this._apollo.query<ConciliaInternaDWHQueryResponse>({
         query: conciliaInternaDWHQuery,
         variables: { conciliaInternaDWHInput: payload },
         fetchPolicy: 'network-only'
@@ -273,6 +274,10 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
   }
 
   private _calcularTotales() {
+    this.totalEmisor = 0;
+    this.totalReceptor = 0;
+    this.totalDiferencia = 0;
+    
     this.dataSource.forEach(element => {
       this.totalEmisor += element.ImporteE;
       this.totalReceptor += element.ImporteR;
@@ -290,6 +295,7 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit {
         // pageOrientation: 'landscape',
         content: [
           await this._pdfMakeSvc.getHeaderDefinition('Conciliación Interna Golden DWH'),
+          await this._conciliarInternaDWHSvc.getDivision(this.fg.controls['idDivision'].value, this.divisionesValues),
           await this._conciliarInternaDWHSvc.getParteAtrasosDefinition(this.dataSource, fechaInicial, fechaFinal),
         ],
         footer: (page: string, pages: string) => {

@@ -114,11 +114,11 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
         this._clasificadorEntidadesSvc.fg.patchValue(inputData);
 
         this._dinamicDialogSvc.open('Agregar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._clasificadorEntidadesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });
+        }));
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -134,35 +134,35 @@ export class ListClasificadorEntidadesComponent implements OnInit, AfterViewInit
   private _edit(clasificadorEntidad: any): void {
     try {
       this._clasificadorEntidadesSvc.subscription.push(
-        this._clasificadorEntidadesSvc.loadClasificadorEntidad(clasificadorEntidad.IdUnidad)
-        .subscribe(response => {
-        const result = response.getClasificadorEntidad;
+        this._clasificadorEntidadesSvc.loadClasificadorEntidad(clasificadorEntidad.IdUnidad).subscribe(response => {
+          const result = response.getClasificadorEntidad;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: `Se produjo el siguiente error: ${ result.error }`,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
-
-        const data = result.data;
-
-        const inputData = {
-          idUnidad: data.IdUnidad,
-          idTipoEntidad: data.IdTipoEntidad,
-        };
-        this._clasificadorEntidadesSvc.fg.patchValue(inputData);
-
-        this._dinamicDialogSvc.open('Modificar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-          if (message) {
-            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: `Se produjo el siguiente error: ${ result.error }`,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar'
+            });
           }
-        });
-      }));
+
+          const data = result.data;
+
+          const inputData = {
+            idUnidad: data.IdUnidad,
+            idTipoEntidad: data.IdTipoEntidad,
+          };
+          this._clasificadorEntidadesSvc.fg.patchValue(inputData);
+
+          this._dinamicDialogSvc.open('Modificar Clasificador de Entidad', ClasificadorEntidadesFormComponent);
+          this._clasificadorEntidadesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+            if (message) {
+              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+            }
+          }));
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',

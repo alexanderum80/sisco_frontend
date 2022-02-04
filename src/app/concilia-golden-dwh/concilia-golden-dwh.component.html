@@ -41,21 +41,20 @@
     <div class="conciliacion-detalle shadow-1 mt-2">
       <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
         <p-tabPanel header="Conciliación">
-          <p-card class="m-1">
-            <ng-template pTemplate="header">Análisis de Inventario</ng-template>
-            <p-table [value]="dataSourceInventario" sortField="IdUnidad" sortMode="single" rowGroupMode="subheader" groupRowsBy="IdUnidad">
+          <p-card class="m-1" header="Análisis de Inventario">
+            <p-table [value]="dataSourceInventario" sortField="IdUnidad" sortMode="single" rowGroupMode="subheader" [groupRowsBy]="!isConsolidado ? 'IdUnidad' : ''">
               <ng-template pTemplate="header">
                   <tr>
                     <th *ngIf="isConsolidado">Unidad</th>
                     <th *ngIf="!isConsolidado">Piso</th>
                     <th *ngIf="!isConsolidado">Cuenta</th>
-                    <th class="text-right">Saldo Golden</th>
                     <th class="text-right">Saldo Restaurador</th>
-                    <th class="text-right">Dif. Golden - Rest.</th>
+                    <th class="text-right">Saldo Golden</th>
+                    <th class="text-right">Dif. Rest. - Golden</th>
                     <th class="text-right">Saldo Distribuidor</th>
-                    <th class="text-right">Dif. Golden - Dist.</th>
+                    <th class="text-right">Dif. Rest. - Dist.</th>
                     <th class="text-right">Saldo Rodas</th>
-                    <th class="text-right">Dif. Golden - Rodas</th>
+                    <th class="text-right">Dif. Rest. - Rodas</th>
                   </tr>
               </ng-template>
               <ng-template pTemplate="groupheader" let-inventario *ngIf="!isConsolidado">
@@ -70,8 +69,8 @@
                     <td *ngIf="isConsolidado">{{ inventario.Unidad }}</td>
                     <td *ngIf="!isConsolidado">{{ inventario.Almacen }}</td>
                     <td *ngIf="!isConsolidado">{{ inventario.Cuenta }}</td>
-                    <td class="text-right">{{ inventario.SaldoGolden | currency: 'USD' }}</td>
                     <td class="text-right">{{ inventario.SaldoRestaurador | currency: 'USD' }}</td>
+                    <td class="text-right">{{ inventario.SaldoGolden | currency: 'USD' }}</td>
                     <td class="text-right">{{ inventario.DifGoldenRest | currency: 'USD' }}</td>
                     <td class="text-right">{{ inventario.SaldoDistribuidor | currency: 'USD' }}</td>
                     <td class="text-right">{{ inventario.DifGoldenDist | currency: 'USD' }}</td>
@@ -82,8 +81,8 @@
               <ng-template pTemplate="footer">
                   <tr>
                     <td [attr.colspan]="isConsolidado ? '1' : '2'">TOTAL</td>
-                    <td class="text-right">{{ totalInvGolden | currency: 'USD' }}</td>
                     <td class="text-right">{{ totalInvRest | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalInvGolden | currency: 'USD' }}</td>
                     <td class="text-right">{{ totalInvDifGoldenRest | currency: 'USD' }}</td>
                     <td class="text-right">{{ totalInvDist | currency: 'USD' }}</td>
                     <td class="text-right">{{ totalInvDifGoldenDist | currency: 'USD' }}</td>
@@ -93,21 +92,20 @@
               </ng-template>
             </p-table> 
           </p-card>
-          <p-card class="m-1">
-            <ng-template pTemplate="header">Análisis de Ventas</ng-template>
-            <p-table [value]="dataSourceVenta" sortField="IdUnidad" rowGroupMode="subheader" groupRowsBy="IdUnidad" responsiveLayout="scroll">
+          <p-card class="m-1" header="Análisis de Ventas">
+            <p-table [value]="dataSourceVenta" sortField="IdUnidad" rowGroupMode="subheader" [groupRowsBy]="!isConsolidado ? 'IdUnidad' : ''" responsiveLayout="scroll">
               <ng-template pTemplate="header">
                   <tr>
                     <th *ngIf="isConsolidado">Unidad</th>
                     <th *ngIf="!isConsolidado">Piso</th>
                     <th *ngIf="!isConsolidado">Cuenta</th>
-                    <th class="text-right">Saldo Golden</th>
                     <th class="text-right">Saldo Restaurador</th>
-                    <th class="text-right">Dif. Golden - Rest.</th>
+                    <th class="text-right">Saldo Golden</th>
+                    <th class="text-right">Dif. Rest. - Golden</th>
                     <th class="text-right">Saldo Distribuidor</th>
-                    <th class="text-right">Dif. Golden - Dist.</th>
+                    <th class="text-right">Dif. Rest. - Dist.</th>
                     <th class="text-right">Saldo Rodas</th>
-                    <th class="text-right">Dif. Golden - Rodas</th>
+                    <th class="text-right">Dif. Rest. - Rodas</th>
                   </tr>
               </ng-template>
               <ng-template pTemplate="groupheader" let-venta *ngIf="!isConsolidado">
@@ -122,8 +120,8 @@
                     <td *ngIf="isConsolidado">{{ venta.Unidad }}</td>
                     <td *ngIf="!isConsolidado">{{ venta.Almacen }}</td>
                     <td *ngIf="!isConsolidado">{{ venta.Cuenta }}</td>
-                    <td class="text-right">{{ venta.SaldoGolden | currency: 'USD' }}</td>
                     <td class="text-right">{{ venta.SaldoRestaurador | currency: 'USD' }}</td>
+                    <td class="text-right">{{ venta.SaldoGolden | currency: 'USD' }}</td>
                     <td class="text-right">{{ venta.DifGoldenRest | currency: 'USD' }}</td>
                     <td class="text-right">{{ venta.SaldoDistribuidor | currency: 'USD' }}</td>
                     <td class="text-right">{{ venta.DifGoldenDist | currency: 'USD' }}</td>
@@ -134,8 +132,8 @@
               <ng-template pTemplate="footer">
                   <tr>
                     <td [attr.colspan]="isConsolidado ? '1' : '2'">TOTAL</td>
-                    <td class="text-right">{{ totalVtaGolden | currency: 'USD' }}</td>
                     <td class="text-right">{{ totalVtaRest | currency: 'USD' }}</td>
+                    <td class="text-right">{{ totalVtaGolden | currency: 'USD' }}</td>
                     <td class="text-right">{{ totalVtaDifGoldenRest | currency: 'USD' }}</td>
                     <td class="text-right">{{ totalVtaDist | currency: 'USD' }}</td>
                     <td class="text-right">{{ totalVtaDifGoldenDist | currency: 'USD' }}</td>
@@ -173,10 +171,10 @@
           </p-card>
         </p-tabPanel>
       </p-tabView>
-      <div class="item__footer mt-2">
-        <png-button class="mr-1" label="Conciliar" icon="pi-check" tooltip="Calcular la Conciliación." [raised]="true" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
-        <png-button class="mr-2" label="Reporte" [style]="'secondary'" [raised]="true" icon="pi-print" [disabled]="dataSourceInventario.length === 0" (clicked)="reporte()"></png-button>
-      </div>
+    </div>
+    <div class="flex justify-content-end mt-2">
+      <png-button class="mr-1" label="Conciliar" icon="pi-check" tooltip="Calcular la Conciliación." [raised]="true" [disabled]="!fg.valid" (clicked)="conciliar()"></png-button>
+      <png-button class="mr-2" label="Reporte" [style]="'secondary'" [raised]="true" icon="pi-print" [disabled]="dataSourceInventario.length === 0" (clicked)="reporte()"></png-button>
     </div>
   </png-panel>
 </div>

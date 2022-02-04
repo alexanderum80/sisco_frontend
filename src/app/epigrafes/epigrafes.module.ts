@@ -7,6 +7,7 @@ import { EpigrafesRoutingModule } from './epigrafes-routing.module';
 import { ListEpigrafesComponent } from './list-epigrafes/list-epigrafes.component';
 import { EpigrafesFormComponent } from './epigrafes-form/epigrafes-form.component';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
+import { EpigrafesService } from './shared/services/epigrafes.service';
 
 
 @NgModule({
@@ -21,6 +22,9 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     ReactiveFormsModule,
     SharedModule,
     PrimeNgModule
+  ],
+  providers: [
+    EpigrafesService
   ]
 })
 export class EpigrafesModule { }

@@ -8,6 +8,7 @@ import { ListConexionRodasComponent } from './list-conexion-rodas/list-conexion-
 import { ConexionRodasFormComponent } from './conexion-rodas-form/conexion-rodas-form.component';
 import { EstadoConexionRodasComponent } from './estado-conexion/estado-conexion.component';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
+import { ConexionRodasService } from './shared/services/conexion-rodas.service';
 
 
 @NgModule({
@@ -20,5 +21,8 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     SharedModule,
     PrimeNgModule
   ],
+  providers: [
+    ConexionRodasService
+  ]
 })
 export class ConexionRodasModule { }

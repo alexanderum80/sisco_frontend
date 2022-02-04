@@ -1,4 +1,4 @@
-mutation CreateUsuario($usuarioInfo: UsuarioDTO!) {
+mutation CreateUsuario($usuarioInfo: UsuarioInput!) {
    createUsuario(usuarioInfo: $usuarioInfo) {
     success
     error

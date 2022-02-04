@@ -1,12 +1,39 @@
+import { ParteAtrasosQueryResponse } from './../models/parte-atraso.model';
+import { Apollo } from 'apollo-angular';
 import { DateFormatEnum, LocaleFormatEnum } from './../../../shared/models/date-range';
 import { formatDate } from '@angular/common';
-import { sortBy, uniqBy } from 'lodash';
+import { toNumber, uniqBy } from 'lodash';
 import { Injectable } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { FormGroup, FormControl } from '@angular/forms';
+
+const parteAtrasosQuery = require('graphql-tag/loader!../graphql/parte-atrasos.query.gql');
 
 @Injectable()
 export class ParteAtrasoService {
+  fg: FormGroup = new FormGroup({
+    idDivision: new FormControl(null)
+  });
 
-  constructor() { }
+  subscription: Subscription[] = [];
+
+  constructor(
+    private _apollo: Apollo,
+  ) { }
+
+  calcular(): Observable<ParteAtrasosQueryResponse> {
+    const idDivision = toNumber(this.fg.controls['idDivision'].value);
+
+    return new Observable<ParteAtrasosQueryResponse>(subscriber => {
+      this._apollo.query<ParteAtrasosQueryResponse>({
+        query: parteAtrasosQuery,
+        variables: { idDivision },
+        fetchPolicy: 'network-only'
+      }).subscribe(reponse => {
+        subscriber.next(reponse.data);
+      })
+    })
+  }
 
   public async getParteAtrasosDefinition(parteAtrasosData: any): Promise<any> {
     const returnValue = [];
@@ -135,5 +162,8 @@ export class ParteAtrasoService {
     return returnValue;
   }
 
+  dispose(): void {
+    this.subscription.forEach(subs => subs.unsubscribe());
+  }
 
 }

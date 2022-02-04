@@ -5,17 +5,17 @@ import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tip
 import { ClasificadorCuentaService } from './../../clasificador-cuenta/shared/service/clasificador-cuenta.service';
 import { EpigrafesService } from './../../epigrafes/shared/services/epigrafes.service';
 import { ElementosGastosService } from './../shared/services/elementos-gastos.service';
-import { Subscription } from 'rxjs';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 
 @Component({
   selector: 'app-elementos-gastos-form',
   templateUrl: './elementos-gastos-form.component.html',
-  styleUrls: ['./elementos-gastos-form.component.scss']
+  styleUrls: ['./elementos-gastos-form.component.scss'],
+  providers: [EpigrafesService, ClasificadorCuentaService]
 })
-export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
   action: ActionClicked;
 
   fg: FormGroup;
@@ -23,8 +23,6 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
   tipoEntidadValues: SelectItem[] = [];
   cuentasValues: SelectItem[] = [];
   epigrafesValues: SelectItem[] = [];
-
-  subscription: Subscription[] = [];
 
   constructor(
     private _elementoGastoSvc: ElementosGastosService,
@@ -46,13 +44,9 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
     this._loadCuentas();
   }
 
-  ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
-  }
-
   private _loadTipoEntidades(): void {
     try {
-      this.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
+      this._elementoGastoSvc.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
         const result = response.getAllTipoEntidades;
         if (result.success) {
           this.tipoEntidadValues = result.data.map((tipo: { Id: any; Entidades: any; }) => {
@@ -76,7 +70,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
 
   private _loadEpigrafes(): void {
     try {
-      this.subscription.push(this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
+      this._elementoGastoSvc.subscription.push(this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
         const result = response.getAllEpigrafes;
         if (result.success) {
           this.epigrafesValues = result.data.map((epigrafe: { IdEpigafre: any; Epigrafe: any; }) => {
@@ -100,7 +94,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit, OnDe
 
   private _loadCuentas(): void {
     try {
-      this.subscription.push(this._clasificadorCuentaSvc.loadCuentasAgrupadas().subscribe(res => {
+      this._elementoGastoSvc.subscription.push(this._clasificadorCuentaSvc.loadCuentasAgrupadas().subscribe(res => {
         const result = res.getCuentasAgrupadas;
         if (!result.success) {
           return SweetAlert.fire({

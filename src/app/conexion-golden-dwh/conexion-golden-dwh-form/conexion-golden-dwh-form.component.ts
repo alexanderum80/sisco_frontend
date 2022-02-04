@@ -2,19 +2,12 @@ import { ActionClicked } from './../../shared/models/list-items';
 import { DatabasesService } from './../../shared/services/databases.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { ConexionDWHMutationResponse, ConexionDWHQueryResponse } from './../shared/models/conexion-dwh.model';
-import { toNumber } from 'lodash';
 import { Router } from '@angular/router';
 import { ConexionGoldenDwhService } from './../shared/services/conexion-golden-dwh.service';
 import { FormGroup } from '@angular/forms';
-import { Apollo } from 'apollo-angular';
-import { Subscription } from 'rxjs';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import SweetAlert from 'sweetalert2';
-import { conexionDWHApi } from '../shared/graphql/conexion-dwhActions';
 import { SelectItem } from 'primeng/api';
-
-const updateConexionDwhMutation = require('graphql-tag/loader!../shared/graphql/update-conexion-dwh.mutation.gql');
 
 @Component({
   selector: 'app-conexion-golden-dwh-form',
@@ -26,8 +19,6 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
   baseDatosRestValues: SelectItem[] = [];
   baseDatosDWHValues: SelectItem[] = [];
 
-  subscription: Subscription[] = [];
-
   fg: FormGroup;
 
   loadingDWHDataBase = false;
@@ -35,7 +26,6 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
 
   constructor(
     private _conexionDWHSvc: ConexionGoldenDwhService,
-    private _apollo: Apollo,
     private _divisionesSvc: DivisionesService,
     private _databasesSvc: DatabasesService,
     private _dinamicDialogSvc: DinamicDialogService,
@@ -53,12 +43,12 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
   }
 
   ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
+    this._conexionDWHSvc.dispose();
   }
 
   private _getDivisiones(): void {
     try {
-      this.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
+      this._conexionDWHSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
         const result = response.getAllDivisiones;
 
         if (!result.success) {
@@ -90,52 +80,48 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
   }
 
   private _subscribeToFgValueChange(): void {
-    this.subscription.push(this.fg.controls['idUnidad'].valueChanges.subscribe(value => {
+    this._conexionDWHSvc.subscription.push(this.fg.controls['idUnidad'].valueChanges.subscribe(value => {
       if (value) {
         this._getDWHConexion(value);
       }
     }));
 
     // Golden DWH Tab
-    this.subscription.push(this.fg.controls['dwh_ip'].valueChanges.subscribe(() => {
+    this._conexionDWHSvc.subscription.push(this.fg.controls['dwh_ip'].valueChanges.subscribe(() => {
       this.fg.controls['dwh_baseDatos'].setValue(null);
       this.baseDatosDWHValues = [];
     }));
 
-    this.subscription.push(this.fg.controls['dwh_usuario'].valueChanges.subscribe(() => {
+    this._conexionDWHSvc.subscription.push(this.fg.controls['dwh_usuario'].valueChanges.subscribe(() => {
       this.fg.controls['dwh_baseDatos'].setValue(null);
       this.baseDatosDWHValues = [];
     }));
 
-    this.subscription.push(this.fg.controls['dwh_contrasena'].valueChanges.subscribe(() => {
+    this._conexionDWHSvc.subscription.push(this.fg.controls['dwh_contrasena'].valueChanges.subscribe(() => {
       this.fg.controls['dwh_baseDatos'].setValue(null);
       this.baseDatosDWHValues = [];
     }));
 
     // Golden Restaura Tab
-    this.subscription.push(this.fg.controls['rest_ip'].valueChanges.subscribe(() => {
+    this._conexionDWHSvc.subscription.push(this.fg.controls['rest_ip'].valueChanges.subscribe(() => {
       this.fg.controls['rest_baseDatos'].setValue(null);
       this.baseDatosRestValues = [];
     }));
 
-    this.subscription.push(this.fg.controls['rest_usuario'].valueChanges.subscribe(() => {
+    this._conexionDWHSvc.subscription.push(this.fg.controls['rest_usuario'].valueChanges.subscribe(() => {
       this.fg.controls['rest_baseDatos'].setValue(null);
       this.baseDatosRestValues = [];
     }));
 
-    this.subscription.push(this.fg.controls['rest_contrasena'].valueChanges.subscribe(() => {
+    this._conexionDWHSvc.subscription.push(this.fg.controls['rest_contrasena'].valueChanges.subscribe(() => {
       this.fg.controls['rest_baseDatos'].setValue(null);
       this.baseDatosRestValues = [];
     }));
   }
 
   private _getDWHConexion(idDivision: any): void {
-    this.subscription.push(this._apollo.query<ConexionDWHQueryResponse>({
-      query: conexionDWHApi.byUnidad,
-      variables: { idDivision },
-      fetchPolicy: 'network-only'
-    }).subscribe(response => {
-      const result = response.data.getDWHConexion;
+    this._conexionDWHSvc.subscription.push(this._conexionDWHSvc.loadDWHConexion(idDivision).subscribe(response => {
+      const result = response.getDWHConexion;
 
       if (!result.success) {
         return SweetAlert.fire({
@@ -193,7 +179,7 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
       }
 
       const that = this;
-      this.subscription.push(this._databasesSvc.getDataBases(ip, usuario, password).subscribe(response => {
+      this._conexionDWHSvc.subscription.push(this._databasesSvc.getDataBases(ip, usuario, password).subscribe(response => {
         this.loadingDWHDataBase = false;
         this.loadingRestDataBase = false;
 
@@ -252,24 +238,8 @@ export class ConexionGoldenDwhFormComponent implements OnInit, AfterViewInit, On
 
   private _save(): void {
     try {
-      const inputData = {
-        IdUnidad: toNumber(this.fg.controls['idUnidad'].value),
-        DWH_ip: this.fg.controls['dwh_ip'].value,
-        DWH_usuario: this.fg.controls['dwh_usuario'].value,
-        DWH_contrasena: this.fg.controls['dwh_contrasena'].value,
-        DWH_baseDatos: this.fg.controls['dwh_baseDatos'].value,
-        Rest_ip: this.fg.controls['rest_ip'].value,
-        Rest_usuario: this.fg.controls['rest_usuario'].value,
-        Rest_contrasena: this.fg.controls['rest_contrasena'].value,
-        Rest_baseDatos: this.fg.controls['rest_baseDatos'].value,
-      };
-
-      this.subscription.push(this._apollo.mutate<ConexionDWHMutationResponse>({
-        mutation: updateConexionDwhMutation,
-        variables: { dwhConexionInput: inputData },
-        refetchQueries: ['GetDWHConexion']
-      }).subscribe(response => {
-        const result = response.data?.updateDWhConexion;
+      this._conexionDWHSvc.subscription.push(this._conexionDWHSvc.save().subscribe(response => {
+        const result = response.updateDWhConexion;
 
         if (!result?.success) {
           return SweetAlert.fire({

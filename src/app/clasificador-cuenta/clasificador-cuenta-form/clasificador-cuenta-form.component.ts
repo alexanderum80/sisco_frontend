@@ -1,11 +1,10 @@
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tipo-entidades.service';
-import { Subscription } from 'rxjs';
 import SweetAlert from 'sweetalert2';
 import { ClasificadorCuentaService } from './../shared/service/clasificador-cuenta.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 
 @Component({
@@ -13,7 +12,7 @@ import { SelectItem } from 'primeng/api';
   templateUrl: './clasificador-cuenta-form.component.html',
   styleUrls: ['./clasificador-cuenta-form.component.scss']
 })
-export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
+export class ClasificadorCuentaFormComponent implements OnInit {
   action: ActionClicked;
   fg: FormGroup;
 
@@ -30,8 +29,6 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
 
   tipoUnidadesValues: SelectItem[] = [];
 
-  subscription: Subscription[] = [];
-
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _tipoEntidadesSvc: TipoEntidadesService,
@@ -46,13 +43,9 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
     this._loadTipoUnidades();
   }
 
-  ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
-  }
-
   private _loadTipoUnidades(): void {
     try {
-      this.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
+      this._clasificadorSvc.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
         const result = response.getAllTipoEntidades;
         if (!result.success) {
           return SweetAlert.fire({
@@ -69,7 +62,7 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
             label: tipo.Entidades
           };
         });
-      }, error => { throw new Error(error); }));
+      }));
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
@@ -94,7 +87,7 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
 
   private _save(): void {
     try {
-      this.subscription.push(this._clasificadorSvc.save().subscribe(response => {
+      this._clasificadorSvc.subscription.push(this._clasificadorSvc.save().subscribe(response => {
         const result = response.saveClasificadorCuenta;
         if (!result.success) {
           return SweetAlert.fire({

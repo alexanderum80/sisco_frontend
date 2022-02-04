@@ -21,6 +21,8 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     SharedModule,
     PrimeNgModule,
   ],
-  providers: [ConciliaContabilidadService]
+  providers: [
+    ConciliaContabilidadService
+  ]
 })
 export class ConciliaContabilidadModule { }

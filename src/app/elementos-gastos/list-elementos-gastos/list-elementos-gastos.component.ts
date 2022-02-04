@@ -91,11 +91,11 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
         this._elementosGastosSvc.fg.patchValue(inputData);
 
         this._dinamicDialogSvc.open('Agregar Elemento de Gasto', ElementosGastosFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._elementosGastosSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });
+        }));
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -136,11 +136,11 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
       this._elementosGastosSvc.fg.patchValue(inputData);
 
       this._dinamicDialogSvc.open('Modificar Elemento de Gasto', ElementosGastosFormComponent);
-      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+      this._elementosGastosSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
           this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
-      });
+      }));
     }));
   }
 

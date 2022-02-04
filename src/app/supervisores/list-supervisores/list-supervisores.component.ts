@@ -40,6 +40,8 @@ export class ListSupervisoresComponent implements OnInit, AfterViewInit, OnDestr
 
   ngOnDestroy(): void {
     this.supervisores = [];
+
+    this._supervisorSvc.dispose();
   }
 
   hasAdminPermission(): boolean {
@@ -99,11 +101,11 @@ export class ListSupervisoresComponent implements OnInit, AfterViewInit, OnDestr
       this._supervisorSvc.fg.patchValue(inputData);
 
       this._dinamicDialogSvc.open('Agregar Supervisor', SupervisoresFormComponent);
-      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+      this._supervisorSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
-      });
+      }));
     }
   }
 
@@ -135,11 +137,11 @@ export class ListSupervisoresComponent implements OnInit, AfterViewInit, OnDestr
 
         this._dinamicDialogSvc.open('Modificar Supervisor', SupervisoresFormComponent);
 
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._supervisorSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
               this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });
+        }));
       }));
     }
   }

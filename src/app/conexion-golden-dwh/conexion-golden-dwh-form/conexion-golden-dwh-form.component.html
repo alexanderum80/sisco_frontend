@@ -5,19 +5,21 @@
     </div>
     <p-tabView>
       <p-tabPanel header="Golden Restaura">
-        <div class="form__group mt-1">
-          <png-input-text class="w-full mt-1" label="Servidor" labelWidth="90" [fg]="fg" control="rest_ip" [required]="true" autocomplete="off"></png-input-text>
-        </div>
-        <div class="form__group mt-1">
-          <png-input-text class="w-full mt-1" label="Usuario" labelWidth="90" [fg]="fg" control="rest_usuario" [required]="true" autocomplete="off"></png-input-text>
-        </div>
-        <div class="form__group">
-          <png-password class="w-full mt-1" label="Contraseña" labelWidth="90" [fg]="fg" control="rest_contrasena" [required]="true" autocomplete="off"></png-password>
-        </div>
-        <div class="form__group mt-1">
-          <png-dropdown class="w-full mt-1" [fg]="fg" control="rest_baseDatos" label="Base de Datos" labelWidth="90" [optionsValues]="baseDatosRestValues" placeholder="&lt;Base de Datos&gt;" [required]="true" [disabled]="loadingRestDataBase" [filter]="true" [showClear]="true"></png-dropdown>
-          <png-button class="ml-2" icon="mdi mdi-refresh" [raised]="true" [rounded]="true" [text]="true" [disabled]="loadingRestDataBase" [raised]="true" [fullWidth]="true" [loading]="loadingRestDataBase" (clicked)="refreshDataBases('Rest')"></png-button>
-        </div>
+        <ng-template pTemplate="content" style="overflow: unset;">
+          <div class="form__group mt-1">
+            <png-input-text class="w-full mt-1" label="Servidor" labelWidth="90" [fg]="fg" control="rest_ip" [required]="true" autocomplete="off"></png-input-text>
+          </div>
+          <div class="form__group mt-1">
+            <png-input-text class="w-full mt-1" label="Usuario" labelWidth="90" [fg]="fg" control="rest_usuario" [required]="true" autocomplete="off"></png-input-text>
+          </div>
+          <div class="form__group">
+            <png-password class="w-full mt-1" label="Contraseña" labelWidth="90" [fg]="fg" control="rest_contrasena" [required]="true" autocomplete="off"></png-password>
+          </div>
+          <div class="form__group mt-1">
+            <png-dropdown class="w-full mt-1" [fg]="fg" control="rest_baseDatos" label="Base de Datos" labelWidth="90" [optionsValues]="baseDatosRestValues" placeholder="&lt;Base de Datos&gt;" [required]="true" [disabled]="loadingRestDataBase" [filter]="true" [showClear]="true"></png-dropdown>
+            <png-button class="ml-2" icon="mdi mdi-refresh" [raised]="true" [rounded]="true" [text]="true" [disabled]="loadingRestDataBase" [raised]="true" [fullWidth]="true" [loading]="loadingRestDataBase" (clicked)="refreshDataBases('Rest')"></png-button>
+          </div>
+        </ng-template>
       </p-tabPanel>
       <p-tabPanel header="Golden DWH">
         <div class="form__group mt-1">

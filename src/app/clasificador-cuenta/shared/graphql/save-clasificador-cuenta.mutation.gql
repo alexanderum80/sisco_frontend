@@ -1,4 +1,4 @@
-mutation SaveClasificadorCuenta($clasificadorInfo: ClasificadorCuentaRealDTO!) {
+mutation SaveClasificadorCuenta($clasificadorInfo: ClasificadorCuentaRealInput!) {
   saveClasificadorCuenta(clasificadorInfo: $clasificadorInfo) {
     success
     error

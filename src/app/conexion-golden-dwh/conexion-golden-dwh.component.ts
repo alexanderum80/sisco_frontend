@@ -25,7 +25,7 @@ export class ConexionGoldenDwhComponent implements OnInit {
 
     if (this._usuarioSvc.usuario.IdTipoUsuario === ETipoUsuarios.Administrador) {
       this._dinamicDialogSvc.open('Actualizar Conexión al Golden DWH', ConexionGoldenDwhFormComponent);
-      this._dinamicDialogSvc.ref.onClose.subscribe(() => this._navigationSvc.navigateTo(''))
+      this._usuarioSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe(() => this._navigationSvc.navigateTo('')));
     } else {
       SweetAlert.fire({
         icon: 'warning',

@@ -5,7 +5,6 @@ import { ChangePasswordComponent } from './../change-password/change-password.co
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Usuario } from '../../shared/models/usuarios';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { Apollo } from 'apollo-angular';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
@@ -20,7 +19,6 @@ export class LoginComponent implements OnInit {
   autenticando = false;
 
   constructor(
-    private _apollo: Apollo,
     private _authSvc: AuthenticationService,
     private _route: ActivatedRoute,
     private _dinamicDialogSvc: DinamicDialogService,

@@ -7,18 +7,16 @@ import { toNumber } from 'lodash';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { FormGroup } from '@angular/forms';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { Subscription } from 'rxjs';
 import SweetAlert from 'sweetalert2';
-import { ISelectableOptions } from './../../shared/models/selectable-item';
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { UsuarioService } from '../../shared/services/usuario.service';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-conexion-rodas-form',
   templateUrl: './conexion-rodas-form.component.html',
   styleUrls: ['./conexion-rodas-form.component.scss']
 })
-export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
   divisionesValues: SelectItem[] = [];
   unidadesValues: SelectItem[] = [];
   baseDatosValues: SelectItem[] = [];
@@ -28,8 +26,6 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
   fg: FormGroup;
 
   loadingDataBase = false;
-
-  subscription: Subscription[] = [];
 
   constructor(
     private _usuarioSvc: UsuarioService,
@@ -42,6 +38,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
 
   ngOnInit(): void {
     this.fg = this._conexionRodasSvc.fg;
+
     this.action = toNumber(this.fg.controls['idUnidad'].value) === 0 ? ActionClicked.Add : ActionClicked.Edit;
     if (this.action === ActionClicked.Edit) {
       this.refreshDataBases();
@@ -55,27 +52,23 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
     this._subscribeToFgValueChange();
   }
 
-  ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
-  }
-
   private _subscribeToFgValueChange(): void {
-    this.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
+    this._conexionRodasSvc.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
       this.fg.controls['idUnidad'].setValue(null);
       this._getUnidades();
     }));
 
-    this.subscription.push(this.fg.controls['ip'].valueChanges.subscribe(() => {
+    this._conexionRodasSvc.subscription.push(this.fg.controls['ip'].valueChanges.subscribe(() => {
       this.fg.controls['baseDatos'].setValue(null);
       this.baseDatosValues = [];
     }));
 
-    this.subscription.push(this.fg.controls['usuario'].valueChanges.subscribe(() => {
+    this._conexionRodasSvc.subscription.push(this.fg.controls['usuario'].valueChanges.subscribe(() => {
       this.fg.controls['baseDatos'].setValue(null);
       this.baseDatosValues = [];
     }));
 
-    this.subscription.push(this.fg.controls['contrasena'].valueChanges.subscribe(() => {
+    this._conexionRodasSvc.subscription.push(this.fg.controls['contrasena'].valueChanges.subscribe(() => {
       this.fg.controls['baseDatos'].setValue(null);
       this.baseDatosValues = [];
     }));
@@ -87,7 +80,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
 
   private _getDivisiones(): void {
     try {
-      this.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
+      this._conexionRodasSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
         const result = response.getAllDivisiones;
 
         if (!result.success) {
@@ -127,7 +120,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
         return;
       }
 
-      this.subscription.push(this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe(response => {
+      this._conexionRodasSvc.subscription.push(this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe(response => {
         const result = response.getUnidadesByIdDivision;
 
         if (!result.success) {
@@ -167,7 +160,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
       const password = this.fg.controls['contrasena'].value;
 
       const that = this;
-      this.subscription.push(this._databasesSvc.getDataBases(ip, usuario, password).subscribe(response => {
+      this._conexionRodasSvc.subscription.push(this._databasesSvc.getDataBases(ip, usuario, password).subscribe(response => {
         this.loadingDataBase = false;
 
         const result = response.getDataBases;
@@ -215,7 +208,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit, OnDest
 
   private _save(): void {
     try {
-      this.subscription.push(this._conexionRodasSvc.save().subscribe({ 
+      this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.save().subscribe({ 
         next: (response: any) => {
           let result;
           let txtMessage;

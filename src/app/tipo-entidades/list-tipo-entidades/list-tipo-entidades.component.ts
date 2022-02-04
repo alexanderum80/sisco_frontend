@@ -35,6 +35,10 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
   ngAfterViewInit(): void {
     this._loadAllTipoEntidades();
   }
+  
+  ngOnDestroy(): void {
+    this._tipoEntidadesSvc.dispose();
+  }
 
   private _loadAllTipoEntidades(): void {
     try {
@@ -62,10 +66,6 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
         confirmButtonText: 'Aceptar'
       });
     }
-  }
-
-  ngOnDestroy(): void {
-    this._tipoEntidadesSvc.dispose();
   }
 
   hasAdvancedUserPermission(): boolean {
@@ -97,11 +97,11 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
         this._tipoEntidadesSvc.fg.patchValue(inputData);
         
         this._dinamicDialogSvc.open('Agregar Tipo de Entidad', TipoEntidadesFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._tipoEntidadesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });      
+        }));      
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -140,11 +140,11 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
         this._tipoEntidadesSvc.fg.patchValue(inputData);
 
         this._dinamicDialogSvc.open('Editar Tipo de Entidad', TipoEntidadesFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._tipoEntidadesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });
+        }));
       }));
     } catch (err: any) {
       SweetAlert.fire({

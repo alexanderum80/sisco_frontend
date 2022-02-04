@@ -125,11 +125,11 @@ export class ListClasificadorCuentaComponent implements OnInit, AfterViewInit, O
         };
         this._clasificadorCuentaSvc.fg.patchValue(inputData);
         this._dinamicDialogSvc.open('Agregar Cuenta', ClasificadorCuentaFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._clasificadorCuentaSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
               this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });      
+        }));      
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -179,11 +179,11 @@ export class ListClasificadorCuentaComponent implements OnInit, AfterViewInit, O
 
             this._clasificadorCuentaSvc.fg.patchValue(inputData);
             this._dinamicDialogSvc.open('Modificar Cuenta', ClasificadorCuentaFormComponent);
-            this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+            this._clasificadorCuentaSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
               if (message) {
                   this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
               }
-            });
+            }));
           })
         );
       }

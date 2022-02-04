@@ -111,11 +111,11 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
       this._conexionRodasSvc.fg.patchValue(dataInput);
 
       this._dinamicDialogSvc.open('Agregar Conexión al Rodas', ConexionRodasFormComponent);
-      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+      this._conexionRodasSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
           this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
-      });
+      }));
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
@@ -158,11 +158,11 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
           this._conexionRodasSvc.fg.patchValue(dataInput);
 
           this._dinamicDialogSvc.open('Modificar Conexión al Rodas', ConexionRodasFormComponent);
-          this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+          this._conexionRodasSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
             if (message) {
               this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
             }
-          });
+          }));
         }));
       }
     } catch (err: any) {
@@ -204,11 +204,11 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
                 });
               }
 
-              this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+              this._conexionRodasSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
                 if (message) {
                   this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'La Conexión se ha eliminado correctamente.' })
                 }
-              });
+              }));
             }));
           }
         });

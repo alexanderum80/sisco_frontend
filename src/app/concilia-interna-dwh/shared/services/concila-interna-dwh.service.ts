@@ -3,6 +3,8 @@ import { numberFormatter } from './../../../shared/models/number';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { formatDate } from '@angular/common';
+import { SelectItem } from 'primeng/api';
+import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'platform'
@@ -21,6 +23,8 @@ export class ConcilaInternaDwhService {
     soloDiferencias: new FormControl(true),
   });
 
+  subscription: Subscription[] = [];
+
   constructor() { }
 
   public inicializarFormGroup(): void {
@@ -37,6 +41,20 @@ export class ConcilaInternaDwhService {
     };
 
     this.fg.patchValue(inputValues);
+  }
+
+  public async getDivision(idDivision: number, divisionesList: SelectItem[]): Promise<any> {
+    const definition = [];
+
+    const _division = divisionesList.find(u => u.value === idDivision);
+
+    definition.push({
+      text: `División:  ${ _division?.label } `,
+      bold: true,
+      margin: [0, 5, 0, 0]
+    });
+
+    return definition;
   }
 
   public async getParteAtrasosDefinition(parteAtrasosData: any[], fechaInicial: Date, fechaFinal: Date): Promise<any[]> {
@@ -167,5 +185,9 @@ export class ConcilaInternaDwhService {
     });
 
     return returnValue;
+  }
+
+  dispose() {
+    this.subscription.forEach(subs => subs.unsubscribe());
   }
 }

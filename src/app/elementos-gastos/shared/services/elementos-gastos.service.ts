@@ -6,9 +6,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class ElementosGastosService {
   fg: FormGroup = new FormGroup({
     elemento: new FormControl('', Validators.maxLength(5)),

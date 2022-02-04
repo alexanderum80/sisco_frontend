@@ -24,8 +24,6 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
 
   empleados: any[] = [];
 
-  subscription: Subscription[] = [];
-
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
@@ -41,8 +39,8 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
     this.empleados = [];
+    this._empleadoSvc.dispose();
   }
 
   hasAdminPermission(): boolean {
@@ -51,7 +49,7 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private _getEmpleados(): void {
     try {
-      this.subscription.push(this._empleadoSvc.loadAllEmpleados().subscribe(response => {
+      this._empleadoSvc.subscription.push(this._empleadoSvc.loadAllEmpleados().subscribe(response => {
         const result = response.getAllEmpleados;
 
         if (result.success === false) {
@@ -102,17 +100,17 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
       this._empleadoSvc.fg.patchValue(inputData);
 
       this._dinamicDialogSvc.open('Agregar Empleado', EmpleadosFormComponent);
-      this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+      this._empleadoSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
         if (message) {
             this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
         }
-      });
+      }));
     }
   }
 
   private _edit(data: any): void {
     if (this.hasAdminPermission()) {
-      this.subscription.push(this._empleadoSvc.loadEmpleadoById(data.IdEmpleado).subscribe(response => {
+      this._empleadoSvc.subscription.push(this._empleadoSvc.loadEmpleadoById(data.IdEmpleado).subscribe(response => {
         const result = response.getEmpleadoById;
 
         if (!result.success) {
@@ -137,11 +135,11 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
         this._empleadoSvc.fg.patchValue(inputData);
 
         this._dinamicDialogSvc.open('Modificar Empleado', EmpleadosFormComponent);
-        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+        this._empleadoSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
               this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
           }
-        });
+        }));
       }));
     }
   }

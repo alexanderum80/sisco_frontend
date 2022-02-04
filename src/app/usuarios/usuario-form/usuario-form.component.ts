@@ -5,14 +5,13 @@ import { SelectItem } from 'primeng/api';
 import { ActionClicked } from './../../shared/models/list-items';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import { ETipoUsuarios } from './../shared/models/usuarios.model';
-import { Subscription } from 'rxjs';
 import { UsuariosMutationResponse } from '../shared/models/usuarios.model';
 import SweetAlert from 'sweetalert2';
 import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
 import { Apollo } from 'apollo-angular';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IUsuario } from 'src/app/shared/models';
 import { toNumber } from 'lodash';
 
@@ -21,7 +20,7 @@ import { toNumber } from 'lodash';
   templateUrl: './usuario-form.component.html',
   styleUrls: ['./usuario-form.component.scss']
 })
-export class UsuarioFormComponent implements OnInit, OnDestroy {
+export class UsuarioFormComponent implements OnInit {
   action: ActionClicked;
 
   fg: FormGroup;
@@ -29,8 +28,6 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
   divisionesValues: SelectItem[] = [];
 
   tipoUsuariosValues: SelectItem[] = [];
-
-  subscription: Subscription[] = [];
 
   constructor(
     private _usuarioSvc: UsuarioService,
@@ -51,13 +48,9 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
     this._subscribeToFgChanges();
   }
 
-  ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
-  }
-
   private _getTipoUsuarios(): void {
     try {
-      this.subscription.push(this._tipoUsuariosSvc.getAllTipoUsuarios().subscribe(response => {
+      this._usuarioSvc.subscription.push(this._tipoUsuariosSvc.getAllTipoUsuarios().subscribe(response => {
         const result = response.getAllTipoUsuarios;
 
         this.tipoUsuariosValues = result.data.map((c: { IdTipo: any; TipoUsuario: any; }) => {
@@ -80,7 +73,7 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
 
   private _getDivisiones(): void {
     try {
-      this.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
+      this._usuarioSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
         const result = response.getAllDivisiones;
 
         if (!result.success) {
@@ -181,7 +174,7 @@ export class UsuarioFormComponent implements OnInit, OnDestroy {
 
     const usuarioMutation = usuarioInfo.IdUsuario === 0 ? usuariosApi.create : usuariosApi.update;
 
-    this.subscription.push(this._apollo.mutate<UsuariosMutationResponse>({
+    this._usuarioSvc.subscription.push(this._apollo.mutate<UsuariosMutationResponse>({
       mutation: usuarioMutation,
       variables: { usuarioInfo },
       refetchQueries: ['GetAllUsuarios']

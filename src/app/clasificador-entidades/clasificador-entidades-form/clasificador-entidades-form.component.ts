@@ -15,15 +15,13 @@ import { SelectItem } from 'primeng/api';
   templateUrl: './clasificador-entidades-form.component.html',
   styleUrls: ['./clasificador-entidades-form.component.scss']
 })
-export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
+export class ClasificadorEntidadesFormComponent implements OnInit {
   unidadesValues: SelectItem[] = [];
   tipoEntidadesValues: SelectItem[] = [];
 
   action: ActionClicked;
 
   fg: FormGroup;
-
-  subscription: Subscription[] = [];
 
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
@@ -40,12 +38,8 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
     this._loadTipoEntidades();
   }
 
-  ngOnDestroy(): void {
-    this.subscription.forEach(subs => subs.unsubscribe());
-  }
-
   private _loadUnidades(): void {
-    this._unidadesSvc.getAllUnidades().subscribe(response => {
+    this._clasificadorEntidadesSvc.subscription.push(this._unidadesSvc.getAllUnidades().subscribe(response => {
       const result = response.getAllUnidades;
       if (!result.success) {
         return SweetAlert.fire({
@@ -63,11 +57,11 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
           label: unidad.IdUnidad + '-' + unidad.Nombre
         };
       });
-    });
+    }));
   }
 
   private _loadTipoEntidades(): void {
-    this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
+    this._clasificadorEntidadesSvc.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
       const result = response.getAllTipoEntidades;
       if (!result.success) {
         return SweetAlert.fire({
@@ -85,7 +79,7 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
           label: tipoEntidad.Entidades
         };
       });
-    });
+    }));
   }
 
   onActionClicked(action: ActionClicked) {
@@ -100,7 +94,7 @@ export class ClasificadorEntidadesFormComponent implements OnInit, OnDestroy {
   }
 
   private _save(): void {
-    this.subscription.push(this._clasificadorEntidadesSvc.save(this.action).subscribe(response => {
+    this._clasificadorEntidadesSvc.subscription.push(this._clasificadorEntidadesSvc.save(this.action).subscribe(response => {
       const result = this.action === ActionClicked.Add ? response.createClasificadorEntidad : response.updateClasificadorEntidad;
 
       if (!result.success) {

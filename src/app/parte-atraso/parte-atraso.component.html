@@ -15,7 +15,7 @@
         </p-tabPanel>
       </p-tabView>
     </div>
-    <div class="item__footer mt-2">
+    <div class="flex justify-content-end mt-2">
       <png-button class="mr-1" label="Calcular" icon="mdi mdi-file-check-outline" [disabled]="!fg.valid" (clicked)="calcular()"></png-button>
       <png-button class="mr-2" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSourceParteAtraso.length" (clicked)="reporte()"></png-button>
     </div>
