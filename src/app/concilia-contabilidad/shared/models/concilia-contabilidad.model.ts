@@ -7,5 +7,6 @@ export interface ConciliaContabilidadQueryResponse {
 
 export interface ConciliaContabilidadMutationReponse {
     iniciarSaldos: IMutationResponse;
+    chequearCentros: IMutationResponse;
 }
 

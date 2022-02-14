@@ -2,29 +2,6 @@
     height: 100px;
 }
 
-.unidad-container {
-    max-width: 600px;
-}
-
 .conciliacion-detalle {
     height: calc(100% - 157px);
-}
-
-.mat-column-Total,
-.mat-column-Valor,
-.mat-column-ValorC,
-.mat-column-ValorRodas {
-    text-align: right;
-    justify-content: flex-end;  
-}
-
-.mat-column-Operador,
-.mat-column-Resultado,
-.mat-column-Estado {
-    text-align: center;
-    justify-content: center;  
-}
-
-.mat-column-groupHeader {
-    background-color: #fbf8f8;
 }

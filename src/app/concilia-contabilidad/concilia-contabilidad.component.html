@@ -9,42 +9,54 @@
             <png-card>
               <png-radio-button [fg]="fg" control="tipoCentro" [items]="tipoCentrosValues"></png-radio-button>
             </png-card>
-            <div class="unidad-container flex flex-column ml-3">
+            <div class="flex flex-column w-20rem ml-3">
               <div class="form__group">
-                <png-dropdown class="w-full" [fg]="fg" control="idCentro" label="Centro" labelWidth="100" [optionsValues]="centrosValues" placeholder="Seleccione el Centro" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+                <png-dropdown class="w-full" [fg]="fg" control="idCentro" label="Centro" [optionsValues]="centrosValues" placeholder="Seleccione el Centro" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
               </div>
               <div class="form__group">
-                <png-dropdown class="w-full" [fg]="fg" control="tipoEntidad" label="Tipo de Centro" labelWidth="100" [optionsValues]="tipoEntidadValues" placeholder="Tipo de Centro" [disabled]="true"></png-dropdown>
+                <png-dropdown class="w-full" [fg]="fg" control="tipoEntidad" label="Tipo de Centro" [optionsValues]="tipoEntidadValues" placeholder="Tipo de Centro" [disabled]="true"></png-dropdown>
               </div>
               <div class="form__group">
-                <png-calendar class="w-full" [fg]="fg" label="Período" labelWidth="100" control="periodo" view="month" dateFormat="MM/yy" [required]="true"></png-calendar>
+                <png-calendar *ngIf="!isCierreOApertura" class="w-full" [fg]="fg" label="Período" control="periodo" view="month" dateFormat="MM/yy" [required]="true"></png-calendar>
+                <png-calendar *ngIf="isCierreOApertura" class="w-full" [fg]="fg" label="Período" control="periodo" view="year" dateFormat="yy" [required]="true"></png-calendar>
+              </div>
+            </div>
+            <div class="ml-3">
+              <div class="mt-1">
+                <png-checkbox label="Apertura" [fg]="fg" control="apertura"></png-checkbox>
+              </div>
+              <div class="mt-2">
+                <png-checkbox label="Cierre" [fg]="fg" control="cierre"></png-checkbox>
               </div>
             </div>
           </div>
         </form>
         <div class="conciliacion-detalle shadow-1 mt-2">
           <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
-            <p-tabPanel header="Análisis de Asientos">
+            <p-tabPanel *ngIf="chequeoCentro" header="Análisis del Chequeo">
+              <png-table [columns]="displayedColumnsChequeo" [data]="dataSourceChequeo" [paginator]="false" [filterData]="false" groupField="Unidad"></png-table>
+            </p-tabPanel>
+            <p-tabPanel *ngIf="!chequeoCentro" header="Análisis de Asientos">
               <png-table [columns]="displayedColumnsConciliacion" [data]="dataSourceAsientos" [paginator]="false" [filterData]="false" groupField="Consulta"></png-table>
             </p-tabPanel>
-            <p-tabPanel header="Chequeo de expresiones">
+            <p-tabPanel *ngIf="!chequeoCentro" header="Chequeo de Expresiones">
               <png-table [columns]="displayedColumnsExpresiones" [data]="dataSourceExpresiones" [paginator]="false" [filterData]="false"></png-table>
             </p-tabPanel>
-            <p-tabPanel header="Chequeo de valores">
+            <p-tabPanel *ngIf="!chequeoCentro" header="Chequeo de Valores">
               <png-table [columns]="displayedColumnsValores" [data]="dataSourceValores" [paginator]="false" [filterData]="false"></png-table>
             </p-tabPanel>
-            <p-tabPanel header="Análisis del Clasificador">
+            <p-tabPanel *ngIf="!chequeoCentro" header="Análisis del Clasificador">
               <png-table [columns]="displayedColumnsClasificador" [data]="dataSourceClasificador" [filterData]="false"></png-table>
             </p-tabPanel>
           </p-tabView>
         </div>
         <div class="flex justify-content-end mt-2">
           <png-split-button class="mr-1" label="Conciliar" icon="mdi mdi-file-check-outline" [items]="buttonConciliarItems" [disabled]="!fg.valid" (clicked)="conciliar()"></png-split-button>
-          <png-button class="mr-2" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSourceAsientos.length &amp;&amp; !dataSourceClasificador.length" (clicked)="reporte()"></png-button>
+          <png-button class="mr-2" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSourceAsientos.length && !dataSourceClasificador.length && !dataSourceChequeo.length" (clicked)="reporte()"></png-button>
         </div>
       </div>
-      <p-panel *ngIf="isConsolidado" header="Centros a Consolidar" class="ml-2">
-        <p>Prueba</p>
+      <p-panel *ngIf="isConsolidado" header="Centros a Consolidar" class="ml-2 w-20rem">
+        <png-table [columns]="displayedColumnsCentrosSubordinados" [data]="dataSourceCentrosSubordinados" [paginator]="false" [filterData]="false" [canSelect]="true"></png-table>
       </p-panel>
     </div>
   </png-panel>

@@ -18,6 +18,8 @@ export class ConciliaContabilidadService {
     idCentro: new FormControl(''),
     tipoEntidad: new FormControl(''),
     periodo: new FormControl(''),
+    apertura: new FormControl(false),
+    cierre: new FormControl(false),
     nota: new FormControl(''),
   });
 
@@ -34,6 +36,8 @@ export class ConciliaContabilidadService {
       idCentro: null,
       tipoEntidad: null,
       periodo: new Date(today.getFullYear(), today.getMonth(), 0),
+      apertura: false,
+      cierre: false,
       nota: '',
     };
 
@@ -47,6 +51,20 @@ export class ConciliaContabilidadService {
 
     definition.push({
       text: `Centro:  ${ _unidad?.label } `,
+      bold: true,
+      margin: [0, 5, 0, 0]
+    });
+
+    return definition;
+  }
+
+  public async getConsolidado(idUnidad: number, unidadesList: SelectItem[]): Promise<any> {
+    const definition = [];
+
+    const _unidad = unidadesList.find(u => u.value === idUnidad);
+
+    definition.push({
+      text: `Consolidado:  ${ _unidad?.label } `,
       bold: true,
       margin: [0, 5, 0, 0]
     });
@@ -69,9 +87,15 @@ export class ConciliaContabilidadService {
   }
 
   public conciliar(): Observable<ConciliaContabilidadQueryResponse> {
+    let periodo = toNumber(moment(this.fg.controls['periodo'].value).format('MM'));
+    if (this.fg.controls['apertura'].value)
+      periodo = 0;
+    if (this.fg.controls['cierre'].value)
+      periodo = 13;
+    
     const conciliaContaInput = {
       idCentro: toNumber(this.fg.controls['idCentro'].value),
-      periodo: toNumber(moment(this.fg.controls['periodo'].value).format('MM')),
+      periodo: periodo,
       annio: toNumber(moment(this.fg.controls['periodo'].value).format('YYYY')),
       tipoCentro: toNumber(this.fg.controls['tipoCentro'].value),
       tipoEntidad: toNumber(this.fg.controls['tipoEntidad'].value),
@@ -105,6 +129,24 @@ export class ConciliaContabilidadService {
     });
   }
 
+  public chequearCentros(centrosAChequear: number[]): Observable<ConciliaContabilidadMutationReponse> {
+    const chequearCentrosInput = {
+      idCentro: toNumber(this.fg.controls['idCentro'].value),
+      annio: toNumber(moment(this.fg.controls['periodo'].value).format('YYYY')),
+      periodo: toNumber(moment(this.fg.controls['periodo'].value).format('MM')),
+      centrosAChequear: centrosAChequear
+    };
+
+    return new Observable<ConciliaContabilidadMutationReponse>(subscriber => {
+      this._apollo.mutate<ConciliaContabilidadMutationReponse>({
+        mutation: conciliaContabilidadApi.chequearCentros,
+        variables: { chequearCentrosInput },
+      }).subscribe(response => {
+        subscriber.next(response.data || undefined)
+      });
+    });
+  }
+
   public async getReporteAsientoDefinition(data: any): Promise<any> {
     if (typeof data === 'string') {
       data = [];
@@ -114,14 +156,14 @@ export class ConciliaContabilidadService {
 
     const consultas = uniq(data.map((d: { Consulta: any; }) => d.Consulta));
 
-    consultas.forEach(element => {
+    consultas.forEach(consulta => {
       definition.push({
-        text: 'Consulta: ' + element,
+        text: 'Consulta: ' + consulta,
         bold: true,
         margin: [0, 10, 0, 0]
       });
 
-      const _filteredData = data.filter((f: { Consulta: string; }) => f.Consulta === element);
+      const _filteredData = data.filter((f: { Consulta: string; }) => f.Consulta === consulta);
 
       definition.push(this._getReporteAsientoTable(_filteredData));
     });
@@ -240,15 +282,15 @@ export class ConciliaContabilidadService {
 
     const expresiones = uniq(data.map(d => d.Expresion));
 
-    expresiones.forEach(element => {
+    expresiones.forEach(expresion => {
       definition.push({
-        text: 'Expresión: ' + element,
+        text: 'Expresión: ' + expresion,
         bold: true,
         italics: true,
         margin: [0, 10, 0, 0]
       });
 
-      const _filteredData = data.filter(f => f.Expresion === element);
+      const _filteredData = data.filter(f => f.Expresion === expresion);
 
       definition.push(this._getReporteValoresTable(_filteredData));
     });
@@ -403,6 +445,77 @@ export class ConciliaContabilidadService {
     );
 
     return definition;
+  }
+
+  public async getReporteChequeoDefinition(data: any): Promise<any> {
+    if (typeof data === 'string') {
+      data = [];
+    }
+
+    const definition: any[] = [];
+
+    const unidades = uniq(data.map((d: { Unidad: any; }) => d.Unidad));
+
+    unidades.forEach(unidad => {
+      definition.push({
+        text: 'Centro: ' + unidad,
+        bold: true,
+        margin: [0, 10, 0, 0]
+      });
+
+      const _filteredData = data.filter((f: { Unidad: string; }) => f.Unidad === unidad);
+
+      definition.push(this._getReporteChequeoTable(_filteredData));
+    });
+
+    return definition;
+  }
+
+  private _getReporteChequeoTable(data: any): object {
+    let total = 0;
+
+    const returnValue = {
+      table: {
+        widths: ['*', '*', '*', '*', '*', '*'],
+        body: [
+          [{
+            text: 'Cuenta',
+            style: 'tableHeader'
+          },
+          {
+            text: 'SubCuenta',
+            style: 'tableHeader'
+          },
+          {
+            text: 'Análisis 1',
+            style: 'tableHeader',
+          },
+          {
+            text: 'Análisis 2',
+            style: 'tableHeader',
+          },
+          {
+            text: 'Análisis 3',
+            style: 'tableHeader',
+          },
+          {
+            text: 'Total',
+            style: 'tableHeader',
+            alignment : 'right'
+          },
+          ],
+          ...data.map((al: any) => {
+            total += al.Total;
+            return [al.Cuenta, al.SubCuenta, al['Análisis 1'], al['Análisis 2'], al['Análisis 3'],
+              { text: numberFormatter.format(al.Total), alignment: 'right' }
+            ];
+          }),
+          [{}, {}, {}, {}, { text: 'TOTAL', bold: true, alignment: 'right' }, { text: numberFormatter.format(total), bold: true, alignment: 'right' }]
+        ]
+      }
+    };
+
+    return returnValue;
   }
 
   dispose() {
