@@ -2,21 +2,6 @@
     height: 80px;
 }
 
-.unidad-container {
-    max-width: 600px;
-}
-
 .conciliacion-detalle {
     height: calc(100% - 170px);
-}
-
-.mat-column-SaldoGolden, 
-.mat-column-SaldoRestaurador,
-.mat-column-DifGoldenRest,
-.mat-column-SaldoDistribuidor,
-.mat-column-DifGoldenDist,
-.mat-column-SaldoRodas,
-.mat-column-DifGoldenRodas {
-    text-align: right;
-    justify-content: flex-end;  
 }

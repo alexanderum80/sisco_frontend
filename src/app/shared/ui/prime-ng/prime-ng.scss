@@ -29,7 +29,13 @@
 }
 
 .p-fieldset {
-    .p-fieldset-legend, .p-fieldset-content {
+
+    .p-fieldset-legend {
+       padding: .5rem !important;
+       font-weight: inherit !important;
+    } 
+    
+    .p-fieldset-content {
        padding: .5rem !important;
     }
 }
@@ -169,6 +175,7 @@ p-slidemenu {
     .p-panel-header {
         padding: .5rem !important;
         height: 2rem !important;
+        font-weight: 500;
     }
 
     .p-panel-title {

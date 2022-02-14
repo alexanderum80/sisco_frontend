@@ -8,7 +8,7 @@
           <p-card class="tipo-centro-container">
             <png-radio-button [fg]="fg" control="tipoCentro" [items]="tipoCentrosValues"></png-radio-button>
           </p-card>
-          <div class="unidad-container flex flex-column ml-3">
+          <div class="flex flex-column w-20rem ml-3">
             <div class="form__group">
               <png-dropdown class="w-full" [fg]="fg" control="idDivision" label="División" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
             </div>
@@ -18,13 +18,13 @@
             <div class="form__group">
               <div class="flex">
                 <png-calendar class="w-full" [fg]="fg" label="Período" control="periodo" view="month" dateFormat="MM/yy" [required]="true"></png-calendar>
-                <div class="ml-3 mt-1">
+                <!-- <div class="ml-3 mt-1">
                   <png-checkbox [fg]="fg" control="isComplejo" label="Complejo" [disabled]="true"></png-checkbox>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
-          <div class="empleados-container w-20rem ml-2 flex flex-column">
+          <div class="flex flex-column w-20rem ml-2">
             <div class="form__group">
               <png-dropdown class="w-full" [fg]="fg" control="idEmpleado" label="Empleado" [optionsValues]="empleadosValues" placeholder="(Opcional)" [filter]="true" [showClear]="true"></png-dropdown>
             </div>
@@ -42,7 +42,7 @@
       <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
         <p-tabPanel header="Conciliación">
           <p-card class="m-1" header="Análisis de Inventario">
-            <p-table [value]="dataSourceInventario" sortField="IdUnidad" sortMode="single" rowGroupMode="subheader" [groupRowsBy]="!isConsolidado ? 'IdUnidad' : ''">
+            <p-table [value]="dataSourceInventario" sortField="IdUnidad" sortMode="single" rowGroupMode="subheader" [groupRowsBy]="!isConsolidado ? ['IdUnidad', 'Almacen'] : ''">
               <ng-template pTemplate="header">
                   <tr>
                     <th *ngIf="isConsolidado">Unidad</th>
@@ -148,8 +148,7 @@
           <png-input-textarea class="w-full mt-1" label="Nota" [fg]="fg" control="nota" autocomplete="off"></png-input-textarea>
         </p-tabPanel>
         <p-tabPanel header="Almacenes del Golden vs Rodas" [disabled]="isConsolidado">
-          <p-card class="m-1">
-            <ng-template pTemplate="header">Análisis de Almacenes</ng-template>
+          <p-card class="m-1" header="Análisis de Almacenes">
             <p-table [value]="dataSourceAlmacenes" responsiveLayout="scroll">
               <ng-template pTemplate="header">
                   <tr>

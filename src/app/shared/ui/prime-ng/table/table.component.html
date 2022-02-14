@@ -1,7 +1,7 @@
 <p-toolbar *ngIf="canEditDelete" class="mb-4">
     <ng-template pTemplate="left">
-        <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success mr-2" (click)="onActionClicked('add')"></button>
-        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger" (click)="onActionClicked('delete')" [disabled]="!selectedRow || !selectedRow.length"></button>
+        <button pButton pRipple label="Nuevo" icon="pi pi-plus" class="p-button-success mr-2" pTooltip="Agregar nuevo" tooltipPosition="bottom" (click)="onActionClicked('add')"></button>
+        <button pButton pRipple label="Eliminar" icon="pi pi-trash" class="p-button-danger" pTooltip="Eliminar seleccionado(s)" tooltipPosition="bottom" (click)="onActionClicked('delete')" [disabled]="!selectedRow || !selectedRow.length"></button>
     </ng-template>
 </p-toolbar>
 
@@ -27,7 +27,7 @@
     [globalFilterFields]="getFields()">
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngIf="canEditDelete">
+            <th *ngIf="canEditDelete || canSelect">
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
             </th>
             <ng-container *ngFor="let col of columns" >
@@ -79,7 +79,7 @@
     
     <ng-template [pTemplate]="expandible && groupMode==='subheader' ? 'rowexpansion' :'body'" let-rowData let-columns="columns" let-rowgroup="rowgroup" let-rowspan="rowspan">
         <tr>
-            <td *ngIf="canEditDelete">
+            <td *ngIf="canEditDelete || canSelect">
                 <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
             </td>
             <td *ngIf="rowgroup && groupMode === 'rowspan'" [attr.rowspan]="rowspan">

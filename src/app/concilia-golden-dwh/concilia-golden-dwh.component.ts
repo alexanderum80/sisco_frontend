@@ -71,7 +71,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
   ngOnInit(): void {
     this.fg = this._conciliaDWHSvc.fg;
-    this._inicializarFg();
+    this._conciliaDWHSvc.inicializarFg();
     this._subscribeToFgValueChanges();
   }
 
@@ -89,23 +89,12 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
     this._conciliaDWHSvc.subscription.forEach(subsc => subsc.unsubscribe());
   }
 
-  private _inicializarFg(): void {
-    const today = new Date();
-    const fgValues = {
-      tipoCentro: '0',
-      idDivision: null,
-      idCentro: null,
-      periodo: new Date(today.getFullYear(), today.getMonth(), 0),
-      idEmpleado: null,
-      idSupervisor: null,
-      isComplejo: false,
-      ventasAcumuladas: true,
-    };
-
-    this.fg.patchValue(fgValues);
-  }
-
   private _subscribeToFgValueChanges(): void {
+    // cualquier cambio en el FG
+    this._conciliaDWHSvc.subscription.push(this.fg.valueChanges.subscribe(() => {
+      this._inicializarDatos();
+    }));
+
     // TipoCentro
     this._conciliaDWHSvc.subscription.push(this.fg.controls['tipoCentro'].valueChanges.subscribe(value => {
       this.isConsolidado = value === '1';
@@ -118,25 +107,6 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
       this.fg.controls['idCentro'].setValue(null);
 
       this._getUnidades(value);
-    }));
-
-    // IdCentro
-    this._conciliaDWHSvc.subscription.push(this.fg.controls['idCentro'].valueChanges.subscribe(value => {
-      this.fg.controls['isComplejo'].setValue(false);
-
-      const subordinados = this.unidadesList.filter(f => f.IdSubdivision === value && f.Abierta === true);
-
-      this.fg.controls['isComplejo'].setValue(subordinados.length > 1);
-
-      this._inicializarDatos();
-    }));
-
-    this._conciliaDWHSvc.subscription.push(this.fg.controls['periodo'].valueChanges.subscribe(value => {
-      this._inicializarDatos();
-    }));
-
-    this._conciliaDWHSvc.subscription.push(this.fg.controls['ventasAcumuladas'].valueChanges.subscribe(value => {
-      this._inicializarDatos();
     }));
   }
 

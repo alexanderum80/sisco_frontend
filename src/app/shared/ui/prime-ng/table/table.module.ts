@@ -7,6 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CalendarModule } from 'primeng/calendar';
 import { PrimeSlideMenuModule } from '../slide-menu/slide-menu.module';
 import { MenuModule } from 'primeng/menu';
+import { TableService } from './table.service';
 
 @NgModule({
   declarations: [
@@ -21,9 +22,12 @@ import { MenuModule } from 'primeng/menu';
     MenuModule,
     PrimeToolbarModule
   ],
+  providers: [
+    TableService
+  ],
   exports: [
     TableModule,
-    TableComponent
+    TableComponent,
   ]
 })
 export class PrimeTableModule { }

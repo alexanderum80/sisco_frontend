@@ -2,6 +2,7 @@ import { IActionItemClickedArgs, ActionClicked } from './../../../models/list-it
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { ITableColumns } from './table.model';
 import { get } from 'lodash';
+import { TableService } from './table.service';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -16,6 +17,7 @@ export class TableComponent implements OnInit {
   @Input() paginator = true;
   @Input() loading = false;
   @Input() canEditDelete = false;
+  @Input() canSelect = false;
   @Input() groupField: string;
   @Input() groupMode: 'subheader'|'rowspan' = 'subheader';
   @Input() expandible = false;
@@ -23,18 +25,27 @@ export class TableComponent implements OnInit {
 
   @Output() actionClicked = new EventEmitter<IActionItemClickedArgs>()
 
-  selectedRow = [];
-
   viewportHeight = 120;
   _ = get;
 
-  constructor() { }
+  constructor(
+    private _tableSvc: TableService
+  ) { }
 
   ngOnInit(): void {
+    this.selectedRow = this._tableSvc.selectedRow;
   }
 
   getFields(): string[] {
     return this.columns.map(c => c.field);
+  }
+
+  get selectedRow(): any[] {
+    return this._tableSvc.selectedRow;
+  }
+  
+  set selectedRow(selected: any) {
+    this._tableSvc.selectedRow = selected;
   }
 
   onActionClicked(action: string, data?: any) {
@@ -53,7 +64,7 @@ export class TableComponent implements OnInit {
       case ActionClicked.Delete:
         this.actionClicked.emit({
           action: 'delete',
-          item: data || this.selectedRow
+          item: data || this._tableSvc.selectedRow
         })
         break;
     }

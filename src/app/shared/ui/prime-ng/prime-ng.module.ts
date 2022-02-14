@@ -2,7 +2,7 @@ import { PrimeFieldsetModule } from './fieldset/fieldset.module';
 import { PrimeMultiSelectModule } from './multi-select/multi-select.module';
 import { PrimeToolbarModule } from './toolbar/toolbar.module';
 import { PrimeProgressSpinnerModule } from './progress-spinner/progress-spinner.module';
-import { NgModule } from '@angular/core';
+import { NgModule, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PrimeDropdownModule } from './dropdown/dropdown.module';
@@ -60,15 +60,11 @@ const modules = [
   imports: [ CommonModule, modules ],
   exports: [ modules ],
 })
-export class PrimeNgModule {
+export class PrimeNgModule implements OnInit {
   constructor(
     private config: PrimeNGConfig
-  ) {
-    config.setTranslation({
-      accept: 'Sí',
-      reject: 'No',
-      cancel: 'Cancelar',
-      emptyMessage: 'No hay datos que mostrar',
+  ) { 
+    this.config.setTranslation({
       startsWith: 'Comienza con',
       contains: 'Contiene',
       notContains: 'No contiene',
@@ -76,11 +72,46 @@ export class PrimeNgModule {
       equals: 'Igual',
       notEquals: 'No es igual',
       noFilter: 'Sin filtro',
+      lt: 'Menor que',
+      lte: 'Menor que o igual a',
+      gt: 'Mayor que',
+      gte: 'Mayor que o igual a',
+      is: 'Es',
+      isNot: 'No es',
+      before: 'Antes',
+      after: 'Después',
       dateIs: 'Fecha es',
       dateIsNot: 'Fecha no es',
-      dateAfter: 'Fecha después de',
       dateBefore: 'Fecha antes de',
-      dateFormat: 'Formato de fecha',      
+      dateAfter: 'Fecha después de',
+      clear: 'Limpiar',
+      apply: 'Aplicar',
+      matchAll: 'Coincidir todo',
+      matchAny: 'Coincidir cualquiera',
+      addRule: 'Agregar regla',
+      removeRule: 'Eliminar regla',
+      accept: 'Sí',
+      reject: 'No',
+      choose: 'Seleccionar',
+      upload: 'Subir',
+      cancel: 'Cancelar',
+      dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+      dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+      dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+      monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+      dateFormat: 'Formato de fecha',    
+      today: 'Hoy',
+      weekHeader: 'Se',
+      weak: 'Débil',
+      medium: 'Medio',
+      strong: 'Fuerte',
+      passwordPrompt: 'Introduzca la contraseña',
+      emptyMessage: 'No se han encontrado resultados',
+      emptyFilterMessage: 'No se han encontrado resultados',
     });
+  }
+
+   ngOnInit(): void {
    }
  }

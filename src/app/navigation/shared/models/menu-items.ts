@@ -54,18 +54,22 @@ export const MenuItems: MenuItem[] = [
       title: 'Concilia los Activos Fijos con la Contabilidad.',
     },
     {
-      label: 'Clasificador CNMB',
-      icon: 'mdi mdi-format-list-checkbox',
-      routerLink: '',
-      disabled: true,
-      title: 'Clasificador CNMB para activos fijos tangibles, solo lectura.  Es modificable solo en el departamento de contabilidad de la Empresa.',
-    },
-    {
-      label: 'Arregla Clasificador CNMB',
-      icon: 'mdi mdi-format-list-checks',
-      routerLink: '',
-      disabled: true,
-      title: 'Arregla Clasificador CNMB de los Activos Fijos.',
+      label: 'Clasificadores AFT', items: [
+        {
+          label: 'Clasificador CNMB',
+          icon: 'mdi mdi-format-list-checkbox',
+          routerLink: '',
+          disabled: true,
+          title: 'Clasificador CNMB para activos fijos tangibles, solo lectura.  Es modificable solo en el departamento de contabilidad de la Empresa.',
+        },
+        {
+          label: 'Arregla Clasificador CNMB',
+          icon: 'mdi mdi-format-list-checks',
+          routerLink: '',
+          disabled: true,
+          title: 'Arregla Clasificador CNMB de los Activos Fijos.',
+        },
+      ]
     },
     {
       label: 'Utiles y Herramientas',

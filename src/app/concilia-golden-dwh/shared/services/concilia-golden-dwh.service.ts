@@ -19,7 +19,6 @@ export class ConciliaGoldenDwhService {
     periodo: new FormControl(''),
     idEmpleado: new FormControl(''),
     idSupervisor: new FormControl(''),
-    isComplejo: new FormControl(''),
     ventasAcumuladas: new FormControl(true),
     nota: new FormControl(''),
   });
@@ -29,6 +28,21 @@ export class ConciliaGoldenDwhService {
   constructor(
     private _apollo: Apollo
   ) { }
+
+  inicializarFg(): void {
+    const today = new Date();
+    const fgValues = {
+      tipoCentro: '0',
+      idDivision: null,
+      idCentro: null,
+      periodo: new Date(today.getFullYear(), today.getMonth(), 0),
+      idEmpleado: null,
+      idSupervisor: null,
+      ventasAcumuladas: true,
+    };
+
+    this.fg.patchValue(fgValues);
+  }
 
   conciliar(): Observable<ConciliaDWHQueryResponse> {
     const conciliaDWHInput = {

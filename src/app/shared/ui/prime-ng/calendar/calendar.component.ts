@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, AfterContentChecked, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { PrimeNGConfig } from 'primeng/api';
+// import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -14,7 +14,7 @@ export class CalendarComponent implements OnInit {
   @Input() floatLabel = false;
   @Input() labelWidth: string;
   @Input() control: string;
-  @Input() view: 'date' | 'month' = 'date';
+  @Input() view: 'date' | 'month' | 'year' = 'date';
   @Input() dateFormat = 'dd/mm/yy';
   @Input() showIcon = true;
   @Input() minDate: Date;
@@ -32,19 +32,22 @@ export class CalendarComponent implements OnInit {
   @Input() disabled = false;
 
   constructor(
-    private config: PrimeNGConfig
+    // private config: PrimeNGConfig,
+    private cd: ChangeDetectorRef
   ) { }
 
-  ngOnInit(): void {
-    this.config.setTranslation({
-      dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-      dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
-      dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-      monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-      monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-      today: 'Hoy',
-      clear: 'Limpiar'
-    });
+  ngOnInit(): void {    
+    // this.config.setTranslation({
+    //   dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+    //   dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
+    //   dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+    //   monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+    //   monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    //   today: 'Hoy',
+    //   clear: 'Limpiar'
+    // });   
+    
+    this.cd.detectChanges();
   }
 
 }

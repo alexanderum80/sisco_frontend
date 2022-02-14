@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { ISelectableOptions } from 'src/app/shared/models';
 
 @Component({
   // tslint:disable-next-line: component-selector
