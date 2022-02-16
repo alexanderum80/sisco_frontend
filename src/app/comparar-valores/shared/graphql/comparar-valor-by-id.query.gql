@@ -1,0 +1,14 @@
+query GetComprobarValorById($id: Int!) {
+    getComprobarValorById(id: $id) {
+      success
+      data {
+        Id
+        IdCentro
+        IdExpresion
+        IdOperador
+        Valor
+        IdDivision
+      }
+      error
+    }
+}

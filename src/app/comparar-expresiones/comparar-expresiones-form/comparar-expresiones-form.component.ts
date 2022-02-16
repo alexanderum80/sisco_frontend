@@ -61,7 +61,7 @@ export class CompararExpresionesFormComponent implements OnInit {
 
   private _loadOperadores(): void {
     try {
-      this._compararExpresionesSvc.subscription.push(this._operadoresSvc.getCargos().subscribe(response => {
+      this._compararExpresionesSvc.subscription.push(this._operadoresSvc.getOperadores().subscribe(response => {
         const result = response.getAllOperadores;
 
         if (!result.success) {

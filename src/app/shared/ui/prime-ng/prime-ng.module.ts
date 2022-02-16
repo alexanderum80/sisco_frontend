@@ -1,3 +1,4 @@
+import { PrimeInputNumberModule } from './input-number/input-number.module';
 import { PrimeFieldsetModule } from './fieldset/fieldset.module';
 import { PrimeMultiSelectModule } from './multi-select/multi-select.module';
 import { PrimeToolbarModule } from './toolbar/toolbar.module';
@@ -39,6 +40,7 @@ const modules = [
   PrimeDropdownModule,
   PrimeFieldsetModule,
   PrimeInputMaskModule,
+  PrimeInputNumberModule,
   PrimeInputTextModule,
   PrimeInputTextareaModule,
   PrimeMenubarModule,

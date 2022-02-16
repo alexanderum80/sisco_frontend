@@ -1,0 +1,13 @@
+query GetAllComprobarValores {
+    getAllComprobarValores {
+      success
+      data {
+        Id
+        Centro
+        Expresion
+        Operador
+        Valor
+      }
+      error
+    }
+}

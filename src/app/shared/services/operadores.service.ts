@@ -13,7 +13,7 @@ export class OperadoresService {
     private _apollo: Apollo,
   ) { }
 
-  getCargos(): Observable<OperadoresQueryResponse> {
+  getOperadores(): Observable<OperadoresQueryResponse> {
     return new Observable<OperadoresQueryResponse>(subscriber => {
       try {
         this._apollo.query<OperadoresQueryResponse>({

@@ -1,0 +1,6 @@
+mutation CreateComprobarValor($comprobarValorInput: ComprobarValoresInput!) {
+   createComprobarValor(comprobarValorInput: $comprobarValorInput) {
+    success
+    error
+  }
+}

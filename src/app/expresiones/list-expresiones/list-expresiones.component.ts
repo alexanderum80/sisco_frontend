@@ -112,6 +112,7 @@ export class ListExpresionesComponent implements OnInit, AfterViewInit, OnDestro
           descripcion: result.data.Descripcion,
           acumulado: result.data.Acumulado,
           operacionesInternas: result.data.OperacionesInternas,
+          centralizada: result.data.Centralizada,
           idDivision: result.data.IdDivision
         };
 

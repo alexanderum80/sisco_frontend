@@ -125,6 +125,13 @@ export const MenuItems: MenuItem[] = [
       disabled: false,
       title: 'Establecer las expresiones a comparar.',
     },
+    {
+      label: 'Valores',
+      icon: 'mdi mdi-numeric',
+      routerLink: 'comparar-valores',
+      disabled: false,
+      title: 'Establecer valores de las expresiones.',
+    },
     { separator: true },
     {
       label: 'No Permitidas',

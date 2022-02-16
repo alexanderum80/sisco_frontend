@@ -228,7 +228,7 @@ export class ConciliaContabilidadService {
     },
     {
       table: {
-        widths: [140, 60, 30, 140, 60, 50],
+        widths: [140, 70, 20, 140, 70, 40],
         body: [
           [{
             text: 'Expresión',
@@ -278,33 +278,13 @@ export class ConciliaContabilidadService {
       text: 'Chequeo entre valores',
       bold: true,
       margin: [0, 10, 0, 0]
-    });
-
-    const expresiones = uniq(data.map(d => d.Expresion));
-
-    expresiones.forEach(expresion => {
-      definition.push({
-        text: 'Expresión: ' + expresion,
-        bold: true,
-        italics: true,
-        margin: [0, 10, 0, 0]
-      });
-
-      const _filteredData = data.filter(f => f.Expresion === expresion);
-
-      definition.push(this._getReporteValoresTable(_filteredData));
-    });
-
-    return definition;
-  }
-
-  private _getReporteValoresTable(data: any): object {
-    const returnValue = {
+    },
+    {
       table: {
-        widths: [150, 100, 40, 100, 60],
+        widths: [230, 80, 40, 80, 60],
         body: [
           [{
-            text: 'Centro',
+            text: 'Expresión',
             style: 'tableHeader'
           },
           {
@@ -328,16 +308,16 @@ export class ConciliaContabilidadService {
           },
           ],
           ...data.map((d: any) => {
-            return [d.Codigo, { text: numberFormatter.format(d.Valor), alignment: 'right' }, { text: d.Operador, alignment: 'center' },
+            return [d.Expresion, { text: numberFormatter.format(d.Valor), alignment: 'right' }, { text: d.Operador, alignment: 'center' },
               { text: numberFormatter.format(d.ValorRodas), alignment: 'right' },
               { text: d.Estado, bold: true, color: d.Estado === 'Incorrecto' ? 'red' : 'blue' }
             ];
           })
         ]
       }
-    };
+    });
 
-    return returnValue;
+    return definition;
   }
 
   public async getReporteDiferenciaClasificadorDefinition(data: any[]): Promise<any> {

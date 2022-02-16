@@ -46,7 +46,6 @@ export class ConciliaContabilidadComponent implements OnInit, AfterViewInit, OnD
     { header: 'Resultado', field: 'Resultado', type: 'string' },
   ];
   displayedColumnsValores: ITableColumns[] = [
-    { header: 'Código', field: 'Codigo', type: 'string' },
     { header: 'Expresión', field: 'Expresion', type: 'string' },
     { header: 'Valor', field: 'Valor', type: 'decimal' },
     { header: 'Operador', field: 'Operador', type: 'string' },
