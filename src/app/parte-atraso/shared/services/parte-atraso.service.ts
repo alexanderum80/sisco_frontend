@@ -29,8 +29,13 @@ export class ParteAtrasoService {
         query: parteAtrasosQuery,
         variables: { idDivision },
         fetchPolicy: 'network-only'
-      }).subscribe(reponse => {
-        subscriber.next(reponse.data);
+      }).subscribe({
+        next: reponse => {
+          subscriber.next(reponse.data);
+        },
+        error: err => {
+          subscriber.error(err);
+        }
       })
     })
   }

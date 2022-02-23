@@ -15,7 +15,8 @@ export class SweetalertService {
       title: 'Satisfactorio',
       text: message,
       showConfirmButton: false,
-      timer: 2000
+      timer: 2000,
+      allowOutsideClick: false,
     });
   }
 
@@ -24,18 +25,20 @@ export class SweetalertService {
       icon: 'error',
       title: 'ERROR',
       text: message,
-      confirmButtonText: 'Aceptar'
+      confirmButtonText: 'Aceptar',
+      allowOutsideClick: false,
     });
   }
 
-  async question(message: string): Promise<string> {
+  async question(message: string, title = 'Confirmación'): Promise<string> {
     return Swal.fire({
       icon: 'question',
-      title: 'Confirmación',
+      title,
       text: message,
       confirmButtonText: 'Sí',
       showCancelButton: true,
-      cancelButtonText: 'No'
+      cancelButtonText: 'No',
+      allowOutsideClick: false,
     }).then(result => {
       if (result.isConfirmed) {
         return ActionClicked.Yes;
@@ -51,6 +54,7 @@ export class SweetalertService {
       title: 'Información',
       text: message,
       confirmButtonText: 'Aceptar',
+      allowOutsideClick: false,
     });
   }
 
@@ -60,6 +64,7 @@ export class SweetalertService {
       title: 'Advertencia',
       text: message,
       confirmButtonText: 'Aceptar',
+      allowOutsideClick: false,
     });
   }
 

@@ -18,13 +18,13 @@ interface IComprobarExpresiones {
 interface IComprobarExpresionQueryResponse {
     success: boolean;
     data: IComprobarExpresiones;
-    error?: string;
+    error: string;
 }
 
 interface IComprobarExpresionesQueryResponse {
     success: boolean;
     data: IComprobarExpresiones[];
-    error?: string;
+    error: string;
 }
 
 export interface ComprobarExpresionesQueryResponse {

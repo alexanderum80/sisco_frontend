@@ -15,13 +15,13 @@ interface ICuentasNoPermitidas {
 interface ICuentaNoPermitidaQueryResponse {
     success: boolean;
     data: ICuentasNoPermitidas;
-    error?: string;
+    error: string;
 }
 
 interface ICuentasNoPermitidasQueryResponse {
     success: boolean;
     data: ICuentasNoPermitidas[];
-    error?: string;
+    error: string;
 }
 
 export interface CuentasNoPermitidasQueryResponse {

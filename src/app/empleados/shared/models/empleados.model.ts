@@ -17,13 +17,13 @@ export interface IEmpleado {
 interface IEmpleadoQueryResponse {
     success: boolean;
     data: IEmpleadoInfo;
-    error?: string;
+    error: string;
 }
 
 interface IEmpleadosQueryResponse {
     success: boolean;
     data: IEmpleadoInfo[];
-    error?: string;
+    error: string;
 }
 
 export interface EmpleadosQueryResponse {

@@ -92,7 +92,7 @@ export class ConciliaGoldenDwhService {
                 text: tipo === 'Ventas' ? (ventasAcumuladas ? tipo + ' (Acumuladas)' : tipo + ' (Mes)') : tipo,
                 alignment: 'center',
                 bold: true,
-                margin: [0, 10, 0, 0]
+                margin: [0, 5, 0, 0]
               });
 
               definition.push(this._getConciliacionTable(data, tipoCentro));
@@ -108,7 +108,7 @@ export class ConciliaGoldenDwhService {
                 text: tipo,
                 alignment: 'center',
                 bold: true,
-                margin: [0, 10, 0, 0]
+                margin: [0, 5, 0, 0]
               });
 
               definition.push(this._getConciliacionTable(data, tipoCentro));
@@ -133,7 +133,7 @@ export class ConciliaGoldenDwhService {
         definition.push({
           text: element.field + ': ' + element.value,
           bold: true,
-          margin: [0, 10, 0, 0]
+          margin: [0, 5, 0, 0]
         });
       }
 

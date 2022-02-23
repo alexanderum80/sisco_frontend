@@ -4,18 +4,18 @@ import { ISelectableOptions } from '../../../shared/models/selectable-item';
 interface IUsuarioQueryResponse {
     success: boolean;
     data: IUsuario;
-    error?: string;
+    error: string;
 }
 
 interface IUsuariosQueryResponse {
     success: boolean;
     data: IUsuario[];
-    error?: string;
+    error: string;
 }
 
 interface IUsuariosMutationResponse {
     success: boolean;
-    error?: string;
+    error: string;
 }
 
 export interface UsuariosQueryResponse {

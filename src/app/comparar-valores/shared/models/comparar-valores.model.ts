@@ -15,13 +15,13 @@ interface IComprobarValores {
 interface IComprobarValorQueryResponse {
     success: boolean;
     data: IComprobarValores;
-    error?: string;
+    error: string;
 }
 
 interface IComprobarValoresQueryResponse {
     success: boolean;
     data: IComprobarValores[];
-    error?: string;
+    error: string;
 }
 
 export interface ComprobarValoresQueryResponse {

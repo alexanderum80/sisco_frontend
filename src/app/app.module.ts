@@ -1,3 +1,4 @@
+import { Apollo } from 'apollo-angular';
 import { PrimeMenubarModule } from './shared/ui/prime-ng/menubar/menubar.module';
 import { PrimeButtonModule } from './shared/ui/prime-ng/button/button.module';
 import { NavigationModule } from './navigation/navigation.module';
@@ -49,6 +50,7 @@ import { DialogService } from 'primeng/dynamicdialog';
   ],
   providers: [
     DialogService,
+    Apollo,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
   ],

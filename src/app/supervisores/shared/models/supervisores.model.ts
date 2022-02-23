@@ -17,13 +17,13 @@ export interface ISupervisor {
 interface ISupervisorQueryResponse {
     success: boolean;
     data: ISupervisoresInfo;
-    error?: string;
+    error: string;
 }
 
 interface ISupervisoresQueryResponse {
     success: boolean;
     data: ISupervisoresInfo[];
-    error?: string;
+    error: string;
 }
 
 export interface SupervisoresQueryResponse {

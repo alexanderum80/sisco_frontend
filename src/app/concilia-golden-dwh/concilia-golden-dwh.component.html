@@ -42,7 +42,7 @@
       <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
         <p-tabPanel header="Conciliación">
           <p-card class="m-1" header="Análisis de Inventario">
-            <p-table [value]="dataSourceInventario" sortField="IdUnidad" sortMode="single" rowGroupMode="subheader" [groupRowsBy]="!isConsolidado ? ['IdUnidad', 'Almacen'] : ''">
+            <p-table [value]="dataSourceInventario" sortField="IdUnidad" sortMode="single" [rowGroupMode]="!isConsolidado ? 'subheader' : ''" [groupRowsBy]="!isConsolidado ? 'IdUnidad' : ''">
               <ng-template pTemplate="header">
                   <tr>
                     <th *ngIf="isConsolidado">Unidad</th>
@@ -93,7 +93,7 @@
             </p-table> 
           </p-card>
           <p-card class="m-1" header="Análisis de Ventas">
-            <p-table [value]="dataSourceVenta" sortField="IdUnidad" rowGroupMode="subheader" [groupRowsBy]="!isConsolidado ? 'IdUnidad' : ''" responsiveLayout="scroll">
+            <p-table [value]="dataSourceVenta" sortField="IdUnidad" [rowGroupMode]="!isConsolidado ? 'subheader' : ''" [groupRowsBy]="!isConsolidado ? 'IdUnidad' : ''" responsiveLayout="scroll">
               <ng-template pTemplate="header">
                   <tr>
                     <th *ngIf="isConsolidado">Unidad</th>
@@ -149,18 +149,23 @@
         </p-tabPanel>
         <p-tabPanel header="Almacenes del Golden vs Rodas" [disabled]="isConsolidado">
           <p-card class="m-1" header="Análisis de Almacenes">
-            <p-table [value]="dataSourceAlmacenes" responsiveLayout="scroll">
+            <p-table [value]="dataSourceAlmacenes" sortField="IdUnidad" rowGroupMode="subheader" groupRowsBy="IdUnidad" responsiveLayout="scroll">
               <ng-template pTemplate="header">
                   <tr>
-                    <th>Unidad</th>
                     <th>Almacén</th>
                     <th>Cuenta Golden</th>
                     <th>Cuenta Rodas</th>
                   </tr>
               </ng-template>
+              <ng-template pTemplate="groupheader" let-alm *ngIf="!isConsolidado">
+                <tr pRowGroupHeader>
+                    <td colspan="12">
+                        <span class="font-bold ml-2">{{ alm.Unidad }}</span>
+                    </td>
+                </tr>
+              </ng-template>
               <ng-template pTemplate="body" let-alm>
                   <tr>
-                    <td>{{ alm.IdUnidad }}</td>
                     <td>{{ alm.Almacen }}</td>
                     <td>{{ alm.CuentaG }}</td>
                     <td>{{ alm.CuentaR }}</td>

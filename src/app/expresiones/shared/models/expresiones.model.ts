@@ -8,7 +8,7 @@ interface ITipoValorExpresiones {
 interface ITipoValorExpresionesQueryResponse {
     success: boolean;
     data: ITipoValorExpresiones[];
-    error?: string;
+    error: string;
 }
 
 interface IExpresionResumen {
@@ -24,13 +24,13 @@ interface IExpresionResumen {
 interface IExpresionResumenQueryResponse {
     success: boolean;
     data: IExpresionResumen;
-    error?: string;
+    error: string;
 }
 
 interface IExpresionesResumenQueryResponse {
     success: boolean;
     data: IExpresionResumen[];
-    error?: string;
+    error: string;
 }
 
 interface IExpresionDetalle {
@@ -50,13 +50,13 @@ interface IExpresionDetalle {
 interface IExpresionDetalleQueryResponse {
     success: boolean;
     data: IExpresionDetalle;
-    error?: string;
+    error: string;
 }
 
 interface IExpresionesDetalleQueryResponse {
     success: boolean;
     data: IExpresionDetalle[];
-    error?: string;
+    error: string;
 }
 
 export interface ExpresionesQueryResponse {

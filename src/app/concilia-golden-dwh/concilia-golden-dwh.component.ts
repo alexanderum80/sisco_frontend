@@ -1,3 +1,5 @@
+import { ActionClicked } from './../shared/models/list-items';
+import { SweetalertService } from './../shared/services/sweetalert.service';
 import { SelectItem } from 'primeng/api';
 import { SupervisoresService } from './../supervisores/shared/services/supervisores.service';
 import { EmpleadosService } from './../empleados/shared/services/empleados.service';
@@ -8,7 +10,6 @@ import { toNumber } from 'lodash';
 import { ConciliaGoldenDwhService } from './shared/services/concilia-golden-dwh.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, OnDestroy, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, AfterContentChecked } from '@angular/core';
-import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-concilia-golden-dwh',
@@ -66,6 +67,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
     private _supervisoresSvc: SupervisoresService,
     private _conciliaDWHSvc: ConciliaGoldenDwhService,
     private _pdfMakeSvc: PdfmakeService,
+    private _sweetAlertSvc: SweetalertService,
     private _changeDedectionRef: ChangeDetectorRef
   ) { }
 
@@ -139,13 +141,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         const result = response.getAllDivisiones;
 
         if (!result.success) {
-          return Swal.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
+          return this._sweetAlertSvc.error(result.error);
         }
 
         this.divisionesValues = result.data.map((d: { IdDivision: string; Division: string; }) => {
@@ -156,13 +152,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         });
       }));
     } catch (err: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
-      });
+      this._sweetAlertSvc.error(err);
     }
   }
 
@@ -179,13 +169,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         const result = response.getUnidadesByIdDivision;
 
         if (!result.success) {
-          return Swal.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
+          return this._sweetAlertSvc.error(result.error);
         }
 
         this.unidadesList = result.data;
@@ -197,13 +181,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         });
       }));
     } catch (err: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
-      });
+      this._sweetAlertSvc.error(err);
     }
   }
 
@@ -213,13 +191,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         const result = response.getAllEmpleados;
 
         if (!result.success) {
-          return Swal.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
+          return this._sweetAlertSvc.error(result.error);
         }
 
         this.empleadosValues = result.data.map(d => {
@@ -230,13 +202,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         });
       }));
     } catch (err: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
-      });
+      this._sweetAlertSvc.error(err);
     }
   }
 
@@ -246,13 +212,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         const result = response.getAllSupervisores;
 
         if (!result.success) {
-          return Swal.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
+          return this._sweetAlertSvc.error(result.error);
         }
 
         this.supervisoresValues = result.data.map(d => {
@@ -263,13 +223,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         });
       }));
     } catch (err: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
-      });
+      this._sweetAlertSvc.error(err);
     }
   }
 
@@ -277,32 +231,18 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
     try {
       this.selectedTabViewIndex = event.index;
     } catch (err: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
-      });
+      this._sweetAlertSvc.error(err);
     }
   }
 
-  conciliar(): void {
+  async conciliar(): Promise<void> {
     try {
-      if (toNumber(this.fg.controls['tipoCentro'].value) === 2) {
-        Swal.fire({
-          icon: 'question',
-          title: `Para obtener la información Consolidada, se debe haber terminado la Contabilidad del Consolidado del período.`,
-          text: '¿Desea continuar con la Conciliación del Consolidado?',
-          showConfirmButton: true,
-          confirmButtonText: 'Sí',
-          showCancelButton: true,
-          cancelButtonText: 'No'
-        }).then(res => {
-          if (res.dismiss) {
-            return;
-          }
-        });
+      if (toNumber(this.fg.controls['tipoCentro'].value) === 1) {
+        const dlg = await this._sweetAlertSvc.question('Para obtener la información Consolidada, se debe haber terminado la Contabilidad del Consolidado del período.', 
+        '¿Desea continuar con la Conciliación del Consolidado?');
+        if (dlg === ActionClicked.No) {
+          return;
+        }
       }
 
       this.loading = true;
@@ -315,13 +255,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
         const result = response.conciliaDWH;
 
         if (!result.success) {
-          return Swal.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
+          return this._sweetAlertSvc.error(result.error);
         }
         this.rodasDWHInventarioVentas = JSON.parse(result.data.RodasDWHInventarioVentas.data);
         this.dataSourceInventario = this.rodasDWHInventarioVentas.filter((f: { Tipo: string}) => f.Tipo === 'Inventario');
@@ -350,13 +284,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
     } catch (err: any) {
       this.loading = false;
 
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
-      });
+      this._sweetAlertSvc.error(err);
     }
   }
 
@@ -396,13 +324,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
-      });
+      this._sweetAlertSvc.error(err);
     }
   }
 
@@ -431,13 +353,7 @@ export class ConciliaGoldenDwhComponent implements OnInit, AfterViewInit, AfterC
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
-      });
+      this._sweetAlertSvc.error(err);
     }
   }
 
