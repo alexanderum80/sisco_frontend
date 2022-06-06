@@ -5,18 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RadioButtonModule } from 'primeng/radiobutton';
 
 @NgModule({
-  declarations: [
-    RadioButtonComponent
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RadioButtonModule,
-  ],
-  exports: [
-    RadioButtonModule,
-    RadioButtonComponent
-  ]
+  declarations: [RadioButtonComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RadioButtonModule],
+  exports: [RadioButtonModule, RadioButtonComponent],
 })
-export class PrimeRadioButtonModule { }
+export class PrimeRadioButtonModule {}

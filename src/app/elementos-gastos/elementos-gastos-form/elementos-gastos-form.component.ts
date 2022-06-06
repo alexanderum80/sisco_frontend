@@ -13,7 +13,7 @@ import { SelectItem } from 'primeng/api';
   selector: 'app-elementos-gastos-form',
   templateUrl: './elementos-gastos-form.component.html',
   styleUrls: ['./elementos-gastos-form.component.scss'],
-  providers: [EpigrafesService, ClasificadorCuentaService]
+  providers: [EpigrafesService, ClasificadorCuentaService],
 })
 export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
   action: ActionClicked;
@@ -29,13 +29,16 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
     private _tipoEntidadesSvc: TipoEntidadesService,
     private _epigrafesSvc: EpigrafesService,
     private _clasificadorCuentaSvc: ClasificadorCuentaService,
-    private _dinamicDialogSvc: DinamicDialogService,
-  ) { }
+    private _dinamicDialogSvc: DinamicDialogService
+  ) {}
 
   ngOnInit(): void {
     this.fg = this._elementoGastoSvc.fg;
 
-    this.action = this.fg.controls['elemento'].value === '' ? ActionClicked.Add : ActionClicked.Edit;
+    this.action =
+      this.fg.controls['elemento'].value === ''
+        ? ActionClicked.Add
+        : ActionClicked.Edit;
   }
 
   ngAfterViewInit(): void {
@@ -46,79 +49,91 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
 
   private _loadTipoEntidades(): void {
     try {
-      this._elementoGastoSvc.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-        const result = response.getAllTipoEntidades;
-        if (result.success) {
-          this.tipoEntidadValues = result.data.map((tipo: { Id: any; Entidades: any; }) => {
-            return {
-              value: tipo.Id,
-              label: tipo.Entidades
-            };
-          });
-        }
-      }));
+      this._elementoGastoSvc.subscription.push(
+        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
+          const result = response.getAllTipoEntidades;
+          if (result.success) {
+            this.tipoEntidadValues = result.data.map(
+              (tipo: { Id: any; Entidades: any }) => {
+                return {
+                  value: tipo.Id,
+                  label: tipo.Entidades,
+                };
+              }
+            );
+          }
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   private _loadEpigrafes(): void {
     try {
-      this._elementoGastoSvc.subscription.push(this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
-        const result = response.getAllEpigrafes;
-        if (result.success) {
-          this.epigrafesValues = result.data.map((epigrafe: { IdEpigafre: any; Epigrafe: any; }) => {
-            return {
-              value: epigrafe.IdEpigafre,
-              label: epigrafe.Epigrafe
-            };
-          });
-        }
-      }));
+      this._elementoGastoSvc.subscription.push(
+        this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
+          const result = response.getAllEpigrafes;
+          if (result.success) {
+            this.epigrafesValues = result.data.map(
+              (epigrafe: { IdEpigafre: any; Epigrafe: any }) => {
+                return {
+                  value: epigrafe.IdEpigafre,
+                  label: epigrafe.Epigrafe,
+                };
+              }
+            );
+          }
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   private _loadCuentas(): void {
     try {
-      this._elementoGastoSvc.subscription.push(this._clasificadorCuentaSvc.loadCuentasAgrupadas().subscribe(res => {
-        const result = res.getCuentasAgrupadas;
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+      this._elementoGastoSvc.subscription.push(
+        this._clasificadorCuentaSvc.loadCuentasAgrupadas().subscribe(res => {
+          const result = res.getCuentasAgrupadas;
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result.error,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.cuentasValues = res.getCuentasAgrupadas.data.map((cuenta: { Cuenta: any; }) => {
-          return {
-            value: cuenta.Cuenta,
-            label: cuenta.Cuenta
-          };
-        });
-      }));
+          this.cuentasValues = res.getCuentasAgrupadas.data.map(
+            (cuenta: { Cuenta: any }) => {
+              return {
+                value: cuenta.Cuenta,
+                label: cuenta.Cuenta,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -126,7 +141,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
   onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
-        this._save();        
+        this._save();
         break;
       case ActionClicked.Cancel:
         this._closeModal();
@@ -146,12 +161,12 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
             title: 'ERROR',
             text: result.error,
             showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
+            confirmButtonText: 'Aceptar',
           });
         }
 
         let txtMessage;
-        if (this.action === ActionClicked.Add ) {
+        if (this.action === ActionClicked.Add) {
           txtMessage = 'El Elemento de Gasto se ha creado correctamente.';
         } else {
           txtMessage = 'El Elemento de Gasto se ha actualizado correctamente.';
@@ -165,7 +180,7 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -173,5 +188,4 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
   private _closeModal(message?: string): void {
     this._dinamicDialogSvc.close(message);
   }
-
 }

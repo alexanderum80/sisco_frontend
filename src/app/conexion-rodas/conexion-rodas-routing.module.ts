@@ -3,14 +3,13 @@ import { ListConexionRodasComponent } from './list-conexion-rodas/list-conexion-
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-
 const routes: Routes = [
   { path: '', component: ListConexionRodasComponent },
-  { path: 'estado', component: EstadoConexionRodasComponent }
+  { path: 'estado', component: EstadoConexionRodasComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ConexionRodasRoutingModule { }
+export class ConexionRodasRoutingModule {}

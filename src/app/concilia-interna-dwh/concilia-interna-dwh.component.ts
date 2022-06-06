@@ -16,9 +16,11 @@ const conciliaInternaDWHQuery = require('graphql-tag/loader!./shared/graphql/con
 @Component({
   selector: 'app-concilia-interna-dwh',
   templateUrl: './concilia-interna-dwh.component.html',
-  styleUrls: ['./concilia-interna-dwh.component.scss']
+  styleUrls: ['./concilia-interna-dwh.component.scss'],
 })
-export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ConciliaInternaDwhComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   fg: FormGroup;
 
   divisionesValues: SelectItem[] = [];
@@ -26,7 +28,16 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDes
   unidadesValues: SelectItem[] = [];
   unidadesODValues: SelectItem[] = [];
 
-  displayedColumns = ['Documento', 'Emisor', 'FechaE', 'ImporteE', 'Receptor', 'FechaR', 'ImporteR', 'Diferencia'];
+  displayedColumns = [
+    'Documento',
+    'Emisor',
+    'FechaE',
+    'ImporteE',
+    'Receptor',
+    'FechaR',
+    'ImporteR',
+    'Diferencia',
+  ];
 
   dataSource: any[] = [];
 
@@ -42,8 +53,8 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDes
     private _subdivisionesSvc: SubdivisionesService,
     private _unidadesSvc: UnidadesService,
     private _conciliarInternaDWHSvc: ConcilaInternaDwhService,
-    private _pdfMakeSvc: PdfmakeService,
-  ) { }
+    private _pdfMakeSvc: PdfmakeService
+  ) {}
 
   ngOnInit(): void {
     this._conciliarInternaDWHSvc.inicializarFormGroup();
@@ -51,44 +62,48 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDes
 
     this._subscribeToFgValueChanges();
   }
-  
+
   ngAfterViewInit(): void {
     this._getDivisiones();
   }
 
   ngOnDestroy(): void {
-      this._conciliarInternaDWHSvc.dispose();
+    this._conciliarInternaDWHSvc.dispose();
   }
 
   private _getDivisiones(): void {
     try {
-      this._conciliarInternaDWHSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
-        const result = response.getAllDivisiones;
+      this._conciliarInternaDWHSvc.subscription.push(
+        this._divisionesSvc.getDivisiones().subscribe(response => {
+          const result = response.getAllDivisiones;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result.error,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.divisionesValues = result.data.map((d: { IdDivision: string; Division: string; }) => {
-          return {
-            value: d.IdDivision,
-            label: d.IdDivision + '-' + d.Division
-          };
-        });
-      }));
+          this.divisionesValues = result.data.map(
+            (d: { IdDivision: string; Division: string }) => {
+              return {
+                value: d.IdDivision,
+                label: d.IdDivision + '-' + d.Division,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -101,80 +116,90 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDes
         return;
       }
 
-      this._conciliarInternaDWHSvc.subscription.push(this._subdivisionesSvc.getSubdivisionesByIdDivision(idDivision).subscribe(response => {
-        const result = response.getSubdivisionesByIdDivision;
+      this._conciliarInternaDWHSvc.subscription.push(
+        this._subdivisionesSvc
+          .getSubdivisionesByIdDivision(idDivision)
+          .subscribe(response => {
+            const result = response.getSubdivisionesByIdDivision;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+            if (!result.success) {
+              return SweetAlert.fire({
+                icon: 'error',
+                title: 'ERROR',
+                text: result.error,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+              });
+            }
 
-        this.subdivisionesValues = result.data.map((d: any) => {
-          return {
-            value: d.IdSubdivision,
-            label: d.IdSubdivision + '-' + d.Subdivision
-          }
-        });
-      }));
+            this.subdivisionesValues = result.data.map((d: any) => {
+              return {
+                value: d.IdSubdivision,
+                label: d.IdSubdivision + '-' + d.Subdivision,
+              };
+            });
+          })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   private _getUnidades(origenDestino: boolean): void {
     try {
-      const idSubdivision = origenDestino ? this.fg.controls['idSubdivisionOD'].value : this.fg.controls['idSubdivision'].value;
+      const idSubdivision = origenDestino
+        ? this.fg.controls['idSubdivisionOD'].value
+        : this.fg.controls['idSubdivision'].value;
       if (!idSubdivision) {
         return;
       }
 
-      this._conciliarInternaDWHSvc.subscription.push(this._unidadesSvc.getUnidadesByIdSubdivision(idSubdivision).subscribe(response => {
-        const result = response.getUnidadesByIdSubdivision;
+      this._conciliarInternaDWHSvc.subscription.push(
+        this._unidadesSvc
+          .getUnidadesByIdSubdivision(idSubdivision)
+          .subscribe(response => {
+            const result = response.getUnidadesByIdSubdivision;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+            if (!result.success) {
+              return SweetAlert.fire({
+                icon: 'error',
+                title: 'ERROR',
+                text: result.error,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+              });
+            }
 
-        if (origenDestino) {
-          this.unidadesODValues = result.data.map((u: any) => {
-            return {
-              value: u.IdUnidad,
-              label: u.IdUnidad + '-' + u.Nombre
+            if (origenDestino) {
+              this.unidadesODValues = result.data.map((u: any) => {
+                return {
+                  value: u.IdUnidad,
+                  label: u.IdUnidad + '-' + u.Nombre,
+                };
+              });
+            } else {
+              this.unidadesValues = result.data.map((u: any) => {
+                return {
+                  value: u.IdUnidad,
+                  label: u.IdUnidad + '-' + u.Nombre,
+                };
+              });
             }
-          });
-        } else {
-          this.unidadesValues = result.data.map((u: any) => {
-            return {
-              value: u.IdUnidad,
-              label: u.IdUnidad + '-' + u.Nombre
-            }
-          });
-        }
-      }));
+          })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -186,43 +211,58 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDes
     });
 
     // Centro a analizar
-    this._conciliarInternaDWHSvc.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
-      this.fg.controls['idDivisionOD'].setValue(value);
-      this.fg.controls['idSubdivision'].setValue(null);
-      
-      this.subdivisionesValues = [];
-      this._getSubdivisiones();
-    }));
+    this._conciliarInternaDWHSvc.subscription.push(
+      this.fg.controls['idDivision'].valueChanges.subscribe(value => {
+        this.fg.controls['idDivisionOD'].setValue(value);
+        this.fg.controls['idSubdivision'].setValue(null);
 
-    this._conciliarInternaDWHSvc.subscription.push(this.fg.controls['idSubdivision'].valueChanges.subscribe(value => {
-      this.fg.controls['idUnidad'].setValue(null);
+        this.subdivisionesValues = [];
+        this._getSubdivisiones();
+      })
+    );
 
-      this.unidadesValues = [];
-      this._getUnidades(false);
-    }));
+    this._conciliarInternaDWHSvc.subscription.push(
+      this.fg.controls['idSubdivision'].valueChanges.subscribe(value => {
+        this.fg.controls['idUnidad'].setValue(null);
+
+        this.unidadesValues = [];
+        this._getUnidades(false);
+      })
+    );
 
     // Centro Origen/Destino
-    this._conciliarInternaDWHSvc.subscription.push(this.fg.controls['idSubdivisionOD'].valueChanges.subscribe(value => {
-      this.fg.controls['idUnidadOD'].setValue(null);
+    this._conciliarInternaDWHSvc.subscription.push(
+      this.fg.controls['idSubdivisionOD'].valueChanges.subscribe(value => {
+        this.fg.controls['idUnidadOD'].setValue(null);
 
-      this.unidadesODValues = [];
-      this._getUnidades(true);
-    }));
+        this.unidadesODValues = [];
+        this._getUnidades(true);
+      })
+    );
   }
 
   getTotalImporteE(): number {
-    return this.dataSource.length ?
-          this.dataSource.map(t => t.ImporteE || 0).reduce((acc, value) => acc + value, 0) : 0;
+    return this.dataSource.length
+      ? this.dataSource
+          .map(t => t.ImporteE || 0)
+          .reduce((acc, value) => acc + value, 0)
+      : 0;
   }
 
   getTotalImporteR(): number {
-    return this.dataSource.length ?
-          this.dataSource.map(t => t.ImporteR || 0).reduce((acc, value) => acc + value, 0) : 0;
+    return this.dataSource.length
+      ? this.dataSource
+          .map(t => t.ImporteR || 0)
+          .reduce((acc, value) => acc + value, 0)
+      : 0;
   }
 
   getTotalDiferencia(): number {
-    return this.dataSource.length ?
-          this.dataSource.map(t => t.Diferencia || 0).reduce((acc, value) => acc + value, 0) : 0;
+    return this.dataSource.length
+      ? this.dataSource
+          .map(t => t.Diferencia || 0)
+          .reduce((acc, value) => acc + value, 0)
+      : 0;
   }
 
   conciliar(): void {
@@ -238,37 +278,41 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDes
         IdDivisionOD: this.fg.controls['idDivisionOD'].value || 0,
         IdSubdivisionOD: this.fg.controls['idSubdivisionOD'].value || 0,
         IdUnidadOD: this.fg.controls['idUnidadOD'].value || 0,
-        SoloDiferencias: this.fg.controls['soloDiferencias'].value
+        SoloDiferencias: this.fg.controls['soloDiferencias'].value,
       };
 
-      this._conciliarInternaDWHSvc.subscription.push(this._apollo.query<ConciliaInternaDWHQueryResponse>({
-        query: conciliaInternaDWHQuery,
-        variables: { conciliaInternaDWHInput: payload },
-        fetchPolicy: 'network-only'
-      }).subscribe(response => {
-        this.loading = false;
-        const result = response.data.conciliaInternaDWH;
+      this._conciliarInternaDWHSvc.subscription.push(
+        this._apollo
+          .query<ConciliaInternaDWHQueryResponse>({
+            query: conciliaInternaDWHQuery,
+            variables: { conciliaInternaDWHInput: payload },
+            fetchPolicy: 'network-only',
+          })
+          .subscribe(response => {
+            this.loading = false;
+            const result = response.data.conciliaInternaDWH;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+            if (!result.success) {
+              return SweetAlert.fire({
+                icon: 'error',
+                title: 'ERROR',
+                text: result.error,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+              });
+            }
 
-        this.dataSource = result.data;
-        this._calcularTotales();
-      }));
+            this.dataSource = result.data;
+            this._calcularTotales();
+          })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -277,7 +321,7 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDes
     this.totalEmisor = 0;
     this.totalReceptor = 0;
     this.totalDiferencia = 0;
-    
+
     this.dataSource.forEach(element => {
       this.totalEmisor += element.ImporteE;
       this.totalReceptor += element.ImporteR;
@@ -294,9 +338,18 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDes
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [
-          await this._pdfMakeSvc.getHeaderDefinition('Conciliación Interna Golden DWH'),
-          await this._conciliarInternaDWHSvc.getDivision(this.fg.controls['idDivision'].value, this.divisionesValues),
-          await this._conciliarInternaDWHSvc.getParteAtrasosDefinition(this.dataSource, fechaInicial, fechaFinal),
+          await this._pdfMakeSvc.getHeaderDefinition(
+            'Conciliación Interna Golden DWH'
+          ),
+          await this._conciliarInternaDWHSvc.getDivision(
+            this.fg.controls['idDivision'].value,
+            this.divisionesValues
+          ),
+          await this._conciliarInternaDWHSvc.getParteAtrasosDefinition(
+            this.dataSource,
+            fechaInicial,
+            fechaFinal
+          ),
         ],
         footer: (page: string, pages: string) => {
           return this._pdfMakeSvc.getFooterDefinition(page, pages);
@@ -306,9 +359,9 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDes
         },
         styles: {
           tableHeader: {
-            bold: true
-          }
-        }
+            bold: true,
+          },
+        },
       };
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
@@ -318,9 +371,8 @@ export class ConciliaInternaDwhComponent implements OnInit, AfterViewInit, OnDes
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
-
 }

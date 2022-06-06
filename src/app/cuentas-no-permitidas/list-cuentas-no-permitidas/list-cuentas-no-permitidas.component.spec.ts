@@ -8,9 +8,8 @@ describe('ListCuentasNoPermitidasComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListCuentasNoPermitidasComponent ]
-    })
-    .compileComponents();
+      declarations: [ListCuentasNoPermitidasComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -12,27 +12,35 @@ import { NavigationService } from '../navigation/shared/services/navigation.serv
   template: '<div></div>',
 })
 export class ConexionGoldenDwhComponent implements OnInit {
-
   constructor(
     private _usuarioSvc: UsuarioService,
     private _conexionDWHSvc: ConexionGoldenDwhService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _navigationSvc: NavigationService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this._setFgValues();
 
-    if (this._usuarioSvc.usuario.IdTipoUsuario === ETipoUsuarios.Administrador) {
-      this._dinamicDialogSvc.open('Actualizar Conexión al Golden DWH', ConexionGoldenDwhFormComponent);
-      this._usuarioSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe(() => this._navigationSvc.navigateTo('')));
+    if (
+      this._usuarioSvc.usuario.IdTipoUsuario === ETipoUsuarios.Administrador
+    ) {
+      this._dinamicDialogSvc.open(
+        'Actualizar Conexión al Golden DWH',
+        ConexionGoldenDwhFormComponent
+      );
+      this._usuarioSvc.subscription.push(
+        this._dinamicDialogSvc.ref.onClose.subscribe(() =>
+          this._navigationSvc.navigateTo('')
+        )
+      );
     } else {
       SweetAlert.fire({
         icon: 'warning',
         title: 'AVISO',
         text: 'No tiene permisos para configurar la Conexión al DWH. Contacte con el personal informático.',
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
 
       this._navigationSvc.navigateTo('');
@@ -54,5 +62,4 @@ export class ConexionGoldenDwhComponent implements OnInit {
 
     this._conexionDWHSvc.fg.patchValue(fgValues);
   }
-
 }

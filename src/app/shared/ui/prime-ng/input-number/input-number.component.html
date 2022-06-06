@@ -1,26 +1,46 @@
 <div>
-    <span [ngClass]="{'p-float-label mt-3': floatLabel }" class="p-field" [formGroup]="fg">
-        <label *ngIf="!floatLabel"
-            [for]="control" 
-            class="inline-label" 
-            [ngStyle]="{'width.px': labelWidth}"
-            [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty">{{ label }}:
-        </label>
-        <p-inputNumber [id]="control" 
-            [formControlName]="control" 
-            [mode]="mode" 
-            [currency]="currency"
-            [locale]="locale"
-            [minFractionDigits]="minFractionDigits"
-            [suffix]="suffix"
-            [prefix]="prefix"
-            [autocomplete]="autocomplete"
-            [required]="required" 
-            [disabled]="disabled">
-        </p-inputNumber>
-        <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
-    </span>
-    <small *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['required'] && fg.controls[control].dirty" class="p-error">Este campo es obligatorio.</small>
-    <small *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['minLength'] && fg.controls[control].dirty" class="p-error">Muy pocos caracteres.</small>
-    <small *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['maxlength'] && fg.controls[control].dirty" class="p-error">Demasiados caracteres.</small>
+  <span
+    [ngClass]="{ 'p-float-label mt-3': floatLabel }"
+    class="p-field"
+    [formGroup]="fg">
+    <label
+      *ngIf="!floatLabel"
+      [for]="control"
+      class="inline-label"
+      [ngStyle]="{ 'width.px': labelWidth }"
+      [class.p-error]="
+        !fg.controls[control].valid && fg.controls[control].dirty
+      "
+      >{{ label }}:
+    </label>
+    <p-inputNumber
+      [id]="control"
+      [formControlName]="control"
+      [mode]="mode"
+      [currency]="currency"
+      [locale]="locale"
+      [minFractionDigits]="minFractionDigits"
+      [suffix]="suffix"
+      [prefix]="prefix"
+      [autocomplete]="autocomplete"
+      [required]="required"
+      [disabled]="disabled">
+    </p-inputNumber>
+    <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
+  </span>
+  <small
+    *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['required'] && fg.controls[control].dirty"
+    class="p-error"
+    >Este campo es obligatorio.</small
+  >
+  <small
+    *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['minLength'] && fg.controls[control].dirty"
+    class="p-error"
+    >Muy pocos caracteres.</small
+  >
+  <small
+    *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['maxlength'] && fg.controls[control].dirty"
+    class="p-error"
+    >Demasiados caracteres.</small
+  >
 </div>

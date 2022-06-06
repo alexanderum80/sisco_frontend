@@ -30,6 +30,10 @@ import { PrimeToastModule } from '../shared/ui/prime-ng/toast/toast.module';
     PrimeToastModule,
     PrimeCardModule,
   ],
-  declarations: [ListUsuariosComponent, UsuarioFormComponent, ChangePasswordComponent],
+  declarations: [
+    ListUsuariosComponent,
+    UsuarioFormComponent,
+    ChangePasswordComponent,
+  ],
 })
-export class UsuariosModule { }
+export class UsuariosModule {}

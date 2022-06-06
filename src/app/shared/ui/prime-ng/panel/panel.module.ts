@@ -6,18 +6,8 @@ import { PrimeButtonModule } from '../button/button.module';
 import { PrimeTooltipModule } from '../tooltip/tooltip.module';
 
 @NgModule({
-  declarations: [
-    PanelComponent
-  ],
-  imports: [
-    CommonModule,
-    PanelModule,
-    PrimeButtonModule,
-    PrimeTooltipModule
-  ],
-  exports: [
-    PanelModule,
-    PanelComponent
-  ]
+  declarations: [PanelComponent],
+  imports: [CommonModule, PanelModule, PrimeButtonModule, PrimeTooltipModule],
+  exports: [PanelModule, PanelComponent],
 })
-export class PrimePanelModule { }
+export class PrimePanelModule {}

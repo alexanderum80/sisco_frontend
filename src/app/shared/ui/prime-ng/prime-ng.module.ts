@@ -59,13 +59,11 @@ const modules = [
 ];
 
 @NgModule({
-  imports: [ CommonModule, modules ],
-  exports: [ modules ],
+  imports: [CommonModule, modules],
+  exports: [modules],
 })
-export class PrimeNgModule implements OnInit {
-  constructor(
-    private config: PrimeNGConfig
-  ) { 
+export class PrimeNgModule {
+  constructor(private config: PrimeNGConfig) {
     this.config.setTranslation({
       startsWith: 'Comienza con',
       contains: 'Contiene',
@@ -97,12 +95,46 @@ export class PrimeNgModule implements OnInit {
       choose: 'Seleccionar',
       upload: 'Subir',
       cancel: 'Cancelar',
-      dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+      dayNames: [
+        'Domingo',
+        'Lunes',
+        'Martes',
+        'Miércoles',
+        'Jueves',
+        'Viernes',
+        'Sábado',
+      ],
       dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
       dayNamesMin: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
-      monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-      monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
-      dateFormat: 'Formato de fecha',    
+      monthNames: [
+        'Enero',
+        'Febrero',
+        'Marzo',
+        'Abril',
+        'Mayo',
+        'Junio',
+        'Julio',
+        'Agosto',
+        'Septiembre',
+        'Octubre',
+        'Noviembre',
+        'Diciembre',
+      ],
+      monthNamesShort: [
+        'Ene',
+        'Feb',
+        'Mar',
+        'Abr',
+        'May',
+        'Jun',
+        'Jul',
+        'Ago',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dic',
+      ],
+      dateFormat: 'Formato de fecha',
       today: 'Hoy',
       weekHeader: 'Se',
       weak: 'Débil',
@@ -113,7 +145,4 @@ export class PrimeNgModule implements OnInit {
       emptyFilterMessage: 'No se han encontrado resultados',
     });
   }
-
-   ngOnInit(): void {
-   }
- }
+}

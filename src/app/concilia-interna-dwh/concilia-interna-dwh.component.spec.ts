@@ -8,9 +8,8 @@ describe('ConciliaInternaDwhComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConciliaInternaDwhComponent ]
-    })
-    .compileComponents();
+      declarations: [ConciliaInternaDwhComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

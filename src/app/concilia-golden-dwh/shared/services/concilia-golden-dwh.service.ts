@@ -11,7 +11,6 @@ const conciliaDWHQuery = require('graphql-tag/loader!../graphql/concilia-dwh.que
 
 @Injectable()
 export class ConciliaGoldenDwhService {
-
   fg: FormGroup = new FormGroup({
     tipoCentro: new FormControl('0'),
     idDivision: new FormControl(null),
@@ -25,9 +24,7 @@ export class ConciliaGoldenDwhService {
 
   subscription: Subscription[] = [];
 
-  constructor(
-    private _apollo: Apollo
-  ) { }
+  constructor(private _apollo: Apollo) {}
 
   inicializarFg(): void {
     const today = new Date();
@@ -55,44 +52,65 @@ export class ConciliaGoldenDwhService {
     };
 
     return new Observable<ConciliaDWHQueryResponse>(subscriber => {
-      this._apollo.query<ConciliaDWHQueryResponse>({
-        query: conciliaDWHQuery,
-        variables: { conciliaDWHInput },
-        fetchPolicy: 'network-only'
-      }).subscribe(response => {
-        subscriber.next(response.data);
-      });
-    })
+      this._apollo
+        .query<ConciliaDWHQueryResponse>({
+          query: conciliaDWHQuery,
+          variables: { conciliaDWHInput },
+          fetchPolicy: 'network-only',
+        })
+        .subscribe(response => {
+          subscriber.next(response.data);
+        });
+    });
   }
 
-  public async getConciliacionDefinition(conciliaData: any, tipoCentro: string, ventasAcumuladas: boolean): Promise<any> {
-    const _conciliaData = await this.getFormattedConciliaDWH(conciliaData, tipoCentro);
+  public async getConciliacionDefinition(
+    conciliaData: any,
+    tipoCentro: string,
+    ventasAcumuladas: boolean
+  ): Promise<any> {
+    const _conciliaData = await this.getFormattedConciliaDWH(
+      conciliaData,
+      tipoCentro
+    );
 
     const definition: any[] = [];
     const tipos = ['Inventario', 'Ventas'];
 
-    const groupData = _conciliaData.filter((d: { isGroupBy: any; }) => d.isGroupBy);
+    const groupData = _conciliaData.filter(
+      (d: { isGroupBy: any }) => d.isGroupBy
+    );
 
     groupData.forEach((element: any) => {
       if (element.field) {
         definition.push({
           text: element.field + ': ' + element.value,
           bold: true,
-          margin: [0, 10, 0, 0]
+          margin: [0, 10, 0, 0],
         });
       }
 
       switch (tipoCentro) {
         case '0':
           tipos.forEach(tipo => {
-            const data = _conciliaData.filter((f: any) => f.IdUnidad === element.IdUnidad && f.Tipo === tipo && !f.isGroupBy);
+            const data = _conciliaData.filter(
+              (f: any) =>
+                f.IdUnidad === element.IdUnidad &&
+                f.Tipo === tipo &&
+                !f.isGroupBy
+            );
 
             if (data.length) {
               definition.push({
-                text: tipo === 'Ventas' ? (ventasAcumuladas ? tipo + ' (Acumuladas)' : tipo + ' (Mes)') : tipo,
+                text:
+                  tipo === 'Ventas'
+                    ? ventasAcumuladas
+                      ? tipo + ' (Acumuladas)'
+                      : tipo + ' (Mes)'
+                    : tipo,
                 alignment: 'center',
                 bold: true,
-                margin: [0, 5, 0, 0]
+                margin: [0, 5, 0, 0],
               });
 
               definition.push(this._getConciliacionTable(data, tipoCentro));
@@ -101,14 +119,19 @@ export class ConciliaGoldenDwhService {
           break;
         case '1':
           tipos.forEach(tipo => {
-            const data = _conciliaData.filter((f: any) => f.IdDivision === element.IdDivision && f.Tipo === tipo && !f.isGroupBy);
+            const data = _conciliaData.filter(
+              (f: any) =>
+                f.IdDivision === element.IdDivision &&
+                f.Tipo === tipo &&
+                !f.isGroupBy
+            );
 
             if (data.length) {
               definition.push({
                 text: tipo,
                 alignment: 'center',
                 bold: true,
-                margin: [0, 5, 0, 0]
+                margin: [0, 5, 0, 0],
               });
 
               definition.push(this._getConciliacionTable(data, tipoCentro));
@@ -133,11 +156,13 @@ export class ConciliaGoldenDwhService {
         definition.push({
           text: element.field + ': ' + element.value,
           bold: true,
-          margin: [0, 5, 0, 0]
+          margin: [0, 5, 0, 0],
         });
       }
 
-      const data = _almacenData.filter((f: any) => f.IdUnidad === element.IdUnidad && !f.isGroupBy);
+      const data = _almacenData.filter(
+        (f: any) => f.IdUnidad === element.IdUnidad && !f.isGroupBy
+      );
 
       if (data.length) {
         definition.push(this._getAlmacenesTable(data));
@@ -147,7 +172,10 @@ export class ConciliaGoldenDwhService {
     return definition;
   }
 
-  public async getFormattedConciliaDWH(data: any[], tipoCentro: string): Promise<any> {
+  public async getFormattedConciliaDWH(
+    data: any[],
+    tipoCentro: string
+  ): Promise<any> {
     let _idDivision = 0;
     let _idCentro = 0;
     let _tipo = '';
@@ -165,15 +193,18 @@ export class ConciliaGoldenDwhService {
       data.forEach(element => {
         if (element.IdDivision !== _idDivision) {
           result.push({
-              Tipo: element.Tipo,
-              field: 'División',
-              value: element.Division,
-              IdDivision: element.IdDivision,
-              isGroupBy: true
+            Tipo: element.Tipo,
+            field: 'División',
+            value: element.Division,
+            IdDivision: element.IdDivision,
+            isGroupBy: true,
           });
           _idDivision = element.IdDivision;
         }
-        if (tipoCentro === '0' && (element.IdUnidad !== _idCentro || element.Tipo !== _tipo)) {
+        if (
+          tipoCentro === '0' &&
+          (element.IdUnidad !== _idCentro || element.Tipo !== _tipo)
+        ) {
           if (_idCentro !== 0 || (element.Tipo !== _tipo && _tipo !== '')) {
             result.push({
               Tipo: _tipo,
@@ -187,7 +218,7 @@ export class ConciliaGoldenDwhService {
               SaldoDistribuidor: _totalUnidadGoldenDist,
               DifGoldenDist: _totalUnidadDifGoldenDist,
               SaldoRodas: _totalUnidadRodas,
-              DifGoldenRodas: _totalUnidadDifGoldenRodas
+              DifGoldenRodas: _totalUnidadDifGoldenRodas,
             });
 
             _totalUnidadGolden = 0;
@@ -201,11 +232,11 @@ export class ConciliaGoldenDwhService {
 
           if (element.IdUnidad !== _idCentro) {
             result.push({
-                Tipo: element.Tipo,
-                field: 'Unidad',
-                value: element.Unidad,
-                IdUnidad: element.IdUnidad,
-                isGroupBy: true
+              Tipo: element.Tipo,
+              field: 'Unidad',
+              value: element.Unidad,
+              IdUnidad: element.IdUnidad,
+              isGroupBy: true,
             });
 
             _idCentro = element.IdUnidad;
@@ -224,7 +255,7 @@ export class ConciliaGoldenDwhService {
             SaldoDistribuidor: element.SaldoDistribuidor,
             DifGoldenDist: element.DifGoldenDist,
             SaldoRodas: element.SaldoRodas,
-            DifGoldenRodas: element.DifGoldenRodas
+            DifGoldenRodas: element.DifGoldenRodas,
           });
 
           _totalUnidadGolden += element.SaldoGolden;
@@ -236,7 +267,10 @@ export class ConciliaGoldenDwhService {
           _totalUnidadDifGoldenRodas += element.DifGoldenRodas;
 
           _tipo = element.Tipo;
-        } else if (tipoCentro === '1' && (element.IdDivision !== _idDivision || element.Tipo !== _tipo)) {
+        } else if (
+          tipoCentro === '1' &&
+          (element.IdDivision !== _idDivision || element.Tipo !== _tipo)
+        ) {
           if (_idCentro !== 0 || (element.Tipo !== _tipo && _tipo !== '')) {
             result.push({
               Tipo: _tipo,
@@ -251,7 +285,7 @@ export class ConciliaGoldenDwhService {
               SaldoDistribuidor: _totalUnidadGoldenDist,
               DifGoldenDist: _totalUnidadDifGoldenDist,
               SaldoRodas: _totalUnidadRodas,
-              DifGoldenRodas: _totalUnidadDifGoldenRodas
+              DifGoldenRodas: _totalUnidadDifGoldenRodas,
             });
 
             _totalUnidadGolden = 0;
@@ -276,7 +310,7 @@ export class ConciliaGoldenDwhService {
             SaldoDistribuidor: element.SaldoDistribuidor,
             DifGoldenDist: element.DifGoldenDist,
             SaldoRodas: element.SaldoRodas,
-            DifGoldenRodas: element.DifGoldenRodas
+            DifGoldenRodas: element.DifGoldenRodas,
           });
 
           _totalUnidadGolden += element.SaldoGolden;
@@ -291,11 +325,11 @@ export class ConciliaGoldenDwhService {
 
           if (element.IdDivision !== _idDivision) {
             result.push({
-                Tipo: element.Tipo,
-                field: 'División',
-                value: element.Division,
-                IdDivision: element.IdDivision,
-                isGroupBy: true
+              Tipo: element.Tipo,
+              field: 'División',
+              value: element.Division,
+              IdDivision: element.IdDivision,
+              isGroupBy: true,
             });
 
             _idDivision = element.IdDivision;
@@ -314,7 +348,7 @@ export class ConciliaGoldenDwhService {
             SaldoDistribuidor: element.SaldoDistribuidor,
             DifGoldenDist: element.DifGoldenDist,
             SaldoRodas: element.SaldoRodas,
-            DifGoldenRodas: element.DifGoldenRodas
+            DifGoldenRodas: element.DifGoldenRodas,
           });
 
           _totalUnidadGolden += element.SaldoGolden;
@@ -340,7 +374,7 @@ export class ConciliaGoldenDwhService {
         SaldoDistribuidor: _totalUnidadGoldenDist,
         DifGoldenDist: _totalUnidadDifGoldenDist,
         SaldoRodas: _totalUnidadRodas,
-        DifGoldenRodas: _totalUnidadDifGoldenRodas
+        DifGoldenRodas: _totalUnidadDifGoldenRodas,
       });
     }
 
@@ -356,63 +390,87 @@ export class ConciliaGoldenDwhService {
           table: {
             widths: [100, 92, '*', '*', '*', '*', '*', '*', '*'],
             body: [
-              [{
-                text: 'Almacén',
-                style: 'tableHeader'
-              },
-              {
-                text: 'Cuenta',
-                style: 'tableHeader'
-              },
-              {
-                text: 'Saldo Golden',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Saldo Restaurador',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Dif. Golden Rest.',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Saldo Distribuidor',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Dif. Golden Dist.',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Saldo Rodas',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Dif. Golden Rodas',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
+              [
+                {
+                  text: 'Almacén',
+                  style: 'tableHeader',
+                },
+                {
+                  text: 'Cuenta',
+                  style: 'tableHeader',
+                },
+                {
+                  text: 'Saldo Golden',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Saldo Restaurador',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Dif. Golden Rest.',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Saldo Distribuidor',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Dif. Golden Dist.',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Saldo Rodas',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Dif. Golden Rodas',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
               ],
               ...data.map((al: any) => {
-                return [al.Almacen, al.Cuenta,
-                  { text: numberFormatter.format(al.SaldoGolden), alignment: 'right'},
-                  { text: numberFormatter.format(al.SaldoRestaurador), alignment: 'right'},
-                  { text: numberFormatter.format(al.DifGoldenRest), alignment: 'right'},
-                  { text: numberFormatter.format(al.SaldoDistribuidor), alignment: 'right'},
-                  { text: numberFormatter.format(al.DifGoldenDist), alignment: 'right'},
-                  { text: numberFormatter.format(al.SaldoRodas), alignment: 'right'},
-                  { text: numberFormatter.format(al.DifGoldenRodas), alignment: 'right'}
+                return [
+                  al.Almacen,
+                  al.Cuenta,
+                  {
+                    text: numberFormatter.format(al.SaldoGolden),
+                    alignment: 'right',
+                  },
+                  {
+                    text: numberFormatter.format(al.SaldoRestaurador),
+                    alignment: 'right',
+                  },
+                  {
+                    text: numberFormatter.format(al.DifGoldenRest),
+                    alignment: 'right',
+                  },
+                  {
+                    text: numberFormatter.format(al.SaldoDistribuidor),
+                    alignment: 'right',
+                  },
+                  {
+                    text: numberFormatter.format(al.DifGoldenDist),
+                    alignment: 'right',
+                  },
+                  {
+                    text: numberFormatter.format(al.SaldoRodas),
+                    alignment: 'right',
+                  },
+                  {
+                    text: numberFormatter.format(al.DifGoldenRodas),
+                    alignment: 'right',
+                  },
                 ];
-              })
-            ]
-          }
+              }),
+            ],
+          },
         };
         break;
       case '1':
@@ -420,59 +478,93 @@ export class ConciliaGoldenDwhService {
           table: {
             widths: [150, '*', '*', '*', '*', '*', '*', '*'],
             body: [
-              [{
-                text: 'Unidad',
-                style: 'tableHeader'
-              },
-              {
-                text: 'Saldo Golden',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Saldo Restaurador',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Dif. Golden Rest.',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Saldo Distribuidor',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Dif. Golden Dist.',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Saldo Rodas',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
-              {
-                text: 'Dif. Golden Rodas',
-                style: 'tableHeader',
-                alignment : 'right'
-              },
+              [
+                {
+                  text: 'Unidad',
+                  style: 'tableHeader',
+                },
+                {
+                  text: 'Saldo Golden',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Saldo Restaurador',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Dif. Golden Rest.',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Saldo Distribuidor',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Dif. Golden Dist.',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Saldo Rodas',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
+                {
+                  text: 'Dif. Golden Rodas',
+                  style: 'tableHeader',
+                  alignment: 'right',
+                },
               ],
-              ...data.map((al: { Unidad: any; SaldoGolden: number | bigint; SaldoRestaurador: number | bigint; DifGoldenRest: number | bigint; SaldoDistribuidor: number | bigint; DifGoldenDist: number | bigint; SaldoRodas: number | bigint; DifGoldenRodas: number | bigint; }) => {
-                return [al.Unidad,
-                  { text: numberFormatter.format(al.SaldoGolden), alignment: 'right'},
-                  { text: numberFormatter.format(al.SaldoRestaurador), alignment: 'right'},
-                  { text: numberFormatter.format(al.DifGoldenRest), alignment: 'right'},
-                  { text: numberFormatter.format(al.SaldoDistribuidor), alignment: 'right'},
-                  { text: numberFormatter.format(al.DifGoldenDist), alignment: 'right'},
-                  { text: numberFormatter.format(al.SaldoRodas), alignment: 'right'},
-                  { text: numberFormatter.format(al.DifGoldenRodas), alignment: 'right'}
-                ];
-              })
-            ]
-          }
+              ...data.map(
+                (al: {
+                  Unidad: any;
+                  SaldoGolden: number | bigint;
+                  SaldoRestaurador: number | bigint;
+                  DifGoldenRest: number | bigint;
+                  SaldoDistribuidor: number | bigint;
+                  DifGoldenDist: number | bigint;
+                  SaldoRodas: number | bigint;
+                  DifGoldenRodas: number | bigint;
+                }) => {
+                  return [
+                    al.Unidad,
+                    {
+                      text: numberFormatter.format(al.SaldoGolden),
+                      alignment: 'right',
+                    },
+                    {
+                      text: numberFormatter.format(al.SaldoRestaurador),
+                      alignment: 'right',
+                    },
+                    {
+                      text: numberFormatter.format(al.DifGoldenRest),
+                      alignment: 'right',
+                    },
+                    {
+                      text: numberFormatter.format(al.SaldoDistribuidor),
+                      alignment: 'right',
+                    },
+                    {
+                      text: numberFormatter.format(al.DifGoldenDist),
+                      alignment: 'right',
+                    },
+                    {
+                      text: numberFormatter.format(al.SaldoRodas),
+                      alignment: 'right',
+                    },
+                    {
+                      text: numberFormatter.format(al.DifGoldenRodas),
+                      alignment: 'right',
+                    },
+                  ];
+                }
+              ),
+            ],
+          },
         };
         break;
     }
@@ -490,19 +582,19 @@ export class ConciliaGoldenDwhService {
       data.forEach(element => {
         if (element.IdCentro !== _idCentro) {
           result.push({
-              field: 'Centro',
-              value: element.Centro,
-              IdCentro: element.IdCentro,
-              isGroupBy: true
+            field: 'Centro',
+            value: element.Centro,
+            IdCentro: element.IdCentro,
+            isGroupBy: true,
           });
           _idCentro = element.IdCentro;
         }
         if (element.IdUnidad !== _idUnidad) {
           result.push({
-              field: 'Unidad',
-              value: element.Unidad,
-              IdUnidad: element.IdUnidad,
-              isGroupBy: true
+            field: 'Unidad',
+            value: element.Unidad,
+            IdUnidad: element.IdUnidad,
+            isGroupBy: true,
           });
 
           _idUnidad = element.IdUnidad;
@@ -536,24 +628,28 @@ export class ConciliaGoldenDwhService {
       table: {
         widths: [250, 120, 120],
         body: [
-          [{
-            text: 'Almacén',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Cuenta Golden',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Cuenta Rodas',
-            style: 'tableHeader'
-          }],
-          ...almacenes.map((al: { Almacen: any; CuentaG: any; CuentaR: any; }) => {
-            return [al.Almacen, al.CuentaG, al.CuentaR];
-          })
+          [
+            {
+              text: 'Almacén',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Cuenta Golden',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Cuenta Rodas',
+              style: 'tableHeader',
+            },
+          ],
+          ...almacenes.map(
+            (al: { Almacen: any; CuentaG: any; CuentaR: any }) => {
+              return [al.Almacen, al.CuentaG, al.CuentaR];
+            }
+          ),
         ],
-        margin: [0, 10, 0, 0]
-      }
+        margin: [0, 10, 0, 0],
+      },
     };
 
     return returnValue;
@@ -562,5 +658,4 @@ export class ConciliaGoldenDwhService {
   dispose(): void {
     this.subscription.forEach(subs => subs.unsubscribe());
   }
-
 }

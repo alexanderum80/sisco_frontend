@@ -1,7 +1,7 @@
 export enum DialogResult {
-    OK,
-    SAVE,
-    CANCEL,
-    PREVIEW,
-    DELETE
+  OK,
+  SAVE,
+  CANCEL,
+  PREVIEW,
+  DELETE,
 }

@@ -5,16 +5,8 @@ import { DinamicDialogService } from './dinamic-dialog.service';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    DynamicDialogModule
-  ],
-  providers: [
-    DialogService,
-    DinamicDialogService
-  ],
-  exports: [
-    DynamicDialogModule,
-  ]
+  imports: [CommonModule, DynamicDialogModule],
+  providers: [DialogService, DinamicDialogService],
+  exports: [DynamicDialogModule],
 })
-export class PrimeDinamicDialogModule { }
+export class PrimeDinamicDialogModule {}

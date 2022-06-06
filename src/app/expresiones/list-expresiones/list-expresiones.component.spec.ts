@@ -8,9 +8,8 @@ describe('ListExpresionesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListExpresionesComponent ]
-    })
-    .compileComponents();
+      declarations: [ListExpresionesComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

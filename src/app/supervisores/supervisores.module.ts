@@ -8,7 +8,6 @@ import { ListSupervisoresComponent } from './list-supervisores/list-supervisores
 import { SupervisoresFormComponent } from './supervisores-form/supervisores-form.component';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
-
 @NgModule({
   declarations: [ListSupervisoresComponent, SupervisoresFormComponent],
   imports: [
@@ -17,7 +16,7 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    PrimeNgModule
-  ]
+    PrimeNgModule,
+  ],
 })
-export class SupervisoresModule { }
+export class SupervisoresModule {}

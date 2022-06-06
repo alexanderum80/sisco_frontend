@@ -5,7 +5,14 @@ import { ParteAtrasoService } from './shared/services/parte-atraso.service';
 import { Subscription } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import { ParteAtrasosQueryResponse } from './shared/models/parte-atraso.model';
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { PdfmakeService } from './../shared/services/pdfmake.service';
 import { toNumber } from 'lodash';
 import SweetAlert from 'sweetalert2';
@@ -14,7 +21,7 @@ import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
 @Component({
   selector: 'app-parte-atraso',
   templateUrl: './parte-atraso.component.html',
-  styleUrls: ['./parte-atraso.component.scss']
+  styleUrls: ['./parte-atraso.component.scss'],
 })
 export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   selectedTabViewIndex = 0;
@@ -33,7 +40,11 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
     { header: 'Versión Golden', field: 'Version', type: 'string' },
     { header: 'Versión UtilNet', field: 'vUtilnet', type: 'string' },
     { header: 'Última Circular', field: 'UltimaCircular', type: 'string' },
-    { header: 'Período Restaurado', field: 'PeriodoRestaurado', type: 'string' },
+    {
+      header: 'Período Restaurado',
+      field: 'PeriodoRestaurado',
+      type: 'string',
+    },
   ];
 
   dataSourceParteAtraso = [];
@@ -47,15 +58,15 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _divisionesSvc: DivisionesService,
     private _parteAtrasoSvc: ParteAtrasoService,
-    private _pdfMakeSvc: PdfmakeService,
-  ) { }
+    private _pdfMakeSvc: PdfmakeService
+  ) {}
 
   ngOnInit(): void {
     this.fg = this._parteAtrasoSvc.fg;
-    
+
     this._subscribeToFgChanges();
   }
-  
+
   ngAfterViewInit(): void {
     this._getDivisiones();
   }
@@ -66,42 +77,48 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private _getDivisiones(): void {
     try {
-      this._parteAtrasoSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
-        const result = response.getAllDivisiones;
+      this._parteAtrasoSvc.subscription.push(
+        this._divisionesSvc.getDivisiones().subscribe(response => {
+          const result = response.getAllDivisiones;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result.error,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.divisionesValues = result.data.map((d: { IdDivision: string; Division: string; }) => {
-          return {
-            value: d.IdDivision,
-            label: d.IdDivision + '-' + d.Division
-          };
-        });
-      }));
+          this.divisionesValues = result.data.map(
+            (d: { IdDivision: string; Division: string }) => {
+              return {
+                value: d.IdDivision,
+                label: d.IdDivision + '-' + d.Division,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   private _subscribeToFgChanges(): void {
-    this._parteAtrasoSvc.subscription.push(this.fg.valueChanges.subscribe(() => {
-      this.dataSourceParteAtraso = [];
-      this.dataSourceDatosIdGam = [];
-    }));
+    this._parteAtrasoSvc.subscription.push(
+      this.fg.valueChanges.subscribe(() => {
+        this.dataSourceParteAtraso = [];
+        this.dataSourceDatosIdGam = [];
+      })
+    );
   }
 
   get formValid(): boolean {
@@ -112,23 +129,26 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
     try {
       this.loading = true;
 
-      this._parteAtrasoSvc.subscription.push(this._parteAtrasoSvc.calcular().subscribe(response => {
-        this.loading = false;
-        const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } = response;
+      this._parteAtrasoSvc.subscription.push(
+        this._parteAtrasoSvc.calcular().subscribe(response => {
+          this.loading = false;
+          const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } =
+            response;
 
-        if (!_parteAtrasos.success || !_datosIdGAM.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'Error',
-            text: _parteAtrasos.error || _datosIdGAM.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+          if (!_parteAtrasos.success || !_datosIdGAM.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'Error',
+              text: _parteAtrasos.error || _datosIdGAM.error,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.dataSourceParteAtraso = JSON.parse(_parteAtrasos.data);
-        this.dataSourceDatosIdGam = JSON.parse(_datosIdGAM.data);
-      }));
+          this.dataSourceParteAtraso = JSON.parse(_parteAtrasos.data);
+          this.dataSourceDatosIdGam = JSON.parse(_datosIdGAM.data);
+        })
+      );
     } catch (err: any) {
       this.loading = false;
 
@@ -137,7 +157,7 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
         title: 'Error',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -151,7 +171,7 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
         title: 'Error',
         text: err as string,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -175,7 +195,9 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
         content: [
           await this._pdfMakeSvc.getHeaderDefinition('Parte de Atrasos DWH'),
           await this._getDivisionDefinition(),
-          await this._parteAtrasoSvc.getParteAtrasosDefinition(this.dataSourceParteAtraso),
+          await this._parteAtrasoSvc.getParteAtrasosDefinition(
+            this.dataSourceParteAtraso
+          ),
         ],
         footer: (page: string, pages: string) => {
           return this._pdfMakeSvc.getFooterDefinition(page, pages);
@@ -185,9 +207,9 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         styles: {
           tableHeader: {
-            bold: true
-          }
-        }
+            bold: true,
+          },
+        },
       };
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
@@ -197,7 +219,7 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
         title: 'Error',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -208,9 +230,13 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [
-          await this._pdfMakeSvc.getHeaderDefinition('Detalle de las Salvas Golden DWH'),
+          await this._pdfMakeSvc.getHeaderDefinition(
+            'Detalle de las Salvas Golden DWH'
+          ),
           await this._getDivisionDefinition(),
-          await this._parteAtrasoSvc.getDetalleParteAtrasoDefinition(this.dataSourceDatosIdGam),
+          await this._parteAtrasoSvc.getDetalleParteAtrasoDefinition(
+            this.dataSourceDatosIdGam
+          ),
         ],
         footer: (page: string, pages: string) => {
           return this._pdfMakeSvc.getFooterDefinition(page, pages);
@@ -220,9 +246,9 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
         },
         styles: {
           tableHeader: {
-            bold: true
-          }
-        }
+            bold: true,
+          },
+        },
       };
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
@@ -232,7 +258,7 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
         title: 'Error',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -240,16 +266,16 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   private _getDivisionDefinition(): any {
     const definition = [];
 
-    const divisionValue = this.divisionesValues.find(d => d.value === this.fg.controls['idDivision'].value)?.label;
+    const divisionValue = this.divisionesValues.find(
+      d => d.value === this.fg.controls['idDivision'].value
+    )?.label;
 
     definition.push({
       text: 'División: ' + divisionValue,
       bold: true,
-      margin: [0, 10, 0, 0]
+      margin: [0, 10, 0, 0],
     });
 
     return definition;
   }
-
-
 }

@@ -4,12 +4,7 @@ import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    TooltipModule
-  ],
-  exports: [
-    TooltipModule
-  ]
+  imports: [CommonModule, TooltipModule],
+  exports: [TooltipModule],
 })
-export class PrimeTooltipModule { }
+export class PrimeTooltipModule {}

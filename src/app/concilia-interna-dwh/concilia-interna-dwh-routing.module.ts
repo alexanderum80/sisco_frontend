@@ -2,12 +2,10 @@ import { ConciliaInternaDwhComponent } from './concilia-interna-dwh.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-const routes: Routes = [
-  { path: '', component: ConciliaInternaDwhComponent }
-];
+const routes: Routes = [{ path: '', component: ConciliaInternaDwhComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ConciliaInternaDwhRoutingModule { }
+export class ConciliaInternaDwhRoutingModule {}

@@ -13,7 +13,7 @@ import { SelectItem } from 'primeng/api';
 @Component({
   selector: 'app-clasificador-entidades-form',
   templateUrl: './clasificador-entidades-form.component.html',
-  styleUrls: ['./clasificador-entidades-form.component.scss']
+  styleUrls: ['./clasificador-entidades-form.component.scss'],
 })
 export class ClasificadorEntidadesFormComponent implements OnInit {
   unidadesValues: SelectItem[] = [];
@@ -28,64 +28,75 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService,
     private _unidadesSvc: UnidadesService,
     private _tipoEntidadesSvc: TipoEntidadesService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fg = this._clasificadorEntidadesSvc.fg;
-    this.action = toNumber(this.fg.controls['idUnidad'].value) === 0 ? ActionClicked.Add : ActionClicked.Edit;
+    this.action =
+      toNumber(this.fg.controls['idUnidad'].value) === 0
+        ? ActionClicked.Add
+        : ActionClicked.Edit;
 
     this._loadUnidades();
     this._loadTipoEntidades();
   }
 
   private _loadUnidades(): void {
-    this._clasificadorEntidadesSvc.subscription.push(this._unidadesSvc.getAllUnidades().subscribe(response => {
-      const result = response.getAllUnidades;
-      if (!result.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: result.error,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
-        });
-      }
+    this._clasificadorEntidadesSvc.subscription.push(
+      this._unidadesSvc.getAllUnidades().subscribe(response => {
+        const result = response.getAllUnidades;
+        if (!result.success) {
+          return SweetAlert.fire({
+            icon: 'error',
+            title: 'ERROR',
+            text: result.error,
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+          });
+        }
 
-      this.unidadesValues = result.data.map((unidad: { IdUnidad: string; Nombre: string; }) => {
-        return {
-          value: unidad.IdUnidad,
-          label: unidad.IdUnidad + '-' + unidad.Nombre
-        };
-      });
-    }));
+        this.unidadesValues = result.data.map(
+          (unidad: { IdUnidad: string; Nombre: string }) => {
+            return {
+              value: unidad.IdUnidad,
+              label: unidad.IdUnidad + '-' + unidad.Nombre,
+            };
+          }
+        );
+      })
+    );
   }
 
   private _loadTipoEntidades(): void {
-    this._clasificadorEntidadesSvc.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-      const result = response.getAllTipoEntidades;
-      if (!result.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: result.error,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
-        });
-      }
+    this._clasificadorEntidadesSvc.subscription.push(
+      this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
+        const result = response.getAllTipoEntidades;
+        if (!result.success) {
+          return SweetAlert.fire({
+            icon: 'error',
+            title: 'ERROR',
+            text: result.error,
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+          });
+        }
 
-      this.tipoEntidadesValues = result.data.map((tipoEntidad: { Id: any; Entidades: any; }) => {
-        return {
-          value: tipoEntidad.Id,
-          label: tipoEntidad.Entidades
-        };
-      });
-    }));
+        this.tipoEntidadesValues = result.data.map(
+          (tipoEntidad: { Id: any; Entidades: any }) => {
+            return {
+              value: tipoEntidad.Id,
+              label: tipoEntidad.Entidades,
+            };
+          }
+        );
+      })
+    );
   }
 
   onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
-        this._save();        
+        this._save();
         break;
       case ActionClicked.Cancel:
         this._closeModal();
@@ -94,27 +105,33 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
   }
 
   private _save(): void {
-    this._clasificadorEntidadesSvc.subscription.push(this._clasificadorEntidadesSvc.save(this.action).subscribe(response => {
-      const result = this.action === ActionClicked.Add ? response.createClasificadorEntidad : response.updateClasificadorEntidad;
+    this._clasificadorEntidadesSvc.subscription.push(
+      this._clasificadorEntidadesSvc.save(this.action).subscribe(response => {
+        const result =
+          this.action === ActionClicked.Add
+            ? response.createClasificadorEntidad
+            : response.updateClasificadorEntidad;
 
-      if (!result.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: result.error,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
-        });
-      }
+        if (!result.success) {
+          return SweetAlert.fire({
+            icon: 'error',
+            title: 'ERROR',
+            text: result.error,
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+          });
+        }
 
-      let txtMessage = `El Clasificador de Entidad se ha ${ this.action === ActionClicked.Add ? 'creado' : 'actualizado' } correctamente.`
+        let txtMessage = `El Clasificador de Entidad se ha ${
+          this.action === ActionClicked.Add ? 'creado' : 'actualizado'
+        } correctamente.`;
 
-      this._closeModal(txtMessage);
-    }));
+        this._closeModal(txtMessage);
+      })
+    );
   }
 
   private _closeModal(message?: string): void {
     this._dinamicDialogSvc.close(message);
   }
-
 }

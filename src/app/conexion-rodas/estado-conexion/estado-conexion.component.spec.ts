@@ -8,9 +8,8 @@ describe('ChequeaConexionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EstadoConexionRodasComponent ]
-    })
-    .compileComponents();
+      declarations: [EstadoConexionRodasComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,9 +1,18 @@
-<div class="more-vert__group" *ngIf="isAdminPermission && menuItems.length" dropdown="dropdown" placement="bottom right">
-  <div class="more-vert__btn mdi mdi-{ icon }" dropdownToggle="dropdownToggle"></div>
+<div
+  class="more-vert__group"
+  *ngIf="isAdminPermission && menuItems.length"
+  dropdown="dropdown"
+  placement="bottom right">
+  <div
+    class="more-vert__btn mdi mdi-{ icon }"
+    dropdownToggle="dropdownToggle"></div>
   <ul class="dropdown-menu dropdown-menu-right" *dropdownMenu role="menu">
     <div *ngFor="let item of menuItems">
-      <li class="menu-item" role="menuitem"> 
-        <div class="dropdown-item" [class.disabled]="item.disabled" (click)="onClickItem(item)">
+      <li class="menu-item" role="menuitem">
+        <div
+          class="dropdown-item"
+          [class.disabled]="item.disabled"
+          (click)="onClickItem(item)">
           <div class="menu-item__icon mdi mdi-{ item.icon }"></div>
           <div class="menu-item__label">{{ item.name }}</div>
         </div>

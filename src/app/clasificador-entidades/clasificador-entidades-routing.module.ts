@@ -3,10 +3,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { ListClasificadorEntidadesComponent } from './list-clasificador-entidades/list-clasificador-entidades.component';
 
 const routes: Routes = [
-  { path: '', component: ListClasificadorEntidadesComponent }];
+  { path: '', component: ListClasificadorEntidadesComponent },
+];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ClasificadorEntidadesRoutingModule { }
+export class ClasificadorEntidadesRoutingModule {}

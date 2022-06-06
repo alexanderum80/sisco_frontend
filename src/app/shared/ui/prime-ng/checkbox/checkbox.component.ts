@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
   // tslint:disable-next-line: component-selector
   selector: 'png-checkbox',
   templateUrl: './checkbox.component.html',
-  styleUrls: ['./checkbox.component.scss']
+  styleUrls: ['./checkbox.component.scss'],
 })
 export class CheckboxComponent implements OnInit {
   @Input() fg: FormGroup;
@@ -14,12 +14,9 @@ export class CheckboxComponent implements OnInit {
   @Input() defaultValue = false;
   @Input() disabled = false;
 
-  constructor(
-    private cd: ChangeDetectorRef
-  ) { }
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
   }
-
 }

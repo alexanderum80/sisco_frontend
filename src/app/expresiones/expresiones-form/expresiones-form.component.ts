@@ -10,7 +10,7 @@ import { cloneDeep } from '@apollo/client/utilities';
 @Component({
   selector: 'app-expresiones-form',
   templateUrl: './expresiones-form.component.html',
-  styleUrls: ['./expresiones-form.component.scss']
+  styleUrls: ['./expresiones-form.component.scss'],
 })
 export class ExpresionesFormComponent implements OnInit {
   fg: FormGroup;
@@ -19,7 +19,7 @@ export class ExpresionesFormComponent implements OnInit {
 
   expresionesDetalle: any[] = [];
 
-  clonedExpresion: { [s: string]: any; } = {};
+  clonedExpresion: { [s: string]: any } = {};
 
   signosValues: SelectItem[] = [
     { value: '+', label: '+' },
@@ -33,7 +33,7 @@ export class ExpresionesFormComponent implements OnInit {
     private _expresionesSvc: ExpresionesService
   ) {
     this.fg = _expresionesSvc.fg;
-   }
+  }
 
   async ngOnInit(): Promise<void> {
     await this._loadTipoValorExpresiones();
@@ -52,7 +52,7 @@ export class ExpresionesFormComponent implements OnInit {
         this.tipoValorValues = result.data.map(r => {
           return {
             value: r.IdTipoValor,
-            label: r.Valor
+            label: r.Valor,
           };
         });
       });
@@ -60,9 +60,9 @@ export class ExpresionesFormComponent implements OnInit {
       Swal.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ha ocurrido el siguiente error: ${ err }`,
+        text: `Ha ocurrido el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -70,28 +70,32 @@ export class ExpresionesFormComponent implements OnInit {
   private _loadExpresionesDetalle(): void {
     try {
       const idExpresionResumen = this.fg.controls['idExpresion'].value;
-      this._expresionesSvc.loadExpresionDetalleByIdResumen(idExpresionResumen).subscribe(response => {
-        const result = response.getExpresionesDetalleByIdResumen;
+      this._expresionesSvc
+        .loadExpresionDetalleByIdResumen(idExpresionResumen)
+        .subscribe(response => {
+          const result = response.getExpresionesDetalleByIdResumen;
 
-        if (!result.success) {
-          throw new Error(result.error);
-        }
+          if (!result.success) {
+            throw new Error(result.error);
+          }
 
-        const data = cloneDeep(result.data);
+          const data = cloneDeep(result.data);
 
-        data.map(d => {
-          d.TipoValorDesc = this.tipoValorValues.find(t => t.value === d.TipoValor)?.label;
+          data.map(d => {
+            d.TipoValorDesc = this.tipoValorValues.find(
+              t => t.value === d.TipoValor
+            )?.label;
+          });
+
+          this.expresionesDetalle = data;
         });
-
-        this.expresionesDetalle = data;
-      });
     } catch (err: any) {
       Swal.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ha ocurrido el siguiente error: ${ err }`,
+        text: `Ha ocurrido el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -108,12 +112,12 @@ export class ExpresionesFormComponent implements OnInit {
       Signo: '+',
       PorCiento: '100',
       TipoValor: this.tipoValorValues[0]?.value || 0,
-      TipoValorDesc: this.tipoValorValues[0]?.label || ''
+      TipoValorDesc: this.tipoValorValues[0]?.label || '',
     });
   }
 
   onRowEditInit(expresion: any): void {
-    this.clonedExpresion[expresion.id] = {...expresion};
+    this.clonedExpresion[expresion.id] = { ...expresion };
   }
 
   onRowDelete(index: any): void {
@@ -123,7 +127,7 @@ export class ExpresionesFormComponent implements OnInit {
       icon: 'question',
       confirmButtonText: 'Sí',
       showCancelButton: true,
-      cancelButtonText: 'No'
+      cancelButtonText: 'No',
     }).then(result => {
       if (result.value) {
         this.expresionesDetalle.splice(index, 1);
@@ -178,18 +182,23 @@ export class ExpresionesFormComponent implements OnInit {
           Crit3: exp.Crit3,
           Signo: exp.Signo,
           PorCiento: Number(exp.PorCiento),
-          TipoValor: exp.TipoValor
+          TipoValor: exp.TipoValor,
         };
       });
 
       const payload = {
         ExpresionResumen,
-        ExpresionesDetalle
+        ExpresionesDetalle,
       };
 
       this._expresionesSvc.saveExpresion(payload).subscribe(response => {
-        const result = ExpresionResumen.IdExpresion === 0 ? response.createExpresion : response.updateExpresion;
-        const txtMessage = `La Expresión se ha ${ ExpresionResumen.IdExpresion === 0 ? 'creado' : 'actualizado' } correctamente.`;
+        const result =
+          ExpresionResumen.IdExpresion === 0
+            ? response.createExpresion
+            : response.updateExpresion;
+        const txtMessage = `La Expresión se ha ${
+          ExpresionResumen.IdExpresion === 0 ? 'creado' : 'actualizado'
+        } correctamente.`;
         if (!result.success) {
           throw new Error(result.error);
         }
@@ -200,15 +209,14 @@ export class ExpresionesFormComponent implements OnInit {
       Swal.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ha ocurrido el siguiente error: ${ err }`,
+        text: `Ha ocurrido el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
-   private _closeModal(message?: string): void {
+  private _closeModal(message?: string): void {
     this._dinamicDialogSvc.close(message);
   }
-
 }

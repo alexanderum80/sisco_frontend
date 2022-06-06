@@ -1,5 +1,8 @@
 import { MessageService } from 'primeng/api';
-import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
+import {
+  IActionItemClickedArgs,
+  ActionClicked,
+} from './../../shared/models/list-items';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import SweetAlert from 'sweetalert2';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
@@ -12,9 +15,9 @@ import { isArray } from 'lodash';
 @Component({
   selector: 'app-list-epigrafes',
   templateUrl: './list-epigrafes.component.html',
-  styleUrls: ['./list-epigrafes.component.scss']
+  styleUrls: ['./list-epigrafes.component.scss'],
 })
-export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
   epigrafes: any[];
 
   displayedColumns: ITableColumns[] = [
@@ -26,10 +29,7 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _epigrafesSvc: EpigrafesService
-  ) { }
-
-  ngOnInit(): void {
-  }
+  ) {}
 
   ngAfterViewInit(): void {
     this._loadEpigrafes();
@@ -40,21 +40,23 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private _loadEpigrafes(): void {
-    this._epigrafesSvc.subscription.push(this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
-      const result = response.getAllEpigrafes;
+    this._epigrafesSvc.subscription.push(
+      this._epigrafesSvc.loadAllEpigrafes().subscribe((response) => {
+        const result = response.getAllEpigrafes;
 
-      if (!result.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: `Ocurrió el siguiente error: ${ result.error }`,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
-        });
-      }
+        if (!result.success) {
+          return SweetAlert.fire({
+            icon: 'error',
+            title: 'ERROR',
+            text: `Ocurrió el siguiente error: ${result.error}`,
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+          });
+        }
 
-      this.epigrafes = result.data;
-    }));
+        this.epigrafes = result.data;
+      })
+    );
   }
 
   hasAdvancedUserPermission(): boolean {
@@ -67,10 +69,10 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
         this._add();
         break;
       case ActionClicked.Edit:
-        this._edit(event.item)
-        break;    
+        this._edit(event.item);
+        break;
       case ActionClicked.Delete:
-        this._delete(event.item)
+        this._delete(event.item);
         break;
     }
   }
@@ -85,52 +87,71 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
         this._epigrafesSvc.fg.patchValue(inputData);
 
         this._dinamicDialogSvc.open('Agregar Epígrafe', EpigrafesFormComponent);
-        this._epigrafesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-          if (message) {
-            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-          }
-        }));
+        this._epigrafesSvc.subscription.push(
+          this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+            if (message) {
+              this._msgSvc.add({
+                severity: 'success',
+                summary: 'Satisfactorio',
+                detail: message,
+              });
+            }
+          })
+        );
       }
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ocurrió el siguiente error: ${ err }`,
+        text: `Ocurrió el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   private _edit(clasificador: any): void {
-    this._epigrafesSvc.subscription.push(this._epigrafesSvc.loadEpigrafeById(clasificador.IdEpigafre).subscribe(response => {
-      const result = response.getEpigrafeById;
+    this._epigrafesSvc.subscription.push(
+      this._epigrafesSvc
+        .loadEpigrafeById(clasificador.IdEpigafre)
+        .subscribe((response) => {
+          const result = response.getEpigrafeById;
 
-      if (!result.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: result.error,
-          confirmButtonText: 'Aceptar'
-        });
-      }
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result.error,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-      const data = result.data;
+          const data = result.data;
 
-      const inputData = {
-        idEpigrafe: data.IdEpigafre,
-        epigrafe: data.Epigrafe,
-      };
+          const inputData = {
+            idEpigrafe: data.IdEpigafre,
+            epigrafe: data.Epigrafe,
+          };
 
-      this._epigrafesSvc.fg.patchValue(inputData);
+          this._epigrafesSvc.fg.patchValue(inputData);
 
-      this._dinamicDialogSvc.open('Modificar Epígrafe', EpigrafesFormComponent);
-      this._epigrafesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-        if (message) {
-          this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-        }
-      }));
-    }));
+          this._dinamicDialogSvc.open(
+            'Modificar Epígrafe',
+            EpigrafesFormComponent
+          );
+          this._epigrafesSvc.subscription.push(
+            this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+              if (message) {
+                this._msgSvc.add({
+                  severity: 'success',
+                  summary: 'Satisfactorio',
+                  detail: message,
+                });
+              }
+            })
+          );
+        })
+    );
   }
 
   private _delete(data: any): void {
@@ -143,26 +164,36 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
           showConfirmButton: true,
           confirmButtonText: 'Sí',
           showCancelButton: true,
-          cancelButtonText: 'No'
-        }).then(res => {
+          cancelButtonText: 'No',
+        }).then((res) => {
           if (res.value) {
-            const IDsToRemove: number[] = !isArray(data) ? [data.IdEpigafre] :  data.map(d => { return d.IdEpigafre });
-
-            this._epigrafesSvc.subscription.push(this._epigrafesSvc.delete(IDsToRemove).subscribe(response => {
-              const result = response.deleteEpigrafe;
-
-              if (result.success === false) {
-                return SweetAlert.fire({
-                  icon: 'error',
-                  title: 'ERROR',
-                  text: `Ocurrió el siguiente error: ${ result.error }`,
-                  showConfirmButton: true,
-                  confirmButtonText: 'Aceptar'
+            const IDsToRemove: number[] = !isArray(data)
+              ? [data.IdEpigafre]
+              : data.map((d) => {
+                  return d.IdEpigafre;
                 });
-              }
 
-              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Epígrafe se ha eliminado correctamente.' })
-            }));
+            this._epigrafesSvc.subscription.push(
+              this._epigrafesSvc.delete(IDsToRemove).subscribe((response) => {
+                const result = response.deleteEpigrafe;
+
+                if (result.success === false) {
+                  return SweetAlert.fire({
+                    icon: 'error',
+                    title: 'ERROR',
+                    text: `Ocurrió el siguiente error: ${result.error}`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Aceptar',
+                  });
+                }
+
+                this._msgSvc.add({
+                  severity: 'success',
+                  summary: 'Satisfactorio',
+                  detail: 'El Epígrafe se ha eliminado correctamente.',
+                });
+              })
+            );
           }
         });
       }
@@ -170,11 +201,10 @@ export class ListEpigrafesComponent implements OnInit, AfterViewInit, OnDestroy 
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ocurrió el siguiente error: ${ err }`,
+        text: `Ocurrió el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
-
 }

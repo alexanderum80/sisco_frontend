@@ -1,3 +1,10 @@
-<png-button icon="mdi mdi-24px mdi-account-circle" [rounded]="true" [text]="true" [style]="'secondary'" [outlined]="true" [tooltip]="userName" (clicked)="menu.toggle($event)"></png-button>
+<png-button
+  icon="mdi mdi-24px mdi-account-circle"
+  [rounded]="true"
+  [text]="true"
+  [style]="'secondary'"
+  [outlined]="true"
+  [tooltip]="userName"
+  (clicked)="menu.toggle($event)"></png-button>
 
 <p-menu #menu [popup]="true" [model]="items"></p-menu>

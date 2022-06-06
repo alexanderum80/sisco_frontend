@@ -4,20 +4,27 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PdfmakeService {
-
-  constructor() { 
+  constructor() {
     (window as any).pdfMake.vfs = pdfFonts.pdfMake.vfs;
   }
 
   public generatePdf(documentDefinition: any, action = 'open'): void {
     switch (action) {
-      case 'open': pdfMake.createPdf(documentDefinition).open(); break;
-      case 'print': pdfMake.createPdf(documentDefinition).print(); break;
-      case 'download': pdfMake.createPdf(documentDefinition).download(); break;
-      default: pdfMake.createPdf(documentDefinition).open(); break;
+      case 'open':
+        pdfMake.createPdf(documentDefinition).open();
+        break;
+      case 'print':
+        pdfMake.createPdf(documentDefinition).print();
+        break;
+      case 'download':
+        pdfMake.createPdf(documentDefinition).download();
+        break;
+      default:
+        pdfMake.createPdf(documentDefinition).open();
+        break;
     }
   }
 
@@ -27,7 +34,7 @@ export class PdfmakeService {
         {
           image: await this._getBase64LogoTRD(),
           height: 30,
-          width: 50
+          width: 50,
         },
         [
           {
@@ -41,9 +48,9 @@ export class PdfmakeService {
             fontSize: 14,
             bold: true,
             alignment: 'center',
-          }
+          },
         ],
-      ]
+      ],
     };
   }
 
@@ -51,15 +58,17 @@ export class PdfmakeService {
     return {
       margin: [5, 0, 20, 0],
       height: 30,
-      columns: [{
-        alignment: 'right',
-        text: [
-          'Página ',
-          { text: page.toString(), italics: true },
-          ' de ',
-          { text: pages.toString(), italics: true }
-        ]
-      }]
+      columns: [
+        {
+          alignment: 'right',
+          text: [
+            'Página ',
+            { text: page.toString(), italics: true },
+            ' de ',
+            { text: pages.toString(), italics: true },
+          ],
+        },
+      ],
     };
   }
 
@@ -92,9 +101,13 @@ export class PdfmakeService {
   public getPeriodoDefinition(periodo: Date): any {
     moment.locale('es');
     return {
-      text: 'Período: ' + moment(periodo).locale('es').format('MMMM') + '/' + moment(periodo).format('YYYY'),
+      text:
+        'Período: ' +
+        moment(periodo).locale('es').format('MMMM') +
+        '/' +
+        moment(periodo).format('YYYY'),
       bold: true,
-      margin: [0, 10, 0, 0]
+      margin: [0, 10, 0, 0],
     };
   }
 }

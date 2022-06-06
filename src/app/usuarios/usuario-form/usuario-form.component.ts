@@ -18,7 +18,7 @@ import { toNumber } from 'lodash';
 @Component({
   selector: 'app-usuario-form',
   templateUrl: './usuario-form.component.html',
-  styleUrls: ['./usuario-form.component.scss']
+  styleUrls: ['./usuario-form.component.scss'],
 })
 export class UsuarioFormComponent implements OnInit {
   action: ActionClicked;
@@ -36,7 +36,7 @@ export class UsuarioFormComponent implements OnInit {
     private _tipoUsuariosSvc: TipoUsuariosService,
     private _divisionesSvc: DivisionesService,
     private _sweetAlterSvc: SweetalertService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fg = this._usuarioSvc.fg;
@@ -50,56 +50,64 @@ export class UsuarioFormComponent implements OnInit {
 
   private _getTipoUsuarios(): void {
     try {
-      this._usuarioSvc.subscription.push(this._tipoUsuariosSvc.getAllTipoUsuarios().subscribe(response => {
-        const result = response.getAllTipoUsuarios;
+      this._usuarioSvc.subscription.push(
+        this._tipoUsuariosSvc.getAllTipoUsuarios().subscribe(response => {
+          const result = response.getAllTipoUsuarios;
 
-        this.tipoUsuariosValues = result.data.map((c: { IdTipo: any; TipoUsuario: any; }) => {
-          return {
-            value: c.IdTipo,
-            label: c.TipoUsuario
-          };
-        });
-      }));
+          this.tipoUsuariosValues = result.data.map(
+            (c: { IdTipo: any; TipoUsuario: any }) => {
+              return {
+                value: c.IdTipo,
+                label: c.TipoUsuario,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Se produjo el siguiente error: ${ err }`,
+        text: `Se produjo el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   private _getDivisiones(): void {
     try {
-      this._usuarioSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
-        const result = response.getAllDivisiones;
+      this._usuarioSvc.subscription.push(
+        this._divisionesSvc.getDivisiones().subscribe(response => {
+          const result = response.getAllDivisiones;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: `Se produjo el siguiente error: ${ result.error }`,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: `Se produjo el siguiente error: ${result.error}`,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.divisionesValues = result.data.map((d: { IdDivision: number; Division: string; }) => {
-          return {
-            value: d.IdDivision,
-            label: d.IdDivision + '-' + d.Division
-          };
-        });
-      }));
+          this.divisionesValues = result.data.map(
+            (d: { IdDivision: number; Division: string }) => {
+              return {
+                value: d.IdDivision,
+                label: d.IdDivision + '-' + d.Division,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Se produjo el siguiente error: ${ err }`,
+        text: `Se produjo el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -117,9 +125,9 @@ export class UsuarioFormComponent implements OnInit {
 
     this.fg.controls['contrasenaConfirm'].valueChanges.subscribe(value => {
       if (value.length === 0) {
-        this.fg.controls['contrasenaConfirm'].setErrors({required: true });
+        this.fg.controls['contrasenaConfirm'].setErrors({ required: true });
       } else if (value.length < 6) {
-        this.fg.controls['contrasenaConfirm'].setErrors({minLength: true });
+        this.fg.controls['contrasenaConfirm'].setErrors({ minLength: true });
       } else {
         this.fg.controls['contrasenaConfirm'].setErrors(null);
       }
@@ -135,13 +143,15 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   get isUsuarioAvanzado(): boolean {
-    return this.fg.get('tipoUsuario')?.value === ETipoUsuarios['Usuario Avanzado'];
+    return (
+      this.fg.get('tipoUsuario')?.value === ETipoUsuarios['Usuario Avanzado']
+    );
   }
 
   onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
-        this._save();        
+        this._save();
         break;
       case ActionClicked.Cancel:
         this._closeModal();
@@ -150,13 +160,16 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   private _save(): void {
-    if (this.fg.controls['contrasena'].value !== this.fg.controls['contrasenaConfirm'].value) {
+    if (
+      this.fg.controls['contrasena'].value !==
+      this.fg.controls['contrasenaConfirm'].value
+    ) {
       SweetAlert.fire({
         icon: 'error',
         title: 'Error al Validar',
         text: 'Las contraseñas introducidas no coinciden. Rectifique.',
         showConfirmButton: true,
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
       });
 
       return;
@@ -172,34 +185,40 @@ export class UsuarioFormComponent implements OnInit {
       IdDivision: toNumber(this.fg.controls['idDivision'].value),
     };
 
-    const usuarioMutation = usuarioInfo.IdUsuario === 0 ? usuariosApi.create : usuariosApi.update;
+    const usuarioMutation =
+      usuarioInfo.IdUsuario === 0 ? usuariosApi.create : usuariosApi.update;
 
-    this._usuarioSvc.subscription.push(this._apollo.mutate<UsuariosMutationResponse>({
-      mutation: usuarioMutation,
-      variables: { usuarioInfo },
-      refetchQueries: ['GetAllUsuarios']
-    }).subscribe(response => {
-      let result;
-      let txtMessage;
+    this._usuarioSvc.subscription.push(
+      this._apollo
+        .mutate<UsuariosMutationResponse>({
+          mutation: usuarioMutation,
+          variables: { usuarioInfo },
+          refetchQueries: ['GetAllUsuarios'],
+        })
+        .subscribe(response => {
+          let result;
+          let txtMessage;
 
-      if (usuarioInfo.IdUsuario === 0) {
-        result = response.data?.createUsuario;
-        txtMessage = 'El Usuario se ha creado correctamente.';
-      } else {
-        result = response.data?.updateUsuario;
-        txtMessage = 'El Usuario se ha actualizado correctamente.';
-      }
+          if (usuarioInfo.IdUsuario === 0) {
+            result = response.data?.createUsuario;
+            txtMessage = 'El Usuario se ha creado correctamente.';
+          } else {
+            result = response.data?.updateUsuario;
+            txtMessage = 'El Usuario se ha actualizado correctamente.';
+          }
 
-      if (!result?.success) {
-        return this._sweetAlterSvc.error(`Se produjo el siguiente error: ${ result?.error }`);
-      }
+          if (!result?.success) {
+            return this._sweetAlterSvc.error(
+              `Se produjo el siguiente error: ${result?.error}`
+            );
+          }
 
-      this._closeModal(txtMessage);
-    }));
+          this._closeModal(txtMessage);
+        })
+    );
   }
 
   private _closeModal(message?: string): void {
     this._dinamicDialogSvc.close(message);
   }
-
 }

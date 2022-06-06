@@ -10,9 +10,7 @@ import { MenuModule } from 'primeng/menu';
 import { TableService } from './table.service';
 
 @NgModule({
-  declarations: [
-    TableComponent
-  ],
+  declarations: [TableComponent],
   imports: [
     CommonModule,
     TableModule,
@@ -20,14 +18,9 @@ import { TableService } from './table.service';
     CalendarModule,
     PrimeSlideMenuModule,
     MenuModule,
-    PrimeToolbarModule
+    PrimeToolbarModule,
   ],
-  providers: [
-    TableService
-  ],
-  exports: [
-    TableModule,
-    TableComponent,
-  ]
+  providers: [TableService],
+  exports: [TableModule, TableComponent],
 })
-export class PrimeTableModule { }
+export class PrimeTableModule {}

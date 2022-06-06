@@ -8,9 +8,8 @@ describe('CompararExpresionesFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CompararExpresionesFormComponent ]
-    })
-    .compileComponents();
+      declarations: [CompararExpresionesFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

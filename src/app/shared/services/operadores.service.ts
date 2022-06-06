@@ -6,22 +6,22 @@ import { Injectable } from '@angular/core';
 const operadoresQuery = require('graphql-tag/loader!../graphql/operadores.query.gql');
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OperadoresService {
-  constructor(
-    private _apollo: Apollo,
-  ) { }
+  constructor(private _apollo: Apollo) {}
 
   getOperadores(): Observable<OperadoresQueryResponse> {
     return new Observable<OperadoresQueryResponse>(subscriber => {
       try {
-        this._apollo.query<OperadoresQueryResponse>({
-          query: operadoresQuery,
-          fetchPolicy: 'network-only'
-        }).subscribe(response => {
-          subscriber.next(response.data);
-        });
+        this._apollo
+          .query<OperadoresQueryResponse>({
+            query: operadoresQuery,
+            fetchPolicy: 'network-only',
+          })
+          .subscribe(response => {
+            subscriber.next(response.data);
+          });
       } catch (err: any) {
         subscriber.error(err);
       }

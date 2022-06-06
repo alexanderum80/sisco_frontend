@@ -5,15 +5,8 @@ import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    ToastModule
-  ],
-  providers: [
-    MessageService,
-  ],
-  exports: [
-    ToastModule
-  ]
+  imports: [CommonModule, ToastModule],
+  providers: [MessageService],
+  exports: [ToastModule],
 })
-export class PrimeToastModule { }
+export class PrimeToastModule {}

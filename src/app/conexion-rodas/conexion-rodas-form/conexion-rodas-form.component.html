@@ -1,26 +1,92 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
-  <form [formGroup]="fg" style="width: 350px;">
+  <form [formGroup]="fg" style="width: 350px">
     <div class="form__group">
-      <png-dropdown class="w-full mt-1" [fg]="fg" control="idDivision" label="División" labelWidth="90" [optionsValues]="divisionesValues" placeholder="&lt;División&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-full mt-1"
+        [fg]="fg"
+        control="idDivision"
+        label="División"
+        labelWidth="90"
+        [optionsValues]="divisionesValues"
+        placeholder="&lt;División&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
     </div>
     <div class="form__group">
-      <png-dropdown class="w-full mt-1" [fg]="fg" control="idUnidad" label="Centro" labelWidth="90" [optionsValues]="unidadesValues" placeholder="&lt;Unidad&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-full mt-1"
+        [fg]="fg"
+        control="idUnidad"
+        label="Centro"
+        labelWidth="90"
+        [optionsValues]="unidadesValues"
+        placeholder="&lt;Unidad&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
     </div>
     <div class="form__group">
-      <png-checkbox class="w-full mt-1" label="Consolidado" [fg]="fg" control="consolidado"></png-checkbox>
+      <png-checkbox
+        class="w-full mt-1"
+        label="Consolidado"
+        [fg]="fg"
+        control="consolidado"></png-checkbox>
     </div>
     <div class="form__group">
-      <png-input-text class="w-full mt-1" label="Servidor" labelWidth="90" [fg]="fg" control="ip" [required]="true" autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1"
+        label="Servidor"
+        labelWidth="90"
+        [fg]="fg"
+        control="ip"
+        [required]="true"
+        autocomplete="off"></png-input-text>
     </div>
     <div class="form__group">
-      <png-input-text class="w-full mt-1" label="Usuario" labelWidth="90" [fg]="fg" control="usuario" [required]="true" autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1"
+        label="Usuario"
+        labelWidth="90"
+        [fg]="fg"
+        control="usuario"
+        [required]="true"
+        autocomplete="off"></png-input-text>
     </div>
     <div class="form__group">
-      <png-password class="w-full mt-1" label="Contraseña" labelWidth="90" [fg]="fg" control="contrasena" [required]="true" autocomplete="off"></png-password>
+      <png-password
+        class="w-full mt-1"
+        label="Contraseña"
+        labelWidth="90"
+        [fg]="fg"
+        control="contrasena"
+        [required]="true"
+        autocomplete="off"></png-password>
     </div>
     <div class="form__group">
-      <png-dropdown class="w-full mt-1" [fg]="fg" control="baseDatos" label="Base de Datos" labelWidth="90" [optionsValues]="baseDatosValues" placeholder="&lt;Base de Datos&gt;" [required]="true" [disabled]="loadingDataBase" [filter]="true" [showClear]="true"></png-dropdown>
-      <png-button class="ml-2" icon="mdi mdi-refresh" [raised]="true" [rounded]="true" [text]="true" [disabled]="loadingDataBase" [raised]="true" [fullWidth]="true" [loading]="loadingDataBase" (clicked)="refreshDataBases()"></png-button>
+      <png-dropdown
+        class="w-full mt-1"
+        [fg]="fg"
+        control="baseDatos"
+        label="Base de Datos"
+        labelWidth="90"
+        [optionsValues]="baseDatosValues"
+        placeholder="&lt;Base de Datos&gt;"
+        [required]="true"
+        [disabled]="loadingDataBase"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-button
+        class="ml-2"
+        icon="mdi mdi-refresh"
+        [raised]="true"
+        [rounded]="true"
+        [text]="true"
+        [disabled]="loadingDataBase"
+        [raised]="true"
+        [fullWidth]="true"
+        [loading]="loadingDataBase"
+        (clicked)="refreshDataBases()"></png-button>
     </div>
   </form>
 </app-add-edit-item>

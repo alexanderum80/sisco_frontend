@@ -3,14 +3,40 @@
 <div class="content">
   <png-panel class="h-full w-full" header="Estado de las Conexiones">
     <form class="form-division" [formGroup]="fg">
-      <png-dropdown class="w-20rem" [fg]="fg" control="idDivision" label="División" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-20rem"
+        [fg]="fg"
+        control="idDivision"
+        label="División"
+        [optionsValues]="divisionesValues"
+        placeholder="Seleccione la División"
+        [filter]="true"
+        [required]="true"
+        [showClear]="true"></png-dropdown>
     </form>
     <png-card class="chequea-conexion-detalle m-5">
-      <png-table [columns]="columns" [data]="dataSource" [canEditDelete]="false"></png-table>
+      <png-table
+        [columns]="columns"
+        [data]="dataSource"
+        [canEditDelete]="false"></png-table>
     </png-card>
     <div class="flex justify-content-end mt-2">
-      <png-button class="mr-2 mb-2" label="Conciliar" icon="pi-check" tooltip="Calcular la Conciliación." [raised]="true" [disabled]="!fg.valid" (clicked)="calcular()"></png-button>
-      <png-button class="mr-2 mb-2" label="Reporte" [style]="'secondary'" [raised]="true" icon="pi-print" [disabled]="dataSource.length === 0" (clicked)="reporte()"></png-button>
+      <png-button
+        class="mr-2 mb-2"
+        label="Conciliar"
+        icon="pi-check"
+        tooltip="Calcular la Conciliación."
+        [raised]="true"
+        [disabled]="!fg.valid"
+        (clicked)="calcular()"></png-button>
+      <png-button
+        class="mr-2 mb-2"
+        label="Reporte"
+        [style]="'secondary'"
+        [raised]="true"
+        icon="pi-print"
+        [disabled]="dataSource.length === 0"
+        (clicked)="reporte()"></png-button>
     </div>
   </png-panel>
 </div>

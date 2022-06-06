@@ -7,22 +7,22 @@ import { MenuItem } from 'primeng/api';
 @Component({
   selector: 'app-usuario-info',
   templateUrl: './usuario-info.component.html',
-  styleUrls: ['./usuario-info.component.scss']
+  styleUrls: ['./usuario-info.component.scss'],
 })
-export class UsuarioInfoComponent implements OnInit {
-
-  items: MenuItem[] =  [
+export class UsuarioInfoComponent {
+  items: MenuItem[] = [
     { label: 'Cambiar contraseña', icon: 'mdi mdi-account-key-outline' },
-    { label: 'Cerrar sesión', icon: 'mdi mdi-logout', command: () => this.logout() },
-  ]
+    {
+      label: 'Cerrar sesión',
+      icon: 'mdi mdi-logout',
+      command: () => this.logout(),
+    },
+  ];
 
   constructor(
     private _usarioSvc: UsuarioService,
-    private _authSvc: AuthenticationService,
-  ) { }
-
-  ngOnInit(): void {
-  }
+    private _authSvc: AuthenticationService
+  ) {}
 
   logout(): void {
     try {
@@ -31,9 +31,9 @@ export class UsuarioInfoComponent implements OnInit {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Se produjo el siguiente error: ${ err }`,
+        text: `Se produjo el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -41,5 +41,4 @@ export class UsuarioInfoComponent implements OnInit {
   get userName(): string {
     return this._usarioSvc.usuario.Usuario.toUpperCase();
   }
-
 }

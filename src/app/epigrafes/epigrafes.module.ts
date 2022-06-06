@@ -9,22 +9,16 @@ import { EpigrafesFormComponent } from './epigrafes-form/epigrafes-form.componen
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 import { EpigrafesService } from './shared/services/epigrafes.service';
 
-
 @NgModule({
-  declarations: [
-    ListEpigrafesComponent,
-    EpigrafesFormComponent
-  ],
+  declarations: [ListEpigrafesComponent, EpigrafesFormComponent],
   imports: [
     CommonModule,
     EpigrafesRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
-  providers: [
-    EpigrafesService
-  ]
+  providers: [EpigrafesService],
 })
-export class EpigrafesModule { }
+export class EpigrafesModule {}

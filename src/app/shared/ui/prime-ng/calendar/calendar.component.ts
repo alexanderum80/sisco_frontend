@@ -1,4 +1,12 @@
-import { ChangeDetectorRef, Component, Input, OnInit, AfterContentChecked, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnInit,
+  AfterContentChecked,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 // import { PrimeNGConfig } from 'primeng/api';
 
@@ -6,7 +14,7 @@ import { FormGroup } from '@angular/forms';
   // tslint:disable-next-line: component-selector
   selector: 'png-calendar',
   templateUrl: './calendar.component.html',
-  styleUrls: ['./calendar.component.scss']
+  styleUrls: ['./calendar.component.scss'],
 })
 export class CalendarComponent implements OnInit {
   @Input() fg: FormGroup;
@@ -23,7 +31,8 @@ export class CalendarComponent implements OnInit {
   @Input() disabledDays: number[] = [];
   @Input() monthNavigator = true;
   @Input() yearNavigator = true;
-  @Input() yearRange: string = (new Date()).getFullYear() - 10 + ':' + (new Date()).getFullYear();
+  @Input() yearRange: string =
+    new Date().getFullYear() - 10 + ':' + new Date().getFullYear();
   @Input() showTime = false;
   @Input() timeOnly = false;
   @Input() selectionMode: 'single' | 'multiple' | 'range' = 'single';
@@ -34,9 +43,9 @@ export class CalendarComponent implements OnInit {
   constructor(
     // private config: PrimeNGConfig,
     private cd: ChangeDetectorRef
-  ) { }
+  ) {}
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
     // this.config.setTranslation({
     //   dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
     //   dayNamesShort: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
@@ -45,9 +54,8 @@ export class CalendarComponent implements OnInit {
     //   monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
     //   today: 'Hoy',
     //   clear: 'Limpiar'
-    // });   
-    
+    // });
+
     this.cd.detectChanges();
   }
-
 }

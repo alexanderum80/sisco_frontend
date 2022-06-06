@@ -1,11 +1,18 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
 @Component({
   // tslint:disable-next-line: component-selector
   selector: 'png-split-button',
   templateUrl: './split-button.component.html',
-  styleUrls: ['./split-button.component.scss']
+  styleUrls: ['./split-button.component.scss'],
 })
 export class SplitButtonComponent implements OnInit {
   @Input() label: string;
@@ -13,13 +20,18 @@ export class SplitButtonComponent implements OnInit {
   @Input() icon: string;
   @Input() iconPos: 'left' | 'right' = 'left';
   @Input() disabled = false;
-  @Input() style: 'primary' | 'secondary' | 'success' | 'info' | 'warning' | 'help' | 'danger' = 'primary';
+  @Input() style:
+    | 'primary'
+    | 'secondary'
+    | 'success'
+    | 'info'
+    | 'warning'
+    | 'help'
+    | 'danger' = 'primary';
 
   @Output() clicked = new EventEmitter();
 
-  constructor(
-    private cd: ChangeDetectorRef
-  ) { }
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
@@ -28,5 +40,4 @@ export class SplitButtonComponent implements OnInit {
   onClicked(): void {
     this.clicked.emit();
   }
-
 }

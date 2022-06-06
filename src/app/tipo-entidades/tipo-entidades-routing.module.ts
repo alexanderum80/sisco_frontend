@@ -2,12 +2,10 @@ import { ListTipoEntidadesComponent } from './list-tipo-entidades/list-tipo-enti
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [
-  { path: '', component: ListTipoEntidadesComponent }
-];
+const routes: Routes = [{ path: '', component: ListTipoEntidadesComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class TipoEntidadesRoutingModule { }
+export class TipoEntidadesRoutingModule {}

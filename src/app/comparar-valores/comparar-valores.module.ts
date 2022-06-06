@@ -10,20 +10,16 @@ import { ListCompararValoresComponent } from './list-comparar-valores/list-compa
 import { CompararValoresFormComponent } from './comparar-valores-form/comparar-valores-form.component';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
-
 @NgModule({
-  declarations: [
-    ListCompararValoresComponent,
-    CompararValoresFormComponent
-  ],
+  declarations: [ListCompararValoresComponent, CompararValoresFormComponent],
   imports: [
     CommonModule,
     CompararValoresRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     PrimeNgModule,
-    SharedModule
+    SharedModule,
   ],
-  providers: [CompararValoresService, ExpresionesService]
+  providers: [CompararValoresService, ExpresionesService],
 })
-export class CompararValoresModule { }
+export class CompararValoresModule {}

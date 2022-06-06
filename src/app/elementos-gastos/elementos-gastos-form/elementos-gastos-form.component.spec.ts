@@ -8,9 +8,8 @@ describe('ElementosGastosFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ElementosGastosFormComponent ]
-    })
-    .compileComponents();
+      declarations: [ElementosGastosFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

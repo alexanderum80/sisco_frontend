@@ -1,5 +1,11 @@
 <app-list-item title="Comparación de Valores">
-    <png-table [columns]="columns" [data]="compararValores" groupMode="rowspan" groupField="Expresion" [canEditDelete]="true" (actionClicked)="actionClicked($event)"></png-table>
+  <png-table
+    [columns]="columns"
+    [data]="compararValores"
+    groupMode="rowspan"
+    groupField="Expresion"
+    [canEditDelete]="true"
+    (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
-  
+
 <p-toast></p-toast>

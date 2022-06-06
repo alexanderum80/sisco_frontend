@@ -1,5 +1,10 @@
 <app-list-item title="Conexiones al Rodas">
-  <png-table [columns]="columns" [data]="conexionesRodas" [loading]="loading" [canEditDelete]="hasAdminPermission()" (actionClicked)="actionClicked($event)"></png-table>
+  <png-table
+    [columns]="columns"
+    [data]="conexionesRodas"
+    [loading]="loading"
+    [canEditDelete]="hasAdminPermission()"
+    (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
 
 <p-toast></p-toast>

@@ -8,7 +8,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ConciliaGoldenDwhService } from './shared/services/concilia-golden-dwh.service';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
-
 @NgModule({
   declarations: [ConciliaGoldenDwhComponent],
   imports: [
@@ -19,6 +18,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     SharedModule,
     PrimeNgModule,
   ],
-  providers: [ConciliaGoldenDwhService]
+  providers: [ConciliaGoldenDwhService],
 })
-export class ConciliaGoldenDwhModule { }
+export class ConciliaGoldenDwhModule {}

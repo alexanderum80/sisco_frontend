@@ -8,9 +8,8 @@ describe('ParteAtrasoComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ParteAtrasoComponent ]
-    })
-    .compileComponents();
+      declarations: [ParteAtrasoComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

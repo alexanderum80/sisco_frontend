@@ -7,7 +7,7 @@ import { ISelectableOptions } from '../../../models';
   // tslint:disable-next-line: component-selector
   selector: 'png-dropdown',
   templateUrl: './dropdown.component.html',
-  styleUrls: ['./dropdown.component.scss']
+  styleUrls: ['./dropdown.component.scss'],
 })
 export class DropdownComponent implements OnInit {
   @Input() fg: FormGroup;
@@ -22,12 +22,9 @@ export class DropdownComponent implements OnInit {
   @Input() showClear = false;
   @Input() optionsValues: SelectItem[] = [];
 
-  constructor(
-    private cd: ChangeDetectorRef
-  ) { }
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
   }
-
 }

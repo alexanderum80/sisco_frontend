@@ -6,7 +6,7 @@ import { environment } from './../environments/environment';
 
 export function createApollo(httpLink: HttpLink): any {
   return {
-    link: httpLink.create({uri: environment.graphQlServer}),
+    link: httpLink.create({ uri: environment.graphQlServer }),
     cache: new InMemoryCache(),
   };
 }

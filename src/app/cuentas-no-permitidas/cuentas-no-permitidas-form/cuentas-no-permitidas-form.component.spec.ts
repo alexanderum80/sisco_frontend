@@ -8,9 +8,8 @@ describe('CuentasNoPermitidasFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CuentasNoPermitidasFormComponent ]
-    })
-    .compileComponents();
+      declarations: [CuentasNoPermitidasFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

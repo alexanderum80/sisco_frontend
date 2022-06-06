@@ -9,11 +9,10 @@ import { ClasificadorCuentaFormComponent } from './clasificador-cuenta-form/clas
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 import { ClasificadorCuentaService } from './shared/service/clasificador-cuenta.service';
 
-
 @NgModule({
   declarations: [
     ListClasificadorCuentaComponent,
-    ClasificadorCuentaFormComponent
+    ClasificadorCuentaFormComponent,
   ],
   imports: [
     CommonModule,
@@ -21,10 +20,8 @@ import { ClasificadorCuentaService } from './shared/service/clasificador-cuenta.
     ReactiveFormsModule,
     ClasificadorCuentaRoutingModule,
     SharedModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
-  providers: [
-    ClasificadorCuentaService
-  ]
+  providers: [ClasificadorCuentaService],
 })
-export class ClasificadorCuentaModule { }
+export class ClasificadorCuentaModule {}

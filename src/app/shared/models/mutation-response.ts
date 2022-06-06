@@ -1,5 +1,5 @@
 export interface IMutationResponse {
-    success: boolean;
-    data?: string;
-    error: string;
+  success: boolean;
+  data?: string;
+  error: string;
 }

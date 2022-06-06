@@ -4,12 +4,7 @@ import { MenubarModule } from 'primeng/menubar';
 
 @NgModule({
   declarations: [],
-  imports: [
-    CommonModule,
-    MenubarModule
-  ],
-  exports: [
-    MenubarModule
-  ]
+  imports: [CommonModule, MenubarModule],
+  exports: [MenubarModule],
 })
-export class PrimeMenubarModule { }
+export class PrimeMenubarModule {}

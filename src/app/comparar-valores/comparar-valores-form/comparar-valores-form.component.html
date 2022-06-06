@@ -1,16 +1,50 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
-    <form [formGroup]="fg">
-        <div class="form__group">
-            <png-dropdown class="w-20rem" label="Centro" [fg]="fg" control="centro" [optionsValues]="centrosValues" placeholder="Centro" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
-        </div>
-        <div class="form__group">
-            <png-dropdown class="w-20rem" label="Expresión" [fg]="fg" control="expresion" [optionsValues]="expresionesValues" placeholder="Expresión" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
-        </div>
-        <div class="form__group"> 
-            <png-dropdown class="w-20rem" label="Operador" [fg]="fg" control="operador" [optionsValues]="operadoresValues" placeholder="Operador" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
-        </div>
-        <div class="form__group">
-            <png-input-number class="w-20rem" label="Valor" [fg]="fg" control="valor" mode="currency" [required]="true" autocomplete="off"></png-input-number>
-        </div>
-    </form>
-  </app-add-edit-item>
+  <form [formGroup]="fg">
+    <div class="form__group">
+      <png-dropdown
+        class="w-20rem"
+        label="Centro"
+        [fg]="fg"
+        control="centro"
+        [optionsValues]="centrosValues"
+        placeholder="Centro"
+        [filter]="true"
+        [required]="true"
+        [showClear]="true"></png-dropdown>
+    </div>
+    <div class="form__group">
+      <png-dropdown
+        class="w-20rem"
+        label="Expresión"
+        [fg]="fg"
+        control="expresion"
+        [optionsValues]="expresionesValues"
+        placeholder="Expresión"
+        [filter]="true"
+        [required]="true"
+        [showClear]="true"></png-dropdown>
+    </div>
+    <div class="form__group">
+      <png-dropdown
+        class="w-20rem"
+        label="Operador"
+        [fg]="fg"
+        control="operador"
+        [optionsValues]="operadoresValues"
+        placeholder="Operador"
+        [filter]="true"
+        [required]="true"
+        [showClear]="true"></png-dropdown>
+    </div>
+    <div class="form__group">
+      <png-input-number
+        class="w-20rem"
+        label="Valor"
+        [fg]="fg"
+        control="valor"
+        mode="currency"
+        [required]="true"
+        autocomplete="off"></png-input-number>
+    </div>
+  </form>
+</app-add-edit-item>

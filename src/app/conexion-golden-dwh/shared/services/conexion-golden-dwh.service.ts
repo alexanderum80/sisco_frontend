@@ -3,14 +3,16 @@ import { Apollo } from 'apollo-angular';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { ConexionDWHMutationResponse, ConexionDWHQueryResponse } from '../models/conexion-dwh.model';
+import {
+  ConexionDWHMutationResponse,
+  ConexionDWHQueryResponse,
+} from '../models/conexion-dwh.model';
 import { toNumber } from 'lodash';
 
 const updateConexionDwhMutation = require('graphql-tag/loader!../graphql/update-conexion-dwh.mutation.gql');
 
 @Injectable()
 export class ConexionGoldenDwhService {
-
   fg: FormGroup = new FormGroup({
     idUnidad: new FormControl(''),
     dwh_ip: new FormControl(''),
@@ -25,19 +27,21 @@ export class ConexionGoldenDwhService {
 
   subscription: Subscription[] = [];
 
-  constructor(
-    private _apollo: Apollo,
-  ) { }
+  constructor(private _apollo: Apollo) {}
 
   loadDWHConexion(idDivision: number): Observable<ConexionDWHQueryResponse> {
     return new Observable<ConexionDWHQueryResponse>(subscriber => {
-      this.subscription.push(this._apollo.query<ConexionDWHQueryResponse>({
-        query: conexionDWHApi.byUnidad,
-        variables: { idDivision },
-        fetchPolicy: 'network-only'
-      }).subscribe(reponse => {
-        subscriber.next(reponse.data);
-      }));
+      this.subscription.push(
+        this._apollo
+          .query<ConexionDWHQueryResponse>({
+            query: conexionDWHApi.byUnidad,
+            variables: { idDivision },
+            fetchPolicy: 'network-only',
+          })
+          .subscribe(reponse => {
+            subscriber.next(reponse.data);
+          })
+      );
     });
   }
 
@@ -55,13 +59,17 @@ export class ConexionGoldenDwhService {
     };
 
     return new Observable<ConexionDWHMutationResponse>(subscriber => {
-      this.subscription.push(this._apollo.mutate<ConexionDWHMutationResponse>({
-        mutation: updateConexionDwhMutation,
-        variables: { dwhConexionInput: inputData },
-        refetchQueries: ['GetDWHConexion']
-      }).subscribe(response => {
-        subscriber.next(response.data || undefined);
-      }));
+      this.subscription.push(
+        this._apollo
+          .mutate<ConexionDWHMutationResponse>({
+            mutation: updateConexionDwhMutation,
+            variables: { dwhConexionInput: inputData },
+            refetchQueries: ['GetDWHConexion'],
+          })
+          .subscribe(response => {
+            subscriber.next(response.data || undefined);
+          })
+      );
     });
   }
 

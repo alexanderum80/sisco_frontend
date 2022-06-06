@@ -7,20 +7,14 @@ import { AddEditItemComponent } from './ui/add-edit-item/add-edit-item.component
 import { PrimeNgModule } from './ui/prime-ng/prime-ng.module';
 
 @NgModule({
-  declarations: [
-    ListItemComponent,
-    AddEditItemComponent,
-  ],
+  declarations: [ListItemComponent, AddEditItemComponent],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     NavigationModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
-  exports: [
-    ListItemComponent,
-    AddEditItemComponent,
-  ]
+  exports: [ListItemComponent, AddEditItemComponent],
 })
-export class SharedModule { }
+export class SharedModule {}

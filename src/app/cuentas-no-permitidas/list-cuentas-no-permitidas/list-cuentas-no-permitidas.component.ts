@@ -1,6 +1,9 @@
 import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
 import { UsuarioService } from './../../shared/services/usuario.service';
-import { ActionClicked, IActionItemClickedArgs } from './../../shared/models/list-items';
+import {
+  ActionClicked,
+  IActionItemClickedArgs,
+} from './../../shared/models/list-items';
 import { cloneDeep } from '@apollo/client/utilities';
 import { CuentasNoPermitidasService } from './../shared/services/cuentas-no-permitidas.service';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
@@ -14,9 +17,11 @@ import { isArray } from 'lodash';
 @Component({
   selector: 'app-list-cuentas-no-permitidas',
   templateUrl: './list-cuentas-no-permitidas.component.html',
-  styleUrls: ['./list-cuentas-no-permitidas.component.scss']
+  styleUrls: ['./list-cuentas-no-permitidas.component.scss'],
 })
-export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ListCuentasNoPermitidasComponent
+  implements AfterViewInit, OnDestroy
+{
   columns: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cta', type: 'string' },
     { header: 'SubCuenta', field: 'SubCta', type: 'string' },
@@ -35,12 +40,9 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
     private _dinamicDialogSvc: DinamicDialogService,
     private _sweetAlertSvc: SweetalertService,
     private _msgSvc: MessageService,
-    private _usuarioSvc: UsuarioService,
-  ) { }
+    private _usuarioSvc: UsuarioService
+  ) {}
 
-  ngOnInit(): void {
-  }
-  
   ngAfterViewInit(): void {
     this._getCuentasNoPermitidas();
   }
@@ -52,20 +54,26 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
 
   private _getCuentasNoPermitidas(): void {
     try {
-      this._cuentasNoPermitidasSvc.subscription.push(this._cuentasNoPermitidasSvc.loadAllCuentasNoPermitidas().subscribe(response => {
-        this.loading = false;
+      this._cuentasNoPermitidasSvc.subscription.push(
+        this._cuentasNoPermitidasSvc
+          .loadAllCuentasNoPermitidas()
+          .subscribe((response) => {
+            this.loading = false;
 
-        const result = response.getAllNoUsarEnCuenta;
+            const result = response.getAllNoUsarEnCuenta;
 
-        if (result.success === false) {
-          return this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ result.error }`);
-        }
+            if (result.success === false) {
+              return this._sweetAlertSvc.error(
+                `Ocurrió el siguiente error: ${result.error}`
+              );
+            }
 
-        this.cuentasNoPermitidas = cloneDeep(result.data);
-      }));
+            this.cuentasNoPermitidas = cloneDeep(result.data);
+          })
+      );
     } catch (err: any) {
       this.loading = false;
-      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
     }
   }
 
@@ -75,10 +83,10 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
         this._add();
         break;
       case ActionClicked.Edit:
-        this._edit(event.item)
-        break;    
+        this._edit(event.item);
+        break;
       case ActionClicked.Delete:
-        this._delete(event.item)
+        this._delete(event.item);
         break;
     }
   }
@@ -87,86 +95,132 @@ export class ListCuentasNoPermitidasComponent implements OnInit, AfterViewInit, 
     try {
       this._cuentasNoPermitidasSvc.inicializarFg();
 
-      this._dinamicDialogSvc.open('Agregar Cuenta no Permitida', CuentasNoPermitidasFormComponent);
-      this._cuentasNoPermitidasSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-        if (message) {
-          this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-        }
-      }));
+      this._dinamicDialogSvc.open(
+        'Agregar Cuenta no Permitida',
+        CuentasNoPermitidasFormComponent
+      );
+      this._cuentasNoPermitidasSvc.subscription.push(
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+            this._msgSvc.add({
+              severity: 'success',
+              summary: 'Satisfactorio',
+              detail: message,
+            });
+          }
+        })
+      );
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
     }
   }
 
   private _edit(data: any): void {
     try {
-      if (this._usuarioSvc.usuario.IdDivision !== 100 && this._usuarioSvc.usuario.IdTipoUsuario !== ETipoUsuarios['Usuario Avanzado'] && data.Centralizada) {
-        return this._sweetAlertSvc.warning('No tiene permisos para modificar una Cuenta no Permitida Centralizada.');
+      if (
+        this._usuarioSvc.usuario.IdDivision !== 100 &&
+        this._usuarioSvc.usuario.IdTipoUsuario !==
+          ETipoUsuarios['Usuario Avanzado'] &&
+        data.Centralizada
+      ) {
+        return this._sweetAlertSvc.warning(
+          'No tiene permisos para modificar una Cuenta no Permitida Centralizada.'
+        );
       }
-      
+
       this._cuentasNoPermitidasSvc.inicializarFg();
-      this._cuentasNoPermitidasSvc.loadCuentaNoPermitida(data.Id).subscribe(response => {
-        const result = response.getNoUsarEnCuentaById;
+      this._cuentasNoPermitidasSvc
+        .loadCuentaNoPermitida(data.Id)
+        .subscribe((response) => {
+          const result = response.getNoUsarEnCuentaById;
 
-        if (!result.success) {
-          throw new Error(result.error);
-        }
-
-        const inputValue = {
-          id: result.data.Id,
-          codigo:  result.data.Codigo,
-          cta: result.data.Cta,
-          subcta: result.data.SubCta,
-          crit1: result.data.Crit1,
-          crit2: result.data.Crit2,
-          crit3: result.data.Crit3,
-          centralizada: result.data.Centralizada,
-          idDivision: result.data.IdDivision,
-        };
-
-        this._cuentasNoPermitidasSvc.fg.patchValue(inputValue);
-
-        this._dinamicDialogSvc.open('Editar Cuenta no Permitida',CuentasNoPermitidasFormComponent);
-        this._cuentasNoPermitidasSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-          if (message) {
-            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
+          if (!result.success) {
+            throw new Error(result.error);
           }
-        }));
-      });
+
+          const inputValue = {
+            id: result.data.Id,
+            codigo: result.data.Codigo,
+            cta: result.data.Cta,
+            subcta: result.data.SubCta,
+            crit1: result.data.Crit1,
+            crit2: result.data.Crit2,
+            crit3: result.data.Crit3,
+            centralizada: result.data.Centralizada,
+            idDivision: result.data.IdDivision,
+          };
+
+          this._cuentasNoPermitidasSvc.fg.patchValue(inputValue);
+
+          this._dinamicDialogSvc.open(
+            'Editar Cuenta no Permitida',
+            CuentasNoPermitidasFormComponent
+          );
+          this._cuentasNoPermitidasSvc.subscription.push(
+            this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+              if (message) {
+                this._msgSvc.add({
+                  severity: 'success',
+                  summary: 'Satisfactorio',
+                  detail: message,
+                });
+              }
+            })
+          );
+        });
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
     }
   }
 
   private _delete(data: any): void {
     try {
-      this._sweetAlertSvc.question('¿Desea Eliminar la(s) Cuenta(s) no Permitida(s) seleccionada(s)?').then(res => {
-        if (res === ActionClicked.Yes) {
-          data = isArray(data) ? data : [data];
+      this._sweetAlertSvc
+        .question(
+          '¿Desea Eliminar la(s) Cuenta(s) no Permitida(s) seleccionada(s)?'
+        )
+        .then((res) => {
+          if (res === ActionClicked.Yes) {
+            data = isArray(data) ? data : [data];
 
-          if (this._usuarioSvc.usuario.IdDivision !== 100 && this._usuarioSvc.usuario.IdTipoUsuario !== ETipoUsuarios['Usuario Avanzado']) {
-            const _centralizada: any[] = data.filter((f: { Centralizada: boolean }) => f.Centralizada === true);
-            if (_centralizada.length) {
-              return this._sweetAlertSvc.warning('No tiene permisos para eliminar Cuentas no Permitidas Centralizadas. Seleccione sólo sus Cuentas no Permitidas.');
+            if (
+              this._usuarioSvc.usuario.IdDivision !== 100 &&
+              this._usuarioSvc.usuario.IdTipoUsuario !==
+                ETipoUsuarios['Usuario Avanzado']
+            ) {
+              const _centralizada: any[] = data.filter(
+                (f: { Centralizada: boolean }) => f.Centralizada === true
+              );
+              if (_centralizada.length) {
+                return this._sweetAlertSvc.warning(
+                  'No tiene permisos para eliminar Cuentas no Permitidas Centralizadas. Seleccione sólo sus Cuentas no Permitidas.'
+                );
+              }
             }
+
+            const IDsToRemove: number[] = data.map((d: { Id: number }) => {
+              return d.Id;
+            });
+
+            this._cuentasNoPermitidasSvc
+              .deleteCuentaNoPermitida(IDsToRemove)
+              .subscribe((response) => {
+                const result = response.deleteNoUsarEnCuenta;
+
+                if (!result.success) {
+                  throw new Error(result.error);
+                }
+                this._msgSvc.add({
+                  severity: 'success',
+                  summary: 'Satisfactorio',
+                  detail:
+                    'La Cuenta no Permitida se ha eliminado Satisfactoriamente.',
+                });
+              });
           }
-          
-          const IDsToRemove: number[] = data.map((d: { Id: number }) => { return d.Id });
-          
-          this._cuentasNoPermitidasSvc.deleteCuentaNoPermitida(IDsToRemove).subscribe(response => {
-            const result = response.deleteNoUsarEnCuenta;
-
-            if (!result.success) {
-              throw new Error(result.error);
-            }
-            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'La Cuenta no Permitida se ha eliminado Satisfactoriamente.' })
-          });
-        }
-      });
+        });
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
     }
   }
-
-
 }

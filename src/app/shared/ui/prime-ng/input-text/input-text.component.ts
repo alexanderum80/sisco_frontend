@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
   // tslint:disable-next-line: component-selector
   selector: 'png-input-text',
   templateUrl: './input-text.component.html',
-  styleUrls: ['./input-text.component.scss']
+  styleUrls: ['./input-text.component.scss'],
 })
 export class InputTextComponent implements OnInit {
   @Input() public fg: FormGroup;
@@ -18,12 +18,9 @@ export class InputTextComponent implements OnInit {
   @Input() public disabled = false;
   @Input() public autocomplete: 'off' | 'on' = 'on';
 
-  constructor(
-    private cd: ChangeDetectorRef
-  ) { }
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
   }
-
 }

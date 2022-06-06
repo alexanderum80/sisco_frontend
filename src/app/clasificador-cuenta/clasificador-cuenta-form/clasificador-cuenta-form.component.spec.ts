@@ -8,9 +8,8 @@ describe('ClasificadorCuentaFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ClasificadorCuentaFormComponent ]
-    })
-    .compileComponents();
+      declarations: [ClasificadorCuentaFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

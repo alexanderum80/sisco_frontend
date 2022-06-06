@@ -5,17 +5,8 @@ import { ButtonModule } from 'primeng/button';
 import { PrimeTooltipModule } from '../tooltip/tooltip.module';
 
 @NgModule({
-  declarations: [
-    ButtonComponent
-  ],
-  imports: [
-    CommonModule,
-    ButtonModule,
-    PrimeTooltipModule,
-  ],
-  exports: [
-    ButtonModule,
-    ButtonComponent
-  ]
+  declarations: [ButtonComponent],
+  imports: [CommonModule, ButtonModule, PrimeTooltipModule],
+  exports: [ButtonModule, ButtonComponent],
 })
-export class PrimeButtonModule { }
+export class PrimeButtonModule {}

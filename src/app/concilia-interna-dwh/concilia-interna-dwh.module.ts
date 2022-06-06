@@ -7,7 +7,6 @@ import { CommonModule } from '@angular/common';
 import { ConciliaInternaDwhRoutingModule } from './concilia-interna-dwh-routing.module';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
-
 @NgModule({
   declarations: [ConciliaInternaDwhComponent],
   imports: [
@@ -16,7 +15,7 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     ReactiveFormsModule,
     ConciliaInternaDwhRoutingModule,
     SharedModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
 })
-export class ConciliaInternaDwhModule { }
+export class ConciliaInternaDwhModule {}

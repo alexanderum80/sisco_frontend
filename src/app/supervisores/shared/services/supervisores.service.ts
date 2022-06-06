@@ -1,16 +1,19 @@
 import { toNumber } from 'lodash';
 import { supervisoresApi } from './../graphql/supervisores-api';
 import { Apollo } from 'apollo-angular';
-import { SupervisoresQueryResponse, SupervisoresMutationResponse, ISupervisor } from './../models/supervisores.model';
+import {
+  SupervisoresQueryResponse,
+  SupervisoresMutationResponse,
+  ISupervisor,
+} from './../models/supervisores.model';
 import { Observable, Subscription } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SupervisoresService {
-
   fg = new FormGroup({
     idSupervisor: new FormControl(''),
     supervisor: new FormControl(''),
@@ -20,20 +23,22 @@ export class SupervisoresService {
 
   subscription: Subscription[] = [];
 
-  constructor(
-    private _apollo: Apollo,
-  ) { }
+  constructor(private _apollo: Apollo) {}
 
   loadAllSupervisores(): Observable<SupervisoresQueryResponse> {
     return new Observable<SupervisoresQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.watchQuery<SupervisoresQueryResponse>({
-          query: supervisoresApi.all,
-          fetchPolicy: 'network-only'
-        }).valueChanges.subscribe({
-          next: (response) => subscriber.next(response.data),
-          error: (err) => subscriber.error(err)
-        }));
+        this.subscription.push(
+          this._apollo
+            .watchQuery<SupervisoresQueryResponse>({
+              query: supervisoresApi.all,
+              fetchPolicy: 'network-only',
+            })
+            .valueChanges.subscribe({
+              next: response => subscriber.next(response.data),
+              error: err => subscriber.error(err),
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -43,17 +48,21 @@ export class SupervisoresService {
   loadSupervisorById(id: number): Observable<SupervisoresQueryResponse> {
     return new Observable<SupervisoresQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.query<SupervisoresQueryResponse>({
-          query: supervisoresApi.byId,
-          variables: { id },
-          fetchPolicy: 'network-only'
-        }).subscribe({
-          next: (response) => {
-            subscriber.next(response.data);
-            subscriber.complete();
-          },
-          error: (err) => subscriber.error(err)          
-        }));
+        this.subscription.push(
+          this._apollo
+            .query<SupervisoresQueryResponse>({
+              query: supervisoresApi.byId,
+              variables: { id },
+              fetchPolicy: 'network-only',
+            })
+            .subscribe({
+              next: (response) => {
+                subscriber.next(response.data);
+                subscriber.complete();
+              },
+              error: err => subscriber.error(err),
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -70,16 +79,23 @@ export class SupervisoresService {
           IdDivision: toNumber(this.fg.controls['division'].value),
         };
 
-        const mutation = supervisorInfo.IdSupervisor === 0 ? supervisoresApi.create : supervisoresApi.update;
+        const mutation =
+          supervisorInfo.IdSupervisor === 0
+            ? supervisoresApi.create
+            : supervisoresApi.update;
 
-        this.subscription.push(this._apollo.mutate<SupervisoresMutationResponse>({
-          mutation: mutation,
-          variables: { supervisorInfo },
-          refetchQueries: ['GetAllSupervisores']
-        }).subscribe({
-          next: (response) => subscriber.next(response.data || undefined),
-          error: (err) => subscriber.error(err)
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<SupervisoresMutationResponse>({
+              mutation: mutation,
+              variables: { supervisorInfo },
+              refetchQueries: ['GetAllSupervisores'],
+            })
+            .subscribe({
+              next: response => subscriber.next(response.data || undefined),
+              error: err => subscriber.error(err),
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -89,14 +105,18 @@ export class SupervisoresService {
   delete(IDs: number[]): Observable<SupervisoresMutationResponse> {
     return new Observable<SupervisoresMutationResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.mutate<SupervisoresMutationResponse>({
-          mutation: supervisoresApi.delete,
-          variables: { IDs },
-          refetchQueries: ['GetAllSupervisores']
-        }).subscribe({
-          next: (response) => subscriber.next(response.data || undefined),
-          error: (err) => subscriber.error(err)
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<SupervisoresMutationResponse>({
+              mutation: supervisoresApi.delete,
+              variables: { IDs },
+              refetchQueries: ['GetAllSupervisores'],
+            })
+            .subscribe({
+              next: response => subscriber.next(response.data || undefined),
+              error: err => subscriber.error(err),
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }

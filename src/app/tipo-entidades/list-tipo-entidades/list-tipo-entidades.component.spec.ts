@@ -8,9 +8,8 @@ describe('ListTipoEntidadesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListTipoEntidadesComponent ]
-    })
-    .compileComponents();
+      declarations: [ListTipoEntidadesComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

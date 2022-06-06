@@ -10,7 +10,7 @@ import { SelectItem } from 'primeng/api';
 @Component({
   selector: 'app-clasificador-cuenta-form',
   templateUrl: './clasificador-cuenta-form.component.html',
-  styleUrls: ['./clasificador-cuenta-form.component.scss']
+  styleUrls: ['./clasificador-cuenta-form.component.scss'],
 })
 export class ClasificadorCuentaFormComponent implements OnInit {
   action: ActionClicked;
@@ -33,43 +33,50 @@ export class ClasificadorCuentaFormComponent implements OnInit {
     private _dinamicDialogSvc: DinamicDialogService,
     private _tipoEntidadesSvc: TipoEntidadesService,
     private _clasificadorSvc: ClasificadorCuentaService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fg = this._clasificadorSvc.fg;
 
-    this.action = this.fg.controls['cuenta'].value === '' ? ActionClicked.Add : ActionClicked.Edit;
+    this.action =
+      this.fg.controls['cuenta'].value === ''
+        ? ActionClicked.Add
+        : ActionClicked.Edit;
 
     this._loadTipoUnidades();
   }
 
   private _loadTipoUnidades(): void {
     try {
-      this._clasificadorSvc.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-        const result = response.getAllTipoEntidades;
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+      this._clasificadorSvc.subscription.push(
+        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
+          const result = response.getAllTipoEntidades;
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result.error,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.tipoUnidadesValues = result.data.map((tipo: { Id: any; Entidades: any; }) => {
-          return {
-            value: tipo.Id,
-            label: tipo.Entidades
-          };
-        });
-      }));
+          this.tipoUnidadesValues = result.data.map(
+            (tipo: { Id: any; Entidades: any }) => {
+              return {
+                value: tipo.Id,
+                label: tipo.Entidades,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -77,7 +84,7 @@ export class ClasificadorCuentaFormComponent implements OnInit {
   onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
-        this._save();        
+        this._save();
         break;
       case ActionClicked.Cancel:
         this._closeModal();
@@ -87,35 +94,37 @@ export class ClasificadorCuentaFormComponent implements OnInit {
 
   private _save(): void {
     try {
-      this._clasificadorSvc.subscription.push(this._clasificadorSvc.save().subscribe(response => {
-        const result = response.saveClasificadorCuenta;
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+      this._clasificadorSvc.subscription.push(
+        this._clasificadorSvc.save().subscribe(response => {
+          const result = response.saveClasificadorCuenta;
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result.error,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        let txtMessage;
+          let txtMessage;
 
-        if (this.action === ActionClicked.Add) {
-          txtMessage = 'La Cuenta se ha creado correctamente.';
-        } else {
-          txtMessage = 'La Cuenta se ha actualizado correctamente.';
-        }
+          if (this.action === ActionClicked.Add) {
+            txtMessage = 'La Cuenta se ha creado correctamente.';
+          } else {
+            txtMessage = 'La Cuenta se ha actualizado correctamente.';
+          }
 
-        this._closeModal(txtMessage);
-      }));
+          this._closeModal(txtMessage);
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -123,5 +132,4 @@ export class ClasificadorCuentaFormComponent implements OnInit {
   private _closeModal(message?: string): void {
     this._dinamicDialogSvc.close(message);
   }
-
 }

@@ -12,7 +12,7 @@ import { CompararValoresService } from '../shared/services/comparar-valores.serv
 @Component({
   selector: 'app-comparar-valores-form',
   templateUrl: './comparar-valores-form.component.html',
-  styleUrls: ['./comparar-valores-form.component.scss']
+  styleUrls: ['./comparar-valores-form.component.scss'],
 })
 export class CompararValoresFormComponent implements OnInit {
   action: ActionClicked;
@@ -30,78 +30,91 @@ export class CompararValoresFormComponent implements OnInit {
     private _operadoresSvc: OperadoresService,
     private _sweetAlertSvc: SweetalertService,
     private _dinamicDialogSvc: DinamicDialogService
-  ) { 
+  ) {
     this.fg = _compararValoresSvc.fg;
   }
 
   ngOnInit(): void {
-    this.action = this._compararValoresSvc.fg.controls['id'].value === 0 ? ActionClicked.Add : ActionClicked.Edit;
+    this.action =
+      this._compararValoresSvc.fg.controls['id'].value === 0
+        ? ActionClicked.Add
+        : ActionClicked.Edit;
 
     this._loadCentros();
     this._loadExpresiones();
     this._loadOperadores();
   }
-  
+
   private _loadCentros(): void {
     try {
-      this._compararValoresSvc.subscription.push(this._unidadesSvc.getAllUnidades().subscribe(response => {
-        const result = response.getAllUnidades;
+      this._compararValoresSvc.subscription.push(
+        this._unidadesSvc.getAllUnidades().subscribe(response => {
+          const result = response.getAllUnidades;
 
-        if (!result.success) {
-          throw new Error(result.error);
-        }
+          if (!result.success) {
+            throw new Error(result.error);
+          }
 
-        this.centrosValues = result.data.map((u: { IdUnidad: number, Nombre: string }) => {
-          return {
-            value: u.IdUnidad,
-            label: u.IdUnidad + '-' + u.Nombre
-          };
-        });
-      }));
+          this.centrosValues = result.data.map(
+            (u: { IdUnidad: number; Nombre: string }) => {
+              return {
+                value: u.IdUnidad,
+                label: u.IdUnidad + '-' + u.Nombre,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
     }
   }
 
   private _loadExpresiones(): void {
     try {
-      this._compararValoresSvc.subscription.push(this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
-        const result = response.getAllExpresionesResumen;
+      this._compararValoresSvc.subscription.push(
+        this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
+          const result = response.getAllExpresionesResumen;
 
-        if (!result.success) {
-          throw new Error(result.error);
-        }
+          if (!result.success) {
+            throw new Error(result.error);
+          }
 
-        this.expresionesValues = result.data.map(e => {
-          return {
-            value: e.IdExpresion,
-            label: e.Expresion
-          };
-        });
-      }));
+          this.expresionesValues = result.data.map(e => {
+            return {
+              value: e.IdExpresion,
+              label: e.Expresion,
+            };
+          });
+        })
+      );
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
     }
   }
 
   private _loadOperadores(): void {
     try {
-      this._compararValoresSvc.subscription.push(this._operadoresSvc.getOperadores().subscribe(response => {
-        const result = response.getAllOperadores;
+      this._compararValoresSvc.subscription.push(
+        this._operadoresSvc.getOperadores().subscribe(response => {
+          const result = response.getAllOperadores;
 
-        if (!result.success) {
-          throw new Error(result.error);
-        }
+          if (!result.success) {
+            throw new Error(result.error);
+          }
 
-        this.operadoresValues = result.data.map((o: { Id: any; Operador: any; }) => {
-          return {
-            value: o.Id,
-            label: o.Operador
-          };
-        });
-      }));
+          this.operadoresValues = result.data.map(
+            (o: { Id: any; Operador: any }) => {
+              return {
+                value: o.Id,
+                label: o.Operador,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
     }
   }
 
@@ -118,20 +131,26 @@ export class CompararValoresFormComponent implements OnInit {
 
   private _save(): void {
     try {
-      this._compararValoresSvc.subscription.push(this._compararValoresSvc.save().subscribe(response => {
-        const result = this.action === ActionClicked.Add ? response.createComprobarValor : response.updateComprobarValor;
-         
-        if (!result.success) {
-          throw new Error(result.error);
-        }
+      this._compararValoresSvc.subscription.push(
+        this._compararValoresSvc.save().subscribe(response => {
+          const result =
+            this.action === ActionClicked.Add
+              ? response.createComprobarValor
+              : response.updateComprobarValor;
 
-        let txtMessage = `El Valor de la Expresión se ha ${ this.action === ActionClicked.Add ? 'creado' : 'actualizado' } correctamente.`
+          if (!result.success) {
+            throw new Error(result.error);
+          }
 
-        this._dinamicDialogSvc.close(txtMessage);
-      }));
+          let txtMessage = `El Valor de la Expresión se ha ${
+            this.action === ActionClicked.Add ? 'creado' : 'actualizado'
+          } correctamente.`;
+
+          this._dinamicDialogSvc.close(txtMessage);
+        })
+      );
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ha ocurrido el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ha ocurrido el siguiente error: ${err}`);
     }
   }
-
 }

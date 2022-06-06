@@ -3,11 +3,10 @@ import Swal from 'sweetalert2';
 import { ActionClicked } from '../models';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SweetalertService {
-
-  constructor() { }
+  constructor() {}
 
   success(message: string): void {
     Swal.fire({
@@ -67,5 +66,4 @@ export class SweetalertService {
       allowOutsideClick: false,
     });
   }
-
 }

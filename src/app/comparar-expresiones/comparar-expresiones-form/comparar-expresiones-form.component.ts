@@ -11,7 +11,7 @@ import { SelectItem } from 'primeng/api';
 @Component({
   selector: 'app-comparar-expresiones-form',
   templateUrl: './comparar-expresiones-form.component.html',
-  styleUrls: ['./comparar-expresiones-form.component.scss']
+  styleUrls: ['./comparar-expresiones-form.component.scss'],
 })
 export class CompararExpresionesFormComponent implements OnInit {
   action: ActionClicked;
@@ -32,7 +32,10 @@ export class CompararExpresionesFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.action = this._compararExpresionesSvc.fg.controls['id'].value === 0 ? ActionClicked.Add : ActionClicked.Edit;
+    this.action =
+      this._compararExpresionesSvc.fg.controls['id'].value === 0
+        ? ActionClicked.Add
+        : ActionClicked.Edit;
 
     this._loadExpresiones();
     this._loadOperadores();
@@ -40,43 +43,49 @@ export class CompararExpresionesFormComponent implements OnInit {
 
   private _loadExpresiones(): void {
     try {
-      this._compararExpresionesSvc.subscription.push(this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
-        const result = response.getAllExpresionesResumen;
+      this._compararExpresionesSvc.subscription.push(
+        this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
+          const result = response.getAllExpresionesResumen;
 
-        if (!result.success) {
-          throw new Error(result.error);
-        }
+          if (!result.success) {
+            throw new Error(result.error);
+          }
 
-        this.expresionesValues = result.data.map(e => {
-          return {
-            value: e.IdExpresion,
-            label: e.Expresion
-          };
-        });
-      }));
+          this.expresionesValues = result.data.map(e => {
+            return {
+              value: e.IdExpresion,
+              label: e.Expresion,
+            };
+          });
+        })
+      );
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
     }
   }
 
   private _loadOperadores(): void {
     try {
-      this._compararExpresionesSvc.subscription.push(this._operadoresSvc.getOperadores().subscribe(response => {
-        const result = response.getAllOperadores;
+      this._compararExpresionesSvc.subscription.push(
+        this._operadoresSvc.getOperadores().subscribe(response => {
+          const result = response.getAllOperadores;
 
-        if (!result.success) {
-          throw new Error(result.error);
-        }
+          if (!result.success) {
+            throw new Error(result.error);
+          }
 
-        this.operadoresValues = result.data.map((o: { Id: any; Operador: any; }) => {
-          return {
-            value: o.Id,
-            label: o.Operador
-          };
-        });
-      }));
+          this.operadoresValues = result.data.map(
+            (o: { Id: any; Operador: any }) => {
+              return {
+                value: o.Id,
+                label: o.Operador,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
     }
   }
 
@@ -93,20 +102,26 @@ export class CompararExpresionesFormComponent implements OnInit {
 
   private _save(): void {
     try {
-      this._compararExpresionesSvc.subscription.push(this._compararExpresionesSvc.save().subscribe(response => {
-        const result = this.action === ActionClicked.Add ? response.createComprobarExpresion : response.updateComprobarExpresion;
-         
-        if (!result.success) {
-          throw new Error(result.error);
-        }
+      this._compararExpresionesSvc.subscription.push(
+        this._compararExpresionesSvc.save().subscribe(response => {
+          const result =
+            this.action === ActionClicked.Add
+              ? response.createComprobarExpresion
+              : response.updateComprobarExpresion;
 
-        let txtMessage = `La Comparación de la Expresión se ha ${ this.action === ActionClicked.Add ? 'creado' : 'actualizado' } correctamente.`
+          if (!result.success) {
+            throw new Error(result.error);
+          }
 
-        this._dinamicDialogSvc.close(txtMessage);
-      }));
+          let txtMessage = `La Comparación de la Expresión se ha ${
+            this.action === ActionClicked.Add ? 'creado' : 'actualizado'
+          } correctamente.`;
+
+          this._dinamicDialogSvc.close(txtMessage);
+        })
+      );
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ha ocurrido el siguiente error: ${ err }`);
+      this._sweetAlertSvc.error(`Ha ocurrido el siguiente error: ${err}`);
     }
   }
-
 }

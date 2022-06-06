@@ -1,5 +1,8 @@
 import { FormGroup, FormControl } from '@angular/forms';
-import { ClasificadorCuentasQueryResponse, ClasificadorCuentasMutationResponse } from './../models/clasificador-cuenta.model';
+import {
+  ClasificadorCuentasQueryResponse,
+  ClasificadorCuentasMutationResponse,
+} from './../models/clasificador-cuenta.model';
 import { Injectable } from '@angular/core';
 import { Apollo } from 'apollo-angular';
 import { Observable, Subscription } from 'rxjs';
@@ -27,39 +30,49 @@ export class ClasificadorCuentaService {
 
   subscription: Subscription[] = [];
 
-  constructor(
-    private _apollo: Apollo,
-  ) { }
+  constructor(private _apollo: Apollo) {}
 
   loadAllClasificadorCuenta(): Observable<ClasificadorCuentasQueryResponse> {
     return new Observable(subscriber => {
-      this.subscription.push(this._apollo.watchQuery<ClasificadorCuentasQueryResponse>({
-        query: clasificadorCuentaApi.all,
-        fetchPolicy: 'network-only'
-      }).valueChanges.subscribe({
-        next: (response) => subscriber.next(response.data),
-        error: (err) => subscriber.error(err)
-      }));
+      this.subscription.push(
+        this._apollo
+          .watchQuery<ClasificadorCuentasQueryResponse>({
+            query: clasificadorCuentaApi.all,
+            fetchPolicy: 'network-only',
+          })
+          .valueChanges.subscribe({
+            next: response => subscriber.next(response.data),
+            error: err => subscriber.error(err),
+          })
+      );
     });
   }
 
-  loadClasificadorCuenta(cuenta: string, subcuenta: string, tipo: string): Observable<ClasificadorCuentasQueryResponse> {
+  loadClasificadorCuenta(
+    cuenta: string,
+    subcuenta: string,
+    tipo: string
+  ): Observable<ClasificadorCuentasQueryResponse> {
     return new Observable(subscriber => {
       try {
         const payload = {
           cuenta,
           subcuenta,
-          tipo
+          tipo,
         };
 
-        this.subscription.push(this._apollo.watchQuery<ClasificadorCuentasQueryResponse>({
-          query: clasificadorCuentaApi.byTipo,
-          variables: payload,
-          fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(res => {
-          subscriber.next(res.data);
-          subscriber.complete();
-        }));
+        this.subscription.push(
+          this._apollo
+            .watchQuery<ClasificadorCuentasQueryResponse>({
+              query: clasificadorCuentaApi.byTipo,
+              variables: payload,
+              fetchPolicy: 'network-only',
+            })
+            .valueChanges.subscribe(res => {
+              subscriber.next(res.data);
+              subscriber.complete();
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -68,13 +81,17 @@ export class ClasificadorCuentaService {
 
   loadCuentasAgrupadas(): Observable<ClasificadorCuentasQueryResponse> {
     return new Observable<ClasificadorCuentasQueryResponse>(subscriber => {
-      this.subscription.push(this._apollo.watchQuery<ClasificadorCuentasQueryResponse>({
-        query: clasificadorCuentaApi.cuenta,
-        fetchPolicy: 'network-only'
-      }).valueChanges.subscribe(response => {
-        subscriber.next(response.data);
-        subscriber.complete();
-      }));
+      this.subscription.push(
+        this._apollo
+          .watchQuery<ClasificadorCuentasQueryResponse>({
+            query: clasificadorCuentaApi.cuenta,
+            fetchPolicy: 'network-only',
+          })
+          .valueChanges.subscribe(response => {
+            subscriber.next(response.data);
+            subscriber.complete();
+          })
+      );
     });
   }
 
@@ -98,13 +115,17 @@ export class ClasificadorCuentaService {
           Crit3Consolidacion: this.fg.controls['crit3Consolidacion'].value,
         };
 
-        this.subscription.push(this._apollo.mutate<ClasificadorCuentasMutationResponse>({
-          mutation: clasificadorCuentaApi.save,
-          variables: { clasificadorInfo },
-          refetchQueries: ['GetAllClasificadorCuentas']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<ClasificadorCuentasMutationResponse>({
+              mutation: clasificadorCuentaApi.save,
+              variables: { clasificadorInfo },
+              refetchQueries: ['GetAllClasificadorCuentas'],
+            })
+            .subscribe(response => {
+              subscriber.next(response.data || undefined);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -117,23 +138,27 @@ export class ClasificadorCuentaService {
         const payload = {
           cuenta: clasificador.Cuenta,
           subcuenta: clasificador.SubCuenta,
-          tipo: clasificador.TipoClasificador
+          tipo: clasificador.TipoClasificador,
         };
 
-        this.subscription.push(this._apollo.mutate<ClasificadorCuentasMutationResponse>({
-          mutation: clasificadorCuentaApi.delete,
-          variables: payload,
-          refetchQueries: ['GetAllClasificadorCuentas']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<ClasificadorCuentasMutationResponse>({
+              mutation: clasificadorCuentaApi.delete,
+              variables: payload,
+              refetchQueries: ['GetAllClasificadorCuentas'],
+            })
+            .subscribe(response => {
+              subscriber.next(response.data || undefined);
+            })
+        );
       } catch (err: any) {
         SweetAlert.fire({
           icon: 'error',
           title: 'ERROR',
-          text: `Ocurrió el siguiente error: ${ err }`,
+          text: `Ocurrió el siguiente error: ${err}`,
           showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
         });
       }
     });

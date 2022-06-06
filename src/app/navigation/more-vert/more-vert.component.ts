@@ -5,20 +5,15 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 @Component({
   selector: 'app-more-vert',
   templateUrl: './more-vert.component.html',
-  styleUrls: ['./more-vert.component.scss']
+  styleUrls: ['./more-vert.component.scss'],
 })
-export class MoreVertComponent implements OnInit {
+export class MoreVertComponent {
   @Input() icon = 'dots-vertical';
   @Input() menuItems: VerticalMenuItem[] = [];
 
   @Output() OnClick = new EventEmitter<any>();
 
-  constructor(
-    private _usuarioSvc: UsuarioService
-  ) { }
-
-  ngOnInit(): void {
-  }
+  constructor(private _usuarioSvc: UsuarioService) {}
 
   get isAdminPermission(): boolean {
     return this._usuarioSvc.hasAdminPermission();
@@ -29,5 +24,4 @@ export class MoreVertComponent implements OnInit {
       this.OnClick.emit(item);
     }
   }
-
 }

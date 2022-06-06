@@ -9,22 +9,16 @@ import { ElementosGastosFormComponent } from './elementos-gastos-form/elementos-
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 import { ElementosGastosService } from './shared/services/elementos-gastos.service';
 
-
 @NgModule({
-  declarations: [
-    ListElementosGastosComponent,
-    ElementosGastosFormComponent,
-  ],
+  declarations: [ListElementosGastosComponent, ElementosGastosFormComponent],
   imports: [
     CommonModule,
     ElementosGastosRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
-  providers: [
-    ElementosGastosService
-  ]
+  providers: [ElementosGastosService],
 })
-export class ElementosGastosModule { }
+export class ElementosGastosModule {}

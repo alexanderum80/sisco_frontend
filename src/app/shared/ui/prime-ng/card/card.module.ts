@@ -4,16 +4,8 @@ import { CardModule } from 'primeng/card';
 import { CardComponent } from './card.component';
 
 @NgModule({
-  declarations: [
-    CardComponent
-  ],
-  imports: [
-    CommonModule,
-    CardModule,
-  ],
-  exports: [
-    CardModule,
-    CardComponent
-  ]
+  declarations: [CardComponent],
+  imports: [CommonModule, CardModule],
+  exports: [CardModule, CardComponent],
 })
-export class PrimeCardModule { }
+export class PrimeCardModule {}

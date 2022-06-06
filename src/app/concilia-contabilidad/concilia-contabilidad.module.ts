@@ -8,11 +8,8 @@ import { ConciliaContabilidadRoutingModule } from './concilia-contabilidad-routi
 import { ConciliaContabilidadComponent } from './concilia-contabilidad.component';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
-
 @NgModule({
-  declarations: [
-    ConciliaContabilidadComponent
-  ],
+  declarations: [ConciliaContabilidadComponent],
   imports: [
     CommonModule,
     ConciliaContabilidadRoutingModule,
@@ -21,8 +18,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     SharedModule,
     PrimeNgModule,
   ],
-  providers: [
-    ConciliaContabilidadService
-  ]
+  providers: [ConciliaContabilidadService],
 })
-export class ConciliaContabilidadModule { }
+export class ConciliaContabilidadModule {}

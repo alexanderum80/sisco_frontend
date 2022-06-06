@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', component: ListCuentasNoPermitidasComponent }
+  { path: '', component: ListCuentasNoPermitidasComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class CuentasNoPermitidasRoutingModule { }
+export class CuentasNoPermitidasRoutingModule {}

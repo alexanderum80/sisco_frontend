@@ -20,11 +20,7 @@ import { PrimePasswordModule } from './shared/ui/prime-ng/password/password.modu
 import { DialogService } from 'primeng/dynamicdialog';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    StartComponent,
-    LoginComponent,
-  ],
+  declarations: [AppComponent, StartComponent, LoginComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -46,20 +42,18 @@ import { DialogService } from 'primeng/dynamicdialog';
     // App modules
     NavigationModule,
     GraphQLModule,
-    NavigationModule
+    NavigationModule,
   ],
   providers: [
     DialogService,
     Apollo,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
 })
 export class AppModule {
-
   constructor() {
-
     // tslint:disable-next-line: no-string-literal
     // window['_rollupMoment__default'] = null;
   }

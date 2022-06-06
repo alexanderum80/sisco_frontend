@@ -1,4 +1,7 @@
-import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
+import {
+  IActionItemClickedArgs,
+  ActionClicked,
+} from './../../shared/models/list-items';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import SweetAlert from 'sweetalert2';
 import { ElementosGastosFormComponent } from './../elementos-gastos-form/elementos-gastos-form.component';
@@ -12,9 +15,9 @@ import { isArray } from 'lodash';
 @Component({
   selector: 'app-list-elementos-gastos',
   templateUrl: './list-elementos-gastos.component.html',
-  styleUrls: ['./list-elementos-gastos.component.scss']
+  styleUrls: ['./list-elementos-gastos.component.scss'],
 })
-export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
   elementosGastos: any[];
 
   displayedColumns: ITableColumns[] = [
@@ -28,10 +31,7 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _elementosGastosSvc: ElementosGastosService
-  ) { }
-
-  ngOnInit(): void {
-  }
+  ) {}
 
   ngAfterViewInit(): void {
     this._loadElementosGastos();
@@ -42,16 +42,16 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private _loadElementosGastos(): void {
-    this._elementosGastosSvc.loadAllElementosGastos().subscribe(response => {
+    this._elementosGastosSvc.loadAllElementosGastos().subscribe((response) => {
       const result = response.getAllElementosGastos;
 
       if (!result.success) {
         return SweetAlert.fire({
           icon: 'error',
           title: 'ERROR',
-          text: `Ocurrió el siguiente error: ${ result.error }`,
+          text: `Ocurrió el siguiente error: ${result.error}`,
           showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
+          confirmButtonText: 'Aceptar',
         });
       }
 
@@ -69,10 +69,10 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
         this._add();
         break;
       case ActionClicked.Edit:
-        this._edit(event.item)
-        break;    
+        this._edit(event.item);
+        break;
       case ActionClicked.Delete:
-        this._delete(event.item)
+        this._delete(event.item);
         break;
     }
   }
@@ -90,58 +90,79 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
         };
         this._elementosGastosSvc.fg.patchValue(inputData);
 
-        this._dinamicDialogSvc.open('Agregar Elemento de Gasto', ElementosGastosFormComponent);
-        this._elementosGastosSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-          if (message) {
-            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-          }
-        }));
+        this._dinamicDialogSvc.open(
+          'Agregar Elemento de Gasto',
+          ElementosGastosFormComponent
+        );
+        this._elementosGastosSvc.subscription.push(
+          this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+            if (message) {
+              this._msgSvc.add({
+                severity: 'success',
+                summary: 'Satisfactorio',
+                detail: message,
+              });
+            }
+          })
+        );
       }
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ocurrió el siguiente error: ${ err }`,
+        text: `Ocurrió el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   private _edit(data: any): void {
-    this._elementosGastosSvc.subscription.push(this._elementosGastosSvc.loadElementoGastoById(data.Egasto)
-    .subscribe(response => {
-      const result = response.getElementoGastoById;
-      if (!result.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: `Se produjo el siguiente error: ${ result.error }`,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
-        });
-      }
+    this._elementosGastosSvc.subscription.push(
+      this._elementosGastosSvc
+        .loadElementoGastoById(data.Egasto)
+        .subscribe((response) => {
+          const result = response.getElementoGastoById;
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: `Se produjo el siguiente error: ${result.error}`,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-      const data = result.data;
+          const data = result.data;
 
-      const inputData = {
-        elemento: data.Egasto,
-        descripcion: data.Descripcion,
-        usoContenido: data.UsoContenido,
-        tipoEntidad: data.TipoEntidad.split(', ').map(Number),
-        cuentaAsociada: data.CuentaAsociada.trimEnd().split(', '),
-        epigrafe: data.IdEpigrafe,
-      };
+          const inputData = {
+            elemento: data.Egasto,
+            descripcion: data.Descripcion,
+            usoContenido: data.UsoContenido,
+            tipoEntidad: data.TipoEntidad.split(', ').map(Number),
+            cuentaAsociada: data.CuentaAsociada.trimEnd().split(', '),
+            epigrafe: data.IdEpigrafe,
+          };
 
-      this._elementosGastosSvc.fg.patchValue(inputData);
+          this._elementosGastosSvc.fg.patchValue(inputData);
 
-      this._dinamicDialogSvc.open('Modificar Elemento de Gasto', ElementosGastosFormComponent);
-      this._elementosGastosSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-        if (message) {
-          this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-        }
-      }));
-    }));
+          this._dinamicDialogSvc.open(
+            'Modificar Elemento de Gasto',
+            ElementosGastosFormComponent
+          );
+          this._elementosGastosSvc.subscription.push(
+            this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+              if (message) {
+                this._msgSvc.add({
+                  severity: 'success',
+                  summary: 'Satisfactorio',
+                  detail: message,
+                });
+              }
+            })
+          );
+        })
+    );
   }
 
   private _delete(data: any): void {
@@ -154,26 +175,39 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
           showConfirmButton: true,
           confirmButtonText: 'Sí',
           showCancelButton: true,
-          cancelButtonText: 'No'
-        }).then(res => {
+          cancelButtonText: 'No',
+        }).then((res) => {
           if (res.value) {
-            const IDsToRemove: number[] = !isArray(data) ? [data.Egasto] :  data.map(d => { return d.Egasto });
-
-            this._elementosGastosSvc.subscription.push(this._elementosGastosSvc.delete(IDsToRemove).subscribe(response => {
-              const result = response.deleteElementoGasto;
-
-              if (result.success === false) {
-                return SweetAlert.fire({
-                  icon: 'error',
-                  title: 'ERROR',
-                  text: `Ocurrió el siguiente error: ${ result.error }`,
-                  showConfirmButton: true,
-                  confirmButtonText: 'Aceptar'
+            const IDsToRemove: number[] = !isArray(data)
+              ? [data.Egasto]
+              : data.map((d) => {
+                  return d.Egasto;
                 });
-              }
 
-              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Elemento de Gasto se ha eliminado correctamente.' })
-            }));
+            this._elementosGastosSvc.subscription.push(
+              this._elementosGastosSvc
+                .delete(IDsToRemove)
+                .subscribe((response) => {
+                  const result = response.deleteElementoGasto;
+
+                  if (result.success === false) {
+                    return SweetAlert.fire({
+                      icon: 'error',
+                      title: 'ERROR',
+                      text: `Ocurrió el siguiente error: ${result.error}`,
+                      showConfirmButton: true,
+                      confirmButtonText: 'Aceptar',
+                    });
+                  }
+
+                  this._msgSvc.add({
+                    severity: 'success',
+                    summary: 'Satisfactorio',
+                    detail:
+                      'El Elemento de Gasto se ha eliminado correctamente.',
+                  });
+                })
+            );
           }
         });
       }
@@ -181,11 +215,10 @@ export class ListElementosGastosComponent implements OnInit, AfterViewInit, OnDe
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ocurrió el siguiente error: ${ err }`,
+        text: `Ocurrió el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
-
 }

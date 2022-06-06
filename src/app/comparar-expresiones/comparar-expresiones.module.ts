@@ -10,11 +10,10 @@ import { SharedModule } from '../shared/shared.module';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 import { ExpresionesService } from '../expresiones/shared/services/expresiones.service';
 
-
 @NgModule({
   declarations: [
     ListCompararExpresionesComponent,
-    CompararExpresionesFormComponent
+    CompararExpresionesFormComponent,
   ],
   imports: [
     CommonModule,
@@ -24,9 +23,6 @@ import { ExpresionesService } from '../expresiones/shared/services/expresiones.s
     SharedModule,
     PrimeNgModule,
   ],
-  providers: [
-    CompararExpresionesService,
-    ExpresionesService
-  ]
+  providers: [CompararExpresionesService, ExpresionesService],
 })
-export class CompararExpresionesModule { }
+export class CompararExpresionesModule {}

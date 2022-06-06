@@ -1,24 +1,34 @@
 <div>
-    <div [class.p-float-label]="floatLabel" class="p-field" [formGroup]="fg">
-        <label *ngIf="!floatLabel" 
-            [for]="control" 
-            class="inline-label" 
-            [ngStyle]="{'width.px': labelWidth}"
-            [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty">{{ label }}: 
-        </label>
-        <p-dropdown [inputId]="control" 
-            [options]="optionsValues" 
-            [formControlName]="control" 
-            optionLabel="label" 
-            optionValue="value"
-            [placeholder]="placeholder" 
-            [filter]="filter" 
-            filterBy="label" 
-            [required]="required" 
-            [disabled]="disabled" 
-            [showClear]="showClear">
-        </p-dropdown>
-        <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
-    </div>
-    <small *ngIf="!fg.controls[control].valid && fg.controls[control].dirty" id="username2-help" class="p-error">Este campo es obligatorio</small>
+  <div [class.p-float-label]="floatLabel" class="p-field" [formGroup]="fg">
+    <label
+      *ngIf="!floatLabel"
+      [for]="control"
+      class="inline-label"
+      [ngStyle]="{ 'width.px': labelWidth }"
+      [class.p-error]="
+        !fg.controls[control].valid && fg.controls[control].dirty
+      "
+      >{{ label }}:
+    </label>
+    <p-dropdown
+      [inputId]="control"
+      [options]="optionsValues"
+      [formControlName]="control"
+      optionLabel="label"
+      optionValue="value"
+      [placeholder]="placeholder"
+      [filter]="filter"
+      filterBy="label"
+      [required]="required"
+      [disabled]="disabled"
+      [showClear]="showClear">
+    </p-dropdown>
+    <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
+  </div>
+  <small
+    *ngIf="!fg.controls[control].valid && fg.controls[control].dirty"
+    id="username2-help"
+    class="p-error"
+    >Este campo es obligatorio</small
+  >
 </div>

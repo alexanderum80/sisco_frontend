@@ -2,12 +2,10 @@ import { ListCompararValoresComponent } from './list-comparar-valores/list-compa
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-const routes: Routes = [
-  { path: '', component: ListCompararValoresComponent }
-];
+const routes: Routes = [{ path: '', component: ListCompararValoresComponent }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class CompararValoresRoutingModule { }
+export class CompararValoresRoutingModule {}

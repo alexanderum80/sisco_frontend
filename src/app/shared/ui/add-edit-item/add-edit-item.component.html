@@ -5,7 +5,18 @@
     </div>
   </png-card>
   <div class="flex justify-content-end">
-    <png-button class="mr-2 mb-2" label="Aceptar" [style]="'primary'" [raised]="true" [disabled]="fg && !fg.valid" (clicked)="save()"></png-button>
-    <png-button class="mr-2 mb-2" label="Cancelar" [style]="'secondary'" [raised]="true" (clicked)="cancel()"></png-button>
+    <png-button
+      class="mr-2 mb-2"
+      label="Aceptar"
+      [style]="'primary'"
+      [raised]="true"
+      [disabled]="fg && !fg.valid"
+      (clicked)="save()"></png-button>
+    <png-button
+      class="mr-2 mb-2"
+      label="Cancelar"
+      [style]="'secondary'"
+      [raised]="true"
+      (clicked)="cancel()"></png-button>
   </div>
 </div>

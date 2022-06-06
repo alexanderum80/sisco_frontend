@@ -1,5 +1,9 @@
 <app-list-item title="Epígrafes">
-  <png-table [columns]="displayedColumns" [data]="epigrafes" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
+  <png-table
+    [columns]="displayedColumns"
+    [data]="epigrafes"
+    [canEditDelete]="hasAdvancedUserPermission()"
+    (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
 
 <p-toast></p-toast>

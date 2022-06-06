@@ -4,5 +4,5 @@ import { Injectable } from '@angular/core';
 export class TableService {
   selectedRow: any[] = [];
 
-  constructor() { }
+  constructor() {}
 }

@@ -1,13 +1,28 @@
 <app-list-item title="Clasificador de Cuentas">
   <p-tabView class="h-full">
     <p-tabPanel header="Consolidado">
-      <png-table [columns]="displayedColumns" [data]="clasificadorCuentaConso" [loading]="loading" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
+      <png-table
+        [columns]="displayedColumns"
+        [data]="clasificadorCuentaConso"
+        [loading]="loading"
+        [canEditDelete]="hasAdvancedUserPermission()"
+        (actionClicked)="actionClicked($event)"></png-table>
     </p-tabPanel>
     <p-tabPanel header="Centro">
-      <png-table [columns]="displayedColumns" [data]="clasificadorCuentaCentro" [loading]="loading" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
+      <png-table
+        [columns]="displayedColumns"
+        [data]="clasificadorCuentaCentro"
+        [loading]="loading"
+        [canEditDelete]="hasAdvancedUserPermission()"
+        (actionClicked)="actionClicked($event)"></png-table>
     </p-tabPanel>
     <p-tabPanel header="Complejo">
-      <png-table [columns]="displayedColumns" [data]="clasificadorCuentaComplejo" [loading]="loading" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
+      <png-table
+        [columns]="displayedColumns"
+        [data]="clasificadorCuentaComplejo"
+        [loading]="loading"
+        [canEditDelete]="hasAdvancedUserPermission()"
+        (actionClicked)="actionClicked($event)"></png-table>
     </p-tabPanel>
   </p-tabView>
 </app-list-item>

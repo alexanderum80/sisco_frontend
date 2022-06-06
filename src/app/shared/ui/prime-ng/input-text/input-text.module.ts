@@ -5,18 +5,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    InputTextComponent
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InputTextModule,
-  ],
-  exports: [
-    InputTextModule,
-    InputTextComponent
-  ]
+  declarations: [InputTextComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, InputTextModule],
+  exports: [InputTextModule, InputTextComponent],
 })
-export class PrimeInputTextModule { }
+export class PrimeInputTextModule {}

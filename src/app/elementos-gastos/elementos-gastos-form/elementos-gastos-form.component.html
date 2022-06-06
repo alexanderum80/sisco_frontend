@@ -1,20 +1,69 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form class="epigrafe-form">
     <div class="form__group">
-      <png-input-text class="w-4" label="Elemento" labelWidth="90" [fg]="fg" control="elemento" [required]="true" autocomplete="off"></png-input-text>
-      <png-input-text class="w-8 ml-3" label="Descripción" labelWidth="90" [fg]="fg" control="descripcion" [required]="true" autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-4"
+        label="Elemento"
+        labelWidth="90"
+        [fg]="fg"
+        control="elemento"
+        [required]="true"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-8 ml-3"
+        label="Descripción"
+        labelWidth="90"
+        [fg]="fg"
+        control="descripcion"
+        [required]="true"
+        autocomplete="off"></png-input-text>
     </div>
     <div class="form__group">
-      <png-input-text class="w-full" label="Uso y Contenido" labelWidth="90" [fg]="fg" control="usoContenido" [required]="true" autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full"
+        label="Uso y Contenido"
+        labelWidth="90"
+        [fg]="fg"
+        control="usoContenido"
+        [required]="true"
+        autocomplete="off"></png-input-text>
     </div>
     <div class="form__group">
-      <png-multi-select class="w-full mt-1" [fg]="fg" control="cuentaAsociada" label="Cuentas Asociadas" labelWidth="90" [optionsValues]="cuentasValues" placeholder="&lt;Cuentas Asociadas&gt;" [required]="true" [filter]="true"></png-multi-select>
+      <png-multi-select
+        class="w-full mt-1"
+        [fg]="fg"
+        control="cuentaAsociada"
+        label="Cuentas Asociadas"
+        labelWidth="90"
+        [optionsValues]="cuentasValues"
+        placeholder="&lt;Cuentas Asociadas&gt;"
+        [required]="true"
+        [filter]="true"></png-multi-select>
     </div>
     <div class="form__group">
-      <png-multi-select class="w-full mt-1" [fg]="fg" control="tipoEntidad" label="Tipos de Entidad" labelWidth="90" [optionsValues]="tipoEntidadValues" placeholder="&lt;Cuentas Asociadas&gt;" [required]="true" [filter]="true"></png-multi-select>
+      <png-multi-select
+        class="w-full mt-1"
+        [fg]="fg"
+        control="tipoEntidad"
+        label="Tipos de Entidad"
+        labelWidth="90"
+        [optionsValues]="tipoEntidadValues"
+        placeholder="&lt;Cuentas Asociadas&gt;"
+        [required]="true"
+        [filter]="true"></png-multi-select>
     </div>
     <div class="form__group">
-      <png-dropdown class="w-full mt-1" [fg]="fg" control="epigrafe" label="Epígrafe" labelWidth="90" [optionsValues]="epigrafesValues" placeholder="&lt;Epígrafe&gt;" [required]="true" [filter]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-full mt-1"
+        [fg]="fg"
+        control="epigrafe"
+        label="Epígrafe"
+        labelWidth="90"
+        [optionsValues]="epigrafesValues"
+        placeholder="&lt;Epígrafe&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
     </div>
   </form>
 </app-add-edit-item>

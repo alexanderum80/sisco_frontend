@@ -19,9 +19,7 @@ export class CompararValoresService {
 
   subscription: Subscription[] = [];
 
-  constructor(
-    private _apollo: Apollo,
-  ) { }
+  constructor(private _apollo: Apollo) {}
 
   inicializarFg(): void {
     const payload = {
@@ -30,21 +28,25 @@ export class CompararValoresService {
       expresion: null,
       operador: null,
       valor: 0,
-      division: 0
+      division: 0,
     };
 
     this.fg.patchValue(payload);
   }
-  
+
   loadAll(): Observable<ComprobarValoresQueryResponse> {
     return new Observable<ComprobarValoresQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.watchQuery<ComprobarValoresQueryResponse>({
-          query: compararValoresApi.all,
-          fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(response => {
-          subscriber.next(response.data);
-        }));
+        this.subscription.push(
+          this._apollo
+            .watchQuery<ComprobarValoresQueryResponse>({
+              query: compararValoresApi.all,
+              fetchPolicy: 'network-only',
+            })
+            .valueChanges.subscribe(response => {
+              subscriber.next(response.data);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -54,14 +56,18 @@ export class CompararValoresService {
   loadOne(id: number): Observable<ComprobarValoresQueryResponse> {
     return new Observable<ComprobarValoresQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.watchQuery<ComprobarValoresQueryResponse>({
-          query: compararValoresApi.byId,
-          variables: { id },
-          fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(response => {
-          subscriber.next(response.data);
-          subscriber.complete();
-        }));
+        this.subscription.push(
+          this._apollo
+            .watchQuery<ComprobarValoresQueryResponse>({
+              query: compararValoresApi.byId,
+              variables: { id },
+              fetchPolicy: 'network-only',
+            })
+            .valueChanges.subscribe(response => {
+              subscriber.next(response.data);
+              subscriber.complete();
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -80,15 +86,22 @@ export class CompararValoresService {
           IdDivision: this.fg.controls['division'].value,
         };
 
-        const mutation = payload.Id === 0 ? compararValoresApi.create : compararValoresApi.update;
+        const mutation =
+          payload.Id === 0
+            ? compararValoresApi.create
+            : compararValoresApi.update;
 
-        this.subscription.push(this._apollo.mutate<ComprobarValoresMutation>({
-          mutation: mutation,
-          variables: { comprobarValorInput: payload },
-          refetchQueries: ['GetAllComprobarValores']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<ComprobarValoresMutation>({
+              mutation: mutation,
+              variables: { comprobarValorInput: payload },
+              refetchQueries: ['GetAllComprobarValores'],
+            })
+            .subscribe(response => {
+              subscriber.next(response.data || undefined);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -98,13 +111,17 @@ export class CompararValoresService {
   delete(IDs: number[]): Observable<ComprobarValoresMutation> {
     return new Observable<ComprobarValoresMutation>(subscriber => {
       try {
-        this.subscription.push(this._apollo.mutate<ComprobarValoresMutation>({
-          mutation: compararValoresApi.delete,
-          variables: { IDs },
-          refetchQueries: ['GetAllComprobarValores']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<ComprobarValoresMutation>({
+              mutation: compararValoresApi.delete,
+              variables: { IDs },
+              refetchQueries: ['GetAllComprobarValores'],
+            })
+            .subscribe(response => {
+              subscriber.next(response.data || undefined);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }

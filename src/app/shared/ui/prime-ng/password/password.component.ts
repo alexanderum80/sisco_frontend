@@ -5,7 +5,7 @@ import { FormGroup } from '@angular/forms';
   // tslint:disable-next-line: component-selector
   selector: 'png-password',
   templateUrl: './password.component.html',
-  styleUrls: ['./password.component.scss']
+  styleUrls: ['./password.component.scss'],
 })
 export class PasswordComponent implements OnInit {
   @Input() public fg: FormGroup;
@@ -19,12 +19,9 @@ export class PasswordComponent implements OnInit {
   @Input() public feedback = false;
   @Input() public disabled = false;
 
-  constructor(
-    private cd: ChangeDetectorRef
-  ) { }
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
   }
-
 }

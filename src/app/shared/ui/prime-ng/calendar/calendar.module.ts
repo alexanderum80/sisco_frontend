@@ -5,18 +5,8 @@ import { CalendarModule } from 'primeng/calendar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    CalendarComponent
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    CalendarModule
-  ],
-  exports: [
-    CalendarModule,
-    CalendarComponent
-  ]
+  declarations: [CalendarComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, CalendarModule],
+  exports: [CalendarModule, CalendarComponent],
 })
-export class PrimeCalendarModule { }
+export class PrimeCalendarModule {}

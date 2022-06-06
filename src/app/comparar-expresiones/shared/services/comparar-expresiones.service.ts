@@ -1,7 +1,10 @@
 import { UsuarioService } from './../../../shared/services/usuario.service';
 import { compararExpresionesApi } from './../graphql/comparar-expresiones-api';
 import { Apollo } from 'apollo-angular';
-import { ComprobarExpresionesMutation, ComprobarExpresionesQueryResponse } from './../model/comparar-expresiones.model';
+import {
+  ComprobarExpresionesMutation,
+  ComprobarExpresionesQueryResponse,
+} from './../model/comparar-expresiones.model';
 import { Observable, Subscription } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -22,10 +25,7 @@ export class CompararExpresionesService {
 
   subscription: Subscription[] = [];
 
-  constructor(
-    private _apollo: Apollo,
-    private _usuarioSvc: UsuarioService,
-  ) { }
+  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
 
   inicializarFg(): void {
     const payload = {
@@ -46,12 +46,16 @@ export class CompararExpresionesService {
   loadAll(): Observable<ComprobarExpresionesQueryResponse> {
     return new Observable<ComprobarExpresionesQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.watchQuery<ComprobarExpresionesQueryResponse>({
-          query: compararExpresionesApi.all,
-          fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(response => {
-          subscriber.next(response.data);
-        }));
+        this.subscription.push(
+          this._apollo
+            .watchQuery<ComprobarExpresionesQueryResponse>({
+              query: compararExpresionesApi.all,
+              fetchPolicy: 'network-only',
+            })
+            .valueChanges.subscribe(response => {
+              subscriber.next(response.data);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -61,14 +65,18 @@ export class CompararExpresionesService {
   loadOne(id: number): Observable<ComprobarExpresionesQueryResponse> {
     return new Observable<ComprobarExpresionesQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.watchQuery<ComprobarExpresionesQueryResponse>({
-          query: compararExpresionesApi.byId,
-          variables: { id },
-          fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(response => {
-          subscriber.next(response.data);
-          subscriber.complete();
-        }));
+        this.subscription.push(
+          this._apollo
+            .watchQuery<ComprobarExpresionesQueryResponse>({
+              query: compararExpresionesApi.byId,
+              variables: { id },
+              fetchPolicy: 'network-only',
+            })
+            .valueChanges.subscribe(response => {
+              subscriber.next(response.data);
+              subscriber.complete();
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -90,15 +98,22 @@ export class CompararExpresionesService {
           IdDivision: this.fg.controls['idDivision'].value,
         };
 
-        const mutation = payload.Id === 0 ? compararExpresionesApi.create : compararExpresionesApi.update;
+        const mutation =
+          payload.Id === 0
+            ? compararExpresionesApi.create
+            : compararExpresionesApi.update;
 
-        this.subscription.push(this._apollo.mutate<ComprobarExpresionesMutation>({
-          mutation: mutation,
-          variables: { comprobarExpresionInput: payload },
-          refetchQueries: ['GetAllComprobarExpresiones']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<ComprobarExpresionesMutation>({
+              mutation: mutation,
+              variables: { comprobarExpresionInput: payload },
+              refetchQueries: ['GetAllComprobarExpresiones'],
+            })
+            .subscribe(response => {
+              subscriber.next(response.data || undefined);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -108,13 +123,17 @@ export class CompararExpresionesService {
   delete(IDs: number[]): Observable<ComprobarExpresionesMutation> {
     return new Observable<ComprobarExpresionesMutation>(subscriber => {
       try {
-        this.subscription.push(this._apollo.mutate<ComprobarExpresionesMutation>({
-          mutation: compararExpresionesApi.delete,
-          variables: { IDs },
-          refetchQueries: ['GetAllComprobarExpresiones']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<ComprobarExpresionesMutation>({
+              mutation: compararExpresionesApi.delete,
+              variables: { IDs },
+              refetchQueries: ['GetAllComprobarExpresiones'],
+            })
+            .subscribe(response => {
+              subscriber.next(response.data || undefined);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }

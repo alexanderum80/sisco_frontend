@@ -8,7 +8,6 @@ import { ListEmpleadosComponent } from './list-empleados/list-empleados.componen
 import { EmpleadosFormComponent } from './empleados-form/empleados-form.component';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
-
 @NgModule({
   declarations: [ListEmpleadosComponent, EmpleadosFormComponent],
   imports: [
@@ -18,6 +17,6 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     EmpleadosRoutingModule,
     SharedModule,
     PrimeNgModule,
-  ]
+  ],
 })
-export class EmpleadosModule { }
+export class EmpleadosModule {}

@@ -1,13 +1,11 @@
-import { Component, OnInit, Input
- } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-overlay',
   templateUrl: './overlay.component.html',
-  styleUrls: ['./overlay.component.scss']
+  styleUrls: ['./overlay.component.scss'],
 })
 export class OverlayComponent implements OnInit {
-
   showing = false;
   effect: string;
 
@@ -21,7 +19,7 @@ export class OverlayComponent implements OnInit {
     this.effect = this.openEffect;
 
     if (this.active) {
-        this.show();
+      this.show();
     }
   }
 
@@ -45,5 +43,4 @@ export class OverlayComponent implements OnInit {
       this.show();
     }
   }
-
 }

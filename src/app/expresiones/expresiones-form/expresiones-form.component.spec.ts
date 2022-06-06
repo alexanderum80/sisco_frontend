@@ -8,9 +8,8 @@ describe('ExpresionesFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ExpresionesFormComponent ]
-    })
-    .compileComponents();
+      declarations: [ExpresionesFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

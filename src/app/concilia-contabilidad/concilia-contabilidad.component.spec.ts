@@ -8,9 +8,8 @@ describe('ConciliaContabilidadComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConciliaContabilidadComponent ]
-    })
-    .compileComponents();
+      declarations: [ConciliaContabilidadComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

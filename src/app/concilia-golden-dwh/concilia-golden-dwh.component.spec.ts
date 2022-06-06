@@ -8,9 +8,8 @@ describe('ConciliaGoldenDwhComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConciliaGoldenDwhComponent ]
-    })
-    .compileComponents();
+      declarations: [ConciliaGoldenDwhComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

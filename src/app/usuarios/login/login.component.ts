@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
     private _usuarioSvc: UsuarioService,
     private _navigateSvc: NavigationService,
     private _swalSvc: SweetalertService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.fg = new FormGroup({
@@ -33,7 +33,8 @@ export class LoginComponent implements OnInit {
       password: new FormControl(''),
     });
 
-    this._navigateSvc.continueURL = this._route.snapshot.queryParams['continue'] || '/';
+    this._navigateSvc.continueURL =
+      this._route.snapshot.queryParams['continue'] || '/';
   }
 
   iniciar(): void {
@@ -42,7 +43,7 @@ export class LoginComponent implements OnInit {
 
       const authVariables = {
         Usuario: this.fg.controls['usuario'].value,
-        Contrasena: this.fg.controls['password'].value
+        Contrasena: this.fg.controls['password'].value,
       };
 
       this._usuarioSvc.autenticateUsuario(authVariables).subscribe({
@@ -59,23 +60,28 @@ export class LoginComponent implements OnInit {
           this._usuarioSvc.updateUsuarioInfo(usuario);
 
           if (usuario.CambiarContrasena) {
-            this._usuarioSvc.fg.controls['idUsuario'].setValue(usuario.IdUsuario);
+            this._usuarioSvc.fg.controls['idUsuario'].setValue(
+              usuario.IdUsuario
+            );
             this._usuarioSvc.fg.controls['usuario'].setValue(usuario.Usuario);
             this._usuarioSvc.fg.controls['contrasena'].setValue('');
             this._usuarioSvc.fg.controls['contrasenaConfirm'].setValue('');
 
-            this._dinamicDialogSvc.open('Cambiar Contraseña', ChangePasswordComponent);
+            this._dinamicDialogSvc.open(
+              'Cambiar Contraseña',
+              ChangePasswordComponent
+            );
           } else {
             this._authSvc.login();
 
             this._navigateSvc.navigateTo(this._navigateSvc.continueURL);
           }
         },
-        error: (err) => {
+        error: err => {
           this.autenticando = false;
           this._swalSvc.error(err);
-        }}
-      );
+        },
+      });
     } catch (err: any) {
       this.autenticando = false;
       this._swalSvc.error(err);
@@ -83,7 +89,9 @@ export class LoginComponent implements OnInit {
   }
 
   isFormValid(): boolean {
-    return this.fg.controls['usuario'].value !== '' && this.fg.controls['password'].value !== '';
+    return (
+      this.fg.controls['usuario'].value !== '' &&
+      this.fg.controls['password'].value !== ''
+    );
   }
-
 }

@@ -5,18 +5,8 @@ import { InputNumberComponent } from './input-number.component';
 import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
-  declarations: [
-    InputNumberComponent
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InputNumberModule
-  ],
-  exports: [
-    InputNumberModule,
-    InputNumberComponent
-  ]
+  declarations: [InputNumberComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, InputNumberModule],
+  exports: [InputNumberModule, InputNumberComponent],
 })
-export class PrimeInputNumberModule { }
+export class PrimeInputNumberModule {}

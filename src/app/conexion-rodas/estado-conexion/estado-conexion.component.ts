@@ -11,7 +11,7 @@ import { SelectItem } from 'primeng/api';
 @Component({
   selector: 'app-estado-conexion',
   templateUrl: './estado-conexion.component.html',
-  styleUrls: ['./estado-conexion.component.scss']
+  styleUrls: ['./estado-conexion.component.scss'],
 })
 export class EstadoConexionRodasComponent implements OnInit, OnDestroy {
   columns: ITableColumns[] = [
@@ -24,14 +24,14 @@ export class EstadoConexionRodasComponent implements OnInit, OnDestroy {
   loading = false;
 
   fg: FormGroup = new FormGroup({
-    idDivision: new FormControl('', Validators.required)
+    idDivision: new FormControl('', Validators.required),
   });
 
   constructor(
     private _divisionesSvc: DivisionesService,
     private _conexionRodasSvc: ConexionRodasService,
-    private _pdfMakeSvc: PdfmakeService,
-  ) { }
+    private _pdfMakeSvc: PdfmakeService
+  ) {}
 
   ngOnInit(): void {
     this._getDivisiones();
@@ -45,41 +45,47 @@ export class EstadoConexionRodasComponent implements OnInit, OnDestroy {
 
   private _getDivisiones(): void {
     try {
-      this._conexionRodasSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
-        const result = response.getAllDivisiones;
+      this._conexionRodasSvc.subscription.push(
+        this._divisionesSvc.getDivisiones().subscribe(response => {
+          const result = response.getAllDivisiones;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result.error,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.divisionesValues = result.data.map((d: { IdDivision: string; Division: string; }) => {
-          return {
-            value: d.IdDivision,
-            description: d.IdDivision + '-' + d.Division
-          };
-        });
-      }));
+          this.divisionesValues = result.data.map(
+            (d: { IdDivision: string; Division: string }) => {
+              return {
+                value: d.IdDivision,
+                description: d.IdDivision + '-' + d.Division,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   private _subscribeToFgChanges(): void {
-    this._conexionRodasSvc.subscription.push(this.fg.valueChanges.subscribe(() => {
-      this.dataSource = [];
-    }));
+    this._conexionRodasSvc.subscription.push(
+      this.fg.valueChanges.subscribe(() => {
+        this.dataSource = [];
+      })
+    );
   }
 
   get formValid(): boolean {
@@ -92,22 +98,26 @@ export class EstadoConexionRodasComponent implements OnInit, OnDestroy {
 
       const idDivision = toNumber(this.fg.controls['idDivision'].value);
 
-      this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.estadoConexion(idDivision).subscribe(response => {
-        this.loading = false;
-        const result = response.estadoContaConexiones;
+      this._conexionRodasSvc.subscription.push(
+        this._conexionRodasSvc
+          .estadoConexion(idDivision)
+          .subscribe(response => {
+            this.loading = false;
+            const result = response.estadoContaConexiones;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'Error',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+            if (!result.success) {
+              return SweetAlert.fire({
+                icon: 'error',
+                title: 'Error',
+                text: result.error,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+              });
+            }
 
-        this.dataSource = result.data;
-      }));
+            this.dataSource = result.data;
+          })
+      );
     } catch (err: any) {
       this.loading = false;
 
@@ -116,12 +126,12 @@ export class EstadoConexionRodasComponent implements OnInit, OnDestroy {
         title: 'Error',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
-  isEstadoIncorrecto(row: { Estado: string; }): boolean {
+  isEstadoIncorrecto(row: { Estado: string }): boolean {
     return row.Estado === 'Incorrecto';
   }
 
@@ -131,15 +141,17 @@ export class EstadoConexionRodasComponent implements OnInit, OnDestroy {
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [
-          await this._pdfMakeSvc.getHeaderDefinition('Estado de las Conexiones al Rodas.'),
+          await this._pdfMakeSvc.getHeaderDefinition(
+            'Estado de las Conexiones al Rodas.'
+          ),
           {
             margin: [0, 10, 0, 10],
             bold: true,
-            columns: [
-              { text: 'División: ' + this.divisionDescription }
-            ]
+            columns: [{ text: 'División: ' + this.divisionDescription }],
           },
-          await this._conexionRodasSvc.getEstadoConexionDefinition(this.dataSource),
+          await this._conexionRodasSvc.getEstadoConexionDefinition(
+            this.dataSource
+          ),
         ],
         footer: (page: string, pages: string) => {
           return this._pdfMakeSvc.getFooterDefinition(page, pages);
@@ -149,9 +161,9 @@ export class EstadoConexionRodasComponent implements OnInit, OnDestroy {
         },
         styles: {
           tableHeader: {
-            bold: true
-          }
-        }
+            bold: true,
+          },
+        },
       };
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
@@ -161,13 +173,16 @@ export class EstadoConexionRodasComponent implements OnInit, OnDestroy {
         title: 'Error',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   get divisionDescription(): string {
-    return this.divisionesValues.find(f => f.value === this.fg.controls['idDivision'].value)?.label || '';
+    return (
+      this.divisionesValues.find(
+        f => f.value === this.fg.controls['idDivision'].value
+      )?.label || ''
+    );
   }
-
 }

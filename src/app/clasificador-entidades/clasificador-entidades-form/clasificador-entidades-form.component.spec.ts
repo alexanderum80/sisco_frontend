@@ -8,9 +8,8 @@ describe('ClasificadorEntidadesFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ClasificadorEntidadesFormComponent ]
-    })
-    .compileComponents();
+      declarations: [ClasificadorEntidadesFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

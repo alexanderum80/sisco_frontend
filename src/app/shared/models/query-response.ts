@@ -1,5 +1,5 @@
 export interface IQueryResponse {
-    success: boolean;
-    data?: any;
-    error: string;
+  success: boolean;
+  data?: any;
+  error: string;
 }

@@ -14,7 +14,7 @@ import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
 @Component({
   selector: 'app-change-password',
   templateUrl: './change-password.component.html',
-  styleUrls: ['./change-password.component.scss']
+  styleUrls: ['./change-password.component.scss'],
 })
 export class ChangePasswordComponent implements OnInit, OnDestroy {
   fg: FormGroup;
@@ -26,8 +26,8 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     private _apollo: Apollo,
     private _navigationSvc: NavigationService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _authSvc: AuthenticationService,
-  ) { }
+    private _authSvc: AuthenticationService
+  ) {}
 
   ngOnInit(): void {
     this.fg = this._usuarioSvc.fg;
@@ -40,13 +40,16 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   }
 
   changePassword(): void {
-    if (this.fg.controls['contrasena'].value !== this.fg.controls['contrasenaConfirm'].value) {
+    if (
+      this.fg.controls['contrasena'].value !==
+      this.fg.controls['contrasenaConfirm'].value
+    ) {
       SweetAlert.fire({
         icon: 'error',
         title: 'Error al Validar',
         text: 'Las contraseñas introducidas no coinciden. Rectifique.',
         showConfirmButton: true,
-        confirmButtonText: 'OK'
+        confirmButtonText: 'OK',
       });
       return;
     }
@@ -54,28 +57,31 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
     const _idUsuario = toNumber(this.fg.controls['idUsuario'].value);
     const _password = this.fg.controls['contrasena'].value;
 
-    this.subscription.push(this._apollo.mutate<UsuariosMutationResponse>({
-      mutation: usuariosApi.changePassword,
-      variables: { idUsuario: _idUsuario, password: _password },
-    }).subscribe(response => {
-      const result = response.data?.changePassword;
+    this.subscription.push(
+      this._apollo
+        .mutate<UsuariosMutationResponse>({
+          mutation: usuariosApi.changePassword,
+          variables: { idUsuario: _idUsuario, password: _password },
+        })
+        .subscribe(response => {
+          const result = response.data?.changePassword;
 
-      if (!result?.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: result?.error,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
-        });
-      }
+          if (!result?.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result?.error,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-      this._authSvc.login();
+          this._authSvc.login();
 
-      this._dinamicDialogSvc.close();
+          this._dinamicDialogSvc.close();
 
-      this._navigationSvc.navigateTo(this._navigationSvc.continueURL);
-    }));
+          this._navigationSvc.navigateTo(this._navigationSvc.continueURL);
+        })
+    );
   }
-
 }

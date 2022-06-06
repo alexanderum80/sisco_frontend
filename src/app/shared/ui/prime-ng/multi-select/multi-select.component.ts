@@ -3,11 +3,12 @@ import { Component, OnInit, Input } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 
 @Component({
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'png-multi-select',
   templateUrl: './multi-select.component.html',
-  styleUrls: ['./multi-select.component.scss']
+  styleUrls: ['./multi-select.component.scss'],
 })
-export class MultiSelectComponent implements OnInit {
+export class MultiSelectComponent {
   @Input() fg: FormGroup;
   @Input() control: string;
   @Input() label: string;
@@ -19,9 +20,5 @@ export class MultiSelectComponent implements OnInit {
   @Input() filter = false;
   @Input() optionsValues: SelectItem[] = [];
 
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+  constructor() {}
 }

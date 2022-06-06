@@ -3,21 +3,48 @@
 <div class="content">
   <png-panel class="h-full w-full" header="Parte de Atrasos Golden DWH">
     <form class="form-division mb-3" [formGroup]="fg">
-      <png-dropdown class="w-20rem" [fg]="fg" control="idDivision" label="División" [optionsValues]="divisionesValues" placeholder="Seleccione la División" [filter]="true" [required]="true" [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-20rem"
+        [fg]="fg"
+        control="idDivision"
+        label="División"
+        [optionsValues]="divisionesValues"
+        placeholder="Seleccione la División"
+        [filter]="true"
+        [required]="true"
+        [showClear]="true"></png-dropdown>
     </form>
     <div class="parte-atraso-detalle shadow-1">
       <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
         <p-tabPanel header="Parte de Atrasos">
-          <png-table [columns]="displayedColumnsParteAtraso" [data]="dataSourceParteAtraso" [paginator]="false"></png-table>
+          <png-table
+            [columns]="displayedColumnsParteAtraso"
+            [data]="dataSourceParteAtraso"
+            [paginator]="false"></png-table>
         </p-tabPanel>
         <p-tabPanel header="Detalle de las Salvas">
-          <png-table [columns]="displayedColumnsDatosIdGam" [data]="dataSourceDatosIdGam" groupField="Unidad" [paginator]="false"></png-table>
+          <png-table
+            [columns]="displayedColumnsDatosIdGam"
+            [data]="dataSourceDatosIdGam"
+            groupField="Unidad"
+            [paginator]="false"></png-table>
         </p-tabPanel>
       </p-tabView>
     </div>
     <div class="flex justify-content-end mt-2">
-      <png-button class="mr-1" label="Calcular" icon="mdi mdi-file-check-outline" [disabled]="!fg.valid" (clicked)="calcular()"></png-button>
-      <png-button class="mr-2" label="Reporte" [style]="'secondary'" icon="mdi mdi-printer" [disabled]="!dataSourceParteAtraso.length" (clicked)="reporte()"></png-button>
+      <png-button
+        class="mr-1"
+        label="Calcular"
+        icon="mdi mdi-file-check-outline"
+        [disabled]="!fg.valid"
+        (clicked)="calcular()"></png-button>
+      <png-button
+        class="mr-2"
+        label="Reporte"
+        [style]="'secondary'"
+        icon="mdi mdi-printer"
+        [disabled]="!dataSourceParteAtraso.length"
+        (clicked)="reporte()"></png-button>
     </div>
   </png-panel>
 </div>

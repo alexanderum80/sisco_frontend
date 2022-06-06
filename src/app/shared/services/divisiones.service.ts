@@ -6,23 +6,22 @@ import { Injectable } from '@angular/core';
 const divisionesQuery = require('graphql-tag/loader!../graphql/divisiones.query.gql');
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DivisionesService {
-
-  constructor(
-    private _apollo: Apollo,
-  ) { }
+  constructor(private _apollo: Apollo) {}
 
   getDivisiones(): Observable<DivisionesQueryResponse> {
     return new Observable<DivisionesQueryResponse>(subscriber => {
       try {
-        this._apollo.query<DivisionesQueryResponse>({
-          query: divisionesQuery,
-          fetchPolicy: 'network-only'
-        }).subscribe(response => {
-          subscriber.next(response.data);
-        });
+        this._apollo
+          .query<DivisionesQueryResponse>({
+            query: divisionesQuery,
+            fetchPolicy: 'network-only',
+          })
+          .subscribe(response => {
+            subscriber.next(response.data);
+          });
       } catch (err: any) {
         subscriber.error(err);
       }

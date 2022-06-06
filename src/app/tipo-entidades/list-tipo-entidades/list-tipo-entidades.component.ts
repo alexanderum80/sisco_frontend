@@ -1,4 +1,7 @@
-import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
+import {
+  IActionItemClickedArgs,
+  ActionClicked,
+} from './../../shared/models/list-items';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { TipoEntidadesService } from './../shared/services/tipo-entidades.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
@@ -12,9 +15,9 @@ import { isArray } from 'lodash';
 @Component({
   selector: 'app-list-tipo-entidades',
   templateUrl: './list-tipo-entidades.component.html',
-  styleUrls: ['./list-tipo-entidades.component.scss']
+  styleUrls: ['./list-tipo-entidades.component.scss'],
 })
-export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
   dataSource: any[];
 
   displayedColumns: ITableColumns[] = [
@@ -26,44 +29,43 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
     private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
-    private _tipoEntidadesSvc: TipoEntidadesService,
-  ) { }
-
-  ngOnInit(): void {
-  }
+    private _tipoEntidadesSvc: TipoEntidadesService
+  ) {}
 
   ngAfterViewInit(): void {
     this._loadAllTipoEntidades();
   }
-  
+
   ngOnDestroy(): void {
     this._tipoEntidadesSvc.dispose();
   }
 
   private _loadAllTipoEntidades(): void {
     try {
-      this._tipoEntidadesSvc.subscription.push(this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-        const result = response.getAllTipoEntidades;
+      this._tipoEntidadesSvc.subscription.push(
+        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
+          const result = response.getAllTipoEntidades;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: `Ocurrió el siguiente error: ${ result.error }`,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: `Ocurrió el siguiente error: ${result.error}`,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.dataSource = result.data;
-      }));
+          this.dataSource = result.data;
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ocurrió el siguiente error: ${ err }`,
+        text: `Ocurrió el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -78,10 +80,10 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
         this._add();
         break;
       case ActionClicked.Edit:
-        this._edit(event.item)
-        break;    
+        this._edit(event.item);
+        break;
       case ActionClicked.Delete:
-        this._delete(event.item)
+        this._delete(event.item);
         break;
     }
   }
@@ -95,64 +97,88 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
           descripcion: '',
         };
         this._tipoEntidadesSvc.fg.patchValue(inputData);
-        
-        this._dinamicDialogSvc.open('Agregar Tipo de Entidad', TipoEntidadesFormComponent);
-        this._tipoEntidadesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-          if (message) {
-            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-          }
-        }));      
+
+        this._dinamicDialogSvc.open(
+          'Agregar Tipo de Entidad',
+          TipoEntidadesFormComponent
+        );
+        this._tipoEntidadesSvc.subscription.push(
+          this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+            if (message) {
+              this._msgSvc.add({
+                severity: 'success',
+                summary: 'Satisfactorio',
+                detail: message,
+              });
+            }
+          })
+        );
       }
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ocurrió el siguiente error: ${ err }`,
+        text: `Ocurrió el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   private _edit(tipoEntidad: any): void {
     try {
-      this._tipoEntidadesSvc.subscription.push(this._tipoEntidadesSvc.loadTipoEntidadById(tipoEntidad.Id).subscribe(response => {
-        const result = response.getTipoEntidadById;
+      this._tipoEntidadesSvc.subscription.push(
+        this._tipoEntidadesSvc
+          .loadTipoEntidadById(tipoEntidad.Id)
+          .subscribe(response => {
+            const result = response.getTipoEntidadById;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: `Se produjo el siguiente error: ${ result.error }`,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+            if (!result.success) {
+              return SweetAlert.fire({
+                icon: 'error',
+                title: 'ERROR',
+                text: `Se produjo el siguiente error: ${result.error}`,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+              });
+            }
 
-        const data = result.data;
+            const data = result.data;
 
-        const inputData = {
-          id: data.Id,
-          entidades: data.Entidades,
-          descripcion: data.Descripcion,
-        };
+            const inputData = {
+              id: data.Id,
+              entidades: data.Entidades,
+              descripcion: data.Descripcion,
+            };
 
-        this._tipoEntidadesSvc.fg.patchValue(inputData);
+            this._tipoEntidadesSvc.fg.patchValue(inputData);
 
-        this._dinamicDialogSvc.open('Editar Tipo de Entidad', TipoEntidadesFormComponent);
-        this._tipoEntidadesSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-          if (message) {
-            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-          }
-        }));
-      }));
+            this._dinamicDialogSvc.open(
+              'Editar Tipo de Entidad',
+              TipoEntidadesFormComponent
+            );
+            this._tipoEntidadesSvc.subscription.push(
+              this._dinamicDialogSvc.ref.onClose.subscribe(
+                (message: string) => {
+                  if (message) {
+                    this._msgSvc.add({
+                      severity: 'success',
+                      summary: 'Satisfactorio',
+                      detail: message,
+                    });
+                  }
+                }
+              )
+            );
+          })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ocurrió el siguiente error: ${ err }`,
+        text: `Ocurrió el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -167,26 +193,36 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
           showConfirmButton: true,
           confirmButtonText: 'Sí',
           showCancelButton: true,
-          cancelButtonText: 'No'
+          cancelButtonText: 'No',
         }).then(res => {
           if (res.value) {
-            const IDsToRemove: number[] = !isArray(data) ? [data.Id] :  data.map(d => { return d.Id });
-
-            this._tipoEntidadesSvc.subscription.push(this._tipoEntidadesSvc.delete(IDsToRemove).subscribe(response => {
-              const result = response.deleteTipoEntidad;
-
-              if (!result.success) {
-                return SweetAlert.fire({
-                  icon: 'error',
-                  title: 'ERROR',
-                  text: `Se produjo el siguiente error: ${ result.error }`,
-                  showConfirmButton: true,
-                  confirmButtonText: 'Aceptar'
+            const IDsToRemove: number[] = !isArray(data)
+              ? [data.Id]
+              : data.map(d => {
+                  return d.Id;
                 });
-              }
 
-              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Tipo de Entidad se ha eliminado correctamente.' })
-            }));
+            this._tipoEntidadesSvc.subscription.push(
+              this._tipoEntidadesSvc.delete(IDsToRemove).subscribe(response => {
+                const result = response.deleteTipoEntidad;
+
+                if (!result.success) {
+                  return SweetAlert.fire({
+                    icon: 'error',
+                    title: 'ERROR',
+                    text: `Se produjo el siguiente error: ${result.error}`,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Aceptar',
+                  });
+                }
+
+                this._msgSvc.add({
+                  severity: 'success',
+                  summary: 'Satisfactorio',
+                  detail: 'El Tipo de Entidad se ha eliminado correctamente.',
+                });
+              })
+            );
           }
         });
       }
@@ -194,11 +230,10 @@ export class ListTipoEntidadesComponent implements OnInit, AfterViewInit, OnDest
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ocurrió el siguiente error: ${ err }`,
+        text: `Ocurrió el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
-
 }

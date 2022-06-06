@@ -1,16 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  // tslint:disable-next-line: component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'png-progress-spinner',
   templateUrl: './progress-spinner.component.html',
-  styleUrls: ['./progress-spinner.component.scss']
+  styleUrls: ['./progress-spinner.component.scss'],
 })
-export class ProgressSpinnerComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
+export class ProgressSpinnerComponent {
+  constructor() {}
 }

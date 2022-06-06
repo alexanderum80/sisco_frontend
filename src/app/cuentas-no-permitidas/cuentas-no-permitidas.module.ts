@@ -9,7 +9,6 @@ import { CuentasNoPermitidasFormComponent } from './cuentas-no-permitidas-form/c
 import { SharedModule } from '../shared/shared.module';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
-
 @NgModule({
   declarations: [
     ListCuentasNoPermitidasComponent,
@@ -21,10 +20,8 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
-  providers: [
-    CuentasNoPermitidasService
-  ]
+  providers: [CuentasNoPermitidasService],
 })
-export class CuentasNoPermitidasModule { }
+export class CuentasNoPermitidasModule {}

@@ -9,22 +9,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 import { SharedModule } from '../shared/shared.module';
 
-
 @NgModule({
-  declarations: [
-    ListExpresionesComponent,
-    ExpresionesFormComponent,
-  ],
+  declarations: [ListExpresionesComponent, ExpresionesFormComponent],
   imports: [
     CommonModule,
     ExpresionesRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
-  providers: [
-    ExpresionesService
-  ]
+  providers: [ExpresionesService],
 })
-export class ExpresionesModule { }
+export class ExpresionesModule {}

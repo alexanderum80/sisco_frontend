@@ -8,9 +8,8 @@ describe('InputMaskComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InputMaskComponent ]
-    })
-    .compileComponents();
+      declarations: [InputMaskComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

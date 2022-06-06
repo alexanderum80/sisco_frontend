@@ -8,19 +8,15 @@ import { ListTipoEntidadesComponent } from './list-tipo-entidades/list-tipo-enti
 import { TipoEntidadesFormComponent } from './tipo-entidades-form/tipo-entidades-form.component';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
-
 @NgModule({
-  declarations: [
-    ListTipoEntidadesComponent,
-    TipoEntidadesFormComponent
-  ],
+  declarations: [ListTipoEntidadesComponent, TipoEntidadesFormComponent],
   imports: [
     CommonModule,
     TipoEntidadesRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    PrimeNgModule
-  ]
+    PrimeNgModule,
+  ],
 })
-export class TipoEntidadesModule { }
+export class TipoEntidadesModule {}

@@ -8,9 +8,8 @@ describe('ListConexionRodasComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ListConexionRodasComponent ]
-    })
-    .compileComponents();
+      declarations: [ListConexionRodasComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

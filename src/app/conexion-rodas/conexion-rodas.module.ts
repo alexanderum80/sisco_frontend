@@ -10,19 +10,20 @@ import { EstadoConexionRodasComponent } from './estado-conexion/estado-conexion.
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 import { ConexionRodasService } from './shared/services/conexion-rodas.service';
 
-
 @NgModule({
-  declarations: [ListConexionRodasComponent, ConexionRodasFormComponent, EstadoConexionRodasComponent],
+  declarations: [
+    ListConexionRodasComponent,
+    ConexionRodasFormComponent,
+    EstadoConexionRodasComponent,
+  ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     ConexionRodasRoutingModule,
     SharedModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
-  providers: [
-    ConexionRodasService
-  ]
+  providers: [ConexionRodasService],
 })
-export class ConexionRodasModule { }
+export class ConexionRodasModule {}

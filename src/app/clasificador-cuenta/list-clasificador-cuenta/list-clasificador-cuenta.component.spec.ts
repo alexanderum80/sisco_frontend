@@ -8,9 +8,8 @@ describe('ListClasificadorCuentaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListClasificadorCuentaComponent ]
-    })
-    .compileComponents();
+      declarations: [ListClasificadorCuentaComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

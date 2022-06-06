@@ -8,7 +8,6 @@ import { ParteAtrasoComponent } from './parte-atraso.component';
 import { ParteAtrasoService } from './shared/services/parte-atraso.service';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
-
 @NgModule({
   declarations: [ParteAtrasoComponent],
   imports: [
@@ -17,8 +16,8 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     ReactiveFormsModule,
     ParteAtrasoRoutingModule,
     SharedModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
-  providers: [ParteAtrasoService]
+  providers: [ParteAtrasoService],
 })
-export class ParteAtrasoModule { }
+export class ParteAtrasoModule {}

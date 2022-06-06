@@ -8,9 +8,8 @@ describe('MoreVertComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MoreVertComponent ]
-    })
-    .compileComponents();
+      declarations: [MoreVertComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

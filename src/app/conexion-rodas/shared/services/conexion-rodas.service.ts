@@ -1,6 +1,9 @@
 import { toNumber } from 'lodash';
 import { conexionRodasApi } from './../graphql/conexion-rodasActions';
-import { ConexionRodasQueryResponse, ConexionRodasMutationResponse } from './../models/conexion-rodas.model';
+import {
+  ConexionRodasQueryResponse,
+  ConexionRodasMutationResponse,
+} from './../models/conexion-rodas.model';
 import { Apollo } from 'apollo-angular';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
@@ -21,19 +24,21 @@ export class ConexionRodasService {
 
   subscription: Subscription[] = [];
 
-  constructor(
-    private _apollo: Apollo,
-  ) { }
+  constructor(private _apollo: Apollo) {}
 
   loadAllConexionesRodas(): Observable<ConexionRodasQueryResponse> {
     return new Observable<ConexionRodasQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.watchQuery<ConexionRodasQueryResponse>({
-          query: conexionRodasApi.all,
-          fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(response => {
-          subscriber.next(response.data);
-        }));
+        this.subscription.push(
+          this._apollo
+            .watchQuery<ConexionRodasQueryResponse>({
+              query: conexionRodasApi.all,
+              fetchPolicy: 'network-only',
+            })
+            .valueChanges.subscribe(response => {
+              subscriber.next(response.data);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -42,14 +47,18 @@ export class ConexionRodasService {
 
   loadConexionById(id: number): Observable<ConexionRodasQueryResponse> {
     return new Observable<ConexionRodasQueryResponse>(subscriber => {
-      this.subscription.push(this._apollo.query<ConexionRodasQueryResponse>({
-        query: conexionRodasApi.byId,
-        variables: { id },
-        fetchPolicy: 'network-only'
-      }).subscribe(response => {
-        subscriber.next(response.data);
-        subscriber.complete();
-      }));
+      this.subscription.push(
+        this._apollo
+          .query<ConexionRodasQueryResponse>({
+            query: conexionRodasApi.byId,
+            variables: { id },
+            fetchPolicy: 'network-only',
+          })
+          .subscribe(response => {
+            subscriber.next(response.data);
+            subscriber.complete();
+          })
+      );
     });
   }
 
@@ -67,16 +76,26 @@ export class ConexionRodasService {
           BaseDatos: this.fg.controls['baseDatos'].value,
         };
 
-        const mutation = _conexionInfo.Id === 0 ? conexionRodasApi.create :  conexionRodasApi.update;
+        const mutation =
+          _conexionInfo.Id === 0
+            ? conexionRodasApi.create
+            : conexionRodasApi.update;
 
-        this.subscription.push(this._apollo.mutate<ConexionRodasMutationResponse>({
-          mutation: mutation,
-          variables: { conexionInfo: _conexionInfo },
-          refetchQueries: ['GetAllContaConexiones', 'GetContaConexionesByIdDivision']
-        }).subscribe({
-          next: (response) => subscriber.next(response.data || undefined),
-          error: (error) => subscriber.error(error)
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<ConexionRodasMutationResponse>({
+              mutation: mutation,
+              variables: { conexionInfo: _conexionInfo },
+              refetchQueries: [
+                'GetAllContaConexiones',
+                'GetContaConexionesByIdDivision',
+              ],
+            })
+            .subscribe({
+              next: response => subscriber.next(response.data || undefined),
+              error: error => subscriber.error(error),
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -85,25 +104,33 @@ export class ConexionRodasService {
 
   delete(IDs: number[]): Observable<ConexionRodasMutationResponse> {
     return new Observable<ConexionRodasMutationResponse>(subscriber => {
-      this.subscription.push(this._apollo.mutate<ConexionRodasMutationResponse>({
-        mutation: conexionRodasApi.delete,
-        variables: { id: IDs },
-        refetchQueries: ['GetAllContaConexiones', 'GetContaConexionesByIdDivision']
-      }).subscribe(response => {
-        subscriber.next(response.data || undefined);
-      }));
+      this.subscription.push(
+        this._apollo
+          .mutate<ConexionRodasMutationResponse>({
+            mutation: conexionRodasApi.delete,
+            variables: { id: IDs },
+            refetchQueries: [
+              'GetAllContaConexiones',
+              'GetContaConexionesByIdDivision',
+            ],
+          })
+          .subscribe(response => {
+            subscriber.next(response.data || undefined);
+          })
+      );
     });
   }
 
   estadoConexion(idDivision: number): Observable<ConexionRodasQueryResponse> {
     return new Observable<ConexionRodasQueryResponse>(subscriber => {
-      this._apollo.query<ConexionRodasQueryResponse>({
-        query: conexionRodasApi.estado,
-        variables: { idDivision },
-        fetchPolicy: 'network-only'
-      }).subscribe(response => {
-      });
-    })
+      this._apollo
+        .query<ConexionRodasQueryResponse>({
+          query: conexionRodasApi.estado,
+          variables: { idDivision },
+          fetchPolicy: 'network-only',
+        })
+        .subscribe(response => {});
+    });
   }
 
   public async getEstadoConexionDefinition(data: any): Promise<any> {
@@ -123,20 +150,22 @@ export class ConexionRodasService {
       table: {
         widths: [300, 100],
         body: [
-          [{
-            text: 'Unidad',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Estado',
-            style: 'tableHeader'
-          }],
-          ...chequeaConexion.map((p: { Unidad: any; Estado: any; }) => {
+          [
+            {
+              text: 'Unidad',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Estado',
+              style: 'tableHeader',
+            },
+          ],
+          ...chequeaConexion.map((p: { Unidad: any; Estado: any }) => {
             return [p.Unidad, p.Estado];
-          })
+          }),
         ],
-        margin: [0, 10, 0, 10]
-      }
+        margin: [0, 10, 0, 10],
+      },
     });
 
     return returnValue;
@@ -145,5 +174,4 @@ export class ConexionRodasService {
   dispose(): void {
     this.subscription.forEach(subs => subs.unsubscribe());
   }
-
 }

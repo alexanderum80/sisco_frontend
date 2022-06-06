@@ -29,12 +29,15 @@ export class SupervisoresFormComponent implements OnInit {
     private _divisionesSvc: DivisionesService,
     private _supervisoresSvc: SupervisoresService,
     private _cargosSvc: CargosService,
-    private _dinamicDialogSvc: DinamicDialogService,
-  ) { }
+    private _dinamicDialogSvc: DinamicDialogService
+  ) {}
 
   ngOnInit(): void {
     this.fg = this._supervisoresSvc.fg;
-    this.action = toNumber(this.fg.controls['idSupervisor'].value) === 0 ? ActionClicked.Add : ActionClicked.Edit;
+    this.action =
+      toNumber(this.fg.controls['idSupervisor'].value) === 0
+        ? ActionClicked.Add
+        : ActionClicked.Edit;
 
     this._getCargos();
 
@@ -43,66 +46,74 @@ export class SupervisoresFormComponent implements OnInit {
 
   private _getCargos(): void {
     try {
-      this._supervisoresSvc.subscription.push(this._cargosSvc.getCargos().subscribe(response => {
-        const result = response.getAllCargos;
+      this._supervisoresSvc.subscription.push(
+        this._cargosSvc.getCargos().subscribe(response => {
+          const result = response.getAllCargos;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: `Se produjo el siguiente error: ${ result.error }`,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: `Se produjo el siguiente error: ${result.error}`,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.cargosValues = result.data.map((data: { IdCargo: any; Cargo: any; }) => {
-          return {
-            value: data.IdCargo,
-            label: data.Cargo
-          };
-        });
-      }));
+          this.cargosValues = result.data.map(
+            (data: { IdCargo: any; Cargo: any }) => {
+              return {
+                value: data.IdCargo,
+                label: data.Cargo,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Se produjo el siguiente error: ${ err }`,
+        text: `Se produjo el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
 
   private _getDivisiones(): void {
     try {
-      this._supervisoresSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
-        const result = response.getAllDivisiones;
+      this._supervisoresSvc.subscription.push(
+        this._divisionesSvc.getDivisiones().subscribe(response => {
+          const result = response.getAllDivisiones;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: `Se produjo el siguiente error: ${ result.error }`,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: `Se produjo el siguiente error: ${result.error}`,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.divisionesValues = result.data.map((data: { IdDivision: string; Division: string; }) => {
-          return {
-            value: data.IdDivision,
-            label: data.IdDivision + '-' + data.Division
-          };
-        });
-      }));
+          this.divisionesValues = result.data.map(
+            (data: { IdDivision: string; Division: string }) => {
+              return {
+                value: data.IdDivision,
+                label: data.IdDivision + '-' + data.Division,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Se produjo el siguiente error: ${ err }`,
+        text: `Se produjo el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -114,7 +125,7 @@ export class SupervisoresFormComponent implements OnInit {
   onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
-        this._save();        
+        this._save();
         break;
       case ActionClicked.Cancel:
         this._closeModal();
@@ -123,34 +134,35 @@ export class SupervisoresFormComponent implements OnInit {
   }
 
   private _save(): void {
-    this._supervisoresSvc.subscription.push(this._supervisoresSvc.save().subscribe(response => {
-      let result;
-      let txtMessage;
+    this._supervisoresSvc.subscription.push(
+      this._supervisoresSvc.save().subscribe(response => {
+        let result;
+        let txtMessage;
 
-      if (this.action === ActionClicked.Add) {
-        result = response.createSupervisor
-        txtMessage = 'El Supervisor se ha creado correctamente.';
-      } else {
-        result = response.updateSupervisor
-        txtMessage = 'El Supervisor se ha actualizado correctamente.';
-      }
-      
-      if (!result.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: result.error,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
-        });
-      }
+        if (this.action === ActionClicked.Add) {
+          result = response.createSupervisor;
+          txtMessage = 'El Supervisor se ha creado correctamente.';
+        } else {
+          result = response.updateSupervisor;
+          txtMessage = 'El Supervisor se ha actualizado correctamente.';
+        }
 
-      this._closeModal(txtMessage);
-    }));
+        if (!result.success) {
+          return SweetAlert.fire({
+            icon: 'error',
+            title: 'ERROR',
+            text: result.error,
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+          });
+        }
+
+        this._closeModal(txtMessage);
+      })
+    );
   }
 
   private _closeModal(message?: string): void {
     this._dinamicDialogSvc.close(message);
   }
-
 }

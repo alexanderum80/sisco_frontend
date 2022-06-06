@@ -14,7 +14,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 @Component({
   selector: 'app-conexion-rodas-form',
   templateUrl: './conexion-rodas-form.component.html',
-  styleUrls: ['./conexion-rodas-form.component.scss']
+  styleUrls: ['./conexion-rodas-form.component.scss'],
 })
 export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
   divisionesValues: SelectItem[] = [];
@@ -33,45 +33,56 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
     private _dinamicDialogSvc: DinamicDialogService,
     private _divisionesSvc: DivisionesService,
     private _unidadesSvc: UnidadesService,
-    private _databasesSvc: DatabasesService,
-  ) { }
+    private _databasesSvc: DatabasesService
+  ) {}
 
   ngOnInit(): void {
     this.fg = this._conexionRodasSvc.fg;
 
-    this.action = toNumber(this.fg.controls['idUnidad'].value) === 0 ? ActionClicked.Add : ActionClicked.Edit;
+    this.action =
+      toNumber(this.fg.controls['idUnidad'].value) === 0
+        ? ActionClicked.Add
+        : ActionClicked.Edit;
     if (this.action === ActionClicked.Edit) {
       this.refreshDataBases();
     }
 
     this._getDivisiones();
   }
-  
+
   ngAfterViewInit(): void {
     this._getUnidades();
     this._subscribeToFgValueChange();
   }
 
   private _subscribeToFgValueChange(): void {
-    this._conexionRodasSvc.subscription.push(this.fg.controls['idDivision'].valueChanges.subscribe(value => {
-      this.fg.controls['idUnidad'].setValue(null);
-      this._getUnidades();
-    }));
+    this._conexionRodasSvc.subscription.push(
+      this.fg.controls['idDivision'].valueChanges.subscribe(value => {
+        this.fg.controls['idUnidad'].setValue(null);
+        this._getUnidades();
+      })
+    );
 
-    this._conexionRodasSvc.subscription.push(this.fg.controls['ip'].valueChanges.subscribe(() => {
-      this.fg.controls['baseDatos'].setValue(null);
-      this.baseDatosValues = [];
-    }));
+    this._conexionRodasSvc.subscription.push(
+      this.fg.controls['ip'].valueChanges.subscribe(() => {
+        this.fg.controls['baseDatos'].setValue(null);
+        this.baseDatosValues = [];
+      })
+    );
 
-    this._conexionRodasSvc.subscription.push(this.fg.controls['usuario'].valueChanges.subscribe(() => {
-      this.fg.controls['baseDatos'].setValue(null);
-      this.baseDatosValues = [];
-    }));
+    this._conexionRodasSvc.subscription.push(
+      this.fg.controls['usuario'].valueChanges.subscribe(() => {
+        this.fg.controls['baseDatos'].setValue(null);
+        this.baseDatosValues = [];
+      })
+    );
 
-    this._conexionRodasSvc.subscription.push(this.fg.controls['contrasena'].valueChanges.subscribe(() => {
-      this.fg.controls['baseDatos'].setValue(null);
-      this.baseDatosValues = [];
-    }));
+    this._conexionRodasSvc.subscription.push(
+      this.fg.controls['contrasena'].valueChanges.subscribe(() => {
+        this.fg.controls['baseDatos'].setValue(null);
+        this.baseDatosValues = [];
+      })
+    );
   }
 
   get isAdminPermission(): boolean {
@@ -80,33 +91,37 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
 
   private _getDivisiones(): void {
     try {
-      this._conexionRodasSvc.subscription.push(this._divisionesSvc.getDivisiones().subscribe(response => {
-        const result = response.getAllDivisiones;
+      this._conexionRodasSvc.subscription.push(
+        this._divisionesSvc.getDivisiones().subscribe(response => {
+          const result = response.getAllDivisiones;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result.error,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.divisionesValues = result.data.map((d: { IdDivision: string; Division: string; }) => {
-          return {
-            value: d.IdDivision,
-            label: d.IdDivision + '-' + d.Division
-          };
-        });
-      }));
+          this.divisionesValues = result.data.map(
+            (d: { IdDivision: string; Division: string }) => {
+              return {
+                value: d.IdDivision,
+                label: d.IdDivision + '-' + d.Division,
+              };
+            }
+          );
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -120,33 +135,39 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
         return;
       }
 
-      this._conexionRodasSvc.subscription.push(this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe(response => {
-        const result = response.getUnidadesByIdDivision;
+      this._conexionRodasSvc.subscription.push(
+        this._unidadesSvc
+          .getUnidadesByIdDivision(idDivision)
+          .subscribe(response => {
+            const result = response.getUnidadesByIdDivision;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+            if (!result.success) {
+              return SweetAlert.fire({
+                icon: 'error',
+                title: 'ERROR',
+                text: result.error,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+              });
+            }
 
-        this.unidadesValues = result.data.map((d: { IdUnidad: number, Nombre: string}) => {
-          return {
-            value: d.IdUnidad,
-            label: d.IdUnidad + '-' + d.Nombre
-          };
-        });
-      }));
+            this.unidadesValues = result.data.map(
+              (d: { IdUnidad: number; Nombre: string }) => {
+                return {
+                  value: d.IdUnidad,
+                  label: d.IdUnidad + '-' + d.Nombre,
+                };
+              }
+            );
+          })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -160,28 +181,32 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
       const password = this.fg.controls['contrasena'].value;
 
       const that = this;
-      this._conexionRodasSvc.subscription.push(this._databasesSvc.getDataBases(ip, usuario, password).subscribe(response => {
-        this.loadingDataBase = false;
+      this._conexionRodasSvc.subscription.push(
+        this._databasesSvc
+          .getDataBases(ip, usuario, password)
+          .subscribe(response => {
+            this.loadingDataBase = false;
 
-        const result = response.getDataBases;
+            const result = response.getDataBases;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+            if (!result.success) {
+              return SweetAlert.fire({
+                icon: 'error',
+                title: 'ERROR',
+                text: result.error,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+              });
+            }
 
-        that.baseDatosValues = result.data.map((d: { name: any; }) => {
-          return {
-            value: d.name,
-            label: d.name
-          };
-        });
-      }));
+            that.baseDatosValues = result.data.map((d: { name: any }) => {
+              return {
+                value: d.name,
+                label: d.name,
+              };
+            });
+          })
+      );
     } catch (err: any) {
       this.loadingDataBase = false;
 
@@ -190,7 +215,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -198,7 +223,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
   onActionClicked(action: ActionClicked) {
     switch (action) {
       case ActionClicked.Save:
-        this._save();        
+        this._save();
         break;
       case ActionClicked.Cancel:
         this._closeModal();
@@ -208,40 +233,44 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
 
   private _save(): void {
     try {
-      this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.save().subscribe({ 
-        next: (response: any) => {
-          let result;
-          let txtMessage;
+      this._conexionRodasSvc.subscription.push(
+        this._conexionRodasSvc.save().subscribe({
+          next: (response: any) => {
+            let result;
+            let txtMessage;
 
-          if (this.action === ActionClicked.Add) {
-            result = response.createContaConexion;
-            txtMessage = 'La Conexión se ha creado correctamente.';
-          } else {
-            result = response.updateContaConexion;
-            txtMessage = 'La Conexión se ha actualizado correctamente.';
-          }
-          
-          if (!result.success) {
-            throw new Error(result.error);
-          }
+            if (this.action === ActionClicked.Add) {
+              result = response.createContaConexion;
+              txtMessage = 'La Conexión se ha creado correctamente.';
+            } else {
+              result = response.updateContaConexion;
+              txtMessage = 'La Conexión se ha actualizado correctamente.';
+            }
 
-          this._closeModal(txtMessage);
-        }, 
-        error: (error) => { SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: error,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar'
-        }); }
-      }));
+            if (!result.success) {
+              throw new Error(result.error);
+            }
+
+            this._closeModal(txtMessage);
+          },
+          error: error => {
+            SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: error,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          },
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
         text: err,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -249,5 +278,4 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
   private _closeModal(message?: string): void {
     this._dinamicDialogSvc.close(message);
   }
-
 }

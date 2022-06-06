@@ -14,17 +14,12 @@ import { PrimeButtonModule } from '../shared/ui/prime-ng/button/button.module';
     UsuarioInfoComponent,
     // NotificationsComponent,
   ],
-  imports: [
-    CommonModule,
-    MenubarModule,
-    MenuModule,
-    PrimeButtonModule,
-  ],
+  imports: [CommonModule, MenubarModule, MenuModule, PrimeButtonModule],
   exports: [
     // TopMenuComponent,
     // MoreVertComponent,
     // NotificationsComponent,
-    UsuarioInfoComponent
-  ]
+    UsuarioInfoComponent,
+  ],
 })
-export class NavigationModule { }
+export class NavigationModule {}

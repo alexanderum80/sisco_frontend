@@ -1,5 +1,15 @@
-import { IActionItemClickedArgs, ActionClicked } from './../../../models/list-items';
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  IActionItemClickedArgs,
+  ActionClicked,
+} from './../../../models/list-items';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { ITableColumns } from './table.model';
 import { get } from 'lodash';
 import { TableService } from './table.service';
@@ -8,7 +18,7 @@ import { TableService } from './table.service';
   // tslint:disable-next-line: component-selector
   selector: 'png-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
+  styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
   @Input() columns: ITableColumns[] = [];
@@ -19,18 +29,16 @@ export class TableComponent implements OnInit {
   @Input() canEditDelete = false;
   @Input() canSelect = false;
   @Input() groupField: string;
-  @Input() groupMode: 'subheader'|'rowspan' = 'subheader';
+  @Input() groupMode: 'subheader' | 'rowspan' = 'subheader';
   @Input() expandible = false;
   @Input() resizableColumns = false;
 
-  @Output() actionClicked = new EventEmitter<IActionItemClickedArgs>()
+  @Output() actionClicked = new EventEmitter<IActionItemClickedArgs>();
 
   viewportHeight = 120;
   _ = get;
 
-  constructor(
-    private _tableSvc: TableService
-  ) { }
+  constructor(private _tableSvc: TableService) {}
 
   ngOnInit(): void {
     this.selectedRow = this._tableSvc.selectedRow;
@@ -43,7 +51,7 @@ export class TableComponent implements OnInit {
   get selectedRow(): any[] {
     return this._tableSvc.selectedRow;
   }
-  
+
   set selectedRow(selected: any) {
     this._tableSvc.selectedRow = selected;
   }
@@ -52,22 +60,21 @@ export class TableComponent implements OnInit {
     switch (action) {
       case ActionClicked.Add:
         this.actionClicked.emit({
-          action: 'add'
-        })
+          action: 'add',
+        });
         break;
       case ActionClicked.Edit:
         this.actionClicked.emit({
           action: 'edit',
-          item: data || []
-        })
+          item: data || [],
+        });
         break;
       case ActionClicked.Delete:
         this.actionClicked.emit({
           action: 'delete',
-          item: data || this._tableSvc.selectedRow
-        })
+          item: data || this._tableSvc.selectedRow,
+        });
         break;
     }
   }
-
 }

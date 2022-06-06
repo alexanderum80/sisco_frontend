@@ -9,7 +9,6 @@ import { ConexionGoldenDwhComponent } from './conexion-golden-dwh.component';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 import { ConexionGoldenDwhService } from './shared/services/conexion-golden-dwh.service';
 
-
 @NgModule({
   declarations: [ConexionGoldenDwhFormComponent, ConexionGoldenDwhComponent],
   imports: [
@@ -18,8 +17,8 @@ import { ConexionGoldenDwhService } from './shared/services/conexion-golden-dwh.
     ReactiveFormsModule,
     ConexionGoldenDwhRoutingModule,
     SharedModule,
-    PrimeNgModule
+    PrimeNgModule,
   ],
-  providers: [ConexionGoldenDwhService]
+  providers: [ConexionGoldenDwhService],
 })
-export class ConexionGoldenDwhModule { }
+export class ConexionGoldenDwhModule {}

@@ -1,5 +1,9 @@
 <app-list-item title="Tipos de Entidad">
-  <png-table [columns]="displayedColumns" [data]="dataSource" [canEditDelete]="hasAdvancedUserPermission()" (actionClicked)="actionClicked($event)"></png-table>
+  <png-table
+    [columns]="displayedColumns"
+    [data]="dataSource"
+    [canEditDelete]="hasAdvancedUserPermission()"
+    (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
 
 <p-toast></p-toast>

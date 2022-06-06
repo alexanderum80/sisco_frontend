@@ -6,19 +6,16 @@ import { FormGroup } from '@angular/forms';
   // tslint:disable-next-line: component-selector
   selector: 'png-radio-button',
   templateUrl: './radio-button.component.html',
-  styleUrls: ['./radio-button.component.scss']
+  styleUrls: ['./radio-button.component.scss'],
 })
 export class RadioButtonComponent implements OnInit {
   @Input() fg: FormGroup;
   @Input() control: string;
   @Input() items: SelectItem[] = [];
 
-  constructor(
-    private cd: ChangeDetectorRef
-  ) { }
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
   }
-
 }

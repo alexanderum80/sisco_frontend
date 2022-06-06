@@ -5,18 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputMaskModule } from 'primeng/inputmask';
 
 @NgModule({
-  declarations: [
-    InputMaskComponent
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    InputMaskModule
-  ],
-  exports: [
-    InputMaskModule,
-    InputMaskComponent
-  ]
+  declarations: [InputMaskComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, InputMaskModule],
+  exports: [InputMaskModule, InputMaskComponent],
 })
-export class PrimeInputMaskModule { }
+export class PrimeInputMaskModule {}

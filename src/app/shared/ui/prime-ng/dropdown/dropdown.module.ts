@@ -5,18 +5,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    DropdownComponent
-  ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    DropdownModule,
-  ],
-  exports: [
-    DropdownComponent,
-    DropdownModule
-  ]
+  declarations: [DropdownComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, DropdownModule],
+  exports: [DropdownComponent, DropdownModule],
 })
-export class PrimeDropdownModule { }
+export class PrimeDropdownModule {}

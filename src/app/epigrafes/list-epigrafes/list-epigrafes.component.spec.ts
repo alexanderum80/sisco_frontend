@@ -8,9 +8,8 @@ describe('ListEpigrafesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListEpigrafesComponent ]
-    })
-    .compileComponents();
+      declarations: [ListEpigrafesComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

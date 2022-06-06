@@ -1,4 +1,7 @@
-import { LocaleFormatEnum, DateFormatEnum } from './../../../shared/models/date-range';
+import {
+  LocaleFormatEnum,
+  DateFormatEnum,
+} from './../../../shared/models/date-range';
 import { numberFormatter } from './../../../shared/models/number';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
@@ -7,10 +10,9 @@ import { SelectItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
 @Injectable({
-  providedIn: 'platform'
+  providedIn: 'platform',
 })
 export class ConcilaInternaDwhService {
-
   fg: FormGroup = new FormGroup({
     idDivision: new FormControl(''),
     idSubdivision: new FormControl(''),
@@ -25,7 +27,7 @@ export class ConcilaInternaDwhService {
 
   subscription: Subscription[] = [];
 
-  constructor() { }
+  constructor() {}
 
   public inicializarFormGroup(): void {
     const inputValues = {
@@ -43,38 +45,57 @@ export class ConcilaInternaDwhService {
     this.fg.patchValue(inputValues);
   }
 
-  public async getDivision(idDivision: number, divisionesList: SelectItem[]): Promise<any> {
+  public async getDivision(
+    idDivision: number,
+    divisionesList: SelectItem[]
+  ): Promise<any> {
     const definition = [];
 
     const _division = divisionesList.find(u => u.value === idDivision);
 
     definition.push({
-      text: `División:  ${ _division?.label } `,
+      text: `División:  ${_division?.label} `,
       bold: true,
-      margin: [0, 5, 0, 0]
+      margin: [0, 5, 0, 0],
     });
 
     return definition;
   }
 
-  public async getParteAtrasosDefinition(parteAtrasosData: any[], fechaInicial: Date, fechaFinal: Date): Promise<any[]> {
+  public async getParteAtrasosDefinition(
+    parteAtrasosData: any[],
+    fechaInicial: Date,
+    fechaFinal: Date
+  ): Promise<any[]> {
     const definition = [];
 
     definition.push({
       columns: [
         [
           {
-            text: 'Fecha Inicial: ' + formatDate(fechaInicial, DateFormatEnum.ES_DATE, LocaleFormatEnum.EN_US),
+            text:
+              'Fecha Inicial: ' +
+              formatDate(
+                fechaInicial,
+                DateFormatEnum.ES_DATE,
+                LocaleFormatEnum.EN_US
+              ),
             bold: true,
-            margin: [0, 10, 0, 2]
+            margin: [0, 10, 0, 2],
           },
           {
-            text: 'Fecha Final: ' + formatDate(fechaFinal, DateFormatEnum.ES_DATE, LocaleFormatEnum.EN_US),
+            text:
+              'Fecha Final: ' +
+              formatDate(
+                fechaFinal,
+                DateFormatEnum.ES_DATE,
+                LocaleFormatEnum.EN_US
+              ),
             bold: true,
-            margin: [0, 2, 0, 10]
-          }
-        ]
-      ]
+            margin: [0, 2, 0, 10],
+          },
+        ],
+      ],
     });
 
     if (parteAtrasosData.length) {
@@ -95,93 +116,113 @@ export class ConcilaInternaDwhService {
       table: {
         widths: [70, 40, 50, 70, 40, 50, 70, 70],
         body: [
-          [{
-            text: 'Documento',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Emisor',
-            style: 'tableHeader',
-            alignment: 'center'
-          },
-          {
-            text: 'Fecha Emisión',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Importe Emisor',
-            style: 'tableHeader',
-            alignment: 'right'
-          },
-          {
-            text: 'Receptor',
-            style: 'tableHeader',
-            alignment: 'center'
-          },
-          {
-            text: 'Fecha Recepción',
-            style: 'tableHeader'
-          },
-          {
-            text: 'Importe Receptor',
-            style: 'tableHeader',
-            alignment: 'right'
-          },
-          {
-            text: 'Diferencia',
-            style: 'tableHeader',
-            alignment: 'right'
-          }],
+          [
+            {
+              text: 'Documento',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Emisor',
+              style: 'tableHeader',
+              alignment: 'center',
+            },
+            {
+              text: 'Fecha Emisión',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Importe Emisor',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: 'Receptor',
+              style: 'tableHeader',
+              alignment: 'center',
+            },
+            {
+              text: 'Fecha Recepción',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Importe Receptor',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: 'Diferencia',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+          ],
           ...conciliaInternaDWH.map((p: any) => {
             _totalImporteE += p.ImporteE;
             _totalImporteR += p.ImporteR;
             _totalDiferencia += p.Diferencia;
 
-            return [p.Documento, p.Emisor, formatDate(p.FechaE, DateFormatEnum.ES_DATE, LocaleFormatEnum.EN_US),
-                  { text: numberFormatter.format(p.ImporteE), alignment: 'right' },
-                  p.Receptor, formatDate(p.FechaR, DateFormatEnum.ES_DATE, LocaleFormatEnum.EN_US),
-                  { text: numberFormatter.format(p.ImporteR), alignment: 'right' },
-                  { text: numberFormatter.format(p.Diferencia), alignment: 'right' }];
+            return [
+              p.Documento,
+              p.Emisor,
+              formatDate(
+                p.FechaE,
+                DateFormatEnum.ES_DATE,
+                LocaleFormatEnum.EN_US
+              ),
+              { text: numberFormatter.format(p.ImporteE), alignment: 'right' },
+              p.Receptor,
+              formatDate(
+                p.FechaR,
+                DateFormatEnum.ES_DATE,
+                LocaleFormatEnum.EN_US
+              ),
+              { text: numberFormatter.format(p.ImporteR), alignment: 'right' },
+              {
+                text: numberFormatter.format(p.Diferencia),
+                alignment: 'right',
+              },
+            ];
           }),
           // total row
-          [{
-            text: 'TOTAL',
-            style: 'tableHeader'
-          },
-          {
-            text: '',
-            style: 'tableHeader'
-          },
-          {
-            text: '',
-            style: 'tableHeader'
-          },
-          {
-            text: numberFormatter.format(_totalImporteE),
-            style: 'tableHeader',
-            alignment: 'right'
-          },
-          {
-            text: '',
-            style: 'tableHeader'
-          },
-          {
-            text: '',
-            style: 'tableHeader'
-          },
-          {
-            text: numberFormatter.format(_totalImporteR),
-            style: 'tableHeader',
-            alignment: 'right'
-          },
-          {
-            text: numberFormatter.format(_totalDiferencia),
-            style: 'tableHeader',
-            alignment: 'right'
-          }]
+          [
+            {
+              text: 'TOTAL',
+              style: 'tableHeader',
+            },
+            {
+              text: '',
+              style: 'tableHeader',
+            },
+            {
+              text: '',
+              style: 'tableHeader',
+            },
+            {
+              text: numberFormatter.format(_totalImporteE),
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: '',
+              style: 'tableHeader',
+            },
+            {
+              text: '',
+              style: 'tableHeader',
+            },
+            {
+              text: numberFormatter.format(_totalImporteR),
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: numberFormatter.format(_totalDiferencia),
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+          ],
         ],
-        margin: [0, 10, 0, 0]
-      }
+        margin: [0, 10, 0, 0],
+      },
     });
 
     return returnValue;

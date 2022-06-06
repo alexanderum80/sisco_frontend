@@ -8,9 +8,8 @@ describe('EpigrafesFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ EpigrafesFormComponent ]
-    })
-    .compileComponents();
+      declarations: [EpigrafesFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

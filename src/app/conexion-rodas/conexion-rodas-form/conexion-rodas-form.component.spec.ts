@@ -8,9 +8,8 @@ describe('ConexionRodasFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ConexionRodasFormComponent ]
-    })
-    .compileComponents();
+      declarations: [ConexionRodasFormComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

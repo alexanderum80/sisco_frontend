@@ -8,9 +8,8 @@ describe('SupervisoresFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SupervisoresFormComponent ]
-    })
-    .compileComponents();
+      declarations: [SupervisoresFormComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

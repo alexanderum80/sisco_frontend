@@ -4,7 +4,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
 import { Observable, Subscription } from 'rxjs';
 import { expresionesApi } from '../graphql/expresiones-api';
-import { ExpresionesMutationResponse, ExpresionesQueryResponse } from '../models/expresiones.model';
+import {
+  ExpresionesMutationResponse,
+  ExpresionesQueryResponse,
+} from '../models/expresiones.model';
 
 @Injectable()
 export class ExpresionesService {
@@ -21,10 +24,7 @@ export class ExpresionesService {
 
   subscription: Subscription[] = [];
 
-  constructor(
-    private _apollo: Apollo,
-    private _usuarioSvc: UsuarioService,
-  ) { }
+  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
 
   inicializarFg(): void {
     this.fg.controls['id'].setValue(0);
@@ -34,18 +34,24 @@ export class ExpresionesService {
     this.fg.controls['acumulado'].setValue(false);
     this.fg.controls['operacionesInternas'].setValue(false);
     this.fg.controls['centralizada'].setValue(false);
-    this.fg.controls['idDivision'].setValue(this._usuarioSvc.usuario.IdDivision);
+    this.fg.controls['idDivision'].setValue(
+      this._usuarioSvc.usuario.IdDivision
+    );
   }
 
   loadAllExpresionesResumen(): Observable<ExpresionesQueryResponse> {
     return new Observable<ExpresionesQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.watchQuery<ExpresionesQueryResponse>({
-          query: expresionesApi.allResumen,
-          fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(response => {
-          subscriber.next(response.data);
-        }));
+        this.subscription.push(
+          this._apollo
+            .watchQuery<ExpresionesQueryResponse>({
+              query: expresionesApi.allResumen,
+              fetchPolicy: 'network-only',
+            })
+            .valueChanges.subscribe(response => {
+              subscriber.next(response.data);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -55,12 +61,16 @@ export class ExpresionesService {
   loadAllTipoValorExpresiones(): Observable<ExpresionesQueryResponse> {
     return new Observable<ExpresionesQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.watchQuery<ExpresionesQueryResponse>({
-          query: expresionesApi.tipoValor,
-          fetchPolicy: 'network-only'
-        }).valueChanges.subscribe(response => {
-          subscriber.next(response.data);
-        }));
+        this.subscription.push(
+          this._apollo
+            .watchQuery<ExpresionesQueryResponse>({
+              query: expresionesApi.tipoValor,
+              fetchPolicy: 'network-only',
+            })
+            .valueChanges.subscribe(response => {
+              subscriber.next(response.data);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -70,31 +80,41 @@ export class ExpresionesService {
   loadExpresionResumenById(id: number): Observable<ExpresionesQueryResponse> {
     return new Observable<ExpresionesQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.query<ExpresionesQueryResponse>({
-          query: expresionesApi.resumenById,
-          variables: { id },
-          fetchPolicy: 'network-only'
-        }).subscribe(response => {
-          subscriber.next(response.data);
-          subscriber.complete();
-        }));
+        this.subscription.push(
+          this._apollo
+            .query<ExpresionesQueryResponse>({
+              query: expresionesApi.resumenById,
+              variables: { id },
+              fetchPolicy: 'network-only',
+            })
+            .subscribe(response => {
+              subscriber.next(response.data);
+              subscriber.complete();
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
     });
   }
 
-  loadExpresionDetalleByIdResumen(idResumen: number): Observable<ExpresionesQueryResponse> {
+  loadExpresionDetalleByIdResumen(
+    idResumen: number
+  ): Observable<ExpresionesQueryResponse> {
     return new Observable<ExpresionesQueryResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.query<ExpresionesQueryResponse>({
-          query: expresionesApi.detalleByIdResumen,
-          variables: { idResumen },
-          fetchPolicy: 'network-only'
-        }).subscribe(response => {
-          subscriber.next(response.data);
-          subscriber.complete();
-        }));
+        this.subscription.push(
+          this._apollo
+            .query<ExpresionesQueryResponse>({
+              query: expresionesApi.detalleByIdResumen,
+              variables: { idResumen },
+              fetchPolicy: 'network-only',
+            })
+            .subscribe(response => {
+              subscriber.next(response.data);
+              subscriber.complete();
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
@@ -104,31 +124,44 @@ export class ExpresionesService {
   saveExpresion(payload: any): Observable<ExpresionesMutationResponse> {
     return new Observable<ExpresionesMutationResponse>(subscriber => {
       try {
-        const mutation = payload.ExpresionResumen.IdExpresion === 0 ? expresionesApi.create : expresionesApi.update;
+        const mutation =
+          payload.ExpresionResumen.IdExpresion === 0
+            ? expresionesApi.create
+            : expresionesApi.update;
 
-        this.subscription.push(this._apollo.mutate<ExpresionesMutationResponse>({
-          mutation: mutation,
-          variables: { expresionInput: payload },
-          refetchQueries: ['GetAllExpresionesResumen']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<ExpresionesMutationResponse>({
+              mutation: mutation,
+              variables: { expresionInput: payload },
+              refetchQueries: ['GetAllExpresionesResumen'],
+            })
+            .subscribe(response => {
+              subscriber.next(response.data || undefined);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }
     });
   }
 
-  deleteExpresionResumen(IDs: number[]): Observable<ExpresionesMutationResponse> {
+  deleteExpresionResumen(
+    IDs: number[]
+  ): Observable<ExpresionesMutationResponse> {
     return new Observable<ExpresionesMutationResponse>(subscriber => {
       try {
-        this.subscription.push(this._apollo.mutate<ExpresionesMutationResponse>({
-          mutation: expresionesApi.deleteResumen,
-          variables: { IDs },
-          refetchQueries: ['GetAllExpresionesResumen']
-        }).subscribe(response => {
-          subscriber.next(response.data || undefined);
-        }));
+        this.subscription.push(
+          this._apollo
+            .mutate<ExpresionesMutationResponse>({
+              mutation: expresionesApi.deleteResumen,
+              variables: { IDs },
+              refetchQueries: ['GetAllExpresionesResumen'],
+            })
+            .subscribe(response => {
+              subscriber.next(response.data || undefined);
+            })
+        );
       } catch (err: any) {
         subscriber.error(err);
       }

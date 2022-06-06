@@ -1,5 +1,8 @@
 import { MessageService } from 'primeng/api';
-import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
+import {
+  IActionItemClickedArgs,
+  ActionClicked,
+} from './../../shared/models/list-items';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { ConexionRodasFormComponent } from './../conexion-rodas-form/conexion-rodas-form.component';
@@ -12,9 +15,9 @@ import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 @Component({
   selector: 'app-list-conexion-rodas',
   templateUrl: './list-conexion-rodas.component.html',
-  styleUrls: ['./list-conexion-rodas.component.scss']
+  styleUrls: ['./list-conexion-rodas.component.scss'],
 })
-export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
   columns: ITableColumns[] = [
     { header: 'División', field: 'Division', type: 'string' },
     { header: 'Unidad', field: 'Unidad', type: 'string' },
@@ -33,11 +36,8 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
     private _dinamicDialogSvc: DinamicDialogService,
     private _conexionRodasSvc: ConexionRodasService,
     private _msgSvc: MessageService
-  ) { }
+  ) {}
 
-  ngOnInit(): void {
-  }
-  
   ngAfterViewInit(): void {
     this._loadConexionesRodas();
   }
@@ -52,25 +52,30 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
 
   private _loadConexionesRodas(): void {
     try {
-      this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.loadAllConexionesRodas().subscribe(response => {
-        this.loading = false;
+      this._conexionRodasSvc.subscription.push(
+        this._conexionRodasSvc.loadAllConexionesRodas().subscribe(response => {
+          this.loading = false;
 
-        const result = response.getAllContaConexiones;
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar',
-          });
-        }
+          const result = response.getAllContaConexiones;
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result.error,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.conexionesRodas = sortBy(result.data, ['IdDivision', 'IdUnidad']);
-      }));
+          this.conexionesRodas = sortBy(result.data, [
+            'IdDivision',
+            'IdUnidad',
+          ]);
+        })
+      );
     } catch (err: any) {
       this.loading = false;
-      
+
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
@@ -87,10 +92,10 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
         this._add();
         break;
       case ActionClicked.Edit:
-        this._edit(event.item)
-        break;    
+        this._edit(event.item);
+        break;
       case ActionClicked.Delete:
-        this._delete(event.item)
+        this._delete(event.item);
         break;
     }
   }
@@ -110,12 +115,21 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
 
       this._conexionRodasSvc.fg.patchValue(dataInput);
 
-      this._dinamicDialogSvc.open('Agregar Conexión al Rodas', ConexionRodasFormComponent);
-      this._conexionRodasSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-        if (message) {
-          this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-        }
-      }));
+      this._dinamicDialogSvc.open(
+        'Agregar Conexión al Rodas',
+        ConexionRodasFormComponent
+      );
+      this._conexionRodasSvc.subscription.push(
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+            this._msgSvc.add({
+              severity: 'success',
+              summary: 'Satisfactorio',
+              detail: message,
+            });
+          }
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
@@ -130,40 +144,55 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
   private _edit(data: any): void {
     try {
       if (this.hasAdminPermission()) {
-      this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.loadConexionById(data.Id).subscribe(response => {
-          const result = response.getContaConexionById;
+        this._conexionRodasSvc.subscription.push(
+          this._conexionRodasSvc
+            .loadConexionById(data.Id)
+            .subscribe(response => {
+              const result = response.getContaConexionById;
 
-          if (!result.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: result.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
-          }
+              if (!result.success) {
+                return SweetAlert.fire({
+                  icon: 'error',
+                  title: 'ERROR',
+                  text: result.error,
+                  showConfirmButton: true,
+                  confirmButtonText: 'Aceptar',
+                });
+              }
 
-          const data = result.data;
+              const data = result.data;
 
-          const dataInput = {
-            id: data.Id,
-            idUnidad: data.IdUnidad,
-            consolidado: data.Consolidado,
-            ip: data.IpRodas,
-            usuario: data.Usuario,
-            contrasena: data.Contrasena,
-            baseDatos: data.BaseDatos,
-            idDivision: data.IdDivision,
-          };
-          this._conexionRodasSvc.fg.patchValue(dataInput);
+              const dataInput = {
+                id: data.Id,
+                idUnidad: data.IdUnidad,
+                consolidado: data.Consolidado,
+                ip: data.IpRodas,
+                usuario: data.Usuario,
+                contrasena: data.Contrasena,
+                baseDatos: data.BaseDatos,
+                idDivision: data.IdDivision,
+              };
+              this._conexionRodasSvc.fg.patchValue(dataInput);
 
-          this._dinamicDialogSvc.open('Modificar Conexión al Rodas', ConexionRodasFormComponent);
-          this._conexionRodasSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-            if (message) {
-              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-            }
-          }));
-        }));
+              this._dinamicDialogSvc.open(
+                'Modificar Conexión al Rodas',
+                ConexionRodasFormComponent
+              );
+              this._conexionRodasSvc.subscription.push(
+                this._dinamicDialogSvc.ref.onClose.subscribe(
+                  (message: string) => {
+                    if (message) {
+                      this._msgSvc.add({
+                        severity: 'success',
+                        summary: 'Satisfactorio',
+                        detail: message,
+                      });
+                    }
+                  }
+                )
+              );
+            })
+        );
       }
     } catch (err: any) {
       SweetAlert.fire({
@@ -186,30 +215,44 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
           showConfirmButton: true,
           confirmButtonText: 'Sí',
           showCancelButton: true,
-          cancelButtonText: 'No'
+          cancelButtonText: 'No',
         }).then(res => {
           if (res.value) {
-            const IDsToRemove: number[] = !isArray(data) ? [data.Id] :  data.map(d => { return d.Id });
-            
-            this._conexionRodasSvc.subscription.push(this._conexionRodasSvc.delete(IDsToRemove).subscribe(response => {
-              const result = response.deleteContaConexion;
-
-              if (!result.success) {
-                return SweetAlert.fire({
-                  icon: 'error',
-                  title: 'ERROR',
-                  text: result.error,
-                  showConfirmButton: true,
-                  confirmButtonText: 'Aceptar',
+            const IDsToRemove: number[] = !isArray(data)
+              ? [data.Id]
+              : data.map(d => {
+                  return d.Id;
                 });
-              }
 
-              this._conexionRodasSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-                if (message) {
-                  this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'La Conexión se ha eliminado correctamente.' })
+            this._conexionRodasSvc.subscription.push(
+              this._conexionRodasSvc.delete(IDsToRemove).subscribe(response => {
+                const result = response.deleteContaConexion;
+
+                if (!result.success) {
+                  return SweetAlert.fire({
+                    icon: 'error',
+                    title: 'ERROR',
+                    text: result.error,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Aceptar',
+                  });
                 }
-              }));
-            }));
+
+                this._conexionRodasSvc.subscription.push(
+                  this._dinamicDialogSvc.ref.onClose.subscribe(
+                    (message: string) => {
+                      if (message) {
+                        this._msgSvc.add({
+                          severity: 'success',
+                          summary: 'Satisfactorio',
+                          detail: 'La Conexión se ha eliminado correctamente.',
+                        });
+                      }
+                    }
+                  )
+                );
+              })
+            );
           }
         });
       }
@@ -223,5 +266,4 @@ export class ListConexionRodasComponent implements OnInit, AfterViewInit, OnDest
       });
     }
   }
-
 }

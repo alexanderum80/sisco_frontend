@@ -8,9 +8,8 @@ describe('ListCompararExpresionesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListCompararExpresionesComponent ]
-    })
-    .compileComponents();
+      declarations: [ListCompararExpresionesComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

@@ -1,5 +1,8 @@
 import { MessageService } from 'primeng/api';
-import { IActionItemClickedArgs, ActionClicked } from './../../shared/models/list-items';
+import {
+  IActionItemClickedArgs,
+  ActionClicked,
+} from './../../shared/models/list-items';
 import { EmpleadosService } from './../shared/services/empleados.service';
 import { EmpleadosFormComponent } from './../empleados-form/empleados-form.component';
 import SweetAlert from 'sweetalert2';
@@ -13,9 +16,9 @@ import { isArray } from 'lodash';
 @Component({
   selector: 'app-list-empleados',
   templateUrl: './list-empleados.component.html',
-  styleUrls: ['./list-empleados.component.scss']
+  styleUrls: ['./list-empleados.component.scss'],
 })
-export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
   columns: ITableColumns[] = [
     { header: 'Empleado', field: 'Empleado', type: 'string' },
     { header: 'Cargo', field: 'Cargo.Cargo', type: 'string' },
@@ -29,11 +32,8 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
     private _usuarioSvc: UsuarioService,
     private _empleadoSvc: EmpleadosService,
     private _msgSvc: MessageService
-  ) { }
+  ) {}
 
-  ngOnInit(): void {
-  }
-  
   ngAfterViewInit(): void {
     this._getEmpleados();
   }
@@ -49,28 +49,30 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private _getEmpleados(): void {
     try {
-      this._empleadoSvc.subscription.push(this._empleadoSvc.loadAllEmpleados().subscribe(response => {
-        const result = response.getAllEmpleados;
+      this._empleadoSvc.subscription.push(
+        this._empleadoSvc.loadAllEmpleados().subscribe(response => {
+          const result = response.getAllEmpleados;
 
-        if (result.success === false) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: `Ocurrió el siguiente error: ${ result.error }`,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+          if (result.success === false) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: `Ocurrió el siguiente error: ${result.error}`,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-        this.empleados = result.data;
-      }));
+          this.empleados = result.data;
+        })
+      );
     } catch (err: any) {
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
-        text: `Ha ocurrido el siguiente error: ${ err }`,
+        text: `Ha ocurrido el siguiente error: ${err}`,
         showConfirmButton: true,
-        confirmButtonText: 'Aceptar'
+        confirmButtonText: 'Aceptar',
       });
     }
   }
@@ -81,10 +83,10 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
         this._add();
         break;
       case ActionClicked.Edit:
-        this._edit(event.item)
-        break;    
+        this._edit(event.item);
+        break;
       case ActionClicked.Delete:
-        this._delete(event.item)
+        this._delete(event.item);
         break;
     }
   }
@@ -95,52 +97,73 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
         idEmpleado: '',
         empleado: '',
         cargo: null,
-        division: this._usuarioSvc.usuario.IdDivision
+        division: this._usuarioSvc.usuario.IdDivision,
       };
       this._empleadoSvc.fg.patchValue(inputData);
 
       this._dinamicDialogSvc.open('Agregar Empleado', EmpleadosFormComponent);
-      this._empleadoSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-        if (message) {
-            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-        }
-      }));
+      this._empleadoSvc.subscription.push(
+        this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+          if (message) {
+            this._msgSvc.add({
+              severity: 'success',
+              summary: 'Satisfactorio',
+              detail: message,
+            });
+          }
+        })
+      );
     }
   }
 
   private _edit(data: any): void {
     if (this.hasAdminPermission()) {
-      this._empleadoSvc.subscription.push(this._empleadoSvc.loadEmpleadoById(data.IdEmpleado).subscribe(response => {
-        const result = response.getEmpleadoById;
+      this._empleadoSvc.subscription.push(
+        this._empleadoSvc
+          .loadEmpleadoById(data.IdEmpleado)
+          .subscribe(response => {
+            const result = response.getEmpleadoById;
 
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: `Se produjo el siguiente error: ${ result.error }`,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar'
-          });
-        }
+            if (!result.success) {
+              return SweetAlert.fire({
+                icon: 'error',
+                title: 'ERROR',
+                text: `Se produjo el siguiente error: ${result.error}`,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+              });
+            }
 
-        const data = result.data;
+            const data = result.data;
 
-        const inputData = {
-          idEmpleado: data.IdEmpleado,
-          empleado: data.Empleado,
-          cargo: data.Cargo.IdCargo,
-          division: data.Division.IdDivision,
-        };
+            const inputData = {
+              idEmpleado: data.IdEmpleado,
+              empleado: data.Empleado,
+              cargo: data.Cargo.IdCargo,
+              division: data.Division.IdDivision,
+            };
 
-        this._empleadoSvc.fg.patchValue(inputData);
+            this._empleadoSvc.fg.patchValue(inputData);
 
-        this._dinamicDialogSvc.open('Modificar Empleado', EmpleadosFormComponent);
-        this._empleadoSvc.subscription.push(this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-          if (message) {
-              this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: message })
-          }
-        }));
-      }));
+            this._dinamicDialogSvc.open(
+              'Modificar Empleado',
+              EmpleadosFormComponent
+            );
+            this._empleadoSvc.subscription.push(
+              this._dinamicDialogSvc.ref.onClose.subscribe(
+                (message: string) => {
+                  if (message) {
+                    this._msgSvc.add({
+                      severity: 'success',
+                      summary: 'Satisfactorio',
+                      detail: message,
+                    });
+                  }
+                }
+              )
+            );
+          })
+      );
     }
   }
 
@@ -153,10 +176,14 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
         showConfirmButton: true,
         confirmButtonText: 'Sí',
         showCancelButton: true,
-        cancelButtonText: 'No'
+        cancelButtonText: 'No',
       }).then(res => {
         if (res.value) {
-          const IDsToRemove: number[] = !isArray(data) ? [data.IdEmpleado] :  data.map(d => { return d.IdEmpleado });
+          const IDsToRemove: number[] = !isArray(data)
+            ? [data.IdEmpleado]
+            : data.map(d => {
+                return d.IdEmpleado;
+              });
 
           this._empleadoSvc.delete(IDsToRemove).subscribe(response => {
             const result = response.deleteEmpleado;
@@ -165,17 +192,20 @@ export class ListEmpleadosComponent implements OnInit, AfterViewInit, OnDestroy 
               return SweetAlert.fire({
                 icon: 'error',
                 title: 'ERROR',
-                text: `Se produjo el siguiente error: ${ result.error }`,
+                text: `Se produjo el siguiente error: ${result.error}`,
                 showConfirmButton: true,
-                confirmButtonText: 'Aceptar'
+                confirmButtonText: 'Aceptar',
               });
             }
 
-            this._msgSvc.add({ severity: 'success', summary: 'Satisfactorio', detail: 'El Empleado se ha eliminado correctamente.' })
+            this._msgSvc.add({
+              severity: 'success',
+              summary: 'Satisfactorio',
+              detail: 'El Empleado se ha eliminado correctamente.',
+            });
           });
         }
       });
     }
   }
-
 }

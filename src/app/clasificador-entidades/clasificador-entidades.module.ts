@@ -8,11 +8,10 @@ import { ListClasificadorEntidadesComponent } from './list-clasificador-entidade
 import { ClasificadorEntidadesFormComponent } from './clasificador-entidades-form/clasificador-entidades-form.component';
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
-
 @NgModule({
   declarations: [
     ListClasificadorEntidadesComponent,
-    ClasificadorEntidadesFormComponent
+    ClasificadorEntidadesFormComponent,
   ],
   imports: [
     CommonModule,
@@ -20,7 +19,7 @@ import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
     FormsModule,
     ReactiveFormsModule,
     SharedModule,
-    PrimeNgModule
-  ]
+    PrimeNgModule,
+  ],
 })
-export class ClasificadorEntidadesModule { }
+export class ClasificadorEntidadesModule {}

@@ -4,7 +4,7 @@ import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'png-input-number',
   templateUrl: './input-number.component.html',
-  styleUrls: ['./input-number.component.scss']
+  styleUrls: ['./input-number.component.scss'],
 })
 export class InputNumberComponent implements OnInit {
   @Input() public fg: FormGroup;
@@ -22,12 +22,9 @@ export class InputNumberComponent implements OnInit {
   @Input() public disabled = false;
   @Input() public autocomplete: 'off' | 'on' = 'on';
 
-  constructor(
-    private cd: ChangeDetectorRef
-  ) { }
+  constructor(private cd: ChangeDetectorRef) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
   }
-
 }
