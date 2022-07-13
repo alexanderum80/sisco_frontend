@@ -1,7 +1,7 @@
 import { UsuarioService } from './../../shared/services/usuario.service';
 import SweetAlert from 'sweetalert2';
 import { AuthenticationService } from '../../shared/services/authentication.service';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 
 @Component({

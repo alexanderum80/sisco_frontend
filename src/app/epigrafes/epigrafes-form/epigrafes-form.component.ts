@@ -3,7 +3,7 @@ import { ActionClicked } from './../../shared/models/list-items';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-epigrafes-form',

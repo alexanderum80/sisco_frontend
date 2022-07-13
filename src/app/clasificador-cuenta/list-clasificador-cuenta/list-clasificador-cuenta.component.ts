@@ -11,7 +11,7 @@ import { ClasificadorCuentaFormComponent } from './../clasificador-cuenta-form/c
 import { ClasificadorCuentaService } from './../shared/service/clasificador-cuenta.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-list-clasificador-cuenta',
@@ -56,7 +56,7 @@ export class ListClasificadorCuentaComponent
     try {
       this._clasificadorCuentaSvc.subscription.push(
         this._clasificadorCuentaSvc.loadAllClasificadorCuenta().subscribe({
-          next: (response) => {
+          next: response => {
             this.loading = false;
 
             const result = response.getAllClasificadorCuentas;
@@ -82,7 +82,7 @@ export class ListClasificadorCuentaComponent
                 f.TipoClasificador === TiposClasificadorCuenta.Complejo
             );
           },
-          error: (err) => {
+          error: err => {
             this.loading = false;
             this._sweetalertSvc.error(err);
           },
@@ -183,7 +183,7 @@ export class ListClasificadorCuentaComponent
               clasificador.SubCuenta,
               clasificador.TipoClasificador
             )
-            .subscribe((response) => {
+            .subscribe(response => {
               const result = response.getClasificadorCuenta;
               if (!result.success) {
                 return SweetAlert.fire({
@@ -256,11 +256,11 @@ export class ListClasificadorCuentaComponent
           confirmButtonText: 'Sí',
           showCancelButton: true,
           cancelButtonText: 'No',
-        }).then((res) => {
+        }).then(res => {
           if (res.value) {
             this._clasificadorCuentaSvc.subscription.push(
               this._clasificadorCuentaSvc.delete(clasificador).subscribe({
-                next: (response) => {
+                next: response => {
                   const result = response.deleteClasificadorCuenta;
 
                   if (!result.success) {
@@ -279,7 +279,7 @@ export class ListClasificadorCuentaComponent
                     detail: 'La Cuenta se ha eliminado correctamente.',
                   });
                 },
-                error: (err) => {
+                error: err => {
                   this._sweetalertSvc.error(err);
                 },
               })

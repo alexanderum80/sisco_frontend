@@ -8,8 +8,7 @@ import { EmpleadosFormComponent } from './../empleados-form/empleados-form.compo
 import SweetAlert from 'sweetalert2';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { isArray } from 'lodash';
 

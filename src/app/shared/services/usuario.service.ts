@@ -157,7 +157,7 @@ export class UsuarioService {
           fetchPolicy: 'network-only',
         })
         .subscribe({
-          next: (response) => {
+          next: response => {
             subscriber.next(response.data);
           },
           error: error => {

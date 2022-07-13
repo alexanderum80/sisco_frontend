@@ -6,7 +6,7 @@ import {
   IActionItemClickedArgs,
 } from './../../shared/models/list-items';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
-import { Component, OnDestroy, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { cloneDeep } from '@apollo/client/utilities';
 import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 import { ExpresionesFormComponent } from '../expresiones-form/expresiones-form.component';
@@ -54,19 +54,17 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
   private _getExpresionesResumen(): void {
     try {
       this._expresionesSvc.subscription.push(
-        this._expresionesSvc
-          .loadAllExpresionesResumen()
-          .subscribe((response) => {
-            const result = response.getAllExpresionesResumen;
+        this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
+          const result = response.getAllExpresionesResumen;
 
-            if (result.success === false) {
-              return this._sweetAlertSvc.error(
-                `Ocurrió el siguiente error: ${result.error}`
-              );
-            }
+          if (result.success === false) {
+            return this._sweetAlertSvc.error(
+              `Ocurrió el siguiente error: ${result.error}`
+            );
+          }
 
-            this.expresiones = cloneDeep(result.data);
-          })
+          this.expresiones = cloneDeep(result.data);
+        })
       );
     } catch (err: any) {
       this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
@@ -127,7 +125,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
       this._expresionesSvc.inicializarFg();
       this._expresionesSvc
         .loadExpresionResumenById(data.IdExpresion)
-        .subscribe((response) => {
+        .subscribe(response => {
           const result = response.getExpresionResumenById;
 
           if (!result.success) {
@@ -171,7 +169,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
     try {
       this._sweetAlertSvc
         .question('¿Desea Eliminar la(s) Expresión(es) seleccionada(s)?')
-        .then((res) => {
+        .then(res => {
           if (res === ActionClicked.Yes) {
             data = isArray(data) ? data : [data];
 
@@ -198,7 +196,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
 
             this._expresionesSvc
               .deleteExpresionResumen(IDsToRemove)
-              .subscribe((response) => {
+              .subscribe(response => {
                 const result = response.deleteExpresionResumen;
 
                 if (!result.success) {

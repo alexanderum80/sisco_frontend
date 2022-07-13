@@ -6,12 +6,11 @@ import {
 } from './../../shared/models/list-items';
 import { IUsuario } from './../../shared/models/usuarios';
 import { UsuarioFormComponent } from './../usuario-form/usuario-form.component';
-import { Subscription } from 'rxjs';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import { UsuariosMutationResponse } from '../shared/models/usuarios.model';
 import SweetAlert from 'sweetalert2';
 import { QueryRef, Apollo } from 'apollo-angular';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
 import { UsuariosQueryResponse } from '../shared/models/usuarios.model';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
@@ -50,7 +49,7 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this._usuarioSvc.subscription.forEach((subs) => subs.unsubscribe());
+    this._usuarioSvc.subscription.forEach(subs => subs.unsubscribe());
   }
 
   hasAdminPermission(): boolean {
@@ -145,7 +144,7 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
             variables: { id: idUsuario },
             fetchPolicy: 'network-only',
           })
-          .subscribe((response) => {
+          .subscribe(response => {
             const result = response.data.getUsuarioById;
 
             if (!result.success) {
@@ -203,11 +202,11 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
         confirmButtonText: 'Sí',
         showCancelButton: true,
         cancelButtonText: 'No',
-      }).then((res) => {
+      }).then(res => {
         if (res.value) {
           const IDsToRemove: number[] = !isArray(data)
             ? [data.IdUsuario]
-            : data.map((d) => {
+            : data.map(d => {
                 return d.IdUsuario;
               });
 
@@ -218,7 +217,7 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
                 variables: { IDs: IDsToRemove },
                 refetchQueries: ['GetAllUsuarios'],
               })
-              .subscribe((response) => {
+              .subscribe(response => {
                 const result = response.data?.deleteUsuario;
 
                 if (result?.success === false) {

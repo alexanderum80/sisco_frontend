@@ -3,7 +3,7 @@ import {
   IActionItemClickedArgs,
   ActionClicked,
 } from './../../shared/models/list-items';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { ConexionRodasFormComponent } from './../conexion-rodas-form/conexion-rodas-form.component';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';

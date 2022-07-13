@@ -8,7 +8,7 @@ import { ElementosGastosFormComponent } from './../elementos-gastos-form/element
 import { ElementosGastosService } from './../shared/services/elementos-gastos.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { isArray } from 'lodash';
 
@@ -42,7 +42,7 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
   }
 
   private _loadElementosGastos(): void {
-    this._elementosGastosSvc.loadAllElementosGastos().subscribe((response) => {
+    this._elementosGastosSvc.loadAllElementosGastos().subscribe(response => {
       const result = response.getAllElementosGastos;
 
       if (!result.success) {
@@ -121,7 +121,7 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
     this._elementosGastosSvc.subscription.push(
       this._elementosGastosSvc
         .loadElementoGastoById(data.Egasto)
-        .subscribe((response) => {
+        .subscribe(response => {
           const result = response.getElementoGastoById;
           if (!result.success) {
             return SweetAlert.fire({
@@ -176,18 +176,18 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
           confirmButtonText: 'Sí',
           showCancelButton: true,
           cancelButtonText: 'No',
-        }).then((res) => {
+        }).then(res => {
           if (res.value) {
             const IDsToRemove: number[] = !isArray(data)
               ? [data.Egasto]
-              : data.map((d) => {
+              : data.map(d => {
                   return d.Egasto;
                 });
 
             this._elementosGastosSvc.subscription.push(
               this._elementosGastosSvc
                 .delete(IDsToRemove)
-                .subscribe((response) => {
+                .subscribe(response => {
                   const result = response.deleteElementoGasto;
 
                   if (result.success === false) {

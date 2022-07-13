@@ -8,7 +8,7 @@ import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { MessageService } from 'primeng/api';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { CompararExpresionesService } from '../shared/services/comparar-expresiones.service';
 import { cloneDeep } from '@apollo/client/utilities';
 import { CompararExpresionesFormComponent } from '../comparar-expresiones-form/comparar-expresiones-form.component';
@@ -54,7 +54,7 @@ export class ListCompararExpresionesComponent
   private _getCompararExpresiones(): void {
     try {
       this._compararExpresionesSvc.subscription.push(
-        this._compararExpresionesSvc.loadAll().subscribe((response) => {
+        this._compararExpresionesSvc.loadAll().subscribe(response => {
           const result = response.getAllComprobarExpresiones;
 
           if (result.success === false) {
@@ -124,7 +124,7 @@ export class ListCompararExpresionesComponent
 
       this._compararExpresionesSvc.inicializarFg();
       this._compararExpresionesSvc.subscription.push(
-        this._compararExpresionesSvc.loadOne(data.Id).subscribe((response) => {
+        this._compararExpresionesSvc.loadOne(data.Id).subscribe(response => {
           const result = response.getComprobarExpresionById;
 
           if (!result.success) {
@@ -171,7 +171,7 @@ export class ListCompararExpresionesComponent
     try {
       this._sweetAlertSvc
         .question('¿Desea Eliminar la(s) Comparación(es) seleccionada(s)?')
-        .then((res) => {
+        .then(res => {
           if (res === ActionClicked.Yes) {
             data = isArray(data) ? data : [data];
 
@@ -197,7 +197,7 @@ export class ListCompararExpresionesComponent
             this._compararExpresionesSvc.subscription.push(
               this._compararExpresionesSvc
                 .delete(IDsToRemove)
-                .subscribe((response) => {
+                .subscribe(response => {
                   const result = response.deleteComprobarExpresion;
 
                   if (!result.success) {

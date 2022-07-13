@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NavigationService } from 'src/app/navigation/shared/services/navigation.service';
 
 @Component({

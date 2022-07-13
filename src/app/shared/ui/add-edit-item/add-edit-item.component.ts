@@ -1,6 +1,6 @@
 import { ActionClicked } from './../../models/list-items';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-add-edit-item',

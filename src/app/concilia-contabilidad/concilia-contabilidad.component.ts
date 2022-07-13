@@ -162,7 +162,7 @@ export class ConciliaContabilidadComponent
 
   private _subscribeToFgValueChanges(): void {
     this._conciliaContabSvc.subscription.push(
-      this.fg.valueChanges.subscribe(value => {
+      this.fg.valueChanges.subscribe(() => {
         this._inicializarDatos();
       })
     );

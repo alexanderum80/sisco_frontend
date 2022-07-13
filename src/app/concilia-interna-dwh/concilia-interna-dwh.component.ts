@@ -5,7 +5,6 @@ import { PdfmakeService } from './../shared/services/pdfmake.service';
 import { ConciliaInternaDWHQueryResponse } from './shared/models/concilia-interna-dwh.model';
 import SweetAlert from 'sweetalert2';
 import { Apollo } from 'apollo-angular';
-import { Subscription } from 'rxjs';
 import { ConcilaInternaDwhService } from './shared/services/concila-interna-dwh.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
@@ -222,7 +221,7 @@ export class ConciliaInternaDwhComponent
     );
 
     this._conciliarInternaDWHSvc.subscription.push(
-      this.fg.controls['idSubdivision'].valueChanges.subscribe(value => {
+      this.fg.controls['idSubdivision'].valueChanges.subscribe(() => {
         this.fg.controls['idUnidad'].setValue(null);
 
         this.unidadesValues = [];
@@ -232,7 +231,7 @@ export class ConciliaInternaDwhComponent
 
     // Centro Origen/Destino
     this._conciliarInternaDWHSvc.subscription.push(
-      this.fg.controls['idSubdivisionOD'].valueChanges.subscribe(value => {
+      this.fg.controls['idSubdivisionOD'].valueChanges.subscribe(() => {
         this.fg.controls['idUnidadOD'].setValue(null);
 
         this.unidadesODValues = [];

@@ -5,7 +5,7 @@ import {
 import { SupervisoresService } from './../shared/services/supervisores.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { SupervisoresFormComponent } from '../supervisores-form/supervisores-form.component';
 import { MessageService } from 'primeng/api';
 import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
@@ -51,7 +51,7 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
   private _getSupervisores(): void {
     try {
       this._supervisorSvc.subscription.push(
-        this._supervisorSvc.loadAllSupervisores().subscribe((response) => {
+        this._supervisorSvc.loadAllSupervisores().subscribe(response => {
           const result = response.getAllSupervisores;
 
           if (result.success === false) {
@@ -125,7 +125,7 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
       this._supervisorSvc.subscription.push(
         this._supervisorSvc
           .loadSupervisorById(data.IdSupervisor)
-          .subscribe((response) => {
+          .subscribe(response => {
             const result = response.getSupervisorById;
 
             if (!result.success) {
@@ -182,16 +182,16 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
         confirmButtonText: 'Sí',
         showCancelButton: true,
         cancelButtonText: 'No',
-      }).then((res) => {
+      }).then(res => {
         if (res.value) {
           const IDsToRemove: number[] = !isArray(data)
             ? [data.IdSupervisor]
-            : data.map((d) => {
+            : data.map(d => {
                 return d.IdSupervisor;
               });
 
           this._supervisorSvc.subscription.push(
-            this._supervisorSvc.delete(IDsToRemove).subscribe((response) => {
+            this._supervisorSvc.delete(IDsToRemove).subscribe(response => {
               const result = response.deleteSupervisor;
 
               if (!result.success) {

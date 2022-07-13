@@ -57,7 +57,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
 
   private _subscribeToFgValueChange(): void {
     this._conexionRodasSvc.subscription.push(
-      this.fg.controls['idDivision'].valueChanges.subscribe(value => {
+      this.fg.controls['idDivision'].valueChanges.subscribe(() => {
         this.fg.controls['idUnidad'].setValue(null);
         this._getUnidades();
       })

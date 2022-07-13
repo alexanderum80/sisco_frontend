@@ -1,20 +1,9 @@
 import { SelectItem } from 'primeng/api';
 import { DivisionesService } from './../shared/services/divisiones.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { ParteAtrasoService } from './shared/services/parte-atraso.service';
-import { Subscription } from 'rxjs';
-import { Apollo } from 'apollo-angular';
-import { ParteAtrasosQueryResponse } from './shared/models/parte-atraso.model';
-import {
-  Component,
-  OnInit,
-  OnDestroy,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { PdfmakeService } from './../shared/services/pdfmake.service';
-import { toNumber } from 'lodash';
 import SweetAlert from 'sweetalert2';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
 

@@ -8,7 +8,7 @@ import SweetAlert from 'sweetalert2';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
 import { UsuarioService } from './../../shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { EpigrafesFormComponent } from '../epigrafes-form/epigrafes-form.component';
 import { isArray } from 'lodash';
 
@@ -41,7 +41,7 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
 
   private _loadEpigrafes(): void {
     this._epigrafesSvc.subscription.push(
-      this._epigrafesSvc.loadAllEpigrafes().subscribe((response) => {
+      this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
         const result = response.getAllEpigrafes;
 
         if (!result.success) {
@@ -114,7 +114,7 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
     this._epigrafesSvc.subscription.push(
       this._epigrafesSvc
         .loadEpigrafeById(clasificador.IdEpigafre)
-        .subscribe((response) => {
+        .subscribe(response => {
           const result = response.getEpigrafeById;
 
           if (!result.success) {
@@ -165,16 +165,16 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
           confirmButtonText: 'Sí',
           showCancelButton: true,
           cancelButtonText: 'No',
-        }).then((res) => {
+        }).then(res => {
           if (res.value) {
             const IDsToRemove: number[] = !isArray(data)
               ? [data.IdEpigafre]
-              : data.map((d) => {
+              : data.map(d => {
                   return d.IdEpigafre;
                 });
 
             this._epigrafesSvc.subscription.push(
-              this._epigrafesSvc.delete(IDsToRemove).subscribe((response) => {
+              this._epigrafesSvc.delete(IDsToRemove).subscribe(response => {
                 const result = response.deleteEpigrafe;
 
                 if (result.success === false) {

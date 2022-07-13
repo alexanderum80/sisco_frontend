@@ -8,7 +8,7 @@ import {
   ActionClicked,
 } from './../../shared/models/list-items';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { cloneDeep, isArray } from 'lodash';
 
 @Component({

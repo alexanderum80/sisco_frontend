@@ -10,7 +10,7 @@ import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { MessageService } from 'primeng/api';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { CuentasNoPermitidasFormComponent } from '../cuentas-no-permitidas-form/cuentas-no-permitidas-form.component';
 import { isArray } from 'lodash';
 
@@ -57,7 +57,7 @@ export class ListCuentasNoPermitidasComponent
       this._cuentasNoPermitidasSvc.subscription.push(
         this._cuentasNoPermitidasSvc
           .loadAllCuentasNoPermitidas()
-          .subscribe((response) => {
+          .subscribe(response => {
             this.loading = false;
 
             const result = response.getAllNoUsarEnCuenta;
@@ -131,7 +131,7 @@ export class ListCuentasNoPermitidasComponent
       this._cuentasNoPermitidasSvc.inicializarFg();
       this._cuentasNoPermitidasSvc
         .loadCuentaNoPermitida(data.Id)
-        .subscribe((response) => {
+        .subscribe(response => {
           const result = response.getNoUsarEnCuentaById;
 
           if (!result.success) {
@@ -179,7 +179,7 @@ export class ListCuentasNoPermitidasComponent
         .question(
           '¿Desea Eliminar la(s) Cuenta(s) no Permitida(s) seleccionada(s)?'
         )
-        .then((res) => {
+        .then(res => {
           if (res === ActionClicked.Yes) {
             data = isArray(data) ? data : [data];
 
@@ -204,7 +204,7 @@ export class ListCuentasNoPermitidasComponent
 
             this._cuentasNoPermitidasSvc
               .deleteCuentaNoPermitida(IDsToRemove)
-              .subscribe((response) => {
+              .subscribe(response => {
                 const result = response.deleteNoUsarEnCuenta;
 
                 if (!result.success) {
