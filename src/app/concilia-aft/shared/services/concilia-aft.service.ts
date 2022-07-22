@@ -195,11 +195,11 @@ export class ConciliaAftService {
     }
 
     public async getClasificadorDefinition(clasifData: any): Promise<any> {
-        const _almacenData = await this.getFormattedClasificador(clasifData);
+        const _clasifData = await this.getFormattedClasificador(clasifData);
 
         const definition: any[] = [];
 
-        const groupData = _almacenData.filter((d: any) => d.isGroupBy);
+        const groupData = _clasifData.filter((d: any) => d.isGroupBy);
 
         groupData.forEach((element: any) => {
             if (element.field) {
@@ -210,7 +210,7 @@ export class ConciliaAftService {
                 });
             }
 
-            const data = _almacenData.filter(
+            const data = _clasifData.filter(
                 (f: any) => f.IdUnidad === element.IdUnidad && !f.isGroupBy
             );
 
@@ -413,7 +413,7 @@ export class ConciliaAftService {
             case '0':
                 returnValue = {
                     table: {
-                        widths: ['*', '*', '*', '*', '*', '*', '*', '*'],
+                        widths: [40, 50, 40, 40, 40, '*', '*', '*'],
                         body: [
                             [
                                 {
@@ -454,7 +454,10 @@ export class ConciliaAftService {
                             ],
                             ...data.map((al: any) => {
                                 return [
-                                    al.Cta,
+                                    {
+                                        text: al.Cta,
+                                        bold: al.Cta === 'TOTAL',
+                                    },
                                     al.Scta,
                                     al.An1,
                                     al.An2,
@@ -463,18 +466,21 @@ export class ConciliaAftService {
                                         text: numberFormatter.format(
                                             al.Saldo_AF
                                         ),
+                                        bold: al.Cta === 'TOTAL',
                                         alignment: 'right',
                                     },
                                     {
                                         text: numberFormatter.format(
                                             al.Saldo_Rodas
                                         ),
+                                        bold: al.Cta === 'TOTAL',
                                         alignment: 'right',
                                     },
                                     {
                                         text: numberFormatter.format(
                                             al.Diferencia
                                         ),
+                                        bold: al.Cta === 'TOTAL',
                                         alignment: 'right',
                                     },
                                 ];
@@ -549,22 +555,12 @@ export class ConciliaAftService {
     }
 
     public async getFormattedClasificador(data: any[]): Promise<any> {
-        let _idCentro = 0;
         let _idUnidad = 0;
 
         const result: any[] = [];
 
         if (data && data.length) {
             data.forEach(element => {
-                if (element.IdCentro !== _idCentro) {
-                    result.push({
-                        field: 'Centro',
-                        value: element.Centro,
-                        IdCentro: element.IdCentro,
-                        isGroupBy: true,
-                    });
-                    _idCentro = element.IdCentro;
-                }
                 if (element.IdUnidad !== _idUnidad) {
                     result.push({
                         field: 'Unidad',
@@ -576,19 +572,19 @@ export class ConciliaAftService {
                     _idUnidad = element.IdUnidad;
 
                     result.push({
-                        IdCentro: element.IdCentro,
                         IdUnidad: element.IdUnidad,
-                        Almacen: element.Almacen,
-                        CuentaG: element.CuentaG,
-                        CuentaR: element.CuentaR,
+                        CNMB: element.CNMB,
+                        DCNMB: element.DCNMB,
+                        TREPO: element.TREPO,
+                        TREPO_UC: element.TREPO_UC,
                     });
                 } else {
                     result.push({
-                        IdCentro: element.IdCentro,
                         IdUnidad: element.IdUnidad,
-                        Almacen: element.Almacen,
-                        CuentaG: element.CuentaG,
-                        CuentaR: element.CuentaR,
+                        CNMB: element.CNMB,
+                        DCNMB: element.DCNMB,
+                        TREPO: element.TREPO,
+                        TREPO_UC: element.TREPO_UC,
                     });
                 }
             });
@@ -602,7 +598,7 @@ export class ConciliaAftService {
 
         returnValue = {
             table: {
-                widths: [100, 250, 100, 100],
+                widths: [60, 250, 80, 80],
                 body: [
                     [
                         {
@@ -614,11 +610,11 @@ export class ConciliaAftService {
                             style: 'tableHeader',
                         },
                         {
-                            text: 'TREPO',
+                            text: 'TASA Clasificador',
                             style: 'tableHeader',
                         },
                         {
-                            text: 'TREPO UC',
+                            text: 'TASA Unidad',
                             style: 'tableHeader',
                         },
                     ],

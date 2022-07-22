@@ -249,13 +249,21 @@ export class ConciliaAftComponent implements OnInit, AfterViewInit, OnDestroy {
                     next: response => {
                         this.loading = false;
 
-                        this.dataSourceConciliacion = cloneDeep(
-                            response.conciliaAFT.ConciliaAFT || []
-                        );
                         this.dataSourceClasificador =
                             cloneDeep(
                                 response.conciliaAFT.DiferenciaClasificadorCNMB
                             ) || [];
+
+                        if (this.dataSourceClasificador.length) {
+                            return this._swalSvc.error(
+                                `Usted tiene errores en el clasificador, lo que conlleva a que no pueda terminar el análisis. Corrija estos errores.
+                                Vaya a la pestaña Análisis del Clasificador para ver las diferencias.`
+                            );
+                        }
+
+                        this.dataSourceConciliacion = cloneDeep(
+                            response.conciliaAFT.ConciliaAFT || []
+                        );
                         this.dataSourceInventario = this.dataSourceConciliacion
                             ? cloneDeep(
                                   this.dataSourceConciliacion.filter(
@@ -301,7 +309,7 @@ export class ConciliaAftComponent implements OnInit, AfterViewInit, OnDestroy {
         try {
             const documentDefinitions = {
                 pageSize: 'LETTER',
-                pageOrientation: 'landscape',
+                // pageOrientation: 'landscape',
                 content: [
                     await this._pdfMakeSvc.getHeaderDefinition(
                         'Conciliación Rodas vs Activos Fijos'
@@ -340,7 +348,7 @@ export class ConciliaAftComponent implements OnInit, AfterViewInit, OnDestroy {
                 // pageOrientation: 'landscape',
                 content: [
                     await this._pdfMakeSvc.getHeaderDefinition(
-                        'Diferencias entre el Clasificador y el Clasificador CNMB'
+                        'Diferencias en el Clasificador CNMB'
                     ),
                     await this._pdfMakeSvc.getPeriodoDefinition(
                         this.fg.controls['periodo'].value
