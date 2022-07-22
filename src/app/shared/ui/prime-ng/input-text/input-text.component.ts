@@ -1,13 +1,21 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { TooltipService } from './../tooltip/tooltip.service';
+import {
+  ChangeDetectorRef,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-  // tslint:disable-next-line: component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'png-input-text',
   templateUrl: './input-text.component.html',
   styleUrls: ['./input-text.component.scss'],
 })
-export class InputTextComponent implements OnInit {
+export class InputTextComponent implements OnInit, OnChanges {
   @Input() public fg: FormGroup;
   @Input() public control: string;
   @Input() public label: string;
@@ -16,11 +24,36 @@ export class InputTextComponent implements OnInit {
   @Input() public placeholder = '';
   @Input() public required = false;
   @Input() public disabled = false;
+  @Input() public readonly = false;
   @Input() public autocomplete: 'off' | 'on' = 'on';
+  @Input() tooltip: string = '';
+  @Input() tooltipPosition: 'right' | 'left' | 'top' | 'bottom' = 'right';
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private _toolTipSvc: TooltipService
+  ) {}
 
   ngOnInit(): void {
     this.cd.detectChanges();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.disabled) {
+      this.fg.controls[this.control].disable();
+    }
+  }
+
+  getToolTip(): string {
+    return this._toolTipSvc.getFormControlTooltip(
+      this.fg.controls[this.control],
+      this.tooltip
+    );
+  }
+
+  getToolTipStyleClass(): string {
+    return this._toolTipSvc.getToolTipStyleClass(
+      this.fg.controls[this.control]
+    );
   }
 }

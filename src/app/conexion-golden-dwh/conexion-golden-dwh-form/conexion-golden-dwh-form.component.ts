@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { ActionClicked } from './../../shared/models/list-items';
 import { DatabasesService } from './../../shared/services/databases.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
@@ -25,6 +26,8 @@ export class ConexionGoldenDwhFormComponent
 
   loadingDWHDataBase = false;
   loadingRestDataBase = false;
+
+  subscription: Subscription[] = [];
 
   constructor(
     private _conexionDWHSvc: ConexionGoldenDwhService,
@@ -86,7 +89,7 @@ export class ConexionGoldenDwhFormComponent
   }
 
   private _subscribeToFgValueChange(): void {
-    this._conexionDWHSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['idUnidad'].valueChanges.subscribe(value => {
         if (value) {
           this._getDWHConexion(value);
@@ -95,21 +98,21 @@ export class ConexionGoldenDwhFormComponent
     );
 
     // Golden DWH Tab
-    this._conexionDWHSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['dwh_ip'].valueChanges.subscribe(() => {
         this.fg.controls['dwh_baseDatos'].setValue(null);
         this.baseDatosDWHValues = [];
       })
     );
 
-    this._conexionDWHSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['dwh_usuario'].valueChanges.subscribe(() => {
         this.fg.controls['dwh_baseDatos'].setValue(null);
         this.baseDatosDWHValues = [];
       })
     );
 
-    this._conexionDWHSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['dwh_contrasena'].valueChanges.subscribe(() => {
         this.fg.controls['dwh_baseDatos'].setValue(null);
         this.baseDatosDWHValues = [];
@@ -117,21 +120,21 @@ export class ConexionGoldenDwhFormComponent
     );
 
     // Golden Restaura Tab
-    this._conexionDWHSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['rest_ip'].valueChanges.subscribe(() => {
         this.fg.controls['rest_baseDatos'].setValue(null);
         this.baseDatosRestValues = [];
       })
     );
 
-    this._conexionDWHSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['rest_usuario'].valueChanges.subscribe(() => {
         this.fg.controls['rest_baseDatos'].setValue(null);
         this.baseDatosRestValues = [];
       })
     );
 
-    this._conexionDWHSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['rest_contrasena'].valueChanges.subscribe(() => {
         this.fg.controls['rest_baseDatos'].setValue(null);
         this.baseDatosRestValues = [];
@@ -303,6 +306,7 @@ export class ConexionGoldenDwhFormComponent
   }
 
   private _closeModal(message?: string): void {
+    this.subscription.forEach(subs => subs.unsubscribe());
     this._dinamicDialogSvc.close(message);
   }
 }

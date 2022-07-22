@@ -1,42 +1,33 @@
-<div>
-  <span
-    [ngClass]="{ 'p-float-label mt-3': floatLabel }"
-    class="p-field"
-    [formGroup]="fg">
-    <label
-      *ngIf="!floatLabel"
-      [for]="control"
-      class="inline-label"
-      [ngStyle]="{ 'width.px': labelWidth }"
-      [class.p-error]="
-        !fg.controls[control].valid && fg.controls[control].dirty
-      "
-      >{{ label }}:
-    </label>
-    <input
-      [id]="control"
-      type="text"
-      pInputText
-      [formControlName]="control"
-      [placeholder]="placeholder"
-      [autocomplete]="autocomplete"
-      [required]="required"
-      [disabled]="disabled" />
-    <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
-  </span>
-  <small
-    *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['required'] && fg.controls[control].dirty"
-    class="p-error"
-    >Este campo es obligatorio.</small
+<span
+  [ngClass]="{ 'p-float-label mt-5': floatLabel }"
+  class="field"
+  [formGroup]="fg">
+  <label
+    *ngIf="!floatLabel"
+    [for]="control"
+    class="inline-label"
+    [ngStyle]="{ 'width.px': labelWidth }"
+    [ngClass]="{ 'label-required': required }"
+    [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty"
+    >{{ label }}:
+  </label>
+  <input
+    [id]="control"
+    type="text"
+    pInputText
+    [formControlName]="control"
+    [placeholder]="placeholder"
+    [autocomplete]="autocomplete"
+    [required]="required"
+    [disabled]="disabled"
+    [readonly]="readonly"
+    [pTooltip]="getToolTip()"
+    [tooltipPosition]="tooltipPosition"
+    [tooltipStyleClass]="getToolTipStyleClass()" />
+  <label
+    *ngIf="floatLabel"
+    [for]="control"
+    [ngClass]="{ 'label-required': required }"
+    >{{ label }}</label
   >
-  <small
-    *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['minLength'] && fg.controls[control].dirty"
-    class="p-error"
-    >Muy pocos caracteres.</small
-  >
-  <small
-    *ngIf="!fg.controls[control].valid && fg.controls[control].errors?.['maxlength'] && fg.controls[control].dirty"
-    class="p-error"
-    >Demasiados caracteres.</small
-  >
-</div>
+</span>

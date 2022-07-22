@@ -1,6 +1,6 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg" style="width: 350px">
-    <div class="form__group">
+    <div>
       <png-dropdown
         class="w-full mt-1"
         [fg]="fg"
@@ -13,7 +13,7 @@
         [filter]="true"
         [showClear]="true"></png-dropdown>
     </div>
-    <div class="form__group">
+    <div>
       <png-dropdown
         class="w-full mt-1"
         [fg]="fg"
@@ -26,14 +26,14 @@
         [filter]="true"
         [showClear]="true"></png-dropdown>
     </div>
-    <div class="form__group">
+    <div>
       <png-checkbox
         class="w-full mt-1"
         label="Consolidado"
         [fg]="fg"
         control="consolidado"></png-checkbox>
     </div>
-    <div class="form__group">
+    <div>
       <png-input-text
         class="w-full mt-1"
         label="Servidor"
@@ -43,7 +43,7 @@
         [required]="true"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group">
+    <div>
       <png-input-text
         class="w-full mt-1"
         label="Usuario"
@@ -53,7 +53,7 @@
         [required]="true"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group">
+    <div>
       <png-password
         class="w-full mt-1"
         label="Contraseña"
@@ -63,7 +63,7 @@
         [required]="true"
         autocomplete="off"></png-password>
     </div>
-    <div class="form__group">
+    <div class="flex">
       <png-dropdown
         class="w-full mt-1"
         [fg]="fg"
@@ -86,6 +86,7 @@
         [raised]="true"
         [fullWidth]="true"
         [loading]="loadingDataBase"
+        tooltip="Refrescar lista de Bases de Datos"
         (clicked)="refreshDataBases()"></png-button>
     </div>
   </form>

@@ -20,14 +20,18 @@
           <png-table
             [columns]="displayedColumnsParteAtraso"
             [data]="dataSourceParteAtraso"
-            [paginator]="false"></png-table>
+            [paginator]="false"
+            [scrollable]="true"
+            scrollHeight="calc(100vh - 270px)"></png-table>
         </p-tabPanel>
         <p-tabPanel header="Detalle de las Salvas">
           <png-table
             [columns]="displayedColumnsDatosIdGam"
             [data]="dataSourceDatosIdGam"
             groupField="Unidad"
-            [paginator]="false"></png-table>
+            [paginator]="false"
+            [scrollable]="true"
+            scrollHeight="calc(100vh - 270px)"></png-table>
         </p-tabPanel>
       </p-tabView>
     </div>

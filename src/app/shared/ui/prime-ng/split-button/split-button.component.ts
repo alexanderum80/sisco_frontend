@@ -9,7 +9,7 @@ import {
 import { MenuItem } from 'primeng/api';
 
 @Component({
-  // tslint:disable-next-line: component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'png-split-button',
   templateUrl: './split-button.component.html',
   styleUrls: ['./split-button.component.scss'],

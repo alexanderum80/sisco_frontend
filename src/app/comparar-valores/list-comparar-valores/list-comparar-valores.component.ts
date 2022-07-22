@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { MessageService } from 'primeng/api';
 import { CompararValoresFormComponent } from './../comparar-valores-form/comparar-valores-form.component';
@@ -25,6 +28,9 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
   ];
 
   compararValores: any[] = [];
+
+  inlineButtons: IButtons[] = DefaultInlineButtonsTable;
+  topLeftButtons: IButtons[] = DefaultTopLeftButtonsTable;
 
   constructor(
     private _compararValoresSvc: CompararValoresService,

@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { UsuarioService } from './../../shared/services/usuario.service';
 import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
 import {
@@ -33,6 +36,9 @@ export class ListCompararExpresionesComponent
   ];
 
   compararExpresiones: any[] = [];
+
+  inlineButtons: IButtons[] = DefaultInlineButtonsTable;
+  topLeftButtons: IButtons[] = DefaultTopLeftButtonsTable;
 
   constructor(
     private _usuarioSvc: UsuarioService,

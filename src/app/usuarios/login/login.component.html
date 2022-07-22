@@ -1,6 +1,6 @@
 <p-card class="login">
   <form [formGroup]="fg" class="form__login" (ngSubmit)="iniciar()">
-    <div class="form__group">
+    <div>
       <png-input-text
         class="w-full"
         [fg]="fg"
@@ -8,7 +8,7 @@
         label="Usuario"
         [floatLabel]="true"></png-input-text>
     </div>
-    <div class="form__group">
+    <div>
       <png-password
         class="w-full"
         [fg]="fg"
@@ -16,7 +16,7 @@
         label="Contraseña"
         [floatLabel]="true"></png-password>
     </div>
-    <div class="pt-2">
+    <div class="pt-3">
       <button
         pButton
         type="submit"

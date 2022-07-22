@@ -1,0 +1,122 @@
+<png-progress-spinner *ngIf="loading"></png-progress-spinner>
+
+<div class="content">
+    <png-panel class="h-full w-full" header="Activos Fijos Tangibles">
+        <div class="flex h-full">
+            <div class="h-full w-full">
+                <form [formGroup]="fg">
+                    <div class="flex p-1">
+                        <png-card>
+                            <png-radio-button
+                                [fg]="fg"
+                                control="tipoCentro"
+                                [items]="tipoCentrosValues"
+                                [disabled]="true"></png-radio-button>
+                        </png-card>
+                        <div class="flex flex-column w-25rem ml-3">
+                            <div>
+                                <png-dropdown
+                                    class="w-full"
+                                    [fg]="fg"
+                                    control="idCentro"
+                                    label="Centro"
+                                    [optionsValues]="centrosValues"
+                                    placeholder="Seleccione el Centro"
+                                    [filter]="true"
+                                    [required]="true"
+                                    [showClear]="true"></png-dropdown>
+                            </div>
+                            <div>
+                                <png-dropdown
+                                    class="w-full"
+                                    [fg]="fg"
+                                    control="tipoEntidad"
+                                    label="Tipo de Centro"
+                                    [optionsValues]="tipoEntidadValues"
+                                    placeholder="Tipo de Centro"
+                                    [disabled]="true"></png-dropdown>
+                            </div>
+                            <div>
+                                <png-calendar
+                                    class="w-full"
+                                    [fg]="fg"
+                                    label="Período"
+                                    control="periodo"
+                                    view="month"
+                                    dateFormat="MM/yy"
+                                    [required]="true"></png-calendar>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div class="conciliacion-detalle shadow-1 mt-2">
+                    <p-tabView
+                        class="h-full"
+                        (onChange)="handleTabViewChange($event)">
+                        <p-tabPanel header="Inventario">
+                            <png-table
+                                [columns]="displayedColumnsInventario"
+                                [data]="dataSourceInventario"
+                                groupField="Unidad"
+                                [totalizeGroup]="true"
+                                [totalizeTable]="true"
+                                [paginator]="false"
+                                [filterData]="false"
+                                [scrollable]="true"
+                                scrollHeight="calc(100vh - 335px)"></png-table>
+                        </p-tabPanel>
+                        <p-tabPanel header="Depreciación">
+                            <png-table
+                                [columns]="displayedColumnsDepreciacion"
+                                [data]="dataSourceDepreciacion"
+                                groupField="Unidad"
+                                [totalizeGroup]="true"
+                                [totalizeTable]="true"
+                                [paginator]="false"
+                                [filterData]="false"
+                                [scrollable]="true"
+                                scrollHeight="calc(100vh - 335px)"></png-table>
+                        </p-tabPanel>
+                        <p-tabPanel header="Nota">
+                            <png-input-textarea
+                                class="w-full mt-1"
+                                label="Nota"
+                                [fg]="fg"
+                                control="nota"
+                                autocomplete="off"></png-input-textarea>
+                        </p-tabPanel>
+                        <p-tabPanel header="Análisis del Clasificador">
+                            <png-table
+                                [columns]="displayedColumnsClasificador"
+                                [data]="dataSourceClasificador"
+                                [filterData]="false"
+                                [scrollable]="true"
+                                scrollHeight="calc(100vh - 380px)"></png-table>
+                        </p-tabPanel>
+                    </p-tabView>
+                </div>
+                <div class="flex justify-content-end mt-2">
+                    <png-button
+                        class="mr-1"
+                        label="Conciliar"
+                        icon="pi-check"
+                        tooltip="Calcular la Conciliación."
+                        [raised]="true"
+                        [disabled]="!fg.valid"
+                        (clicked)="conciliar()"></png-button>
+                    <png-button
+                        class="mr-2"
+                        label="Reporte"
+                        [style]="'secondary'"
+                        icon="mdi mdi-printer"
+                        [disabled]="
+                            !dataSourceInventario.length &&
+                            !dataSourceDepreciacion.length &&
+                            !dataSourceClasificador.length
+                        "
+                        (clicked)="reporte()"></png-button>
+                </div>
+            </div>
+        </div>
+    </png-panel>
+</div>

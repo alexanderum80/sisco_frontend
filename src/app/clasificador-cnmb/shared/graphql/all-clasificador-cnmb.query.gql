@@ -1,0 +1,7 @@
+query GetAllActFijosClasificadorCnmb {
+    getAllActFijosClasificadorCnmb {
+        CNMB
+        DCNMB
+        TREPO
+    }
+}

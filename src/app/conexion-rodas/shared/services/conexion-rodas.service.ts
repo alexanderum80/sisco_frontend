@@ -86,10 +86,7 @@ export class ConexionRodasService {
             .mutate<ConexionRodasMutationResponse>({
               mutation: mutation,
               variables: { conexionInfo: _conexionInfo },
-              refetchQueries: [
-                'GetAllContaConexiones',
-                'GetContaConexionesByIdDivision',
-              ],
+              refetchQueries: ['GetAllContaConexiones'],
             })
             .subscribe({
               next: response => subscriber.next(response.data || undefined),
@@ -108,11 +105,8 @@ export class ConexionRodasService {
         this._apollo
           .mutate<ConexionRodasMutationResponse>({
             mutation: conexionRodasApi.delete,
-            variables: { id: IDs },
-            refetchQueries: [
-              'GetAllContaConexiones',
-              'GetContaConexionesByIdDivision',
-            ],
+            variables: { IDs },
+            refetchQueries: ['GetAllContaConexiones'],
           })
           .subscribe(response => {
             subscriber.next(response.data || undefined);
@@ -122,14 +116,14 @@ export class ConexionRodasService {
   }
 
   estadoConexion(idDivision: number): Observable<ConexionRodasQueryResponse> {
-    return new Observable<ConexionRodasQueryResponse>(subscriber => {
+    return new Observable<ConexionRodasQueryResponse>(() => {
       this._apollo
         .query<ConexionRodasQueryResponse>({
           query: conexionRodasApi.estado,
           variables: { idDivision },
           fetchPolicy: 'network-only',
         })
-        .subscribe(response => {});
+        .subscribe(() => {});
     });
   }
 

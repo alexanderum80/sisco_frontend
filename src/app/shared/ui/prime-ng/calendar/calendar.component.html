@@ -1,37 +1,42 @@
-<div [class.p-float-label]="floatLabel" class="p-field" [formGroup]="fg">
-  <label
-    *ngIf="!floatLabel"
-    [for]="control"
-    class="inline-label"
-    [ngStyle]="{ 'width.px': labelWidth }"
-    [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty"
-    >{{ label }}:
-  </label>
-  <p-calendar
-    [inputId]="control"
-    [formControlName]="control"
-    [view]="view"
-    [dateFormat]="dateFormat"
-    [showIcon]="showIcon"
-    [minDate]="minDate"
-    [maxDate]="maxDate"
-    [readonlyInput]="readonlyInput"
-    [disabledDays]="disabledDays"
-    [monthNavigator]="monthNavigator"
-    [yearNavigator]="yearNavigator"
-    [yearRange]="yearRange"
-    [showTime]="showTime"
-    [timeOnly]="timeOnly"
-    [selectionMode]="selectionMode"
-    [showButtonBar]="showButtonBar"
-    [required]="required"
-    [disabled]="disabled">
-  </p-calendar>
-  <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
+<div [class.p-float-label]="floatLabel" class="field" [formGroup]="fg">
+    <label
+        *ngIf="!floatLabel"
+        [for]="control"
+        class="inline-label"
+        [ngStyle]="{ 'width.px': labelWidth }"
+        [ngClass]="{ 'label-required': required }"
+        [class.p-error]="
+            !fg.controls[control].valid && fg.controls[control].dirty
+        "
+        >{{ label }}:
+    </label>
+    <p-calendar
+        [inputId]="control"
+        [formControlName]="control"
+        [view]="view"
+        [dateFormat]="dateFormat"
+        [showIcon]="showIcon"
+        [minDate]="minDate"
+        [maxDate]="maxDate"
+        [readonlyInput]="readonlyInput"
+        [disabledDays]="disabledDays"
+        [monthNavigator]="monthNavigator"
+        [yearNavigator]="yearNavigator"
+        [yearRange]="yearRange"
+        [showTime]="showTime"
+        [timeOnly]="timeOnly"
+        [selectionMode]="selectionMode"
+        [showButtonBar]="showButtonBar"
+        [required]="required"
+        [disabled]="disabled"
+        [pTooltip]="getToolTip()"
+        [tooltipPosition]="tooltipPosition"
+        [tooltipStyleClass]="getToolTipStyleClass()">
+    </p-calendar>
+    <label
+        *ngIf="floatLabel"
+        [for]="control"
+        [ngClass]="{ 'label-required': required }"
+        >{{ label }}</label
+    >
 </div>
-<small
-  *ngIf="!fg.controls[control].valid && fg.controls[control].dirty"
-  id="username2-help"
-  class="p-error"
-  >Este campo es obligatorio</small
->

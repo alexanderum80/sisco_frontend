@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
 import { UsuarioService } from './../../shared/services/usuario.service';
 import {
@@ -32,6 +35,9 @@ export class ListCuentasNoPermitidasComponent
   ];
 
   cuentasNoPermitidas: any[] = [];
+
+  inlineButtons: IButtons[] = DefaultInlineButtonsTable;
+  topLeftButtons: IButtons[] = DefaultTopLeftButtonsTable;
 
   loading = true;
 

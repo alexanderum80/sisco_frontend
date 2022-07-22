@@ -1,0 +1,18 @@
+<span
+  [ngClass]="{ 'p-float-label mt-5': floatLabel }"
+  class="field"
+  [formGroup]="fg">
+  <label
+    *ngIf="!floatLabel"
+    class="inline-label"
+    [ngStyle]="{ 'width.px': labelWidth }"
+    [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty"
+    >{{ label }}:
+  </label>
+  <p-selectButton
+    [formGroup]="fg"
+    [formControlName]="control"
+    [options]="options"
+    [disabled]="disabled"></p-selectButton>
+  <label *ngIf="floatLabel">{{ label }}</label>
+</span>

@@ -1,5 +1,13 @@
+import { TooltipService } from './../tooltip/tooltip.service';
 import { FormGroup } from '@angular/forms';
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  OnChanges,
+  ChangeDetectorRef,
+  SimpleChanges,
+} from '@angular/core';
 import { SelectItem } from 'primeng/api';
 
 @Component({
@@ -8,7 +16,7 @@ import { SelectItem } from 'primeng/api';
   templateUrl: './multi-select.component.html',
   styleUrls: ['./multi-select.component.scss'],
 })
-export class MultiSelectComponent {
+export class MultiSelectComponent implements OnInit, OnChanges {
   @Input() fg: FormGroup;
   @Input() control: string;
   @Input() label: string;
@@ -19,6 +27,34 @@ export class MultiSelectComponent {
   @Input() disabled = false;
   @Input() filter = false;
   @Input() optionsValues: SelectItem[] = [];
+  @Input() tooltip: string = '';
+  @Input() tooltipPosition: 'right' | 'left' | 'top' | 'bottom' = 'right';
 
-  constructor() {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private _toolTipSvc: TooltipService
+  ) {}
+
+  ngOnInit(): void {
+    this.cd.detectChanges();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.disabled) {
+      this.fg.controls[this.control].disable();
+    }
+  }
+
+  getToolTip(): string {
+    return this._toolTipSvc.getFormControlTooltip(
+      this.fg.controls[this.control],
+      this.tooltip
+    );
+  }
+
+  getToolTipStyleClass(): string {
+    return this._toolTipSvc.getToolTipStyleClass(
+      this.fg.controls[this.control]
+    );
+  }
 }

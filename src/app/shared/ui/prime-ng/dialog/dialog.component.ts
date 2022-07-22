@@ -1,11 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-dialog',
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss'],
 })
-export class DialogComponent {
+export class DialogComponent implements OnInit {
   @Input() showDialog = false;
   @Input() header: string;
   @Input() modal = true;
@@ -16,6 +16,8 @@ export class DialogComponent {
   @Input() closable = false;
 
   constructor() {}
+
+  ngOnInit(): void {}
 
   confirm(): void {}
 

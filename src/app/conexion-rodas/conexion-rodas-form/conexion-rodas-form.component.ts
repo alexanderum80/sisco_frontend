@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { ActionClicked } from './../../shared/models/list-items';
 import { SelectItem } from 'primeng/api';
 import { UnidadesService } from './../../unidades/shared/services/unidades.service';
@@ -24,6 +25,8 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
   action: ActionClicked;
 
   fg: FormGroup;
+
+  subscription: Subscription[] = [];
 
   loadingDataBase = false;
 
@@ -56,28 +59,28 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
   }
 
   private _subscribeToFgValueChange(): void {
-    this._conexionRodasSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['idDivision'].valueChanges.subscribe(() => {
         this.fg.controls['idUnidad'].setValue(null);
         this._getUnidades();
       })
     );
 
-    this._conexionRodasSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['ip'].valueChanges.subscribe(() => {
         this.fg.controls['baseDatos'].setValue(null);
         this.baseDatosValues = [];
       })
     );
 
-    this._conexionRodasSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['usuario'].valueChanges.subscribe(() => {
         this.fg.controls['baseDatos'].setValue(null);
         this.baseDatosValues = [];
       })
     );
 
-    this._conexionRodasSvc.subscription.push(
+    this.subscription.push(
       this.fg.controls['contrasena'].valueChanges.subscribe(() => {
         this.fg.controls['baseDatos'].setValue(null);
         this.baseDatosValues = [];
@@ -276,6 +279,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
   }
 
   private _closeModal(message?: string): void {
+    this.subscription.forEach(subs => subs.unsubscribe());
     this._dinamicDialogSvc.close(message);
   }
 }

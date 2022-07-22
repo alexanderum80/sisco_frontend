@@ -1,0 +1,17 @@
+<p-dataView [value]="data">
+  <ng-template pTemplate="header"
+    >{{ header }}
+    <p-dataViewLayoutOptions></p-dataViewLayoutOptions>
+  </ng-template>
+  <ng-template let-data pTemplate="listItem">
+    <div class="col-12 md:col-3">
+      {{ data.Name }}
+    </div>
+  </ng-template>
+  <ng-template let-data pTemplate="gridItem">
+    <div class="col-12 md:col-3">
+      {{ data.Name }}
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">Choose from the list.</ng-template>
+</p-dataView>

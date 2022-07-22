@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import {
   IActionItemClickedArgs,
   ActionClicked,
@@ -27,12 +30,20 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
 
   supervisores: any;
 
+  inlineButtons: IButtons[] = [];
+  topLeftButtons: IButtons[] = [];
+
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
     private _supervisorSvc: SupervisoresService,
     private _msgSvc: MessageService
-  ) {}
+  ) {
+    if (this.hasAdminPermission()) {
+      this.inlineButtons = DefaultInlineButtonsTable;
+      this.topLeftButtons = DefaultTopLeftButtonsTable;
+    }
+  }
 
   ngAfterViewInit(): void {
     this._getSupervisores();

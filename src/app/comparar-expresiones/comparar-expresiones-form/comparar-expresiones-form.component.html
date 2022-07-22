@@ -1,7 +1,7 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form class="flex flex-column" [formGroup]="fg">
     <div class="flex">
-      <div class="form__group">
+      <div>
         <png-dropdown
           class="w-20rem"
           [fg]="fg"
@@ -13,7 +13,7 @@
           [required]="true"
           [showClear]="true"></png-dropdown>
       </div>
-      <div class="form__group">
+      <div>
         <png-dropdown
           class="w-8rem ml-2"
           [fg]="fg"
@@ -25,7 +25,7 @@
           [required]="true"
           [showClear]="true"></png-dropdown>
       </div>
-      <div class="form__group">
+      <div>
         <png-dropdown
           class="w-20rem ml-2"
           [fg]="fg"
@@ -39,17 +39,17 @@
       </div>
     </div>
     <div class="flex">
-      <div class="form__group">
+      <div>
         <png-checkbox [fg]="fg" control="centro" label="Centro"></png-checkbox>
       </div>
-      <div class="form__group">
+      <div>
         <png-checkbox
           class="ml-5"
           [fg]="fg"
           control="complejo"
           label="Complejo"></png-checkbox>
       </div>
-      <div class="form__group">
+      <div>
         <png-checkbox
           class="ml-5"
           [fg]="fg"

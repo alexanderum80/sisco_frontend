@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 
 @Component({
-  // tslint:disable-next-line: component-selector
+  // eslint-disable-next-line @angular-eslint/component-selector
   selector: 'png-button',
   templateUrl: './button.component.html',
   styleUrls: ['./button.component.scss'],
@@ -35,6 +35,7 @@ export class ButtonComponent implements OnInit {
   @Input() loading = false;
   @Input() fullWidth = false;
   @Input() tooltip: string;
+  @Input() tooltipPosition: 'right' | 'left' | 'top' | 'bottom' = 'right';
 
   @Output() clicked = new EventEmitter();
 

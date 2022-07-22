@@ -1,21 +1,23 @@
-import { Component, Input } from '@angular/core';
-import { NavigationService } from 'src/app/navigation/shared/services/navigation.service';
+import { Router } from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  // eslint-disable-next-line @angular-eslint/component-selector
+  // tslint:disable-next-line: component-selector
   selector: 'png-panel',
   templateUrl: './panel.component.html',
   styleUrls: ['./panel.component.scss'],
 })
-export class PanelComponent {
+export class PanelComponent implements OnInit {
   @Input() header: string;
   @Input() footer: string;
   @Input() toggleable = false;
   @Input() closeButton = true;
 
-  constructor(private _navigationSvc: NavigationService) {}
+  constructor(private router: Router) {}
+
+  ngOnInit(): void {}
 
   close(): void {
-    this._navigationSvc.navigateTo('/');
+    this.router.navigateByUrl('/');
   }
 }

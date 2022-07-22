@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { MessageService } from 'primeng/api';
 import {
   IActionItemClickedArgs,
@@ -29,6 +32,9 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
 
   conexionesRodas: any[] = [];
 
+  inlineButtons: IButtons[] = [];
+  topLeftButtons: IButtons[] = [];
+
   loading = true;
 
   constructor(
@@ -36,7 +42,12 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
     private _dinamicDialogSvc: DinamicDialogService,
     private _conexionRodasSvc: ConexionRodasService,
     private _msgSvc: MessageService
-  ) {}
+  ) {
+    if (this.hasAdminPermission()) {
+      this.inlineButtons = DefaultInlineButtonsTable;
+      this.topLeftButtons = DefaultTopLeftButtonsTable;
+    }
+  }
 
   ngAfterViewInit(): void {
     this._loadConexionesRodas();

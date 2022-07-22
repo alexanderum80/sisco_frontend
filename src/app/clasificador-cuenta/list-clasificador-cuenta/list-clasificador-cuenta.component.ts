@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { MessageService } from 'primeng/api';
 import {
   IActionItemClickedArgs,
@@ -42,6 +45,9 @@ export class ListClasificadorCuentaComponent
     { header: 'Crit3', field: 'Crit3', type: 'string' },
   ];
 
+  inlineButtons: IButtons[] = [];
+  topLeftButtons: IButtons[] = [];
+
   loading = true;
 
   constructor(
@@ -50,9 +56,18 @@ export class ListClasificadorCuentaComponent
     private _sweetalertSvc: SweetalertService,
     private _clasificadorCuentaSvc: ClasificadorCuentaService,
     private _msgSvc: MessageService
-  ) {}
+  ) {
+    if (this.hasAdvancedUserPermission()) {
+      this.inlineButtons = DefaultInlineButtonsTable;
+      this.topLeftButtons = DefaultTopLeftButtonsTable;
+    }
+  }
 
   ngAfterViewInit(): void {
+    this._loadClasificadorCuenta();
+  }
+
+  private _loadClasificadorCuenta(): void {
     try {
       this._clasificadorCuentaSvc.subscription.push(
         this._clasificadorCuentaSvc.loadAllClasificadorCuenta().subscribe({

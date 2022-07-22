@@ -1,0 +1,29 @@
+query ConciliaAFT($conciliaAftInput: ConciliaAftInput!) {
+  conciliaAFT(conciliaAftInput: $conciliaAftInput) {
+    ConciliaAFT {
+      Division
+      SubDivision
+      Tipo
+      Centro
+      IdCentro
+      IdUnidad
+      Unidad
+      Periodo
+      Cta
+      Scta
+      An1
+      An2
+      An3
+      Saldo_AF
+      Saldo_Rodas
+      Diferencia 
+    }
+    DiferenciaClasificadorCNMB{
+      Unidad
+      CNMB
+      DCNMB
+      TREPO 
+      TREPO_UC
+    }
+  }
+}

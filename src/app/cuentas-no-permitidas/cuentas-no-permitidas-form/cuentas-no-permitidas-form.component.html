@@ -1,6 +1,6 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg">
-    <div class="form__group w-30rem">
+    <div class="field w-30rem">
       <png-dropdown
         class="w-full"
         [fg]="fg"
@@ -12,7 +12,7 @@
         [filter]="true"
         [showClear]="true"></png-dropdown>
     </div>
-    <div class="form__group w-30rem">
+    <div class="field w-30rem">
       <png-input-text
         class="w-full mt-1"
         label="Cuenta"
@@ -21,7 +21,7 @@
         control="cta"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group w-30rem">
+    <div class="field w-30rem">
       <png-input-text
         class="w-full mt-1"
         label="Sub Cuenta"
@@ -30,7 +30,7 @@
         control="subcta"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group w-30rem">
+    <div class="field w-30rem">
       <png-input-text
         class="w-full mt-1"
         label="Criterio 1"
@@ -39,7 +39,7 @@
         control="crit1"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group w-30rem">
+    <div class="field w-30rem">
       <png-input-text
         class="w-full mt-1"
         label="Criterio 2"
@@ -48,7 +48,7 @@
         control="crit2"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group w-30rem">
+    <div class="field w-30rem">
       <png-input-text
         class="w-full mt-1"
         label="Criterio 3"

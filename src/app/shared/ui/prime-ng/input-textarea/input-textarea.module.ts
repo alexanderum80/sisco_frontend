@@ -1,3 +1,4 @@
+import { TooltipModule } from 'primeng/tooltip';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputTextareaModule } from 'primeng/inputtextarea';
@@ -11,6 +12,7 @@ import { InputTextareaComponent } from './input-textarea.component';
     FormsModule,
     ReactiveFormsModule,
     InputTextareaModule,
+    TooltipModule,
   ],
   exports: [InputTextareaModule, InputTextareaComponent],
 })

@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { MessageService } from 'primeng/api';
 import {
@@ -37,12 +40,20 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
 
   usuarios: IUsuario[] = [];
 
+  inlineButtons: IButtons[] = [];
+  topLeftButtons: IButtons[] = [];
+
   constructor(
     private _apollo: Apollo,
     private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
     private _msgSvc: MessageService
-  ) {}
+  ) {
+    if (this.hasAdminPermission()) {
+      this.inlineButtons = DefaultInlineButtonsTable;
+      this.topLeftButtons = DefaultTopLeftButtonsTable;
+    }
+  }
 
   ngAfterViewInit(): void {
     this._getUsuarios();

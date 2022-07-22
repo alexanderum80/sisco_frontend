@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import {
   IActionItemClickedArgs,
   ActionClicked,
@@ -26,12 +29,20 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
     { header: 'Uso y Contenido', field: 'UsoContenido', type: 'string' },
   ];
 
+  inlineButtons: IButtons[] = [];
+  topLeftButtons: IButtons[] = [];
+
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _elementosGastosSvc: ElementosGastosService
-  ) {}
+  ) {
+    if (this.hasAdvancedUserPermission()) {
+      this.inlineButtons = DefaultInlineButtonsTable;
+      this.topLeftButtons = DefaultTopLeftButtonsTable;
+    }
+  }
 
   ngAfterViewInit(): void {
     this._loadElementosGastos();

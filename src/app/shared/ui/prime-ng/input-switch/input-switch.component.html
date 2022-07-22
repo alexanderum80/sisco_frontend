@@ -1,0 +1,23 @@
+<span
+  [ngClass]="{ 'p-float-label mt-5': floatLabel }"
+  class="field"
+  [formGroup]="fg">
+  <label
+    *ngIf="!floatLabel"
+    [for]="control"
+    class="inline-label"
+    [ngStyle]="{ 'width.px': labelWidth }"
+    [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty"
+    >{{ label }}
+  </label>
+  <p-inputSwitch
+    [id]="control"
+    [formControlName]="control"
+    [required]="required"
+    [disabled]="disabled"
+    [pTooltip]="getToolTip()"
+    [tooltipPosition]="tooltipPosition"
+    [tooltipStyleClass]="getToolTipStyleClass()">
+  </p-inputSwitch>
+  <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
+</span>

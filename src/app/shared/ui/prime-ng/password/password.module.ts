@@ -3,10 +3,17 @@ import { CommonModule } from '@angular/common';
 import { PasswordComponent } from './password.component';
 import { PasswordModule } from 'primeng/password';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TooltipModule } from 'primeng/tooltip';
 
 @NgModule({
   declarations: [PasswordComponent],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, PasswordModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    PasswordModule,
+    TooltipModule,
+  ],
   exports: [PasswordModule, PasswordComponent],
 })
 export class PrimePasswordModule {}

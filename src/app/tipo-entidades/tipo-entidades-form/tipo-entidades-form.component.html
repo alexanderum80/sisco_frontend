@@ -1,6 +1,6 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg" style="width: 350px">
-    <div class="form__group">
+    <div>
       <png-input-text
         class="w-full mt-1"
         label="Entidad"
@@ -10,7 +10,7 @@
         [required]="true"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group">
+    <div>
       <png-input-text
         class="w-full mt-1"
         label="Descripción"

@@ -1,0 +1,7 @@
+mutation SaveActFijosClasificadorCnmb($actfijosClasificadorCnmbInput: ActFijosClasificadorCnmbInput!) {
+	saveActFijosClasificadorCnmb(actfijosClasificadorCnmbInput: $actfijosClasificadorCnmbInput) {
+		CNMB
+		DCNMB
+		TREPO
+	}
+}

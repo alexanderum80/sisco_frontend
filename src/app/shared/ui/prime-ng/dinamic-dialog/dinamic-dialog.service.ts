@@ -9,12 +9,11 @@ export class DinamicDialogService {
 
   constructor(private _dialogSvc: DialogService) {}
 
-  open(header: string, component: any): void {
+  open(header: string, component: any, width?: string): void {
     this.ref = this._dialogSvc.open(component, {
       header: header,
       closable: false,
-      style: { 'max-width': '90%' },
-      contentStyle: { 'max-height': '90%', overflow: 'inherit' },
+      width: width,
       baseZIndex: 1000,
     });
   }

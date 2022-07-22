@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { MessageService } from 'primeng/api';
 import {
   IActionItemClickedArgs,
@@ -24,12 +27,20 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
     { header: 'Epígrafe', field: 'Epigrafe', type: 'string' },
   ];
 
+  inlineButtons: IButtons[] = [];
+  topLeftButtons: IButtons[] = [];
+
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _epigrafesSvc: EpigrafesService
-  ) {}
+  ) {
+    if (this.hasAdvancedUserPermission()) {
+      this.inlineButtons = DefaultInlineButtonsTable;
+      this.topLeftButtons = DefaultTopLeftButtonsTable;
+    }
+  }
 
   ngAfterViewInit(): void {
     this._loadEpigrafes();

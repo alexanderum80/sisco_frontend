@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
 import { UsuarioService } from './../../shared/services/usuario.service';
 import { MessageService } from 'primeng/api';
@@ -33,6 +36,9 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
   ];
 
   expresiones: any[] = [];
+
+  inlineButtons: IButtons[] = DefaultInlineButtonsTable;
+  topLeftButtons: IButtons[] = DefaultTopLeftButtonsTable;
 
   constructor(
     private _usuarioSvc: UsuarioService,

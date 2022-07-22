@@ -1,113 +1,113 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
-  <form [formGroup]="fg">
-    <div class="form__group mt-1">
-      <png-dropdown
-        class="w-full mt-1"
-        [fg]="fg"
-        control="tipoClasificador"
-        label="Tipo de Clasificador"
-        [optionsValues]="tipoClasificadorValues"
-        placeholder="&lt;Tipo de Clasificador&gt;"
-        [required]="true"
-        [filter]="true"
-        [showClear]="true"></png-dropdown>
-    </div>
-    <div class="form__group">
-      <png-input-text
-        class="w-full mt-1"
-        label="Cuenta"
-        [fg]="fg"
-        control="cuenta"
-        [required]="true"
-        autocomplete="off"></png-input-text>
-      <png-input-text
-        class="w-full mt-1 ml-3"
-        label="CubCuenta"
-        [fg]="fg"
-        control="subcuenta"
-        [required]="true"
-        autocomplete="off"></png-input-text>
-    </div>
-    <div class="form__group">
-      <png-input-text
-        class="w-full mt-1"
-        label="Descripción"
-        [fg]="fg"
-        control="descripcion"
-        [required]="true"
-        autocomplete="off"></png-input-text>
-    </div>
-    <div class="form__group">
-      <png-dropdown
-        class="w-full mt-1"
-        [fg]="fg"
-        control="naturaleza"
-        label="Naturaleza"
-        [optionsValues]="naturalezaValues"
-        placeholder="&lt;Naturaleza&gt;"
-        [required]="true"
-        [filter]="true"
-        [showClear]="true"></png-dropdown>
-      <png-checkbox
-        class="mt-1 ml-3"
-        [fg]="fg"
-        control="terminal"
-        label="Terminal"></png-checkbox>
-      <png-checkbox
-        class="mt-1 ml-3"
-        [fg]="fg"
-        control="obligacion"
-        label="Obligación"></png-checkbox>
-    </div>
-    <div class="form__group">
-      <png-input-text
-        class="w-full mt-1"
-        label="Crit1"
-        [fg]="fg"
-        control="crit1"
-        autocomplete="off"></png-input-text>
-      <png-input-text
-        class="w-full mt-1 ml-3"
-        label="Crit2"
-        [fg]="fg"
-        control="crit2"
-        autocomplete="off"></png-input-text>
-      <png-input-text
-        class="w-full mt-1 ml-3"
-        label="Crit3"
-        [fg]="fg"
-        control="crit3"
-        autocomplete="off"></png-input-text>
-    </div>
-    <div class="form__group">
-      <png-multi-select
-        class="w-full mt-1"
-        [fg]="fg"
-        control="seUtiliza"
-        label="Se utiliza en"
-        [optionsValues]="tipoUnidadesValues"
-        placeholder="&lt;Se utiliza en&gt;"
-        [filter]="true"></png-multi-select>
-    </div>
-    <div class="form__group">
-      <png-input-text
-        class="w-full mt-1"
-        label="Crit1 Consolidación"
-        [fg]="fg"
-        control="crit1Consolidacion"
-        autocomplete="off"></png-input-text>
-      <png-input-text
-        class="w-full mt-1 ml-3"
-        label="Crit2 Consolidación"
-        [fg]="fg"
-        control="crit2Consolidacion"
-        autocomplete="off"></png-input-text>
-      <png-input-text
-        class="w-full mt-1 ml-3"
-        label="Crit3 Consolidación"
-        [fg]="fg"
-        control="crit3Consolidacion"
-        autocomplete="off"></png-input-text>
-    </div>
-  </form>
+    <form [formGroup]="fg">
+        <div class="field mt-1">
+            <png-dropdown
+                class="w-full mt-1"
+                [fg]="fg"
+                control="tipoClasificador"
+                label="Tipo de Clasificador"
+                [optionsValues]="tipoClasificadorValues"
+                placeholder="&lt;Tipo de Clasificador&gt;"
+                [required]="true"
+                [filter]="true"
+                [showClear]="true"></png-dropdown>
+        </div>
+        <div>
+            <png-input-text
+                class="w-full mt-1"
+                label="Cuenta"
+                [fg]="fg"
+                control="cuenta"
+                [required]="true"
+                autocomplete="off"></png-input-text>
+            <png-input-text
+                class="w-full mt-1 ml-3"
+                label="CubCuenta"
+                [fg]="fg"
+                control="subcuenta"
+                [required]="true"
+                autocomplete="off"></png-input-text>
+        </div>
+        <div>
+            <png-input-text
+                class="w-full mt-1"
+                label="Descripción"
+                [fg]="fg"
+                control="descripcion"
+                [required]="true"
+                autocomplete="off"></png-input-text>
+        </div>
+        <div>
+            <png-dropdown
+                class="w-full mt-1"
+                [fg]="fg"
+                control="naturaleza"
+                label="Naturaleza"
+                [optionsValues]="naturalezaValues"
+                placeholder="&lt;Naturaleza&gt;"
+                [required]="true"
+                [filter]="true"
+                [showClear]="true"></png-dropdown>
+            <png-checkbox
+                class="mt-1 ml-3"
+                [fg]="fg"
+                control="terminal"
+                label="Terminal"></png-checkbox>
+            <png-checkbox
+                class="mt-1 ml-3"
+                [fg]="fg"
+                control="obligacion"
+                label="Obligación"></png-checkbox>
+        </div>
+        <div>
+            <png-input-text
+                class="w-full mt-1"
+                label="Crit1"
+                [fg]="fg"
+                control="crit1"
+                autocomplete="off"></png-input-text>
+            <png-input-text
+                class="w-full mt-1 ml-3"
+                label="Crit2"
+                [fg]="fg"
+                control="crit2"
+                autocomplete="off"></png-input-text>
+            <png-input-text
+                class="w-full mt-1 ml-3"
+                label="Crit3"
+                [fg]="fg"
+                control="crit3"
+                autocomplete="off"></png-input-text>
+        </div>
+        <div>
+            <png-multi-select
+                class="w-full mt-1"
+                [fg]="fg"
+                control="seUtiliza"
+                label="Se utiliza en"
+                [optionsValues]="tipoUnidadesValues"
+                placeholder="&lt;Se utiliza en&gt;"
+                [filter]="true"></png-multi-select>
+        </div>
+        <div>
+            <png-input-text
+                class="w-full mt-1"
+                label="Crit1 Consolidación"
+                [fg]="fg"
+                control="crit1Consolidacion"
+                autocomplete="off"></png-input-text>
+            <png-input-text
+                class="w-full mt-1 ml-3"
+                label="Crit2 Consolidación"
+                [fg]="fg"
+                control="crit2Consolidacion"
+                autocomplete="off"></png-input-text>
+            <png-input-text
+                class="w-full mt-1 ml-3"
+                label="Crit3 Consolidación"
+                [fg]="fg"
+                control="crit3Consolidacion"
+                autocomplete="off"></png-input-text>
+        </div>
+    </form>
 </app-add-edit-item>

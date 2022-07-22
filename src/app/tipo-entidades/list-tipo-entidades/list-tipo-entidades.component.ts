@@ -1,4 +1,9 @@
 import {
+  DefaultInlineButtonsTable,
+  DefaultTopLeftButtonsTable,
+} from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
+import {
   IActionItemClickedArgs,
   ActionClicked,
 } from './../../shared/models/list-items';
@@ -8,7 +13,7 @@ import { UsuarioService } from './../../shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import SweetAlert from 'sweetalert2';
 import { TipoEntidadesFormComponent } from './../tipo-entidades-form/tipo-entidades-form.component';
-import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { isArray } from 'lodash';
 
@@ -25,12 +30,20 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
     { header: 'Descripción', field: 'Descripcion', type: 'string' },
   ];
 
+  inlineButtons: IButtons[] = [];
+  topLeftButtons: IButtons[] = [];
+
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _tipoEntidadesSvc: TipoEntidadesService
-  ) {}
+  ) {
+    if (this.hasAdvancedUserPermission()) {
+      this.inlineButtons = DefaultInlineButtonsTable;
+      this.topLeftButtons = DefaultTopLeftButtonsTable;
+    }
+  }
 
   ngAfterViewInit(): void {
     this._loadAllTipoEntidades();

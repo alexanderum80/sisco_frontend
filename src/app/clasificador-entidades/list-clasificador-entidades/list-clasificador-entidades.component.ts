@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import {
   IActionItemClickedArgs,
@@ -8,7 +11,7 @@ import SweetAlert from 'sweetalert2';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import { isArray } from 'lodash';
 
@@ -18,7 +21,7 @@ import { isArray } from 'lodash';
   styleUrls: ['./list-clasificador-entidades.component.scss'],
 })
 export class ListClasificadorEntidadesComponent
-  implements OnInit, AfterViewInit, OnDestroy
+  implements AfterViewInit, OnDestroy
 {
   dataSource: any[];
 
@@ -27,6 +30,9 @@ export class ListClasificadorEntidadesComponent
     { header: 'Tipo de Entidad', field: 'TipoEntidad', type: 'string' },
   ];
 
+  inlineButtons: IButtons[] = [];
+  topLeftButtons: IButtons[] = [];
+
   loading = true;
 
   constructor(
@@ -34,9 +40,12 @@ export class ListClasificadorEntidadesComponent
     private _msgSvc: MessageService,
     private _usuarioSvc: UsuarioService,
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService
-  ) {}
-
-  ngOnInit(): void {}
+  ) {
+    if (this.hasAdvancedUserPermission()) {
+      this.inlineButtons = DefaultInlineButtonsTable;
+      this.topLeftButtons = DefaultTopLeftButtonsTable;
+    }
+  }
 
   ngAfterViewInit(): void {
     this._loadAllTipoEntidades();
@@ -48,7 +57,7 @@ export class ListClasificadorEntidadesComponent
         this._clasificadorEntidadesSvc
           .loadAllClasificadorEntidades()
           .subscribe({
-            next: (response) => {
+            next: response => {
               this.loading = false;
 
               const result = response.getAllClasificadorEntidades;

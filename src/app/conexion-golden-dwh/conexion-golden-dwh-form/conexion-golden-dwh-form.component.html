@@ -1,6 +1,6 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg" style="width: 350px">
-    <div class="form__group mt-1">
+    <div class="field mt-1">
       <png-dropdown
         class="w-full"
         [fg]="fg"
@@ -16,7 +16,7 @@
     <p-tabView>
       <p-tabPanel header="Golden Restaura">
         <ng-template pTemplate="content" style="overflow: unset">
-          <div class="form__group mt-1">
+          <div class="field mt-1">
             <png-input-text
               class="w-full mt-1"
               label="Servidor"
@@ -26,7 +26,7 @@
               [required]="true"
               autocomplete="off"></png-input-text>
           </div>
-          <div class="form__group mt-1">
+          <div class="field mt-1">
             <png-input-text
               class="w-full mt-1"
               label="Usuario"
@@ -36,7 +36,7 @@
               [required]="true"
               autocomplete="off"></png-input-text>
           </div>
-          <div class="form__group">
+          <div>
             <png-password
               class="w-full mt-1"
               label="Contraseña"
@@ -46,7 +46,7 @@
               [required]="true"
               autocomplete="off"></png-password>
           </div>
-          <div class="form__group mt-1">
+          <div class="field mt-1">
             <png-dropdown
               class="w-full mt-1"
               [fg]="fg"
@@ -69,12 +69,13 @@
               [raised]="true"
               [fullWidth]="true"
               [loading]="loadingRestDataBase"
+              tooltip="Refrescar lista de Bases de Datos"
               (clicked)="refreshDataBases('Rest')"></png-button>
           </div>
         </ng-template>
       </p-tabPanel>
       <p-tabPanel header="Golden DWH">
-        <div class="form__group mt-1">
+        <div class="field mt-1">
           <png-input-text
             class="w-full mt-1"
             label="Servidor"
@@ -84,7 +85,7 @@
             [required]="true"
             autocomplete="off"></png-input-text>
         </div>
-        <div class="form__group mt-1">
+        <div class="field mt-1">
           <png-input-text
             class="w-full mt-1"
             label="Usuario"
@@ -94,7 +95,7 @@
             [required]="true"
             autocomplete="off"></png-input-text>
         </div>
-        <div class="form__group">
+        <div>
           <png-password
             class="w-full mt-1"
             label="Contraseña"
@@ -104,7 +105,7 @@
             [required]="true"
             autocomplete="off"></png-password>
         </div>
-        <div class="form__group mt-1">
+        <div class="field mt-1">
           <png-dropdown
             class="w-full mt-1"
             [fg]="fg"

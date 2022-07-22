@@ -1,0 +1,28 @@
+<span
+  [ngClass]="{ 'p-float-label mt-5': floatLabel }"
+  class="field"
+  [formGroup]="fg">
+  <label
+    *ngIf="!floatLabel"
+    [for]="control"
+    class="inline-label"
+    [ngStyle]="{ 'width.px': labelWidth }"
+    [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty"
+    >{{ label }}:
+  </label>
+  <p-fileUpload
+    class="w-full"
+    name="image"
+    (onSelect)="onUpload($event)"
+    [multiple]="multiple"
+    accept="image/*"
+    [maxFileSize]="1000000"
+    [mode]="mode"
+    [showUploadButton]="false"
+    [chooseLabel]="chooseLabel"
+    [disabled]="disabled"
+    [pTooltip]="tooltip"
+    [tooltipPosition]="tooltipPosition">
+  </p-fileUpload>
+  <label *ngIf="floatLabel" [for]="control">{{ label }}</label>
+</span>

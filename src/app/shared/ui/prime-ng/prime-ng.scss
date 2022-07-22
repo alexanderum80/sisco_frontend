@@ -1,5 +1,6 @@
-.p-field {
+.field {
     display: flex;
+    margin-bottom: 0.3rem !important;
 
     .inline-label {
         min-width: fit-content;
@@ -7,13 +8,32 @@
         margin-right: 5px;
     }
 
-    p-dropdown, .p-dropdown, .p-inputtext, p-password, .p-password, .p-calendar, p-multiselect, .p-multiselect {
+    p-dropdown, .p-dropdown, 
+    .p-inputtext, 
+    p-inputmask, 
+    p-inputnumber, .p-inputnumber, 
+    p-password, .p-password, 
+    .p-calendar, 
+    p-multiselect, .p-multiselect,
+    p-selectbutton,
+    p-inputswitch {
         width: 100% !important;
+        height: 22px;
     }
 
-    .p-calendar {
-        height: 26px;
+    .p-selectbutton {
+        .p-button {
+            padding: 0.2rem 1rem !important;
+        } 
     }
+
+    .p-inputtextarea.p-inputtext {
+        height: auto !important;
+    }
+
+    // .p-calendar {
+    //     height: 22px;
+    // }
 
     .p-datepicker table {
         font-size: inherit !important;
@@ -87,6 +107,18 @@ p-inputnumber, .p-inputnumber {
     font-size: 2rem !important;
 }
 
+.p-datatable-scrollable .p-datatable-thead, 
+.p-datatable-scrollable .p-datatable-tbody, 
+.p-datatable-scrollable .p-datatable-tfoot,
+.p-datatable-scrollable .p-datatable-thead>tr>th, 
+.p-datatable-scrollable .p-datatable-tbody>tr>td, 
+.p-datatable-scrollable .p-datatable-tfoot>tr>td,
+.p-datatable-scrollable .p-datatable-thead>tr, 
+.p-datatable-scrollable .p-datatable-tbody>tr, 
+.p-datatable-scrollable .p-datatable-tfoot>tr {
+    display: revert !important;
+}
+
 .p-dropdown .p-dropdown-trigger, .p-multiselect-trigger {
     width: 2rem !important;
 }
@@ -99,8 +131,20 @@ p-inputnumber, .p-inputnumber {
     padding: 0.5rem 1rem !important;
 }
 
-.p-tooltip label {
-    padding: .5rem !important;
+.p-tooltip {
+    label {
+        padding: .5rem !important;
+    }
+    
+    &.p-error {
+        .p-tooltip-arrow {
+            border-right-color: #e24c4c !important;
+        }
+
+        .p-tooltip-text {
+            background-color: #e24c4c !important;
+        }
+    }
 }
 
 .p-toolbar {
@@ -108,21 +152,22 @@ p-inputnumber, .p-inputnumber {
     margin-bottom: .5rem !important;
 }
 
-.p-field-checkbox, .p-field-radiobutton {
+.p-field-checkbox {
     display: flex;
     align-items: center;
-
+    margin-bottom: 0.5rem !important;
+        
     & label:hover {
         cursor: pointer;
     }
-
+    
     label {
-        padding: 3px;
+        margin-bottom: 0 !important;
     }
 
     .p-checkbox {
-        height: 1rem !important;
-        width: 1rem !important;
+        height: 1.2rem !important;
+        width: 1.2rem !important;
 
         .p-checkbox-box {
             height: inherit !important;
@@ -132,16 +177,28 @@ p-inputnumber, .p-inputnumber {
 }
 
 .p-field-radiobutton {
-    margin-bottom: .3rem !important;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem !important;
+        
+    & label:hover {
+        cursor: pointer;
+    }
+    
+    label {
+        padding: 0 .5rem !important;
+        margin-bottom: 0 !important;
+    }
 }
 
 .p-datatable .p-datatable-thead > tr > th,
-.p-datatable .p-datatable-tbody > tr > td {
+.p-datatable .p-datatable-tbody > tr > td,
+.p-datatable .p-datatable-tfoot > tr > td {
     padding: .5rem !important;
 }
 
-.p-datatable .p-datatable-tfoot>tr>td {
-    padding: .5rem !important;
+.p-datatable-responsive-scroll>.p-datatable-wrapper {
+    overflow-x: unset !important;
 }
 
 .p-paginator .p-dropdown, 
@@ -151,7 +208,7 @@ p-inputnumber, .p-inputnumber {
 .p-paginator .p-paginator-next, 
 .p-paginator .p-paginator-last,
 .p-paginator .p-paginator-pages .p-paginator-page {
-    min-width: 1.5rem !important;
+    min-width: 2rem !important;
     height: 1.5rem !important;
 }
 
@@ -193,11 +250,6 @@ p-slidemenu {
     .p-panel-content {
         padding: .5rem !important;
     }
-
-    .ng-trigger-panelContent, .p-panel-content {
-        height: calc(100% - 15px) !important;
-        overflow: auto;
-    }
 }
 
 .p-tabview {
@@ -205,7 +257,6 @@ p-slidemenu {
 
     .p-tabview-panels {
         height: calc(100% - 50px);
-        overflow: auto;
         padding: .5rem !important;
     }
 }
@@ -238,10 +289,53 @@ p-slidemenu {
 
     .p-dialog-content {
         padding: 0 !important;
+        overflow-y: unset !important;
     }
+}
+
+.p-dialog-mask {
+    overflow: auto;
 }
 
 .p-column-filter-row .p-column-filter-menu-button, 
 .p-column-filter-row .p-column-filter-clear-button {
     margin-left: 0 !important;
+}
+
+.p-sidebar {
+    .p-sidebar-header, .p-sidebar-content
+    {
+       padding: .5rem 1rem !important;
+    }
+}
+
+.p-panelmenu .p-panelmenu-header > a {
+    padding: 1rem !important;
+}
+
+.p-inputswitch {
+    height: 1.5rem !important;
+
+    .p-inputswitch-slider:before {
+        width: 1rem !important;
+        height: 1rem !important;
+        margin-top: -0.525rem !important;
+    }
+}
+
+.label-required:after {
+    content: " *";
+}
+
+small.p-error {
+    position: absolute;
+    margin-top: 0 !important;
+}
+
+.p-overlay-badge .p-badge {
+    font-size: small !important;
+}
+
+.p-fileupload .p-fileupload-content {
+    padding: 0 !important;
 }

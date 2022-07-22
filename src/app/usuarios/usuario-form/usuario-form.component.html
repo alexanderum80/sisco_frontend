@@ -1,6 +1,6 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg">
-    <div class="form__group">
+    <div>
       <png-input-text
         class="w-full mt-1"
         label="Usuario"
@@ -10,7 +10,7 @@
         [required]="true"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group">
+    <div>
       <png-password
         class="w-full mt-1"
         label="Contraseña"
@@ -20,7 +20,7 @@
         [required]="true"
         autocomplete="off"></png-password>
     </div>
-    <div class="form__group">
+    <div>
       <png-password
         class="w-full mt-1"
         label="Confirmar Contraseña"
@@ -30,7 +30,7 @@
         [required]="true"
         autocomplete="off"></png-password>
     </div>
-    <div class="form__group">
+    <div>
       <png-dropdown
         class="w-full mt-1"
         [fg]="fg"
@@ -43,14 +43,14 @@
         [filter]="true"
         [showClear]="true"></png-dropdown>
     </div>
-    <div class="form__group">
+    <div>
       <png-checkbox
         class="mt-1"
         [fg]="fg"
         control="cambiarContrasena"
         label="Cambiar contraseña en el próximo inicio de sesión."></png-checkbox>
     </div>
-    <div class="form__group" *ngIf="isUsuarioAvanzado">
+    <div *ngIf="isUsuarioAvanzado">
       <png-password
         class="w-full mt-1"
         label="Contraseña Avanzada"
@@ -60,7 +60,7 @@
         [required]="true"
         autocomplete="off"></png-password>
     </div>
-    <div class="form__group" *ngIf="isSuperAdmin">
+    <div *ngIf="isSuperAdmin">
       <png-dropdown
         class="w-full mt-1"
         [fg]="fg"

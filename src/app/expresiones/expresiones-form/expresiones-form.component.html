@@ -1,6 +1,6 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form class="flex" [formGroup]="fg">
-    <div class="form__group flex-column w-9">
+    <div class="field flex-column w-9">
       <png-input-text
         class="w-full mt-1"
         label="Expresión"
@@ -17,7 +17,7 @@
         control="descripcion"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group ml-3 mt-1 flex-column">
+    <div class="field ml-3 mt-1 flex-column">
       <png-checkbox
         [fg]="fg"
         control="acumulado"

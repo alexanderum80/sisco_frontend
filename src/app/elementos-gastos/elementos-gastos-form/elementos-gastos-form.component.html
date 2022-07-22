@@ -1,8 +1,8 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
-  <form class="epigrafe-form">
-    <div class="form__group">
+  <form class="elemento-gasto-form">
+    <div class="flex">
       <png-input-text
-        class="w-4"
+        class="w-3"
         label="Elemento"
         labelWidth="90"
         [fg]="fg"
@@ -10,7 +10,7 @@
         [required]="true"
         autocomplete="off"></png-input-text>
       <png-input-text
-        class="w-8 ml-3"
+        class="w-9 ml-3"
         label="Descripción"
         labelWidth="90"
         [fg]="fg"
@@ -18,7 +18,7 @@
         [required]="true"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group">
+    <div>
       <png-input-text
         class="w-full"
         label="Uso y Contenido"
@@ -28,7 +28,7 @@
         [required]="true"
         autocomplete="off"></png-input-text>
     </div>
-    <div class="form__group">
+    <div>
       <png-multi-select
         class="w-full mt-1"
         [fg]="fg"
@@ -40,7 +40,7 @@
         [required]="true"
         [filter]="true"></png-multi-select>
     </div>
-    <div class="form__group">
+    <div>
       <png-multi-select
         class="w-full mt-1"
         [fg]="fg"
@@ -52,7 +52,7 @@
         [required]="true"
         [filter]="true"></png-multi-select>
     </div>
-    <div class="form__group">
+    <div>
       <png-dropdown
         class="w-full mt-1"
         [fg]="fg"

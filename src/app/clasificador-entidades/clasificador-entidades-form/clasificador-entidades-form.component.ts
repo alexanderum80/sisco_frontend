@@ -6,8 +6,7 @@ import { toNumber } from 'lodash';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 
 @Component({

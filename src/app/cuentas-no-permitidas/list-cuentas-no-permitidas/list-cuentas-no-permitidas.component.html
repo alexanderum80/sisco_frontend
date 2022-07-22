@@ -2,8 +2,11 @@
   <png-table
     [columns]="columns"
     [data]="cuentasNoPermitidas"
-    [canEditDelete]="true"
+    [inlineButtons]="inlineButtons"
     [loading]="loading"
+    [topLeftButtons]="topLeftButtons"
+    [scrollable]="true"
+    scrollHeight="calc(100vh - 220px)"
     (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
 

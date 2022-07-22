@@ -1,3 +1,4 @@
+import { Subscription } from 'rxjs';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tipo-entidades.service';
@@ -15,6 +16,7 @@ import { SelectItem } from 'primeng/api';
 export class ClasificadorCuentaFormComponent implements OnInit {
   action: ActionClicked;
   fg: FormGroup;
+  subscription: Subscription[] = [];
 
   naturalezaValues: SelectItem[] = [
     { value: 'D', label: 'Deudora' },

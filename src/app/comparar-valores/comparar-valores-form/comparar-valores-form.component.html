@@ -1,6 +1,6 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg">
-    <div class="form__group">
+    <div>
       <png-dropdown
         class="w-20rem"
         label="Centro"
@@ -12,7 +12,7 @@
         [required]="true"
         [showClear]="true"></png-dropdown>
     </div>
-    <div class="form__group">
+    <div>
       <png-dropdown
         class="w-20rem"
         label="Expresión"
@@ -24,7 +24,7 @@
         [required]="true"
         [showClear]="true"></png-dropdown>
     </div>
-    <div class="form__group">
+    <div>
       <png-dropdown
         class="w-20rem"
         label="Operador"
@@ -36,7 +36,7 @@
         [required]="true"
         [showClear]="true"></png-dropdown>
     </div>
-    <div class="form__group">
+    <div>
       <png-input-number
         class="w-20rem"
         label="Valor"

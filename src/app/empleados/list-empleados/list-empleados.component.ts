@@ -1,3 +1,6 @@
+import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
+import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
+import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { MessageService } from 'primeng/api';
 import {
   IActionItemClickedArgs,
@@ -26,12 +29,20 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
 
   empleados: any[] = [];
 
+  inlineButtons: IButtons[] = [];
+  topLeftButtons: IButtons[] = [];
+
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
     private _empleadoSvc: EmpleadosService,
     private _msgSvc: MessageService
-  ) {}
+  ) {
+    if (this.hasAdminPermission()) {
+      this.inlineButtons = DefaultInlineButtonsTable;
+      this.topLeftButtons = DefaultTopLeftButtonsTable;
+    }
+  }
 
   ngAfterViewInit(): void {
     this._getEmpleados();

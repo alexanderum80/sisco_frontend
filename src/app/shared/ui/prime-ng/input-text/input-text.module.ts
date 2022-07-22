@@ -1,3 +1,4 @@
+import { TooltipModule } from 'primeng/tooltip';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputTextComponent } from './input-text.component';
@@ -6,7 +7,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [InputTextComponent],
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, InputTextModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    TooltipModule,
+  ],
   exports: [InputTextModule, InputTextComponent],
 })
 export class PrimeInputTextModule {}

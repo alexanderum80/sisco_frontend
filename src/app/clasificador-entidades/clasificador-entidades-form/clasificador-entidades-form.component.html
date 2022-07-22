@@ -1,6 +1,6 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
   <form [formGroup]="fg" class="w-25rem">
-    <div class="form__group">
+    <div>
       <png-dropdown
         class="w-full mt-1"
         [fg]="fg"
@@ -14,7 +14,7 @@
         [filter]="true"
         [showClear]="true"></png-dropdown>
     </div>
-    <div class="form__group">
+    <div>
       <png-dropdown
         class="w-full mt-1"
         [fg]="fg"
