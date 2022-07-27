@@ -290,9 +290,9 @@ export class ConciliaGoldenDwhComponent
                     if (!result.success) {
                         return this._sweetAlertSvc.error(result.error);
                     }
-                    this.rodasDWHInventarioVentas = JSON.parse(
-                        result.data.RodasDWHInventarioVentas.data
-                    );
+
+                    this.rodasDWHInventarioVentas = result.data;
+
                     this.dataSourceInventario =
                         this.rodasDWHInventarioVentas.filter(
                             (f: { Tipo: string }) => f.Tipo === 'Inventario'
@@ -319,9 +319,10 @@ export class ConciliaGoldenDwhComponent
                         this.totalVtaDifGoldenRodas += v.DifGoldenRodas;
                     });
 
-                    this.dataSourceAlmacenes = JSON.parse(
-                        result.data.RodasDWHAlmacenes.data
-                    );
+                    this.dataSourceAlmacenes =
+                        this.rodasDWHInventarioVentas.filter(
+                            (f: { Tipo: string }) => f.Tipo === 'Almacenes'
+                        );
                 })
             );
         } catch (err: any) {

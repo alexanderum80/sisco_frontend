@@ -1,5 +1,5 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
-    <form [formGroup]="fg">
+    <form class="flex flex-column" [formGroup]="fg">
         <div class="field mt-1">
             <png-dropdown
                 class="w-full mt-1"
@@ -12,7 +12,7 @@
                 [filter]="true"
                 [showClear]="true"></png-dropdown>
         </div>
-        <div>
+        <div class="field">
             <png-input-text
                 class="w-full mt-1"
                 label="Cuenta"
@@ -28,7 +28,7 @@
                 [required]="true"
                 autocomplete="off"></png-input-text>
         </div>
-        <div>
+        <div class="field">
             <png-input-text
                 class="w-full mt-1"
                 label="Descripción"
@@ -37,7 +37,7 @@
                 [required]="true"
                 autocomplete="off"></png-input-text>
         </div>
-        <div>
+        <div class="field">
             <png-dropdown
                 class="w-full mt-1"
                 [fg]="fg"
@@ -59,7 +59,7 @@
                 control="obligacion"
                 label="Obligación"></png-checkbox>
         </div>
-        <div>
+        <div class="field">
             <png-input-text
                 class="w-full mt-1"
                 label="Crit1"
@@ -79,7 +79,7 @@
                 control="crit3"
                 autocomplete="off"></png-input-text>
         </div>
-        <div>
+        <div class="field">
             <png-multi-select
                 class="w-full mt-1"
                 [fg]="fg"
@@ -89,7 +89,7 @@
                 placeholder="&lt;Se utiliza en&gt;"
                 [filter]="true"></png-multi-select>
         </div>
-        <div>
+        <div class="field">
             <png-input-text
                 class="w-full mt-1"
                 label="Crit1 Consolidación"

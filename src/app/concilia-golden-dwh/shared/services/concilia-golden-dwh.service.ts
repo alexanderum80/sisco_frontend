@@ -616,22 +616,12 @@ export class ConciliaGoldenDwhService {
     }
 
     public async getFormattedAlmacenesDWH(data: any[]): Promise<any> {
-        let _idCentro = 0;
         let _idUnidad = 0;
 
         const result: any[] = [];
 
         if (data && data.length) {
             data.forEach(element => {
-                if (element.IdCentro !== _idCentro) {
-                    result.push({
-                        field: 'Centro',
-                        value: element.Centro,
-                        IdCentro: element.IdCentro,
-                        isGroupBy: true,
-                    });
-                    _idCentro = element.IdCentro;
-                }
                 if (element.IdUnidad !== _idUnidad) {
                     result.push({
                         field: 'Unidad',
@@ -641,23 +631,14 @@ export class ConciliaGoldenDwhService {
                     });
 
                     _idUnidad = element.IdUnidad;
-
-                    result.push({
-                        IdCentro: element.IdCentro,
-                        IdUnidad: element.IdUnidad,
-                        Almacen: element.Almacen,
-                        CuentaG: element.CuentaG,
-                        CuentaR: element.CuentaR,
-                    });
-                } else {
-                    result.push({
-                        IdCentro: element.IdCentro,
-                        IdUnidad: element.IdUnidad,
-                        Almacen: element.Almacen,
-                        CuentaG: element.CuentaG,
-                        CuentaR: element.CuentaR,
-                    });
                 }
+
+                result.push({
+                    IdUnidad: element.IdUnidad,
+                    Almacen: element.Almacen,
+                    Cuenta: element.Cuenta,
+                    CuentaR: element.CuentaR,
+                });
             });
         }
 
@@ -686,8 +667,8 @@ export class ConciliaGoldenDwhService {
                         },
                     ],
                     ...almacenes.map(
-                        (al: { Almacen: any; CuentaG: any; CuentaR: any }) => {
-                            return [al.Almacen, al.CuentaG, al.CuentaR];
+                        (al: { Almacen: any; Cuenta: any; CuentaR: any }) => {
+                            return [al.Almacen, al.Cuenta, al.CuentaR];
                         }
                     ),
                 ],
