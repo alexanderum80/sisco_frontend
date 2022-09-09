@@ -1,12 +1,12 @@
 import { TooltipModule } from 'primeng/tooltip';
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { InputTextComponent } from './input-text.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InputEmailComponent } from './input-email.component';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
-    declarations: [InputTextComponent],
+    declarations: [InputEmailComponent],
     imports: [
         CommonModule,
         FormsModule,
@@ -14,6 +14,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         InputTextModule,
         TooltipModule,
     ],
-    exports: [InputTextModule, InputTextComponent],
+    exports: [InputEmailComponent],
 })
-export class PrimeInputTextModule {}
+export class PrimeInputEmailModule {}

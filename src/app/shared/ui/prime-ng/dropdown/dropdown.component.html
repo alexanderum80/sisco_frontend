@@ -1,34 +1,36 @@
 <div [class.p-float-label]="floatLabel" class="field" [formGroup]="fg">
-  <label
-    *ngIf="!floatLabel"
-    [for]="control"
-    class="inline-label"
-    [ngStyle]="{ 'width.px': labelWidth }"
-    [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty"
-    [ngClass]="{ 'label-required': required }"
-    >{{ label }}:
-  </label>
-  <p-dropdown
-    [inputId]="control"
-    [options]="optionsValues"
-    [formControlName]="control"
-    optionLabel="label"
-    optionValue="value"
-    [placeholder]="placeholder"
-    [filter]="filter"
-    filterBy="label"
-    [required]="required"
-    [disabled]="disabled"
-    [showClear]="showClear"
-    [autoDisplayFirst]="false"
-    [pTooltip]="getToolTip()"
-    [tooltipPosition]="tooltipPosition"
-    [tooltipStyleClass]="getToolTipStyleClass()">
-  </p-dropdown>
-  <label
-    *ngIf="floatLabel"
-    [for]="control"
-    [ngClass]="{ 'label-required': required }"
-    >{{ label }}</label
-  >
+    <label
+        *ngIf="!floatLabel"
+        [for]="control"
+        class="inline-label"
+        [ngStyle]="{ 'width.px': labelWidth }"
+        [class.p-error]="
+            !fg.controls[control].valid && fg.controls[control].dirty
+        "
+        [ngClass]="{ 'label-required': required }"
+        >{{ label }}:
+    </label>
+    <p-dropdown
+        [inputId]="control"
+        [options]="optionsValues"
+        [formControlName]="control"
+        optionLabel="label"
+        optionValue="value"
+        [placeholder]="placeholder"
+        [filter]="filter"
+        filterBy="label"
+        [required]="required"
+        [disabled]="disabled"
+        [showClear]="showClear"
+        [autoDisplayFirst]="false"
+        [pTooltip]="getToolTip()"
+        [tooltipPosition]="tooltipPosition"
+        [tooltipStyleClass]="getToolTipStyleClass()">
+    </p-dropdown>
+    <label
+        *ngIf="floatLabel"
+        [for]="control"
+        [ngClass]="{ 'label-required': required }"
+        >{{ label }}</label
+    >
 </div>
