@@ -31,7 +31,7 @@
     [groupRowsBy]="groupField"
     styleClass="p-datatable-gridlines"
     [paginator]="paginator"
-    [(selection)]="selectedRow"
+    [(selection)]="selectedRowDatas"
     [dataKey]="groupField"
     [rows]="25"
     [rowsPerPageOptions]="[25, 50, 100]"
@@ -43,7 +43,9 @@
     currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
     [globalFilterFields]="getFields()"
     [scrollable]="scrollable"
-    [scrollHeight]="scrollHeight">
+    [scrollHeight]="scrollHeight"
+    (onRowSelect)="switchRowSelection()"
+    (onRowUnselect)="switchRowSelection()">
     <!-- caption -->
     <ng-template *ngIf="caption" pTemplate="caption">
         {{ caption }}
@@ -52,7 +54,7 @@
     <!-- header -->
     <ng-template pTemplate="header" let-columns>
         <tr>
-            <th *ngIf="inlineButtons.length || canSelect">
+            <th *ngIf="inlineButtons.length || selectCheckbox">
                 <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
             </th>
             <ng-container *ngFor="let col of columns">
@@ -101,7 +103,7 @@
                             let-filter="filterCallback">
                             <p-calendar
                                 (onSelect)="filter($event)"
-                                dateFormat="dd/MM/yyyy"></p-calendar>
+                                [dateFormat]="dateFormat"></p-calendar>
                         </ng-template>
                     </p-columnFilter>
                     <p-columnFilter
@@ -132,7 +134,7 @@
                             let-filter="filterCallback">
                             <p-calendar
                                 (onSelect)="filter($event)"
-                                dateFormat="dd/MM/yyyy"></p-calendar>
+                                [dateFormat]="dateFormat"></p-calendar>
                         </ng-template>
                     </p-columnFilter>
                     <p-columnFilter
@@ -163,7 +165,7 @@
         <tr pRowGroupHeader>
             <td colspan="12" class="relative">
                 <button
-                    *ngIf="expandible"
+                    *ngIf="expandableGroup"
                     type="button"
                     pButton
                     pRipple
@@ -173,7 +175,7 @@
                         expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'
                     "></button>
                 <span
-                    [ngClass]="{ 'absolute mt-2': expandible }"
+                    [ngClass]="{ 'absolute mt-2': expandableGroup }"
                     class="font-bold"
                     >{{ get(rowData, groupField) }}</span
                 >
@@ -207,14 +209,22 @@
     <!-- body -->
     <ng-template
         [pTemplate]="
-            expandible && groupMode === 'subheader' ? 'rowexpansion' : 'body'
+            expandableGroup && groupMode === 'subheader'
+                ? 'rowexpansion'
+                : 'body'
         "
         let-rowData
         let-columns="columns"
         let-rowgroup="rowgroup"
-        let-rowspan="rowspan">
-        <tr>
-            <td *ngIf="inlineButtons.length || canSelect">
+        let-rowspan="rowspan"
+        let-rowIndex="rowIndex">
+        <tr
+            [ngClass]="{
+                'selected-row':
+                    rowIndex === selectedRowDataIndex && selectRowOnClick
+            }"
+            (click)="onClickRow(rowData, rowIndex)">
+            <td *ngIf="inlineButtons.length || selectCheckbox">
                 <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
             </td>
             <td

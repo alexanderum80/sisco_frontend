@@ -1,8 +1,7 @@
 import { ActionClicked } from './../../../models/list-items';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ITableColumns } from './table.model';
 import { get, upperCase } from 'lodash';
-import { TableService } from './table.service';
 import { IButtons } from '../button/button.model';
 
 @Component({
@@ -11,19 +10,20 @@ import { IButtons } from '../button/button.model';
     templateUrl: './table.component.html',
     styleUrls: ['./table.component.scss'],
 })
-export class TableComponent implements OnInit {
+export class TableComponent {
     @Input() caption: string;
     @Input() columns: ITableColumns[] = [];
     @Input() data: any[] = [];
     @Input() filterData = true;
     @Input() paginator = true;
     @Input() loading = false;
-    @Input() canSelect = false;
+    @Input() selectCheckbox = false;
+    @Input() selectRowOnClick = false;
     @Input() groupField: string;
     @Input() groupMode: 'subheader' | 'rowspan' = 'subheader';
+    @Input() expandableGroup = false;
     @Input() totalizeGroup = false;
     @Input() totalizeTable = false;
-    @Input() expandible = false;
     @Input() resizableColumns = false;
     @Input() operations = false;
     @Input() topLeftButtons: IButtons[] = [];
@@ -33,26 +33,20 @@ export class TableComponent implements OnInit {
     @Input() scrollHeight = '';
 
     @Output() actionClicked = new EventEmitter<any>();
+    @Output() selectedRows = new EventEmitter<any>();
+    @Output() selectedRowIndex = new EventEmitter<number>();
 
     viewportHeight = 120;
+    dateFormat = 'dd/MM/yyyy';
     get = get;
 
-    constructor(private _tableSvc: TableService) {}
+    selectedRowDatas: any[] = [];
+    selectedRowDataIndex: number;
 
-    ngOnInit(): void {
-        this.selectedRow = this._tableSvc.selectedRow;
-    }
+    constructor() {}
 
     getFields(): string[] {
         return this.columns.map(c => c.field);
-    }
-
-    get selectedRow(): any[] {
-        return this._tableSvc.selectedRow;
-    }
-
-    set selectedRow(selected: any) {
-        this._tableSvc.selectedRow = selected;
     }
 
     getTotalsGroup(data: any[], column: ITableColumns) {
@@ -90,7 +84,7 @@ export class TableComponent implements OnInit {
             case ActionClicked.Delete:
                 this.actionClicked.emit({
                     action: 'delete',
-                    item: data || this._tableSvc.selectedRow,
+                    item: data || this.selectedRowDatas,
                 });
                 break;
             default:
@@ -99,6 +93,22 @@ export class TableComponent implements OnInit {
                     item: data || [],
                 });
                 break;
+        }
+    }
+
+    switchRowSelection() {
+        this.selectedRows.emit(this.selectedRowDatas);
+    }
+
+    onClickRow(data: any, rowIndex: number): void {
+        if (this.selectRowOnClick) {
+            this.selectedRowDataIndex = rowIndex;
+            this.selectedRowIndex.emit(this.selectedRowDataIndex);
+
+            this.actionClicked.emit({
+                action: 'selectedRow',
+                item: data,
+            });
         }
     }
 }

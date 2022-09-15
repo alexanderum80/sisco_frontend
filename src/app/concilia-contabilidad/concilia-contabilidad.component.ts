@@ -21,7 +21,6 @@ import { TabView } from 'primeng/tabview';
 import { toNumber } from 'lodash';
 import { SubdivisionesService } from '../shared/services/subdivisiones.service';
 import { DivisionesService } from '../shared/services/divisiones.service';
-import { TableService } from '../shared/ui/prime-ng/table/table.service';
 
 const DISPLAYED_COLUMNS_CONSULTAS: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cuenta', type: 'string' },
@@ -119,6 +118,8 @@ export class ConciliaContabilidadComponent
     loading = false;
     chequeoCentro = false;
 
+    centrosAChequear: any[] = [];
+
     selectedTabViewIndex = 0;
 
     tipoCentrosValues: SelectItem[] = [
@@ -150,7 +151,6 @@ export class ConciliaContabilidadComponent
         private _clasifEntidadesSvc: ClasificadorEntidadesService,
         private _conciliaContabSvc: ConciliaContabilidadService,
         private _pdfMakeSvc: PdfmakeService,
-        private _tableSvc: TableService,
         private _changeDedectionRef: ChangeDetectorRef,
         private _swalSvc: SweetalertService
     ) {}
@@ -388,6 +388,10 @@ export class ConciliaContabilidadComponent
         );
     }
 
+    updateSelectedCentrosChequeo(data: any): void {
+        this.centrosAChequear = data;
+    }
+
     conciliar(): void {
         try {
             this.loading = true;
@@ -459,7 +463,7 @@ export class ConciliaContabilidadComponent
 
     private _chequearCentros(): void {
         try {
-            if (!this._tableSvc.selectedRow.length) {
+            if (!this.centrosAChequear.length) {
                 this._swalSvc.error(
                     'Debe seleccionar al menos 1 Centro a Chequear.'
                 );
@@ -471,13 +475,13 @@ export class ConciliaContabilidadComponent
             this.chequeoCentro = true;
             this.dataSourceChequeo = [];
 
-            const centrosAChequear = this._tableSvc.selectedRow.map(row => {
+            const idCentrosAChequear = this.centrosAChequear.map(row => {
                 return row.IdCentro;
             });
 
             this._conciliaContabSvc.subscription.push(
                 this._conciliaContabSvc
-                    .chequearCentros(centrosAChequear)
+                    .chequearCentros(idCentrosAChequear)
                     .subscribe(response => {
                         this.loading = false;
                         const result = response.chequearCentros;
