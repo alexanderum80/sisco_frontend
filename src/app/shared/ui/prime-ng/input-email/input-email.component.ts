@@ -1,21 +1,20 @@
 import { TooltipService } from './../tooltip/tooltip.service';
+import { FormGroup } from '@angular/forms';
 import {
-    ChangeDetectorRef,
     Component,
     Input,
-    OnChanges,
     OnInit,
+    ChangeDetectorRef,
+    OnChanges,
     SimpleChanges,
 } from '@angular/core';
-import { FormGroup } from '@angular/forms';
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
-    selector: 'png-input-text',
-    templateUrl: './input-text.component.html',
-    styleUrls: ['./input-text.component.scss'],
+    selector: 'app-input-email',
+    templateUrl: './input-email.component.html',
+    styleUrls: ['./input-email.component.scss'],
 })
-export class InputTextComponent implements OnInit, OnChanges {
+export class InputEmailComponent implements OnInit, OnChanges {
     @Input() public fg: FormGroup;
     @Input() public control: string;
     @Input() public label: string;
@@ -38,6 +37,7 @@ export class InputTextComponent implements OnInit, OnChanges {
         this.cd.detectChanges();
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ngOnChanges(changes: SimpleChanges): void {
         if (this.disabled) {
             this.fg.controls[this.control].disable();

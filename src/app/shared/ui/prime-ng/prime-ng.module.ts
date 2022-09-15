@@ -34,6 +34,7 @@ import { PrimeCardModule } from './card/card.module';
 import { PrimeToastModule } from './toast/toast.module';
 import { PrimeInputTextareaModule } from './input-textarea/input-textarea.module';
 import { PrimeNGConfig } from 'primeng/api';
+import { PrimeInputEmailModule } from './input-email/input-email.module';
 
 const modules = [
     PrimeButtonModule,
@@ -45,6 +46,7 @@ const modules = [
     PrimeDialogModule,
     PrimeDinamicDialogModule,
     PrimeDropdownModule,
+    PrimeInputEmailModule,
     PrimeFieldsetModule,
     PrimeFileUploadModule,
     PrimeInputMaskModule,
@@ -73,6 +75,7 @@ const modules = [
 @NgModule({
     imports: [CommonModule, modules],
     exports: [modules],
+    declarations: [],
 })
 export class PrimeNgModule {
     constructor(private config: PrimeNGConfig) {
