@@ -40,7 +40,7 @@ export class TableComponent {
     dateFormat = 'dd/MM/yyyy';
     get = get;
 
-    selectedRowDatas: any[] = [];
+    selectedRowsData: any[] = [];
     selectedRowDataIndex: number;
 
     constructor() {}
@@ -84,7 +84,7 @@ export class TableComponent {
             case ActionClicked.Delete:
                 this.actionClicked.emit({
                     action: 'delete',
-                    item: data || this.selectedRowDatas,
+                    item: data || this.selectedRowsData,
                 });
                 break;
             default:
@@ -97,7 +97,7 @@ export class TableComponent {
     }
 
     switchRowSelection() {
-        this.selectedRows.emit(this.selectedRowDatas);
+        this.selectedRows.emit(this.selectedRowsData);
     }
 
     onClickRow(data: any, rowIndex: number): void {

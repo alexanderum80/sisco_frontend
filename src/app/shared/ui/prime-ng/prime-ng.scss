@@ -6,6 +6,7 @@
         min-width: fit-content;
         margin-top: 5px ;
         margin-right: 5px;
+        margin-bottom: 0;
     }
 
     p-dropdown, .p-dropdown, 
@@ -45,6 +46,15 @@
 
     .p-datepicker-buttonbar {
         padding: 0 !important;
+    }
+
+    &.p-input-icon-right,
+    &.p-input-icon-left {
+        display: inline-flex !important;
+
+        i:last-of-type:hover {
+            cursor: pointer !important;
+        }
     }
 }
 
