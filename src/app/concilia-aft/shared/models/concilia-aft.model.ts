@@ -1,7 +1,7 @@
 export interface IConciliaAFT {
+    Tipo: string;
     Division: string;
     SubDivision: string;
-    Tipo: string;
     Centro: string;
     IdCentro: number;
     IdUnidad: number;

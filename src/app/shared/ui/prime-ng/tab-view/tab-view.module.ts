@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { TabViewModule } from 'primeng/tabview';
 
 @NgModule({
-  declarations: [],
-  imports: [CommonModule, TabViewModule],
-  exports: [TabViewModule],
+    declarations: [],
+    imports: [CommonModule, TabViewModule],
+    exports: [TabViewModule],
 })
 export class PrimeTabViewModule {}

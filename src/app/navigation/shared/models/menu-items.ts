@@ -77,9 +77,9 @@ export const MenuItems: MenuItem[] = [
             {
                 label: 'Utiles y Herramientas',
                 icon: 'mdi mdi-toolbox',
-                routerLink: '',
-                disabled: true,
-                title: 'Concilia los Utiles y Herramientas con la Contabilidad.',
+                routerLink: 'concilia-uh',
+                disabled: false,
+                title: 'Concilia los Útiles y Herramientas con la Contabilidad.',
             },
             { separator: true },
             {

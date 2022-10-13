@@ -56,7 +56,7 @@
       "rules": {
         "prettier/prettier": ["error", 
           { "parser": "angular" },
-          { "endOfLine": "auto" }
+          { "endOfLine": "lf" }
         ]
       }
     }

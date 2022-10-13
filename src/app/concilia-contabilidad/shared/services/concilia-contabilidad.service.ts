@@ -277,7 +277,7 @@ export class ConciliaContabilidadService {
             },
             {
                 table: {
-                    widths: [140, 70, 20, 140, 70, 40],
+                    widths: [135, 70, 20, 135, 70, 50],
                     body: [
                         [
                             {

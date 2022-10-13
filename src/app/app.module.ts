@@ -20,41 +20,41 @@ import { PrimePasswordModule } from './shared/ui/prime-ng/password/password.modu
 import { DialogService } from 'primeng/dynamicdialog';
 
 @NgModule({
-  declarations: [AppComponent, StartComponent, LoginComponent],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    AppRoutingModule,
+    declarations: [AppComponent, StartComponent, LoginComponent],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        ReactiveFormsModule,
+        AppRoutingModule,
 
-    // Prime NG
-    // PrimeNgModule,
-    PrimeCardModule,
-    PrimeInputTextModule,
-    PrimePasswordModule,
-    PrimeButtonModule,
-    PrimeMenubarModule,
+        // Prime NG
+        // PrimeNgModule,
+        PrimeCardModule,
+        PrimeInputTextModule,
+        PrimePasswordModule,
+        PrimeButtonModule,
+        PrimeMenubarModule,
 
-    // Apollo
-    HttpClientModule, // provides HttpClient for HttpLink
+        // Apollo
+        HttpClientModule, // provides HttpClient for HttpLink
 
-    // App modules
-    NavigationModule,
-    GraphQLModule,
-    NavigationModule,
-  ],
-  providers: [
-    DialogService,
-    Apollo,
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-  ],
-  bootstrap: [AppComponent],
+        // App modules
+        NavigationModule,
+        GraphQLModule,
+        NavigationModule,
+    ],
+    providers: [
+        DialogService,
+        Apollo,
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    ],
+    bootstrap: [AppComponent],
 })
 export class AppModule {
-  constructor() {
-    // tslint:disable-next-line: no-string-literal
-    // window['_rollupMoment__default'] = null;
-  }
+    constructor() {
+        // tslint:disable-next-line: no-string-literal
+        // window['_rollupMoment__default'] = null;
+    }
 }

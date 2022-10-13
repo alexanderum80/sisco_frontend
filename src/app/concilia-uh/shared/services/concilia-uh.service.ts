@@ -1,16 +1,21 @@
-import { ApolloService } from './../../../shared/services/apollo.service';
-import { conciliaAftApi } from './../graphql/concilia-aft.actions';
-import { ConciliaAFTQueryResponse } from './../models/concilia-aft.model';
-import { SelectItem } from 'primeng/api';
 import { numberFormatter } from './../../../shared/models/number';
+import { conciliaUhApi } from './../graphql/concilia-uh.actions';
 import { toNumber } from 'lodash';
+import {
+    ConciliaUH,
+    ConciliaUHQueryResponse,
+} from './../models/concilia-uh.model';
+import { SelectItem } from 'primeng/api';
+import { ApolloService } from './../../../shared/services/apollo.service';
 import { Subscription, Observable } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 
-@Injectable()
-export class ConciliaAftService {
+@Injectable({
+    providedIn: 'root',
+})
+export class ConciliaUhService {
     fg: FormGroup = new FormGroup({
         tipoCentro: new FormControl('0'),
         idCentro: new FormControl(''),
@@ -87,12 +92,12 @@ export class ConciliaAftService {
         return definition;
     }
 
-    public conciliar(): Observable<ConciliaAFTQueryResponse> {
+    public conciliar(): Observable<ConciliaUHQueryResponse> {
         let periodo = toNumber(
             moment(this.fg.controls['periodo'].value).format('MM')
         );
 
-        const conciliaAftInput = {
+        const conciliaUhInput = {
             idCentro: toNumber(this.fg.controls['idCentro'].value),
             periodo: periodo,
             annio: toNumber(
@@ -100,10 +105,10 @@ export class ConciliaAftService {
             ),
         };
 
-        return new Observable<ConciliaAFTQueryResponse>(subscriber => {
+        return new Observable<ConciliaUHQueryResponse>(subscriber => {
             this._apolloSvc
-                .query<ConciliaAFTQueryResponse>(conciliaAftApi.concilia, {
-                    conciliaAftInput,
+                .query<ConciliaUHQueryResponse>(conciliaUhApi.concilia, {
+                    conciliaUhInput,
                 })
                 .subscribe({
                     next: response => {
@@ -126,16 +131,16 @@ export class ConciliaAftService {
         );
 
         const definition: any[] = [];
-        const tipos = ['Inventario', 'Depreciación'];
+        const tipos = ['Inventario', 'Desgaste'];
 
         const groupData = _conciliaData.filter(
-            (d: { isGroupBy: any }) => d.isGroupBy
+            (d: { IsGroupBy: any }) => d.IsGroupBy
         );
 
         groupData.forEach((element: any) => {
-            if (element.field) {
+            if (element.Field) {
                 definition.push({
-                    text: element.field + ': ' + element.value,
+                    text: element.Field + ': ' + element.Value,
                     bold: true,
                     margin: [0, 10, 0, 0],
                 });
@@ -148,7 +153,7 @@ export class ConciliaAftService {
                             (f: any) =>
                                 f.IdUnidad === element.IdUnidad &&
                                 f.Tipo === tipo &&
-                                !f.isGroupBy
+                                !f.IsGroupBy
                         );
 
                         if (data.length) {
@@ -171,7 +176,7 @@ export class ConciliaAftService {
                             (f: any) =>
                                 f.IdDivision === element.IdDivision &&
                                 f.Tipo === tipo &&
-                                !f.isGroupBy
+                                !f.IsGroupBy
                         );
 
                         if (data.length) {
@@ -199,19 +204,19 @@ export class ConciliaAftService {
 
         const definition: any[] = [];
 
-        const groupData = _clasifData.filter((d: any) => d.isGroupBy);
+        const groupData = _clasifData.filter((d: any) => d.IsGroupBy);
 
         groupData.forEach((element: any) => {
-            if (element.field) {
+            if (element.Field) {
                 definition.push({
-                    text: element.field + ': ' + element.value,
+                    text: element.Field + ': ' + element.Value,
                     bold: true,
                     margin: [0, 5, 0, 0],
                 });
             }
 
             const data = _clasifData.filter(
-                (f: any) => f.IdUnidad === element.IdUnidad && !f.isGroupBy
+                (f: any) => f.IdUnidad === element.IdUnidad && !f.IsGroupBy
             );
 
             if (data.length) {
@@ -223,13 +228,13 @@ export class ConciliaAftService {
     }
 
     public async getFormattedConcilia(
-        data: any[],
+        data: ConciliaUH[],
         tipoCentro: string
     ): Promise<any> {
         let _idDivision = 0;
         let _idCentro = 0;
         let _tipo = '';
-        let _totalAFT = 0;
+        let _totalUH = 0;
         let _totalRodas = 0;
         let _totalDif = 0;
 
@@ -237,16 +242,16 @@ export class ConciliaAftService {
 
         if (data && data.length) {
             data.forEach(element => {
-                // if (element.IdDivision !== _idDivision) {
-                //     result.push({
-                //         Tipo: element.Tipo,
-                //         field: 'División',
-                //         value: element.Division,
-                //         IdDivision: element.IdDivision,
-                //         isGroupBy: true,
-                //     });
-                //     _idDivision = element.IdDivision;
-                // }
+                if (element.IdDivision !== _idDivision) {
+                    result.push({
+                        Tipo: element.Tipo,
+                        Field: 'División',
+                        Value: element.Division,
+                        IdDivision: element.IdDivision,
+                        IsGroupBy: true,
+                    });
+                    _idDivision = element.IdDivision;
+                }
                 if (
                     tipoCentro === '0' &&
                     (element.IdUnidad !== _idCentro || element.Tipo !== _tipo)
@@ -259,17 +264,17 @@ export class ConciliaAftService {
                             Tipo: _tipo,
                             IdDivision: _idDivision,
                             IdUnidad: _idCentro,
-                            Cta: 'TOTAL',
-                            Scta: '',
-                            An1: '',
-                            An2: '',
-                            An3: '',
-                            Saldo_AF: _totalAFT,
-                            Saldo_Rodas: _totalRodas,
+                            Cuenta: 'TOTAL',
+                            SubCuenta: '',
+                            Analisis1: '',
+                            Analisis2: '',
+                            Analisis3: '',
+                            SaldoUH: _totalUH,
+                            SaldoRodas: _totalRodas,
                             Diferencia: _totalDif,
                         });
 
-                        _totalAFT = 0;
+                        _totalUH = 0;
                         _totalRodas = 0;
                         _totalDif = 0;
                     }
@@ -277,10 +282,10 @@ export class ConciliaAftService {
                     if (element.IdUnidad !== _idCentro) {
                         result.push({
                             Tipo: element.Tipo,
-                            field: 'Unidad',
-                            value: element.Unidad,
+                            Field: 'Unidad',
+                            Value: element.Unidad,
                             IdUnidad: element.IdUnidad,
-                            isGroupBy: true,
+                            IsGroupBy: true,
                         });
 
                         _idCentro = element.IdUnidad;
@@ -291,18 +296,18 @@ export class ConciliaAftService {
                         IdDivision: element.IdDivision,
                         IdUnidad: element.IdUnidad,
                         Unidad: element.Unidad,
-                        Cta: element.Cta,
-                        Scta: element.Scta,
-                        An1: element.An1,
-                        An2: element.An2,
-                        An3: element.An3,
-                        Saldo_AF: element.Saldo_AF,
-                        Saldo_Rodas: element.Saldo_Rodas,
+                        Cuenta: element.Cuenta,
+                        SubCuenta: element.SubCuenta,
+                        Analisis1: element.Analisis1,
+                        Analisis2: element.Analisis2,
+                        Analisis3: element.Analisis3,
+                        SaldoUH: element.SaldoUH,
+                        SaldoRodas: element.SaldoRodas,
                         Diferencia: element.Diferencia,
                     });
 
-                    _totalAFT += element.Saldo_AF;
-                    _totalRodas += element.Saldo_Rodas;
+                    _totalUH += element.SaldoUH;
+                    _totalRodas += element.SaldoRodas;
                     _totalDif += element.Diferencia;
 
                     _tipo = element.Tipo;
@@ -319,17 +324,17 @@ export class ConciliaAftService {
                             Tipo: _tipo,
                             IdDivision: _idDivision,
                             IdUnidad: _idCentro,
-                            Cta: 'TOTAL',
-                            Scta: '',
-                            An1: '',
-                            An2: '',
-                            An3: '',
-                            Saldo_AF: _totalAFT,
-                            Saldo_Rodas: _totalRodas,
+                            Cuenta: 'TOTAL',
+                            SubCuenta: '',
+                            Analisis1: '',
+                            Analisis2: '',
+                            Analisis3: '',
+                            SaldoUH: _totalUH,
+                            SaldoRodas: _totalRodas,
                             Diferencia: _totalDif,
                         });
 
-                        _totalAFT = 0;
+                        _totalUH = 0;
                         _totalRodas = 0;
                         _totalDif = 0;
                     }
@@ -339,18 +344,18 @@ export class ConciliaAftService {
                         IdDivision: element.IdDivision,
                         IdUnidad: element.IdUnidad,
                         Unidad: element.Unidad,
-                        Cta: element.Cta,
-                        Scta: element.Scta,
-                        An1: element.An1,
-                        An2: element.An2,
-                        An3: element.An3,
-                        Saldo_AF: element.Saldo_AF,
-                        Saldo_Rodas: element.Saldo_Rodas,
+                        Cuenta: element.Cuenta,
+                        SubCuenta: element.SubCuenta,
+                        Analisis1: element.Analisis1,
+                        Analisis2: element.Analisis2,
+                        Analisis3: element.Analisis3,
+                        SaldoUH: element.SaldoUH,
+                        SaldoRodas: element.SaldoRodas,
                         Diferencia: element.Diferencia,
                     });
 
-                    _totalAFT += element.Saldo_AF;
-                    _totalRodas += element.Saldo_Rodas;
+                    _totalUH += element.SaldoUH;
+                    _totalRodas += element.SaldoRodas;
                     _totalDif += element.Diferencia;
 
                     _tipo = element.Tipo;
@@ -358,10 +363,10 @@ export class ConciliaAftService {
                     if (element.IdDivision !== _idDivision) {
                         result.push({
                             Tipo: element.Tipo,
-                            field: 'División',
-                            value: element.Division,
+                            Field: 'División',
+                            Value: element.Division,
                             IdDivision: element.IdDivision,
-                            isGroupBy: true,
+                            IsGroupBy: true,
                         });
 
                         _idDivision = element.IdDivision;
@@ -372,18 +377,18 @@ export class ConciliaAftService {
                         IdDivision: element.IdDivision,
                         IdUnidad: element.IdUnidad,
                         Unidad: element.Unidad,
-                        Cta: element.Cta,
-                        Scta: element.Scta,
-                        An1: element.An1,
-                        An2: element.An2,
-                        An3: element.An3,
-                        Saldo_AF: element.Saldo_AF,
-                        Saldo_Rodas: element.Saldo_Rodas,
+                        Cuenta: element.Cuenta,
+                        SubCuenta: element.SubCuenta,
+                        Analisis1: element.Analisis1,
+                        Analisis2: element.Analisis2,
+                        Analisis3: element.Analisis3,
+                        SaldoUH: element.SaldoUH,
+                        SaldoRodas: element.SaldoRodas,
                         Diferencia: element.Diferencia,
                     });
 
-                    _totalAFT += element.Saldo_AF;
-                    _totalRodas += element.Saldo_Rodas;
+                    _totalUH += element.SaldoUH;
+                    _totalRodas += element.SaldoRodas;
                     _totalDif += element.Diferencia;
                 }
             });
@@ -392,13 +397,13 @@ export class ConciliaAftService {
                 Tipo: _tipo,
                 IdDivision: _idDivision,
                 IdUnidad: _idCentro,
-                Cta: 'TOTAL',
-                Scta: '',
-                An1: '',
-                An2: '',
-                An3: '',
-                Saldo_AF: _totalAFT,
-                Saldo_Rodas: _totalRodas,
+                Cuenta: 'TOTAL',
+                SubCuenta: '',
+                Analisis1: '',
+                Analisis2: '',
+                Analisis3: '',
+                SaldoUH: _totalUH,
+                SaldoRodas: _totalRodas,
                 Diferencia: _totalDif,
             });
         }
@@ -406,7 +411,10 @@ export class ConciliaAftService {
         return result;
     }
 
-    private _getConciliacionTable(data: any, tipoCentro: string): object {
+    private _getConciliacionTable(
+        data: ConciliaUH[],
+        tipoCentro: string
+    ): object {
         let returnValue = {};
 
         switch (tipoCentro) {
@@ -452,35 +460,35 @@ export class ConciliaAftService {
                                     alignment: 'right',
                                 },
                             ],
-                            ...data.map((al: any) => {
+                            ...data.map((al: ConciliaUH) => {
                                 return [
                                     {
-                                        text: al.Cta,
-                                        bold: al.Cta === 'TOTAL',
+                                        text: al.Cuenta,
+                                        bold: al.Cuenta === 'TOTAL',
                                     },
-                                    al.Scta,
-                                    al.An1,
-                                    al.An2,
-                                    al.An3,
+                                    al.SubCuenta,
+                                    al.Analisis1,
+                                    al.Analisis2,
+                                    al.Analisis3,
                                     {
                                         text: numberFormatter.format(
-                                            al.Saldo_AF
+                                            al.SaldoUH
                                         ),
-                                        bold: al.Cta === 'TOTAL',
+                                        bold: al.Cuenta === 'TOTAL',
                                         alignment: 'right',
                                     },
                                     {
                                         text: numberFormatter.format(
-                                            al.Saldo_Rodas
+                                            al.SaldoRodas
                                         ),
-                                        bold: al.Cta === 'TOTAL',
+                                        bold: al.Cuenta === 'TOTAL',
                                         alignment: 'right',
                                     },
                                     {
                                         text: numberFormatter.format(
                                             al.Diferencia
                                         ),
-                                        bold: al.Cta === 'TOTAL',
+                                        bold: al.Cuenta === 'TOTAL',
                                         alignment: 'right',
                                     },
                                 ];
@@ -515,36 +523,29 @@ export class ConciliaAftService {
                                     alignment: 'right',
                                 },
                             ],
-                            ...data.map(
-                                (al: {
-                                    Unidad: string;
-                                    Saldo_AF: number | bigint;
-                                    Saldo_Rodas: number | bigint;
-                                    Diferencia: number | bigint;
-                                }) => {
-                                    return [
-                                        al.Unidad,
-                                        {
-                                            text: numberFormatter.format(
-                                                al.Saldo_AF
-                                            ),
-                                            alignment: 'right',
-                                        },
-                                        {
-                                            text: numberFormatter.format(
-                                                al.Saldo_Rodas
-                                            ),
-                                            alignment: 'right',
-                                        },
-                                        {
-                                            text: numberFormatter.format(
-                                                al.Diferencia
-                                            ),
-                                            alignment: 'right',
-                                        },
-                                    ];
-                                }
-                            ),
+                            ...data.map((al: ConciliaUH) => {
+                                return [
+                                    al.Unidad,
+                                    {
+                                        text: numberFormatter.format(
+                                            al.SaldoUH
+                                        ),
+                                        alignment: 'right',
+                                    },
+                                    {
+                                        text: numberFormatter.format(
+                                            al.SaldoRodas
+                                        ),
+                                        alignment: 'right',
+                                    },
+                                    {
+                                        text: numberFormatter.format(
+                                            al.Diferencia
+                                        ),
+                                        alignment: 'right',
+                                    },
+                                ];
+                            }),
                         ],
                     },
                 };
@@ -563,10 +564,10 @@ export class ConciliaAftService {
             data.forEach(element => {
                 if (element.IdUnidad !== _idUnidad) {
                     result.push({
-                        field: 'Unidad',
-                        value: element.Unidad,
+                        Field: 'Unidad',
+                        Value: element.Unidad,
                         IdUnidad: element.IdUnidad,
-                        isGroupBy: true,
+                        IsGroupBy: true,
                     });
 
                     _idUnidad = element.IdUnidad;

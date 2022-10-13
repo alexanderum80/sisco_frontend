@@ -13,6 +13,5 @@
     },
     "editor.formatOnSave": false
   },
-},
-"editor.suggest.snippetsPreventQuickSuggestions": false,
-"editor.inlineSuggest.enabled": true
+  "files.eol": "\n",
+}

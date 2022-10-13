@@ -1,0 +1,21 @@
+query ConciliaUH($conciliaUhInput: ConciliaUhInput!) {
+  conciliaUH(conciliaUhInput: $conciliaUhInput) {
+    Tipo
+   	IdDivision
+   	Division
+    SubDivision
+    IdCentro
+    Centro
+    IdUnidad
+    Unidad
+    Periodo
+    Cuenta
+    SubCuenta
+    Analisis1
+    Analisis2
+    Analisis3
+    SaldoUH
+    SaldoRodas
+    Diferencia
+  }
+}

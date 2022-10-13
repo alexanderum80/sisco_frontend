@@ -4,8 +4,8 @@ import { SplitButtonComponent } from './split-button.component';
 import { SplitButtonModule } from 'primeng/splitbutton';
 
 @NgModule({
-  declarations: [SplitButtonComponent],
-  imports: [CommonModule, SplitButtonModule],
-  exports: [SplitButtonModule, SplitButtonComponent],
+    declarations: [SplitButtonComponent],
+    imports: [CommonModule, SplitButtonModule],
+    exports: [SplitButtonModule, SplitButtonComponent],
 })
 export class PrimeSplitButtonModule {}

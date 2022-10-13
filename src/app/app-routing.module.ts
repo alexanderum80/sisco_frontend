@@ -79,6 +79,14 @@ const routes: Routes = [
             ),
         canActivate: [AuthGuard],
     },
+    {
+        path: 'concilia-uh',
+        loadChildren: () =>
+            import('./concilia-uh/concilia-uh.module').then(
+                m => m.ConciliaUhModule
+            ),
+        canActivate: [AuthGuard],
+    },
 
     // Menu Conciliación
     {
