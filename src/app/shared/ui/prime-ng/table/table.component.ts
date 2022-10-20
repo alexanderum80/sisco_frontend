@@ -31,6 +31,7 @@ export class TableComponent {
     @Input() inlineButtons: IButtons[] = [];
     @Input() scrollable = false;
     @Input() scrollHeight = '';
+    @Input() responsiveLayout: 'scroll' | 'stack' = 'scroll'
 
     @Output() actionClicked = new EventEmitter<any>();
     @Output() selectedRows = new EventEmitter<any>();

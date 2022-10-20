@@ -1,9 +1,9 @@
 import {
+    AfterContentChecked,
     ChangeDetectorRef,
     Component,
     EventEmitter,
     Input,
-    OnInit,
     Output,
 } from '@angular/core';
 
@@ -13,7 +13,7 @@ import {
     templateUrl: './button.component.html',
     styleUrls: ['./button.component.scss'],
 })
-export class ButtonComponent implements OnInit {
+export class ButtonComponent implements AfterContentChecked {
     @Input() label: string;
     @Input() type: 'button' | 'submit' | 'reset';
     @Input() icon: string;
@@ -42,7 +42,7 @@ export class ButtonComponent implements OnInit {
 
     constructor(private cd: ChangeDetectorRef) {}
 
-    ngOnInit(): void {
+    ngAfterContentChecked(): void {
         this.cd.detectChanges();
     }
 

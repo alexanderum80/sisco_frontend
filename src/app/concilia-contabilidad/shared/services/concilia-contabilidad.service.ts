@@ -14,7 +14,7 @@ import * as moment from 'moment';
 export class ConciliaContabilidadService {
     fg: FormGroup = new FormGroup({
         tipoCentro: new FormControl('0'),
-        idCentro: new FormControl(''),
+        idCentro: new FormControl(null),
         tipoEntidad: new FormControl(''),
         periodo: new FormControl(''),
         apertura: new FormControl(false),

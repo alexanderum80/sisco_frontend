@@ -3,9 +3,9 @@ import {
     ChangeDetectorRef,
     Component,
     Input,
-    OnInit,
     OnChanges,
     SimpleChanges,
+    AfterContentChecked,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
@@ -15,7 +15,7 @@ import { FormGroup } from '@angular/forms';
     templateUrl: './calendar.component.html',
     styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent implements OnInit, OnChanges {
+export class CalendarComponent implements AfterContentChecked, OnChanges {
     @Input() fg: FormGroup;
     @Input() label: string;
     @Input() floatLabel = false;
@@ -46,7 +46,7 @@ export class CalendarComponent implements OnInit, OnChanges {
         private _toolTipSvc: TooltipService
     ) {}
 
-    ngOnInit(): void {
+    ngAfterContentChecked(): void {
         this.cd.detectChanges();
     }
 

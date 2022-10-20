@@ -13,6 +13,8 @@ import {
     ChangeDetectorRef,
     OnDestroy,
     AfterViewInit,
+    ChangeDetectionStrategy,
+    AfterContentChecked,
 } from '@angular/core';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
@@ -35,9 +37,10 @@ const DISPLAYED_COLUMNS_CONSULTAS: ITableColumns[] = [
     selector: 'app-concilia-contabilidad',
     templateUrl: './concilia-contabilidad.component.html',
     styleUrls: ['./concilia-contabilidad.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConciliaContabilidadComponent
-    implements OnInit, AfterViewInit, OnDestroy
+    implements OnInit, AfterViewInit, OnDestroy, AfterContentChecked
 {
     @ViewChild(TabView) tabView: TabView;
 
@@ -152,20 +155,27 @@ export class ConciliaContabilidadComponent
         private _conciliaContabSvc: ConciliaContabilidadService,
         private _pdfMakeSvc: PdfmakeService,
         private _changeDedectionRef: ChangeDetectorRef,
-        private _swalSvc: SweetalertService
-    ) {}
+        private _swalSvc: SweetalertService,
+        private _cd: ChangeDetectorRef
+    ) {
+        _cd.detach();
+    }
 
     ngOnInit(): void {
         this.fg = this._conciliaContabSvc.fg;
+        // this.fg.reset();
         this._conciliaContabSvc.inicializarFg();
         this._subscribeToFgValueChanges();
-
-        this._changeDedectionRef.detectChanges();
+        // this._changeDedectionRef.detectChanges();
     }
 
     ngAfterViewInit(): void {
         this._getUnidades();
         this._getTipoEntidades();
+    }
+
+    ngAfterContentChecked(): void {
+        this._cd.detectChanges();
     }
 
     ngOnDestroy(): void {

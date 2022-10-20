@@ -43,6 +43,8 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
     inlineButtons: IButtons[] = [];
     topLeftButtons: IButtons[] = [];
 
+    loading = true;
+
     constructor(
         private _apollo: Apollo,
         private _dinamicDialogSvc: DinamicDialogService,
@@ -76,6 +78,8 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
                         fetchPolicy: 'network-only',
                     })
                     .valueChanges.subscribe(({ data }) => {
+                        this.loading = false;
+
                         const result = data.getAllUsuarios;
 
                         if (result.success === false) {
@@ -92,6 +96,8 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
                     })
             );
         } catch (err: any) {
+            this.loading = false;
+
             SweetAlert.fire({
                 icon: 'error',
                 title: 'ERROR',

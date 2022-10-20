@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import {
+    AfterContentChecked,
+    ChangeDetectorRef,
+    Component,
+    Input,
+} from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -7,7 +12,7 @@ import { FormGroup } from '@angular/forms';
     templateUrl: './checkbox.component.html',
     styleUrls: ['./checkbox.component.scss'],
 })
-export class CheckboxComponent implements OnInit {
+export class CheckboxComponent implements AfterContentChecked {
     @Input() fg: FormGroup;
     @Input() control: string;
     @Input() label: string;
@@ -17,7 +22,7 @@ export class CheckboxComponent implements OnInit {
 
     constructor(private cd: ChangeDetectorRef) {}
 
-    ngOnInit(): void {
+    ngAfterContentChecked(): void {
         this.cd.detectChanges();
     }
 }

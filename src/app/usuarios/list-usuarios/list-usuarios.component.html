@@ -1,12 +1,13 @@
 <app-list-item title="Usuarios">
-  <png-table
-    [columns]="columns"
-    [data]="usuarios"
-    [inlineButtons]="inlineButtons"
-    [topLeftButtons]="topLeftButtons"
-    [scrollable]="true"
-    scrollHeight="calc(100vh - 220px)"
-    (actionClicked)="actionClicked($event)"></png-table>
+    <png-table
+        [columns]="columns"
+        [data]="usuarios"
+        [inlineButtons]="inlineButtons"
+        [topLeftButtons]="topLeftButtons"
+        [loading]="loading"
+        [scrollable]="true"
+        scrollHeight="calc(100vh - 220px)"
+        (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
 
 <p-toast></p-toast>
