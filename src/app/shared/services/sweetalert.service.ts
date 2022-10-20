@@ -19,11 +19,11 @@ export class SweetalertService {
         });
     }
 
-    error(message: string): void {
+    error(error: string): void {
         Swal.fire({
             icon: 'error',
             title: 'ERROR',
-            text: message,
+            text: error,
             confirmButtonText: 'Aceptar',
             allowOutsideClick: false,
         });

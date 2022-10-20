@@ -55,7 +55,8 @@
     <ng-template pTemplate="header" let-columns>
         <tr>
             <th *ngIf="inlineButtons.length || selectCheckbox">
-                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                <p-tableHeaderCheckbox
+                    (click)="switchRowSelection()"></p-tableHeaderCheckbox>
             </th>
             <ng-container *ngFor="let col of columns">
                 <th

@@ -398,29 +398,35 @@ export class ConciliaContabilidadComponent
             this.chequeoCentro = false;
 
             this._conciliaContabSvc.subscription.push(
-                this._conciliaContabSvc.conciliar().subscribe(response => {
-                    this.loading = false;
+                this._conciliaContabSvc.conciliar().subscribe({
+                    next: response => {
+                        this.loading = false;
 
-                    const result = response.conciliaContabilidad;
+                        const result = response.conciliaContabilidad;
 
-                    if (!result.success) {
-                        this._swalSvc.error(result.error);
-                    }
+                        if (!result.success) {
+                            this._swalSvc.error(result.error);
+                        }
 
-                    this.dataSourceClasificador =
-                        JSON.parse(result.data.ReporteClasificador.data) || [];
-                    this.dataSourceAsientos =
-                        cloneDeep(
-                            JSON.parse(result.data.ReporteConsultas.data)
-                        ) || [];
-                    this.dataSourceExpresiones =
-                        cloneDeep(
-                            JSON.parse(result.data.ReporteExpresiones.data)
-                        ) || [];
-                    this.dataSourceValores =
-                        cloneDeep(
-                            JSON.parse(result.data.ReporteValores.data)
-                        ) || [];
+                        this.dataSourceClasificador =
+                            JSON.parse(result.data.ReporteClasificador.data) ||
+                            [];
+                        this.dataSourceAsientos =
+                            cloneDeep(
+                                JSON.parse(result.data.ReporteConsultas.data)
+                            ) || [];
+                        this.dataSourceExpresiones =
+                            cloneDeep(
+                                JSON.parse(result.data.ReporteExpresiones.data)
+                            ) || [];
+                        this.dataSourceValores =
+                            cloneDeep(
+                                JSON.parse(result.data.ReporteValores.data)
+                            ) || [];
+                    },
+                    error: err => {
+                        this._swalSvc.error(err);
+                    },
                 })
             );
         } catch (err: any) {
@@ -464,10 +470,9 @@ export class ConciliaContabilidadComponent
     private _chequearCentros(): void {
         try {
             if (!this.centrosAChequear.length) {
-                this._swalSvc.error(
+                throw new Error(
                     'Debe seleccionar al menos 1 Centro a Chequear.'
                 );
-                return;
             }
 
             this.selectedTabViewIndex = 0;

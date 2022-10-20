@@ -55,7 +55,7 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
         );
       });
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ocurrió el siguiente error: ${err}`);
+      this._sweetAlertSvc.error(err);
     }
   }
 
@@ -90,7 +90,7 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
           this._dinamicDialogSvc.close(txtMessage);
         });
     } catch (err: any) {
-      this._sweetAlertSvc.error(`Ha ocurrido el siguiente error: ${err}`);
+      this._sweetAlertSvc.error(err);
     }
   }
 }

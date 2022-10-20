@@ -120,7 +120,7 @@ export class ListClasificadorCuentaComponent
             SweetAlert.fire({
                 icon: 'error',
                 title: 'ERROR',
-                text: `Ocurrió el siguiente error: ${err}`,
+                text: err,
                 showConfirmButton: true,
                 confirmButtonText: 'Aceptar',
             });
@@ -191,7 +191,7 @@ export class ListClasificadorCuentaComponent
             SweetAlert.fire({
                 icon: 'error',
                 title: 'ERROR',
-                text: `Ocurrió el siguiente error: ${err}`,
+                text: err,
                 showConfirmButton: true,
                 confirmButtonText: 'Aceptar',
             });
@@ -272,7 +272,7 @@ export class ListClasificadorCuentaComponent
             SweetAlert.fire({
                 icon: 'error',
                 title: 'ERROR',
-                text: `Ocurrió el siguiente error: ${err}`,
+                text: err,
                 showConfirmButton: true,
                 confirmButtonText: 'Aceptar',
             });
@@ -304,7 +304,7 @@ export class ListClasificadorCuentaComponent
                                             return SweetAlert.fire({
                                                 icon: 'error',
                                                 title: 'ERROR',
-                                                text: `Ocurrió el siguiente error: ${result.error}`,
+                                                text: result.error,
                                                 showConfirmButton: true,
                                                 confirmButtonText: 'Aceptar',
                                             });
@@ -328,7 +328,7 @@ export class ListClasificadorCuentaComponent
             SweetAlert.fire({
                 icon: 'error',
                 title: 'ERROR',
-                text: `Ocurrió el siguiente error: ${err}`,
+                text: err,
                 showConfirmButton: true,
                 confirmButtonText: 'Aceptar',
             });

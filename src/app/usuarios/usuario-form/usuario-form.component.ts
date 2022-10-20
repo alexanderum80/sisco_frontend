@@ -35,7 +35,7 @@ export class UsuarioFormComponent implements OnInit {
         private _apollo: Apollo,
         private _tipoUsuariosSvc: TipoUsuariosService,
         private _divisionesSvc: DivisionesService,
-        private _sweetAlterSvc: SweetalertService
+        private _sweetAlertSvc: SweetalertService
     ) {}
 
     ngOnInit(): void {
@@ -87,7 +87,7 @@ export class UsuarioFormComponent implements OnInit {
                         return SweetAlert.fire({
                             icon: 'error',
                             title: 'ERROR',
-                            text: `Se produjo el siguiente error: ${result.error}`,
+                            text: result.error,
                             showConfirmButton: true,
                             confirmButtonText: 'Aceptar',
                         });
@@ -218,9 +218,7 @@ export class UsuarioFormComponent implements OnInit {
                     }
 
                     if (!result?.success) {
-                        return this._sweetAlterSvc.error(
-                            `Se produjo el siguiente error: ${result?.error}`
-                        );
+                        return this._sweetAlertSvc.error(result?.error || '');
                     }
 
                     this._closeModal(txtMessage);

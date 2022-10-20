@@ -142,22 +142,24 @@ export class ConciliaAftComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     private _subscribeToFgValueChanges(): void {
-        this._conciliaAftSvc.subscription.push(
-            this.fg.valueChanges.subscribe(() => {
-                this._inicializarDatos();
-            })
-        );
+        try {
+            this._conciliaAftSvc.subscription.push(
+                this.fg.valueChanges.subscribe(() => {
+                    this._inicializarDatos();
+                })
+            );
 
-        // IdCentro
-        this._conciliaAftSvc.subscription.push(
-            this.fg.controls['idCentro'].valueChanges.subscribe(value => {
-                if (value) {
-                    this._updateTipoEntidad(value);
-                } else {
-                    this.fg.controls['tipoEntidad'].setValue('');
-                }
-            })
-        );
+            // IdCentro
+            this._conciliaAftSvc.subscription.push(
+                this.fg.controls['idCentro'].valueChanges.subscribe(value => {
+                    if (value) {
+                        this._updateTipoEntidad(value);
+                    } else {
+                        this.fg.controls['tipoEntidad'].setValue('');
+                    }
+                })
+            );
+        } catch (error) {}
     }
 
     private _inicializarDatos(): void {
