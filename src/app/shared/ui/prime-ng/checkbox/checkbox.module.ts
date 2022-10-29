@@ -5,8 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
-    declarations: [CheckboxComponent],
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, CheckboxModule],
-    exports: [CheckboxModule, CheckboxComponent],
+  declarations: [CheckboxComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, CheckboxModule],
+  exports: [CheckboxModule, CheckboxComponent],
 })
 export class PrimeCheckboxModule {}

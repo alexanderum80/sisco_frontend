@@ -1,14 +1,14 @@
 <div class="page-content">
-    <div class="top-menu" *ngIf="authenticated">
-        <p-menubar class="w-full" [model]="menu">
-            <ng-template pTemplate="end">
-                <app-usuario-info></app-usuario-info>
-            </ng-template>
-        </p-menubar>
+  <div class="top-menu" *ngIf="authenticated">
+    <p-menubar class="w-full" [model]="menu">
+      <ng-template pTemplate="end">
+        <app-usuario-info></app-usuario-info>
+      </ng-template>
+    </p-menubar>
+  </div>
+  <div class="app-row">
+    <div class="app-container">
+      <router-outlet></router-outlet>
     </div>
-    <div class="app-row">
-        <div class="app-container">
-            <router-outlet></router-outlet>
-        </div>
-    </div>
+  </div>
 </div>

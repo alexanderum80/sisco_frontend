@@ -19,7 +19,7 @@
     p-selectbutton,
     p-inputswitch {
         width: 100% !important;
-        height: 22px;
+        height: 25px;
     }
 
     .p-selectbutton {
@@ -82,8 +82,8 @@ p-inputnumber, .p-inputnumber {
 .p-float-label input.p-filled ~ label, 
 .p-float-label .p-inputwrapper-focus ~ label,
 .p-float-label .p-inputwrapper-filled ~ label {
-    font-size: .6rem !important;
-    top: -0.5rem !important;
+    font-size: .8rem !important;
+    top: -0.6rem !important;
 }
 
 .p-component, .p-link {
@@ -135,6 +135,7 @@ p-inputnumber, .p-inputnumber {
 
 .p-dropdown-clear-icon {
     right: 1.5rem !important;
+    margin-top: -0.6rem !important;
 }
 
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item, .p-multiselect-item {

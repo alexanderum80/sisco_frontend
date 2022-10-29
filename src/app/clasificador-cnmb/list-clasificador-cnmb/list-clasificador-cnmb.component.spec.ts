@@ -8,9 +8,8 @@ describe('ListClasificadorCnmbComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListClasificadorCnmbComponent ]
-    })
-    .compileComponents();
+      declarations: [ListClasificadorCnmbComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

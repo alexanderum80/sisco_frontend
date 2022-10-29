@@ -8,9 +8,8 @@ describe('ClasificadorCnmbFormComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ClasificadorCnmbFormComponent ]
-    })
-    .compileComponents();
+      declarations: [ClasificadorCnmbFormComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

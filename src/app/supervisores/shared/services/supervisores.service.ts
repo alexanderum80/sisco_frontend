@@ -56,7 +56,7 @@ export class SupervisoresService {
               fetchPolicy: 'network-only',
             })
             .subscribe({
-              next: (response) => {
+              next: response => {
                 subscriber.next(response.data);
                 subscriber.complete();
               },

@@ -4,9 +4,9 @@ import { ConfirmPopupModule } from 'primeng/confirmpopup';
 import { ConfirmationService } from 'primeng/api';
 
 @NgModule({
-    declarations: [],
-    imports: [CommonModule, ConfirmPopupModule],
-    exports: [ConfirmPopupModule],
-    providers: [ConfirmationService],
+  declarations: [],
+  imports: [CommonModule, ConfirmPopupModule],
+  exports: [ConfirmPopupModule],
+  providers: [ConfirmationService],
 })
 export class PrimeConfirmPopupModule {}

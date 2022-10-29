@@ -56,7 +56,7 @@ export class EmpleadosService {
               fetchPolicy: 'network-only',
             })
             .subscribe({
-              next: (response) => {
+              next: response => {
                 subscriber.next(response.data || undefined),
                   subscriber.complete();
               },

@@ -6,14 +6,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
-    declarations: [InputEmailComponent],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        InputTextModule,
-        TooltipModule,
-    ],
-    exports: [InputEmailComponent],
+  declarations: [InputEmailComponent],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    InputTextModule,
+    TooltipModule,
+  ],
+  exports: [InputEmailComponent],
 })
 export class PrimeInputEmailModule {}

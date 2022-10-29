@@ -9,15 +9,15 @@ import { ConciliaContabilidadComponent } from './concilia-contabilidad.component
 import { PrimeNgModule } from '../shared/ui/prime-ng/prime-ng.module';
 
 @NgModule({
-    declarations: [ConciliaContabilidadComponent],
-    imports: [
-        CommonModule,
-        ConciliaContabilidadRoutingModule,
-        FormsModule,
-        ReactiveFormsModule,
-        SharedModule,
-        PrimeNgModule,
-    ],
-    providers: [ConciliaContabilidadService],
+  declarations: [ConciliaContabilidadComponent],
+  imports: [
+    CommonModule,
+    ConciliaContabilidadRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedModule,
+    PrimeNgModule,
+  ],
+  providers: [ConciliaContabilidadService],
 })
 export class ConciliaContabilidadModule {}
