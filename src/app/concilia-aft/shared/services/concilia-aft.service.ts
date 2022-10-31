@@ -88,13 +88,9 @@ export class ConciliaAftService {
   }
 
   public conciliar(): Observable<ConciliaAFTQueryResponse> {
-    let periodo = toNumber(
-      moment(this.fg.controls['periodo'].value).format('MM')
-    );
-
     const conciliaAftInput = {
       idCentro: toNumber(this.fg.controls['idCentro'].value),
-      periodo: periodo,
+      periodo: toNumber(moment(this.fg.controls['periodo'].value).format('MM')),
       annio: toNumber(moment(this.fg.controls['periodo'].value).format('YYYY')),
     };
 

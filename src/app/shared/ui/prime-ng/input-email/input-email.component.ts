@@ -39,9 +39,8 @@ export class InputEmailComponent implements OnInit, OnChanges {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.disabled) {
-      this.fg.controls[this.control].disable();
-    }
+    if (this.disabled) this.fg.controls[this.control].disable();
+    else this.fg.controls[this.control].enable();
   }
 
   getToolTip(): string {

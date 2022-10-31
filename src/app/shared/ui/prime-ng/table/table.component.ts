@@ -38,7 +38,6 @@ export class TableComponent {
   @Output() selectedRowIndex = new EventEmitter<number>();
 
   viewportHeight = 120;
-  dateFormat = 'dd/MM/yyyy';
   get = get;
 
   selectedRowsData: any[] = [];
