@@ -4,6 +4,8 @@ query GetAllClasificadorEntidades {
         data {
             IdUnidad
             Unidad 
+            Division 
+            SubDivision 
             IdTipoEntidad
             TipoEntidad
         }

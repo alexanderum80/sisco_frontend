@@ -27,6 +27,8 @@ export class ListClasificadorEntidadesComponent
 
   displayedColumns: ITableColumns[] = [
     { header: 'Unidad', field: 'Unidad', type: 'string' },
+    { header: 'División', field: 'Division', type: 'string' },
+    { header: 'SubDivisión', field: 'SubDivision', type: 'string' },
     { header: 'Tipo de Entidad', field: 'TipoEntidad', type: 'string' },
   ];
 
