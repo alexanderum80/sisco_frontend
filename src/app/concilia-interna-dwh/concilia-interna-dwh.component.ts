@@ -344,7 +344,7 @@ export class ConciliaInternaDwhComponent
             this.fg.controls['idDivision'].value,
             this.divisionesValues
           ),
-          await this._conciliarInternaDWHSvc.getParteAtrasosDefinition(
+          await this._conciliarInternaDWHSvc.getConciliacionDefinition(
             this.dataSource,
             fechaInicial,
             fechaFinal

@@ -173,6 +173,22 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'concilia-interna-conta',
+    loadChildren: () =>
+      import('./concilia-interna-conta/concilia-interna-conta.module').then(
+        m => m.ConciliaInternaContaModule
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'estadistica',
+    loadChildren: () =>
+      import('./estadistica-contabilidad/estadistica-contabilidad.module').then(
+        m => m.EstadisticaContabilidadModule
+      ),
+    canActivate: [AuthGuard],
+  },
 
   // Cuando no se encuentra el path
   { path: '**', component: StartComponent, canActivate: [AuthGuard] },

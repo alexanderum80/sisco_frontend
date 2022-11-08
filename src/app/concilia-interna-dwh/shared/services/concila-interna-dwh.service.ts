@@ -62,7 +62,7 @@ export class ConcilaInternaDwhService {
     return definition;
   }
 
-  public async getParteAtrasosDefinition(
+  public async getConciliacionDefinition(
     parteAtrasosData: any[],
     fechaInicial: Date,
     fechaFinal: Date
@@ -99,13 +99,13 @@ export class ConcilaInternaDwhService {
     });
 
     if (parteAtrasosData.length) {
-      definition.push(this._getParteAtrasosTable(parteAtrasosData));
+      definition.push(this._getConciliaInternaDwhTable(parteAtrasosData));
     }
 
     return definition;
   }
 
-  private _getParteAtrasosTable(conciliaInternaDWH: any): any[] {
+  private _getConciliaInternaDwhTable(conciliaInternaDWH: any): any[] {
     let _totalImporteE = 0;
     let _totalImporteR = 0;
     let _totalDiferencia = 0;

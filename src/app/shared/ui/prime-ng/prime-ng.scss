@@ -66,7 +66,7 @@
     } 
     
     .p-fieldset-content {
-       padding: .5rem !important;
+       padding: .5rem .2rem 0 .2rem !important;
     }
 }
 
@@ -94,7 +94,7 @@ p-inputnumber, .p-inputnumber {
     padding: 0.5rem 1rem !important;
 }
 
-.p-disabled, .p-button:disabled {
+.p-disabled, .p-disabled *, .p-button:disabled {
     cursor: not-allowed !important;
 }
 

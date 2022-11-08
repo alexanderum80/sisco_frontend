@@ -150,8 +150,8 @@ export const MenuItems: MenuItem[] = [
       {
         label: 'Estadísticas',
         icon: 'mdi mdi-book-information-variant',
-        routerLink: '',
-        disabled: true,
+        routerLink: 'estadistica',
+        disabled: false,
         title: 'Muestra información sobre la gestión de los Centros.',
       },
       { separator: true },
@@ -222,8 +222,8 @@ export const MenuItems: MenuItem[] = [
       {
         label: 'Contabilidad',
         icon: 'mdi mdi-cash-multiple',
-        routerLink: '',
-        disabled: true,
+        routerLink: 'concilia-interna-conta',
+        disabled: false,
         title: 'Conciliación Interna por la Contabilidad.',
       },
     ],
