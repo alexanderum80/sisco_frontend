@@ -12,14 +12,14 @@ import { Observable, Subscription } from 'rxjs';
 @Injectable()
 export class ConexionRodasService {
   fg = new FormGroup({
-    id: new FormControl(''),
-    idUnidad: new FormControl(''),
-    consolidado: new FormControl(''),
-    ip: new FormControl(''),
-    usuario: new FormControl(''),
-    contrasena: new FormControl(''),
-    baseDatos: new FormControl(''),
-    idDivision: new FormControl(''),
+    id: new FormControl('', { initialValueIsDefault: true }),
+    idDivision: new FormControl('', { initialValueIsDefault: true }),
+    idUnidad: new FormControl('', { initialValueIsDefault: true }),
+    consolidado: new FormControl('', { initialValueIsDefault: true }),
+    ip: new FormControl('', { initialValueIsDefault: true }),
+    usuario: new FormControl('', { initialValueIsDefault: true }),
+    contrasena: new FormControl('', { initialValueIsDefault: true }),
+    baseDatos: new FormControl('', { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];
@@ -124,6 +124,29 @@ export class ConexionRodasService {
           fetchPolicy: 'network-only',
         })
         .subscribe(() => {});
+    });
+  }
+
+  getEntidadesRodas(): Observable<ConexionRodasQueryResponse> {
+    const ip = this.fg.get('ip')?.value;
+    const usuario = this.fg.get('usuario')?.value;
+    const password = this.fg.get('contrasena')?.value;
+
+    return new Observable<ConexionRodasQueryResponse>(subscribe => {
+      this._apollo
+        .query<ConexionRodasQueryResponse>({
+          query: conexionRodasApi.entidades,
+          variables: { ip, usuario, password },
+          fetchPolicy: 'network-only',
+        })
+        .subscribe({
+          next: res => {
+            subscribe.next(res.data);
+          },
+          error: err => {
+            subscribe.error(err);
+          },
+        });
     });
   }
 

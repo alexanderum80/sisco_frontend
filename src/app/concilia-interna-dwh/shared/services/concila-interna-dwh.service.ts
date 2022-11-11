@@ -163,18 +163,20 @@ export class ConcilaInternaDwhService {
             return [
               p.Documento,
               p.Emisor,
-              formatDate(
-                p.FechaE,
-                DateFormatEnum.ES_DATE,
-                LocaleFormatEnum.EN_US
-              ),
+              p.FechaE,
+              // formatDate(
+              //   p.FechaE,
+              //   DateFormatEnum.ES_DATE,
+              //   LocaleFormatEnum.EN_US
+              // ),
               { text: numberFormatter.format(p.ImporteE), alignment: 'right' },
               p.Receptor,
-              formatDate(
-                p.FechaR,
-                DateFormatEnum.ES_DATE,
-                LocaleFormatEnum.EN_US
-              ),
+              p.FechaR,
+              // formatDate(
+              //   p.FechaR,
+              //   DateFormatEnum.ES_DATE,
+              //   LocaleFormatEnum.EN_US
+              // ),
               { text: numberFormatter.format(p.ImporteR), alignment: 'right' },
               {
                 text: numberFormatter.format(p.Diferencia),

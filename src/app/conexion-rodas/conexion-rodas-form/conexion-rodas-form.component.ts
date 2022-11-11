@@ -2,22 +2,30 @@ import { Subscription } from 'rxjs';
 import { ActionClicked } from './../../shared/models/list-items';
 import { SelectItem } from 'primeng/api';
 import { UnidadesService } from './../../unidades/shared/services/unidades.service';
-import { DatabasesService } from './../../shared/services/databases.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
-import { toNumber } from 'lodash';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { FormGroup } from '@angular/forms';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import SweetAlert from 'sweetalert2';
 import { UsuarioService } from '../../shared/services/usuario.service';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  AfterContentChecked,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 
 @Component({
   selector: 'app-conexion-rodas-form',
   templateUrl: './conexion-rodas-form.component.html',
   styleUrls: ['./conexion-rodas-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
+export class ConexionRodasFormComponent
+  implements OnInit, AfterViewInit, AfterContentChecked
+{
   divisionesValues: SelectItem[] = [];
   unidadesValues: SelectItem[] = [];
   baseDatosValues: SelectItem[] = [];
@@ -28,7 +36,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
 
   subscription: Subscription[] = [];
 
-  loadingDataBase = false;
+  loadingEntidadesRodas = false;
 
   constructor(
     private _usuarioSvc: UsuarioService,
@@ -36,18 +44,18 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
     private _dinamicDialogSvc: DinamicDialogService,
     private _divisionesSvc: DivisionesService,
     private _unidadesSvc: UnidadesService,
-    private _databasesSvc: DatabasesService
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.fg = this._conexionRodasSvc.fg;
 
     this.action =
-      toNumber(this.fg.controls['idUnidad'].value) === 0
+      this.fg.controls['idUnidad'].value !== ''
         ? ActionClicked.Add
         : ActionClicked.Edit;
     if (this.action === ActionClicked.Edit) {
-      this.refreshDataBases();
+      this.getEntidadesRodas();
     }
 
     this._getDivisiones();
@@ -56,6 +64,10 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this._getUnidades();
     this._subscribeToFgValueChange();
+  }
+
+  ngAfterContentChecked(): void {
+    this.cd.detectChanges();
   }
 
   private _subscribeToFgValueChange(): void {
@@ -94,7 +106,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
 
   private _getDivisiones(): void {
     try {
-      this._conexionRodasSvc.subscription.push(
+      this.subscription.push(
         this._divisionesSvc.getDivisiones().subscribe(response => {
           const result = response.getAllDivisiones;
 
@@ -138,7 +150,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
         return;
       }
 
-      this._conexionRodasSvc.subscription.push(
+      this.subscription.push(
         this._unidadesSvc
           .getUnidadesByIdDivision(idDivision)
           .subscribe(response => {
@@ -175,43 +187,36 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
     }
   }
 
-  refreshDataBases(): void {
+  getEntidadesRodas(): void {
     try {
-      this.loadingDataBase = true;
-
-      const ip = this.fg.controls['ip'].value;
-      const usuario = this.fg.controls['usuario'].value;
-      const password = this.fg.controls['contrasena'].value;
+      this.loadingEntidadesRodas = true;
 
       const that = this;
-      this._conexionRodasSvc.subscription.push(
-        this._databasesSvc
-          .getDataBases(ip, usuario, password)
-          .subscribe(response => {
-            this.loadingDataBase = false;
+      this.subscription.push(
+        this._conexionRodasSvc.getEntidadesRodas().subscribe({
+          next: res => {
+            this.loadingEntidadesRodas = false;
 
-            const result = response.getDataBases;
-
-            if (!result.success) {
-              return SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: result.error,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-              });
-            }
-
-            that.baseDatosValues = result.data.map((d: { name: any }) => {
+            that.baseDatosValues = res.entidadesRodas.map(d => {
               return {
-                value: d.name,
-                label: d.name,
+                value: d.Siglas,
+                label: d.Entidad,
               };
             });
-          })
+          },
+          error: err => {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: err,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          },
+        })
       );
     } catch (err: any) {
-      this.loadingDataBase = false;
+      this.loadingEntidadesRodas = false;
 
       SweetAlert.fire({
         icon: 'error',
@@ -222,6 +227,54 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
       });
     }
   }
+
+  // refreshDataBases(): void {
+  //   try {
+  //     this.loadingDataBase = true;
+
+  //     const ip = this.fg.controls['ip'].value;
+  //     const usuario = this.fg.controls['usuario'].value;
+  //     const password = this.fg.controls['contrasena'].value;
+
+  //     const that = this;
+  //     this._conexionRodasSvc.subscription.push(
+  //       this._databasesSvc
+  //         .getDataBases(ip, usuario, password)
+  //         .subscribe(response => {
+  //           this.loadingDataBase = false;
+
+  //           const result = response.getDataBases;
+
+  //           if (!result.success) {
+  //             return SweetAlert.fire({
+  //               icon: 'error',
+  //               title: 'ERROR',
+  //               text: result.error,
+  //               showConfirmButton: true,
+  //               confirmButtonText: 'Aceptar',
+  //             });
+  //           }
+
+  //           that.baseDatosValues = result.data.map((d: { name: any }) => {
+  //             return {
+  //               value: d.name,
+  //               label: d.name,
+  //             };
+  //           });
+  //         })
+  //     );
+  //   } catch (err: any) {
+  //     this.loadingDataBase = false;
+
+  //     SweetAlert.fire({
+  //       icon: 'error',
+  //       title: 'ERROR',
+  //       text: err,
+  //       showConfirmButton: true,
+  //       confirmButtonText: 'Aceptar',
+  //     });
+  //   }
+  // }
 
   onActionClicked(action: ActionClicked) {
     switch (action) {
@@ -236,7 +289,7 @@ export class ConexionRodasFormComponent implements OnInit, AfterViewInit {
 
   private _save(): void {
     try {
-      this._conexionRodasSvc.subscription.push(
+      this.subscription.push(
         this._conexionRodasSvc.save().subscribe({
           next: (response: any) => {
             let result;

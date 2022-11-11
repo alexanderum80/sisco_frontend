@@ -8,7 +8,6 @@
         label="División"
         labelWidth="90"
         [optionsValues]="divisionesValues"
-        placeholder="&lt;División&gt;"
         [required]="true"
         [filter]="true"
         [showClear]="true"></png-dropdown>
@@ -21,7 +20,6 @@
         label="Centro"
         labelWidth="90"
         [optionsValues]="unidadesValues"
-        placeholder="&lt;Unidad&gt;"
         [required]="true"
         [filter]="true"
         [showClear]="true"></png-dropdown>
@@ -69,12 +67,12 @@
         class="w-full mt-1"
         [fg]="fg"
         control="baseDatos"
-        label="Base de Datos"
+        label="Entidad Rodas"
         labelWidth="90"
         [optionsValues]="baseDatosValues"
-        placeholder="&lt;Base de Datos&gt;"
+        placeholder="&lt;Entidad&gt;"
         [required]="true"
-        [disabled]="loadingDataBase"
+        [disabled]="loadingEntidadesRodas"
         [filter]="true"
         [showClear]="true"></png-dropdown>
       <png-button
@@ -83,12 +81,12 @@
         [raised]="true"
         [rounded]="true"
         [text]="true"
-        [disabled]="loadingDataBase"
+        [disabled]="loadingEntidadesRodas"
         [raised]="true"
         [fullWidth]="true"
-        [loading]="loadingDataBase"
-        tooltip="Refrescar lista de Bases de Datos"
-        (clicked)="refreshDataBases()"></png-button>
+        [loading]="loadingEntidadesRodas"
+        tooltip="Refrescar lista de Entidades"
+        (clicked)="getEntidadesRodas()"></png-button>
     </div>
   </form>
 </app-add-edit-item>

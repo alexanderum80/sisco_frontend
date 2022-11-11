@@ -1,3 +1,5 @@
+import { cloneDeep } from 'lodash';
+import { ITableColumns } from './../shared/ui/prime-ng/table/table.model';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
 import { SubdivisionesService } from './../shared/services/subdivisiones.service';
 import { DivisionesService } from './../shared/services/divisiones.service';
@@ -27,22 +29,34 @@ export class ConciliaInternaDwhComponent
   unidadesValues: SelectItem[] = [];
   unidadesODValues: SelectItem[] = [];
 
-  displayedColumns = [
-    'Documento',
-    'Emisor',
-    'FechaE',
-    'ImporteE',
-    'Receptor',
-    'FechaR',
-    'ImporteR',
-    'Diferencia',
+  displayedColumns: ITableColumns[] = [
+    { header: 'Documento', field: 'Documento', type: 'string' },
+    { header: 'Emisor', field: 'Emisor', type: 'string' },
+    { header: 'Fecha Emisión', field: 'FechaE', type: 'string' },
+    {
+      header: 'Importe Emisor',
+      field: 'ImporteE',
+      type: 'decimal',
+      totalize: true,
+    },
+    { header: 'Receptor', field: 'Receptor', type: 'string' },
+    { header: 'Fecha Recepción', field: 'FechaR', type: 'string' },
+    {
+      header: 'Importe Receptor',
+      field: 'ImporteR',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Diferencia',
+      field: 'Diferencia',
+      type: 'decimal',
+      totalize: true,
+    },
   ];
 
+  dataSourceOriginal: any[] = [];
   dataSource: any[] = [];
-
-  totalEmisor = 0;
-  totalReceptor = 0;
-  totalDiferencia = 0;
 
   loading = false;
 
@@ -204,11 +218,6 @@ export class ConciliaInternaDwhComponent
   }
 
   private _subscribeToFgValueChanges(): void {
-    this.fg.valueChanges.subscribe(() => {
-      this.dataSource = [];
-      this._calcularTotales();
-    });
-
     // Centro a analizar
     this._conciliarInternaDWHSvc.subscription.push(
       this.fg.controls['idDivision'].valueChanges.subscribe(value => {
@@ -217,6 +226,9 @@ export class ConciliaInternaDwhComponent
 
         this.subdivisionesValues = [];
         this._getSubdivisiones();
+
+        this.dataSourceOriginal = [];
+        this._updateDataSource();
       })
     );
 
@@ -226,6 +238,16 @@ export class ConciliaInternaDwhComponent
 
         this.unidadesValues = [];
         this._getUnidades(false);
+
+        this.dataSourceOriginal = [];
+        this._updateDataSource();
+      })
+    );
+
+    this._conciliarInternaDWHSvc.subscription.push(
+      this.fg.controls['idUnidad'].valueChanges.subscribe(() => {
+        this.dataSourceOriginal = [];
+        this._updateDataSource();
       })
     );
 
@@ -236,32 +258,48 @@ export class ConciliaInternaDwhComponent
 
         this.unidadesODValues = [];
         this._getUnidades(true);
+
+        this.dataSourceOriginal = [];
+        this._updateDataSource();
+      })
+    );
+
+    this._conciliarInternaDWHSvc.subscription.push(
+      this.fg.controls['idUnidadOD'].valueChanges.subscribe(() => {
+        this.dataSourceOriginal = [];
+        this._updateDataSource();
+      })
+    );
+
+    // Fechas
+    this._conciliarInternaDWHSvc.subscription.push(
+      this.fg.controls['fechaInicial'].valueChanges.subscribe(() => {
+        this.dataSourceOriginal = [];
+        this._updateDataSource();
+      })
+    );
+
+    this._conciliarInternaDWHSvc.subscription.push(
+      this.fg.controls['fechaFinal'].valueChanges.subscribe(() => {
+        this.dataSourceOriginal = [];
+        this._updateDataSource();
+      })
+    );
+
+    // Solo Diferencias
+    this._conciliarInternaDWHSvc.subscription.push(
+      this.fg.controls['soloDiferencias'].valueChanges.subscribe(() => {
+        this._updateDataSource();
       })
     );
   }
 
-  getTotalImporteE(): number {
-    return this.dataSource.length
-      ? this.dataSource
-          .map(t => t.ImporteE || 0)
-          .reduce((acc, value) => acc + value, 0)
-      : 0;
-  }
-
-  getTotalImporteR(): number {
-    return this.dataSource.length
-      ? this.dataSource
-          .map(t => t.ImporteR || 0)
-          .reduce((acc, value) => acc + value, 0)
-      : 0;
-  }
-
-  getTotalDiferencia(): number {
-    return this.dataSource.length
-      ? this.dataSource
-          .map(t => t.Diferencia || 0)
-          .reduce((acc, value) => acc + value, 0)
-      : 0;
+  private _updateDataSource(): void {
+    if (this.fg.controls['soloDiferencias'].value === true)
+      this.dataSource = cloneDeep(
+        this.dataSourceOriginal.filter(d => d.Diferencia !== 0)
+      );
+    else this.dataSource = cloneDeep(this.dataSourceOriginal);
   }
 
   conciliar(): void {
@@ -277,7 +315,6 @@ export class ConciliaInternaDwhComponent
         IdDivisionOD: this.fg.controls['idDivisionOD'].value || 0,
         IdSubdivisionOD: this.fg.controls['idSubdivisionOD'].value || 0,
         IdUnidadOD: this.fg.controls['idUnidadOD'].value || 0,
-        SoloDiferencias: this.fg.controls['soloDiferencias'].value,
       };
 
       this._conciliarInternaDWHSvc.subscription.push(
@@ -301,8 +338,8 @@ export class ConciliaInternaDwhComponent
               });
             }
 
-            this.dataSource = result.data;
-            this._calcularTotales();
+            this.dataSourceOriginal = result.data;
+            this._updateDataSource();
           })
       );
     } catch (err: any) {
@@ -314,18 +351,6 @@ export class ConciliaInternaDwhComponent
         confirmButtonText: 'Aceptar',
       });
     }
-  }
-
-  private _calcularTotales() {
-    this.totalEmisor = 0;
-    this.totalReceptor = 0;
-    this.totalDiferencia = 0;
-
-    this.dataSource.forEach(element => {
-      this.totalEmisor += element.ImporteE;
-      this.totalReceptor += element.ImporteR;
-      this.totalDiferencia += element.Diferencia;
-    });
   }
 
   async reporte(): Promise<any> {

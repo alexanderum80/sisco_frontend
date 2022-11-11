@@ -1,0 +1,6 @@
+query EntidadesRodas($ip: String!, $usuario: String!, $password: String!) {
+  entidadesRodas(ip: $ip, usuario: $usuario, password: $password) {
+    Siglas
+    Entidad
+  }
+}

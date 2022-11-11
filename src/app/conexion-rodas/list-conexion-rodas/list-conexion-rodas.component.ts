@@ -27,7 +27,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
     { header: 'Consolidado', field: 'Consolidado', type: 'boolean' },
     { header: 'IP', field: 'IpRodas', type: 'string' },
     { header: 'Usuario', field: 'Usuario', type: 'string' },
-    { header: 'Base de Datos', field: 'BaseDatos', type: 'string' },
+    { header: 'Siglas', field: 'BaseDatos', type: 'string' },
   ];
 
   conexionesRodas: any[] = [];
@@ -115,7 +115,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
     try {
       const dataInput = {
         id: '',
-        idUnidad: null,
+        idCentro: null,
         consolidado: '',
         ip: '',
         usuario: '',
@@ -175,7 +175,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
 
               const dataInput = {
                 id: data.Id,
-                idUnidad: data.IdUnidad,
+                idCentro: data.IdUnidad,
                 consolidado: data.Consolidado,
                 ip: data.IpRodas,
                 usuario: data.Usuario,
