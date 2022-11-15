@@ -10,6 +10,7 @@ interface IComprobarValores {
   Operador: string;
   Valor: number;
   IdDivision?: number;
+  Consolidado: boolean;
 }
 
 interface IComprobarValorQueryResponse {

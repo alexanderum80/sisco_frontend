@@ -1,6 +1,7 @@
 import { TooltipService } from './../tooltip/tooltip.service';
 import {
   AfterViewChecked,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   Input,
@@ -13,6 +14,7 @@ import { SelectItem } from 'primeng/api';
   selector: 'png-dropdown',
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DropdownComponent implements AfterViewChecked {
   @Input() fg: FormGroup;

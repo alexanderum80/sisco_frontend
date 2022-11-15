@@ -8,6 +8,7 @@ query GetComprobarValorById($id: Int!) {
         IdOperador
         Valor
         IdDivision
+        Consolidado
       }
       error
     }

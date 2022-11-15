@@ -15,24 +15,12 @@ export class CompararValoresService {
     operador: new FormControl(''),
     valor: new FormControl(0),
     division: new FormControl(0),
+    consolidado: new FormControl(false),
   });
 
   subscription: Subscription[] = [];
 
   constructor(private _apollo: Apollo) {}
-
-  inicializarFg(): void {
-    const payload = {
-      id: 0,
-      centro: null,
-      expresion: null,
-      operador: null,
-      valor: 0,
-      division: 0,
-    };
-
-    this.fg.patchValue(payload);
-  }
 
   loadAll(): Observable<ComprobarValoresQueryResponse> {
     return new Observable<ComprobarValoresQueryResponse>(subscriber => {
@@ -84,6 +72,7 @@ export class CompararValoresService {
           IdOperador: this.fg.controls['operador'].value,
           Valor: this.fg.controls['valor'].value,
           IdDivision: this.fg.controls['division'].value,
+          Consolidado: this.fg.controls['consolidado'].value,
         };
 
         const mutation =

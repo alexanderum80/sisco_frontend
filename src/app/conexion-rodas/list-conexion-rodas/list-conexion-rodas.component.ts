@@ -115,7 +115,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
     try {
       const dataInput = {
         id: '',
-        idCentro: null,
+        idUnidad: null,
         consolidado: '',
         ip: '',
         usuario: '',
@@ -124,7 +124,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
         idDivision: this._usuarioSvc.usuario.IdDivision,
       };
 
-      this._conexionRodasSvc.fg.patchValue(dataInput);
+      this._conexionRodasSvc.fg.setValue(dataInput);
 
       this._dinamicDialogSvc.open(
         'Agregar Conexión al Rodas',
@@ -175,7 +175,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
 
               const dataInput = {
                 id: data.Id,
-                idCentro: data.IdUnidad,
+                idUnidad: data.IdUnidad,
                 consolidado: data.Consolidado,
                 ip: data.IpRodas,
                 usuario: data.Usuario,
