@@ -52,6 +52,7 @@ export class EstadisticaContabilidadComponent
       totalize: true,
     },
     { header: 'Inválidos', field: 'Invalidos', type: 'number', totalize: true },
+    { header: 'Anulados', field: 'Anulados', type: 'number', totalize: true },
   ];
 
   divisionesValues: SelectItem[] = [];
@@ -132,8 +133,7 @@ export class EstadisticaContabilidadComponent
     try {
       const documentDefinitions = {
         info: {
-          title: 'Información Estadística',
-          subject: 'Información Estadística',
+          title: 'Información Estadística | SISCO',
         },
         pageSize: 'LETTER',
         pageOrientation: 'landscape',

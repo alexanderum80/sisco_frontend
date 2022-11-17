@@ -511,6 +511,10 @@ export class ConciliaContabilidadComponent
   private async _reporteConcilia(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title:
+            'Conciliación para la entrega de los Estados Financieros | SISCO',
+        },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [

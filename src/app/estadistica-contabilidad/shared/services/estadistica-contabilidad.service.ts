@@ -87,12 +87,13 @@ export class EstadisticaContabilidadService {
     let _totalTraspasdos = 0;
     let _totalSinTraspasar = 0;
     let _totalInvalidos = 0;
+    let _totalAnulados = 0;
 
     const returnValue = [];
 
     returnValue.push({
       table: {
-        widths: [150, 60, 60, 60, 70, 70, 70, 70],
+        widths: [150, 55, 55, 55, 65, 65, 65, 60, 60],
         body: [
           [
             {
@@ -105,7 +106,7 @@ export class EstadisticaContabilidadService {
               alignment: 'center',
             },
             {
-              text: 'Fecha Inicial',
+              text: 'Fecha Inicio',
               style: 'tableHeader',
               alignment: 'center',
             },
@@ -134,12 +135,18 @@ export class EstadisticaContabilidadService {
               style: 'tableHeader',
               alignment: 'right',
             },
+            {
+              text: 'Anulados',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
           ],
           ...conciliaInternaConta.map((p: any) => {
             _totalComprobantes += p.Comprobantes;
             _totalTraspasdos += p.Traspasados;
             _totalSinTraspasar += p.SinTraspasar;
             _totalInvalidos += p.Invalidos;
+            _totalAnulados += p.Anulados;
 
             return [
               p.Centro,
@@ -183,6 +190,10 @@ export class EstadisticaContabilidadService {
                 text: p.Invalidos,
                 alignment: 'right',
               },
+              {
+                text: p.Anulados,
+                alignment: 'right',
+              },
             ];
           }),
           // total row
@@ -220,6 +231,11 @@ export class EstadisticaContabilidadService {
             },
             {
               text: _totalInvalidos,
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: _totalAnulados,
               style: 'tableHeader',
               alignment: 'right',
             },

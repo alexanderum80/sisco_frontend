@@ -313,6 +313,9 @@ export class ConciliaAftComponent
   private async _reporteConcilia(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title: 'Conciliación Rodas vs AFT | SISCO',
+        },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [

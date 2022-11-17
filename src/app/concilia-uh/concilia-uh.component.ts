@@ -267,6 +267,9 @@ export class ConciliaUhComponent implements OnInit, AfterViewInit, OnDestroy {
   private async _reporteConcilia(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title: 'Conciliación Rodas vs UH | SISCO',
+        },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [

@@ -342,6 +342,9 @@ export class ConciliaGoldenDwhComponent
   async reporteConcilia(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title: 'Conciliación Rodas vs Golden DWH | SISCO',
+        },
         pageSize: 'LETTER',
         pageOrientation: 'landscape',
         content: [

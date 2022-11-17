@@ -12,6 +12,7 @@ export interface IEstadisticaContabilidad {
   Traspasados: number;
   SinTraspasar: number;
   Invalidos: number;
+  Anulados: number;
 }
 
 export interface IEstadisticaContabilidadReponse {
