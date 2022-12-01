@@ -9,7 +9,7 @@ export class TooltipService {
 
   getFormControlTooltip(control: AbstractControl, tooltip: string): string {
     let returnTooltip = tooltip;
-    if (!control.valid && control.dirty) {
+    if (!control.valid && control.errors && control.dirty) {
       if (control.errors!['required']) {
         returnTooltip = 'Este campo es obligatorio.';
       }
@@ -27,6 +27,6 @@ export class TooltipService {
   }
 
   getToolTipStyleClass(control: AbstractControl): string {
-    return !control.valid && control.dirty ? 'p-error' : '';
+    return !control.valid && control.errors && control.dirty ? 'p-error' : '';
   }
 }

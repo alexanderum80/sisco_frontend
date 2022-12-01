@@ -513,7 +513,7 @@ export class ConciliaContabilidadComponent
       const documentDefinitions = {
         info: {
           title:
-            'Conciliación para la entrega de los Estados Financieros | SISCO',
+            'Reporte de incidencias en la entrega de los Estados Financieros | SISCO',
         },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
