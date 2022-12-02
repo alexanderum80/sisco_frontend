@@ -114,7 +114,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
   private _add(): void {
     try {
       const dataInput = {
-        id: '',
+        id: null,
         idUnidad: null,
         consolidado: '',
         ip: '',

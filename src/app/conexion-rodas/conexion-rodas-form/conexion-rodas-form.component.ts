@@ -50,10 +50,9 @@ export class ConexionRodasFormComponent
   ngOnInit(): void {
     this.fg = this._conexionRodasSvc.fg;
 
-    this.action =
-      this.fg.controls['idUnidad'].value !== ''
-        ? ActionClicked.Add
-        : ActionClicked.Edit;
+    this.action = this.fg.controls['idUnidad'].value
+      ? ActionClicked.Add
+      : ActionClicked.Edit;
     if (this.action === ActionClicked.Edit) {
       this.getEntidadesRodas();
     }
