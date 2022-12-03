@@ -9,13 +9,13 @@ import { ComprobarValoresQueryResponse } from '../models/comparar-valores.model'
 @Injectable()
 export class CompararValoresService {
   fg: FormGroup = new FormGroup({
-    id: new FormControl(0),
-    centro: new FormControl(0),
-    expresion: new FormControl(0),
-    operador: new FormControl(''),
-    valor: new FormControl(0),
-    division: new FormControl(0),
-    consolidado: new FormControl(false),
+    id: new FormControl(0, { initialValueIsDefault: true }),
+    centro: new FormControl(0, { initialValueIsDefault: true }),
+    expresion: new FormControl(0, { initialValueIsDefault: true }),
+    operador: new FormControl('', { initialValueIsDefault: true }),
+    valor: new FormControl(0, { initialValueIsDefault: true }),
+    division: new FormControl(0, { initialValueIsDefault: true }),
+    consolidado: new FormControl(false, { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];
