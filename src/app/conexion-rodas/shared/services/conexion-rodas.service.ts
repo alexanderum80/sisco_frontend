@@ -14,12 +14,12 @@ export class ConexionRodasService {
   fg = new FormGroup({
     id: new FormControl('', { initialValueIsDefault: true }),
     idDivision: new FormControl('', { initialValueIsDefault: true }),
-    idUnidad: new FormControl('', { initialValueIsDefault: true }),
+    idUnidad: new FormControl(null, { initialValueIsDefault: true }),
     consolidado: new FormControl('', { initialValueIsDefault: true }),
     ip: new FormControl('', { initialValueIsDefault: true }),
     usuario: new FormControl('', { initialValueIsDefault: true }),
     contrasena: new FormControl('', { initialValueIsDefault: true }),
-    baseDatos: new FormControl('', { initialValueIsDefault: true }),
+    baseDatos: new FormControl(null, { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];

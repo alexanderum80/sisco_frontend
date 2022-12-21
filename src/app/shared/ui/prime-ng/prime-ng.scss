@@ -349,3 +349,8 @@ small.p-error {
 .p-fileupload .p-fileupload-content {
     padding: 0 !important;
 }
+
+.p-tieredmenu.p-tieredmenu-overlay,
+.p-menubar .p-submenu-list {
+    border: 1px solid lightblue !important;
+}

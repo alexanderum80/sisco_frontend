@@ -113,18 +113,10 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
 
   private _add(): void {
     try {
-      const dataInput = {
-        id: '',
-        idUnidad: null,
-        consolidado: '',
-        ip: '',
-        usuario: '',
-        contrasena: '',
-        baseDatos: null,
+      this._conexionRodasSvc.fg.reset();
+      this._conexionRodasSvc.fg.patchValue({
         idDivision: this._usuarioSvc.usuario.IdDivision,
-      };
-
-      this._conexionRodasSvc.fg.setValue(dataInput);
+      });
 
       this._dinamicDialogSvc.open(
         'Agregar Conexión al Rodas',

@@ -1,11 +1,5 @@
 import { TooltipService } from './../tooltip/tooltip.service';
-import {
-  AfterViewChecked,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 
@@ -14,9 +8,8 @@ import { SelectItem } from 'primeng/api';
   selector: 'png-dropdown',
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DropdownComponent implements AfterViewChecked {
+export class DropdownComponent {
   @Input() fg: FormGroup;
   @Input() control: string;
   @Input() label: string;
@@ -32,13 +25,9 @@ export class DropdownComponent implements AfterViewChecked {
   @Input() tooltipPosition: 'right' | 'left' | 'top' | 'bottom' = 'right';
 
   constructor(
-    private cd: ChangeDetectorRef,
+    // private cd: ChangeDetectorRef,
     private _toolTipSvc: TooltipService
   ) {}
-
-  ngAfterViewChecked(): void {
-    this.cd.detectChanges();
-  }
 
   getToolTip(): string {
     return this._toolTipSvc.getFormControlTooltip(
