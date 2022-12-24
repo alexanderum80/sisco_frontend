@@ -1,3 +1,4 @@
+import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { ActionClicked } from './../shared/models/list-items';
 import { SweetalertService } from './../shared/services/sweetalert.service';
 import { SelectItem } from 'primeng/api';
@@ -28,6 +29,105 @@ import {
 export class ConciliaGoldenDwhComponent
   implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy
 {
+  displayedColumns: ITableColumns[] = [
+    { header: 'Piso', field: 'Almacen', type: 'string' },
+    { header: 'Cuenta', field: 'Cuenta', type: 'string' },
+    {
+      header: 'Saldo Restaurador',
+      field: 'SaldoRestaurador',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Saldo Golden',
+      field: 'SaldoGolden',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Dif. Rest. - Golden',
+      field: 'DifGoldenRest',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Saldo Distribuidor',
+      field: 'SaldoDistribuidor',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Dif. Rest. - Dist.',
+      field: 'DifGoldenDist',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Saldo Rodas',
+      field: 'SaldoRodas',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Dif. Rest. - Rodas',
+      field: 'DifGoldenRodas',
+      type: 'decimal',
+      totalize: true,
+    },
+  ];
+
+  displayedColumnsConsolidado: ITableColumns[] = [
+    { header: 'Unidad', field: 'Unidad', type: 'string' },
+    {
+      header: 'Saldo Restaurador',
+      field: 'SaldoRestaurador',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Saldo Golden',
+      field: 'SaldoGolden',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Dif. Rest. - Golden',
+      field: 'DifGoldenRest',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Saldo Distribuidor',
+      field: 'SaldoDistribuidor',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Dif. Rest. - Dist.',
+      field: 'DifGoldenDist',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Saldo Rodas',
+      field: 'SaldoRodas',
+      type: 'decimal',
+      totalize: true,
+    },
+    {
+      header: 'Dif. Rest. - Rodas',
+      field: 'DifGoldenRodas',
+      type: 'decimal',
+      totalize: true,
+    },
+  ];
+
+  displayedColumnsAlmacenes: ITableColumns[] = [
+    { header: 'Almacén', field: 'Almacen', type: 'string' },
+    { header: 'Cuenta Golden', field: 'Cuenta', type: 'string' },
+    { header: 'Cuenta Rodas', field: 'CuentaR', type: 'string' },
+  ];
+
   divisionesValues: SelectItem[] = [];
   centrosValues: SelectItem[] = [];
   empleadosValues: SelectItem[] = [];
@@ -37,22 +137,6 @@ export class ConciliaGoldenDwhComponent
   dataSourceInventario = [];
   dataSourceVenta = [];
   dataSourceAlmacenes = [];
-
-  totalInvGolden = 0;
-  totalInvRest = 0;
-  totalInvDifGoldenRest = 0;
-  totalInvDist = 0;
-  totalInvDifGoldenDist = 0;
-  totalInvRodas = 0;
-  totalInvDifGoldenRodas = 0;
-
-  totalVtaGolden = 0;
-  totalVtaRest = 0;
-  totalVtaDifGoldenRest = 0;
-  totalVtaDist = 0;
-  totalVtaDifGoldenDist = 0;
-  totalVtaRodas = 0;
-  totalVtaDifGoldenRodas = 0;
 
   isConsolidado = false;
   loading = false;
@@ -133,22 +217,6 @@ export class ConciliaGoldenDwhComponent
     this.dataSourceInventario = [];
     this.dataSourceVenta = [];
     this.dataSourceAlmacenes = [];
-
-    this.totalInvGolden = 0;
-    this.totalInvRest = 0;
-    this.totalInvDifGoldenRest = 0;
-    this.totalInvDist = 0;
-    this.totalInvDifGoldenDist = 0;
-    this.totalInvRodas = 0;
-    this.totalInvDifGoldenRodas = 0;
-
-    this.totalVtaGolden = 0;
-    this.totalVtaRest = 0;
-    this.totalVtaDifGoldenRest = 0;
-    this.totalVtaDist = 0;
-    this.totalVtaDifGoldenDist = 0;
-    this.totalVtaRodas = 0;
-    this.totalVtaDifGoldenRodas = 0;
   }
 
   private _getDivisiones(): void {
@@ -294,27 +362,10 @@ export class ConciliaGoldenDwhComponent
           this.dataSourceInventario = this.rodasDWHInventarioVentas.filter(
             (f: { Tipo: string }) => f.Tipo === 'Inventario'
           );
-          this.dataSourceInventario.forEach((i: any) => {
-            this.totalInvGolden += i.SaldoGolden;
-            this.totalInvRest += i.SaldoRestaurador;
-            this.totalInvDifGoldenRest += i.DifGoldenRest;
-            this.totalInvDist += i.SaldoDistribuidor;
-            this.totalInvDifGoldenDist += i.DifGoldenDist;
-            this.totalInvRodas += i.SaldoRodas;
-            this.totalInvDifGoldenRodas += i.DifGoldenRodas;
-          });
+
           this.dataSourceVenta = this.rodasDWHInventarioVentas.filter(
             (f: { Tipo: string }) => f.Tipo === 'Ventas'
           );
-          this.dataSourceVenta.forEach((v: any) => {
-            this.totalVtaGolden += v.SaldoGolden;
-            this.totalVtaRest += v.SaldoRestaurador;
-            this.totalVtaDifGoldenRest += v.DifGoldenRest;
-            this.totalVtaDist += v.SaldoDistribuidor;
-            this.totalVtaDifGoldenDist += v.DifGoldenDist;
-            this.totalVtaRodas += v.SaldoRodas;
-            this.totalVtaDifGoldenRodas += v.DifGoldenRodas;
-          });
 
           this.dataSourceAlmacenes = this.rodasDWHInventarioVentas.filter(
             (f: { Tipo: string }) => f.Tipo === 'Almacenes'

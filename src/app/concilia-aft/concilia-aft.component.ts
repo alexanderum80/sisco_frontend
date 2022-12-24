@@ -99,14 +99,6 @@ export class ConciliaAftComponent
   dataSourceDepreciacion: IConciliaAFT[] = [];
   dataSourceClasificador: IDiferenciaClasificadorCNMB[] = [];
 
-  totalInvAft = 0;
-  totalInvRodas = 0;
-  totalInvDif = 0;
-
-  totalDepAft = 0;
-  totalDepRodas = 0;
-  totalDepDif = 0;
-
   loading = false;
   selectedTabViewIndex = 0;
 

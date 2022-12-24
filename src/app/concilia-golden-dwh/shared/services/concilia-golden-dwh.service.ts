@@ -4,7 +4,7 @@ import { numberFormatter } from './../../../shared/models/number';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { ConciliaDWHQueryResponse } from '../models/concilia-dwh.model';
-import { toNumber } from 'lodash';
+import { orderBy, toNumber } from 'lodash';
 import * as moment from 'moment';
 
 const conciliaDWHQuery = require('graphql-tag/loader!../graphql/concilia-dwh.query.gql');
@@ -190,6 +190,11 @@ export class ConciliaGoldenDwhService {
     const result = [];
 
     if (data && data.length) {
+      const _orderArray =
+        tipoCentro === '0'
+          ? ['IdDivision', 'IdUnidad', 'Tipo']
+          : ['IdDivision', 'Tipo', 'IdUnidad'];
+      data = orderBy(data, _orderArray);
       data.forEach(element => {
         if (element.IdDivision !== _idDivision) {
           result.push({
@@ -437,35 +442,45 @@ export class ConciliaGoldenDwhService {
               ],
               ...data.map((al: any) => {
                 return [
-                  al.Almacen,
+                  {
+                    text: al.Almacen,
+                    bold: al.Almacen === 'TOTAL',
+                  },
                   al.Cuenta,
                   {
                     text: numberFormatter.format(al.SaldoGolden),
                     alignment: 'right',
+                    bold: al.Almacen === 'TOTAL',
                   },
                   {
                     text: numberFormatter.format(al.SaldoRestaurador),
                     alignment: 'right',
+                    bold: al.Almacen === 'TOTAL',
                   },
                   {
                     text: numberFormatter.format(al.DifGoldenRest),
                     alignment: 'right',
+                    bold: al.Almacen === 'TOTAL',
                   },
                   {
                     text: numberFormatter.format(al.SaldoDistribuidor),
                     alignment: 'right',
+                    bold: al.Almacen === 'TOTAL',
                   },
                   {
                     text: numberFormatter.format(al.DifGoldenDist),
                     alignment: 'right',
+                    bold: al.Almacen === 'TOTAL',
                   },
                   {
                     text: numberFormatter.format(al.SaldoRodas),
                     alignment: 'right',
+                    bold: al.Almacen === 'TOTAL',
                   },
                   {
                     text: numberFormatter.format(al.DifGoldenRodas),
                     alignment: 'right',
+                    bold: al.Almacen === 'TOTAL',
                   },
                 ];
               }),
@@ -531,34 +546,44 @@ export class ConciliaGoldenDwhService {
                   DifGoldenRodas: number | bigint;
                 }) => {
                   return [
-                    al.Unidad,
+                    {
+                      text: al.Unidad,
+                      bold: al.Unidad === 'TOTAL',
+                    },
                     {
                       text: numberFormatter.format(al.SaldoGolden),
                       alignment: 'right',
+                      bold: al.Unidad === 'TOTAL',
                     },
                     {
                       text: numberFormatter.format(al.SaldoRestaurador),
                       alignment: 'right',
+                      bold: al.Unidad === 'TOTAL',
                     },
                     {
                       text: numberFormatter.format(al.DifGoldenRest),
                       alignment: 'right',
+                      bold: al.Unidad === 'TOTAL',
                     },
                     {
                       text: numberFormatter.format(al.SaldoDistribuidor),
                       alignment: 'right',
+                      bold: al.Unidad === 'TOTAL',
                     },
                     {
                       text: numberFormatter.format(al.DifGoldenDist),
                       alignment: 'right',
+                      bold: al.Unidad === 'TOTAL',
                     },
                     {
                       text: numberFormatter.format(al.SaldoRodas),
                       alignment: 'right',
+                      bold: al.Unidad === 'TOTAL',
                     },
                     {
                       text: numberFormatter.format(al.DifGoldenRodas),
                       alignment: 'right',
+                      bold: al.Unidad === 'TOTAL',
                     },
                   ];
                 }
