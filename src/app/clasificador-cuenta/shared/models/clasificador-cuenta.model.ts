@@ -12,7 +12,7 @@ export interface ClasificadorCuentasMutationResponse {
   deleteClasificadorCuenta: IMutationResponse;
 }
 
-export enum TiposClasificadorCuenta {
+export enum ETiposClasificadorCuenta {
   'Consolidado' = 1,
   'Centro' = 2,
   'Complejo' = 3,
