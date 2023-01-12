@@ -590,9 +590,9 @@ export class ConciliaContabilidadService {
             return [
               al.Cuenta,
               al.SubCuenta,
-              al['Análisis 1'],
-              al['Análisis 2'],
-              al['Análisis 3'],
+              al.Analisis1,
+              al.Analisis2,
+              al.Analisis3,
               {
                 text: numberFormatter.format(al.Total),
                 alignment: 'right',

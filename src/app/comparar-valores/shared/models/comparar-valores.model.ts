@@ -11,6 +11,7 @@ interface IComprobarValores {
   Valor: number;
   IdDivision?: number;
   Consolidado: boolean;
+  Activo: boolean;
 }
 
 interface IComprobarValorQueryResponse {

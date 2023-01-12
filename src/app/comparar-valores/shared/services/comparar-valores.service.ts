@@ -16,6 +16,7 @@ export class CompararValoresService {
     valor: new FormControl(0, { initialValueIsDefault: true }),
     division: new FormControl(0, { initialValueIsDefault: true }),
     consolidado: new FormControl(false, { initialValueIsDefault: true }),
+    activo: new FormControl(true, { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];
@@ -73,6 +74,7 @@ export class CompararValoresService {
           Valor: this.fg.controls['valor'].value,
           IdDivision: this.fg.controls['division'].value,
           Consolidado: this.fg.controls['consolidado'].value,
+          Activo: this.fg.controls['activo'].value,
         };
 
         const mutation =
