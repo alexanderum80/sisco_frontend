@@ -174,8 +174,8 @@ export class ConciliaAftComponent
   private _getUnidades(): void {
     try {
       this._conciliaAftSvc.subscription.push(
-        this._unidadesSvc.getAllUnidades().subscribe(response => {
-          const result = response.getAllUnidades;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+          const result = response.getAllUnidadesByUsuario;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -243,6 +243,8 @@ export class ConciliaAftComponent
   conciliar(): void {
     try {
       this.loading = true;
+
+      this._inicializarDatos();
 
       this._conciliaAftSvc.subscription.push(
         this._conciliaAftSvc.conciliar().subscribe({

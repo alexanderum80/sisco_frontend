@@ -1,5 +1,5 @@
-query ConciliaInternaDWH($conciliaInternaDWHInput: ConciliaOperacionesDWHInput!) {
-  conciliaInternaDWH(conciliaInternaDWHInput: $conciliaInternaDWHInput) {
+query ConciliaExternaDWH($conciliaExternaDWHInput: ConciliaOperacionesDWHInput!) {
+  conciliaExternaDWH(conciliaExternaDWHInput: $conciliaExternaDWHInput) {
     success
     data {
       Documento

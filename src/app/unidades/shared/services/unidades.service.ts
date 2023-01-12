@@ -27,6 +27,23 @@ export class UnidadesService {
     });
   }
 
+  getAllUnidadesByUsuario(): Observable<UnidadesQueryResponse> {
+    return new Observable<UnidadesQueryResponse>(subscriber => {
+      try {
+        this._apollo
+          .query<UnidadesQueryResponse>({
+            query: unidadesApi.allByUsuario,
+            fetchPolicy: 'network-only',
+          })
+          .subscribe(response => {
+            subscriber.next(response.data);
+          });
+      } catch (err: any) {
+        subscriber.error(err);
+      }
+    });
+  }
+
   getUnidadesByIdSubdivision(
     idSubdivision: number
   ): Observable<UnidadesQueryResponse> {

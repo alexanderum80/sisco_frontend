@@ -268,8 +268,8 @@ export class ConciliaContabilidadComponent
   private _getUnidades(): void {
     try {
       this._conciliaContabSvc.subscription.push(
-        this._unidadesSvc.getAllUnidades().subscribe(response => {
-          const result = response.getAllUnidades;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+          const result = response.getAllUnidadesByUsuario;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -298,8 +298,8 @@ export class ConciliaContabilidadComponent
       switch (subordinadoA) {
         case 100:
           this._conciliaContabSvc.subscription.push(
-            this._divisionesSvc.getDivisiones().subscribe(response => {
-              const result = response.getAllDivisiones;
+            this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
+              const result = response.getAllDivisionesByUsuario;
 
               if (!result.success) {
                 this._swalSvc.error(result.error);

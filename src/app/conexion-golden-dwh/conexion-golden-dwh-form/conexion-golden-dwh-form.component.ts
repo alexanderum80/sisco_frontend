@@ -68,8 +68,8 @@ export class ConexionGoldenDwhFormComponent
   private _getDivisiones(): void {
     try {
       this._conexionDWHSvc.subscription.push(
-        this._divisionesSvc.getDivisiones().subscribe(response => {
-          const result = response.getAllDivisiones;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
+          const result = response.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return SweetAlert.fire({

@@ -222,8 +222,8 @@ export class ConciliaGoldenDwhComponent
   private _getDivisiones(): void {
     try {
       this._conciliaDWHSvc.subscription.push(
-        this._divisionesSvc.getDivisiones().subscribe(response => {
-          const result = response.getAllDivisiones;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
+          const result = response.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return this._sweetAlertSvc.error(result.error);

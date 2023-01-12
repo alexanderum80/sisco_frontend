@@ -38,8 +38,8 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
 
   private _loadCentros(): void {
     try {
-      this._unidadesSvc.getAllUnidades().subscribe(response => {
-        const result = response.getAllUnidades;
+      this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+        const result = response.getAllUnidadesByUsuario;
 
         if (!result.success) {
           throw new Error(result.error);
