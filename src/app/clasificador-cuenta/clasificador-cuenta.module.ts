@@ -1,3 +1,5 @@
+import { ArreglaClasificadorFormComponent } from './arregla-clasificador-form/arregla-clasificador-form.component';
+import { ArreglaClasificadorComponent } from './arregla-clasificador.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from './../shared/shared.module';
 import { NgModule } from '@angular/core';
@@ -13,6 +15,8 @@ import { ClasificadorCuentaService } from './shared/service/clasificador-cuenta.
   declarations: [
     ListClasificadorCuentaComponent,
     ClasificadorCuentaFormComponent,
+    ArreglaClasificadorComponent,
+    ArreglaClasificadorFormComponent,
   ],
   imports: [
     CommonModule,

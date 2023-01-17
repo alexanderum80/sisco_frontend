@@ -147,10 +147,16 @@ export class ConciliaContabilidadService {
   public chequearCentros(
     centrosAChequear: number[]
   ): Observable<ConciliaContabilidadMutationReponse> {
+    let periodo = toNumber(
+      moment(this.fg.controls['periodo'].value).format('MM')
+    );
+    if (this.fg.controls['apertura'].value) periodo = 0;
+    if (this.fg.controls['cierre'].value) periodo = 13;
+
     const chequearCentrosInput = {
       idCentro: toNumber(this.fg.controls['idCentro'].value),
       annio: toNumber(moment(this.fg.controls['periodo'].value).format('YYYY')),
-      periodo: toNumber(moment(this.fg.controls['periodo'].value).format('MM')),
+      periodo: periodo,
       centrosAChequear: centrosAChequear,
     };
 

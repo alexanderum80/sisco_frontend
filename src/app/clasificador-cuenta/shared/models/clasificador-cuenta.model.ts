@@ -10,6 +10,7 @@ export interface ClasificadorCuentasQueryResponse {
 export interface ClasificadorCuentasMutationResponse {
   saveClasificadorCuenta: IMutationResponse;
   deleteClasificadorCuenta: IMutationResponse;
+  arreglaClasificadorCuenta: boolean;
 }
 
 export enum ETiposClasificadorCuenta {
