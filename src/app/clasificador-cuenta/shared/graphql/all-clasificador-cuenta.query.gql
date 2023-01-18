@@ -1,5 +1,5 @@
-query GetAllClasificadorCuentas {
-  getAllClasificadorCuentas {
+query GetAllClasificadorCuentas($tipo: Int) {
+  getAllClasificadorCuentas(tipo: $tipo) {
     success
     data {
       Cuenta

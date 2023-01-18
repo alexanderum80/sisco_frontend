@@ -4,6 +4,7 @@ import { Apollo } from 'apollo-angular';
 import { Injectable } from '@angular/core';
 
 const divisionesQuery = require('graphql-tag/loader!../graphql/divisiones.query.gql');
+const divisionesByUsuarioQuery = require('graphql-tag/loader!../graphql/divisiones-by-usuario.query.gql');
 
 @Injectable({
   providedIn: 'root',
@@ -17,6 +18,23 @@ export class DivisionesService {
         this._apollo
           .query<DivisionesQueryResponse>({
             query: divisionesQuery,
+            fetchPolicy: 'network-only',
+          })
+          .subscribe(response => {
+            subscriber.next(response.data);
+          });
+      } catch (err: any) {
+        subscriber.error(err);
+      }
+    });
+  }
+
+  getDivisionesByUsuario(): Observable<DivisionesQueryResponse> {
+    return new Observable<DivisionesQueryResponse>(subscriber => {
+      try {
+        this._apollo
+          .query<DivisionesQueryResponse>({
+            query: divisionesByUsuarioQuery,
             fetchPolicy: 'network-only',
           })
           .subscribe(response => {

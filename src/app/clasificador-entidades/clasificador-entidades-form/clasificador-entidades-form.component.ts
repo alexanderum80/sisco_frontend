@@ -42,8 +42,8 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
 
   private _loadUnidades(): void {
     this._clasificadorEntidadesSvc.subscription.push(
-      this._unidadesSvc.getAllUnidades().subscribe(response => {
-        const result = response.getAllUnidades;
+      this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+        const result = response.getAllUnidadesByUsuario;
         if (!result.success) {
           return SweetAlert.fire({
             icon: 'error',

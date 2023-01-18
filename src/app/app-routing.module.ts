@@ -189,6 +189,14 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'concilia-externa-dwh',
+    loadChildren: () =>
+      import('./concilia-externa-dwh/concilia-externa-dwh.module').then(
+        m => m.ConciliaExternaDwhModule
+      ),
+    canActivate: [AuthGuard],
+  },
 
   // Cuando no se encuentra el path
   { path: '**', component: StartComponent, canActivate: [AuthGuard] },

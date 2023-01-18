@@ -1,4 +1,3 @@
-import { Subscription } from 'rxjs';
 import { ActionClicked } from './../../shared/models/list-items';
 import { DatabasesService } from './../../shared/services/databases.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
@@ -6,17 +5,27 @@ import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/
 import { Router } from '@angular/router';
 import { ConexionGoldenDwhService } from './../shared/services/conexion-golden-dwh.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  AfterContentChecked,
+  ChangeDetectorRef,
+} from '@angular/core';
 import SweetAlert from 'sweetalert2';
 import { SelectItem } from 'primeng/api';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-conexion-golden-dwh-form',
   templateUrl: './conexion-golden-dwh-form.component.html',
   styleUrls: ['./conexion-golden-dwh-form.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConexionGoldenDwhFormComponent
-  implements OnInit, AfterViewInit, OnDestroy
+  implements OnInit, AfterViewInit, OnDestroy, AfterContentChecked
 {
   divisionesValues: SelectItem[] = [];
   baseDatosRestValues: SelectItem[] = [];
@@ -34,7 +43,8 @@ export class ConexionGoldenDwhFormComponent
     private _divisionesSvc: DivisionesService,
     private _databasesSvc: DatabasesService,
     private _dinamicDialogSvc: DinamicDialogService,
-    public router: Router
+    public router: Router,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -47,6 +57,10 @@ export class ConexionGoldenDwhFormComponent
     this._getDivisiones();
   }
 
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
+  }
+
   ngOnDestroy(): void {
     this._conexionDWHSvc.dispose();
   }
@@ -54,8 +68,8 @@ export class ConexionGoldenDwhFormComponent
   private _getDivisiones(): void {
     try {
       this._conexionDWHSvc.subscription.push(
-        this._divisionesSvc.getDivisiones().subscribe(response => {
-          const result = response.getAllDivisiones;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
+          const result = response.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return SweetAlert.fire({
@@ -143,6 +157,8 @@ export class ConexionGoldenDwhFormComponent
   }
 
   private _getDWHConexion(idDivision: any): void {
+    this.subscription.forEach(subs => subs.unsubscribe());
+
     this._conexionDWHSvc.subscription.push(
       this._conexionDWHSvc.loadDWHConexion(idDivision).subscribe(response => {
         const result = response.getDWHConexion;
@@ -171,7 +187,7 @@ export class ConexionGoldenDwhFormComponent
           dwh_baseDatos: conexionDWH.Database,
         };
 
-        this.fg.patchValue(inputValues);
+        this.fg.patchValue(inputValues, { onlySelf: true });
 
         if (
           inputValues.dwh_ip &&
@@ -189,6 +205,8 @@ export class ConexionGoldenDwhFormComponent
         ) {
           this.refreshDataBases('Rest');
         }
+
+        this._subscribeToFgValueChange();
       })
     );
   }

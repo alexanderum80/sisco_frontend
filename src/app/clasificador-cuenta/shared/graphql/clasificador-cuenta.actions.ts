@@ -4,4 +4,5 @@ export const clasificadorCuentaApi = {
   cuenta: require('graphql-tag/loader!./cuentas-agrupadas.query.gql'),
   save: require('graphql-tag/loader!./save-clasificador-cuenta.mutation.gql'),
   delete: require('graphql-tag/loader!./delete-clasificador-cuenta.mutation.gql'),
+  arregla: require('graphql-tag/loader!./arregla-clasificador-cuenta.mutation.gql'),
 };

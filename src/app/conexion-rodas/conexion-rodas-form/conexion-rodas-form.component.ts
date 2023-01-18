@@ -12,9 +12,9 @@ import {
   Component,
   OnInit,
   AfterViewInit,
-  AfterContentChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
+  AfterViewChecked,
 } from '@angular/core';
 
 @Component({
@@ -24,7 +24,7 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ConexionRodasFormComponent
-  implements OnInit, AfterViewInit, AfterContentChecked
+  implements OnInit, AfterViewInit, AfterViewChecked
 {
   divisionesValues: SelectItem[] = [];
   unidadesValues: SelectItem[] = [];
@@ -50,7 +50,7 @@ export class ConexionRodasFormComponent
   ngOnInit(): void {
     this.fg = this._conexionRodasSvc.fg;
 
-    this.action = this.fg.controls['idUnidad'].value
+    this.action = !this.fg.controls['idUnidad'].value
       ? ActionClicked.Add
       : ActionClicked.Edit;
     if (this.action === ActionClicked.Edit) {
@@ -58,14 +58,14 @@ export class ConexionRodasFormComponent
     }
 
     this._getDivisiones();
+    this._getUnidades();
   }
 
   ngAfterViewInit(): void {
-    this._getUnidades();
     this._subscribeToFgValueChange();
   }
 
-  ngAfterContentChecked(): void {
+  ngAfterViewChecked(): void {
     this.cd.detectChanges();
   }
 
@@ -106,8 +106,8 @@ export class ConexionRodasFormComponent
   private _getDivisiones(): void {
     try {
       this.subscription.push(
-        this._divisionesSvc.getDivisiones().subscribe(response => {
-          const result = response.getAllDivisiones;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
+          const result = response.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return SweetAlert.fire({
@@ -120,7 +120,7 @@ export class ConexionRodasFormComponent
           }
 
           this.divisionesValues = result.data.map(
-            (d: { IdDivision: string; Division: string }) => {
+            (d: { IdDivision: number; Division: string }) => {
               return {
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
@@ -145,9 +145,7 @@ export class ConexionRodasFormComponent
       this.unidadesValues = [];
       const idDivision = this.fg.controls['idDivision'].value;
 
-      if (!idDivision) {
-        return;
-      }
+      if (!idDivision) return;
 
       this.subscription.push(
         this._unidadesSvc

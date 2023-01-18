@@ -1,0 +1,14 @@
+query GetAllUnidadesByUsuario {
+    getAllUnidadesByUsuario {
+        success
+        data {
+            IdUnidad
+            Nombre
+            IdSubdivision
+            Subdivision
+            IdDivision
+            Division
+        }
+        error
+    }
+}

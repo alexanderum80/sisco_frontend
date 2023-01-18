@@ -20,7 +20,7 @@ export class ConexionGoldenDwhComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this._setFgValues();
+    this._conexionDWHSvc.fg.reset();
 
     if (
       this._usuarioSvc.usuario.IdTipoUsuario === ETipoUsuarios.Administrador
@@ -45,21 +45,5 @@ export class ConexionGoldenDwhComponent implements OnInit {
 
       this._navigationSvc.navigateTo('');
     }
-  }
-
-  private _setFgValues(): void {
-    const fgValues = {
-      idUnidad: null,
-      dwh_ip: '',
-      dwh_usuario: '',
-      dwh_contrasena: '',
-      dwh_baseDatos: null,
-      rest_ip: '',
-      rest_usuario: '',
-      rest_contrasena: '',
-      rest_baseDatos: null,
-    };
-
-    this._conexionDWHSvc.fg.patchValue(fgValues);
   }
 }

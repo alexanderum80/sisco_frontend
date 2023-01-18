@@ -157,8 +157,8 @@ export class ConciliaUhComponent implements OnInit, AfterViewInit, OnDestroy {
   private _getUnidades(): void {
     try {
       this._conciliaUhSvc.subscription.push(
-        this._unidadesSvc.getAllUnidades().subscribe(response => {
-          const result = response.getAllUnidades;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+          const result = response.getAllUnidadesByUsuario;
 
           if (!result.success) {
             this._swalSvc.error(result.error);

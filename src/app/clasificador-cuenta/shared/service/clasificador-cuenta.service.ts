@@ -1,13 +1,14 @@
+import { ApolloService } from './../../../shared/services/apollo.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import {
   ClasificadorCuentasQueryResponse,
   ClasificadorCuentasMutationResponse,
 } from './../models/clasificador-cuenta.model';
 import { Injectable } from '@angular/core';
-import { Apollo } from 'apollo-angular';
 import { Observable, Subscription } from 'rxjs';
 import SweetAlert from 'sweetalert2';
 import { clasificadorCuentaApi } from '../graphql/clasificador-cuenta.actions';
+import * as moment from 'moment';
 
 @Injectable()
 export class ClasificadorCuentaService {
@@ -28,20 +29,30 @@ export class ClasificadorCuentaService {
     crit3Consolidacion: new FormControl(''),
   });
 
+  fgArreglaClasif: FormGroup = new FormGroup({
+    tipoCentro: new FormControl('0', { initialValueIsDefault: true }),
+    idCentro: new FormControl(null, { initialValueIsDefault: true }),
+    annio: new FormControl(moment().year().toString(), {
+      initialValueIsDefault: true,
+    }),
+  });
+
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo) {}
+  constructor(private _apolloSvc: ApolloService) {}
 
-  loadAllClasificadorCuenta(): Observable<ClasificadorCuentasQueryResponse> {
+  loadAllClasificadorCuenta(
+    tipo: number
+  ): Observable<ClasificadorCuentasQueryResponse> {
     return new Observable(subscriber => {
       this.subscription.push(
-        this._apollo
-          .watchQuery<ClasificadorCuentasQueryResponse>({
-            query: clasificadorCuentaApi.all,
-            fetchPolicy: 'network-only',
-          })
-          .valueChanges.subscribe({
-            next: response => subscriber.next(response.data),
+        this._apolloSvc
+          .watchQuery<ClasificadorCuentasQueryResponse>(
+            clasificadorCuentaApi.all,
+            { tipo }
+          )
+          .subscribe({
+            next: res => subscriber.next(res),
             error: err => subscriber.error(err),
           })
       );
@@ -62,14 +73,13 @@ export class ClasificadorCuentaService {
         };
 
         this.subscription.push(
-          this._apollo
-            .watchQuery<ClasificadorCuentasQueryResponse>({
-              query: clasificadorCuentaApi.byTipo,
-              variables: payload,
-              fetchPolicy: 'network-only',
-            })
-            .valueChanges.subscribe(res => {
-              subscriber.next(res.data);
+          this._apolloSvc
+            .watchQuery<ClasificadorCuentasQueryResponse>(
+              clasificadorCuentaApi.byTipo,
+              payload
+            )
+            .subscribe(res => {
+              subscriber.next(res);
               subscriber.complete();
             })
         );
@@ -82,13 +92,12 @@ export class ClasificadorCuentaService {
   loadCuentasAgrupadas(): Observable<ClasificadorCuentasQueryResponse> {
     return new Observable<ClasificadorCuentasQueryResponse>(subscriber => {
       this.subscription.push(
-        this._apollo
-          .watchQuery<ClasificadorCuentasQueryResponse>({
-            query: clasificadorCuentaApi.cuenta,
-            fetchPolicy: 'network-only',
-          })
-          .valueChanges.subscribe(response => {
-            subscriber.next(response.data);
+        this._apolloSvc
+          .watchQuery<ClasificadorCuentasQueryResponse>(
+            clasificadorCuentaApi.cuenta
+          )
+          .subscribe(res => {
+            subscriber.next(res);
             subscriber.complete();
           })
       );
@@ -116,14 +125,14 @@ export class ClasificadorCuentaService {
         };
 
         this.subscription.push(
-          this._apollo
-            .mutate<ClasificadorCuentasMutationResponse>({
-              mutation: clasificadorCuentaApi.save,
-              variables: { clasificadorInfo },
-              refetchQueries: ['GetAllClasificadorCuentas'],
-            })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+          this._apolloSvc
+            .mutation<ClasificadorCuentasMutationResponse>(
+              clasificadorCuentaApi.save,
+              { clasificadorInfo },
+              ['GetAllClasificadorCuentas']
+            )
+            .subscribe(res => {
+              subscriber.next(res || undefined);
             })
         );
       } catch (err: any) {
@@ -142,14 +151,14 @@ export class ClasificadorCuentaService {
         };
 
         this.subscription.push(
-          this._apollo
-            .mutate<ClasificadorCuentasMutationResponse>({
-              mutation: clasificadorCuentaApi.delete,
-              variables: payload,
-              refetchQueries: ['GetAllClasificadorCuentas'],
-            })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+          this._apolloSvc
+            .mutation<ClasificadorCuentasMutationResponse>(
+              clasificadorCuentaApi.delete,
+              payload,
+              ['GetAllClasificadorCuentas']
+            )
+            .subscribe(res => {
+              subscriber.next(res || undefined);
             })
         );
       } catch (err: any) {
@@ -166,5 +175,35 @@ export class ClasificadorCuentaService {
 
   dispose(): void {
     this.subscription.forEach(subs => subs.unsubscribe());
+  }
+
+  arreglaClasificador(): Observable<ClasificadorCuentasMutationResponse> {
+    return new Observable<ClasificadorCuentasMutationResponse>(subscriber => {
+      try {
+        const payload = {
+          idUnidad: +this.fgArreglaClasif.controls['idCentro'].value,
+          tipoUnidad: this.fgArreglaClasif.controls['tipoCentro'].value,
+          annio: this.fgArreglaClasif.controls['annio'].value,
+        };
+
+        this.subscription.push(
+          this._apolloSvc
+            .mutation<ClasificadorCuentasMutationResponse>(
+              clasificadorCuentaApi.arregla,
+              payload
+            )
+            .subscribe({
+              next: res => {
+                subscriber.next(res);
+              },
+              error: err => {
+                subscriber.error(err);
+              },
+            })
+        );
+      } catch (err: any) {
+        throw new Error(err);
+      }
+    });
   }
 }

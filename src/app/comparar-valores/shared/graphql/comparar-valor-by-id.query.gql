@@ -9,6 +9,7 @@ query GetComprobarValorById($id: Int!) {
         Valor
         IdDivision
         Consolidado
+        Activo
       }
       error
     }

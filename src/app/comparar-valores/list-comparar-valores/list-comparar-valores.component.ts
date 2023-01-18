@@ -26,6 +26,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
     { header: 'Consolidado', field: 'Consolidado', type: 'boolean' },
     { header: 'Operador', field: 'Operador', type: 'string' },
     { header: 'Valor', field: 'Valor', type: 'decimal' },
+    { header: 'Activo', field: 'Activo', type: 'boolean' },
   ];
 
   compararValores: any[] = [];
@@ -92,7 +93,8 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
 
       this._dinamicDialogSvc.open(
         'Agregar Comparación de Valores',
-        CompararValoresFormComponent
+        CompararValoresFormComponent,
+        '400px'
       );
       this._compararValoresSvc.subscription.push(
         this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
@@ -129,13 +131,15 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
             valor: result.data.Valor,
             division: result.data.IdDivision,
             consolidado: result.data.Consolidado,
+            activo: result.data.Activo,
           };
 
           this._compararValoresSvc.fg.patchValue(inputValue);
 
           this._dinamicDialogSvc.open(
             'Editar Comparación de Valores',
-            CompararValoresFormComponent
+            CompararValoresFormComponent,
+            '400px'
           );
           this._compararValoresSvc.subscription.push(
             this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {

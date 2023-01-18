@@ -99,14 +99,6 @@ export class ConciliaAftComponent
   dataSourceDepreciacion: IConciliaAFT[] = [];
   dataSourceClasificador: IDiferenciaClasificadorCNMB[] = [];
 
-  totalInvAft = 0;
-  totalInvRodas = 0;
-  totalInvDif = 0;
-
-  totalDepAft = 0;
-  totalDepRodas = 0;
-  totalDepDif = 0;
-
   loading = false;
   selectedTabViewIndex = 0;
 
@@ -182,8 +174,8 @@ export class ConciliaAftComponent
   private _getUnidades(): void {
     try {
       this._conciliaAftSvc.subscription.push(
-        this._unidadesSvc.getAllUnidades().subscribe(response => {
-          const result = response.getAllUnidades;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+          const result = response.getAllUnidadesByUsuario;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -251,6 +243,8 @@ export class ConciliaAftComponent
   conciliar(): void {
     try {
       this.loading = true;
+
+      this._inicializarDatos();
 
       this._conciliaAftSvc.subscription.push(
         this._conciliaAftSvc.conciliar().subscribe({

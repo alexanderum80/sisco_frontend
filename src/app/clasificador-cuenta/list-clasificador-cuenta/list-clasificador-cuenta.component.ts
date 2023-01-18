@@ -1,32 +1,38 @@
+import { FormGroup, FormControl } from '@angular/forms';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
-import { MessageService } from 'primeng/api';
+import { MessageService, SelectItem } from 'primeng/api';
 import {
   IActionItemClickedArgs,
   ActionClicked,
 } from './../../shared/models/list-items';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
-import { TiposClasificadorCuenta } from './../shared/models/clasificador-cuenta.model';
 import SweetAlert from 'sweetalert2';
 import { ClasificadorCuentaFormComponent } from './../clasificador-cuenta-form/clasificador-cuenta-form.component';
 import { ClasificadorCuentaService } from './../shared/service/clasificador-cuenta.service';
 import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { Component, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-list-clasificador-cuenta',
   templateUrl: './list-clasificador-cuenta.component.html',
   styleUrls: ['./list-clasificador-cuenta.component.scss'],
 })
-export class ListClasificadorCuentaComponent
-  implements AfterViewInit, OnDestroy
-{
-  clasificadorCuentaConso: any[];
-  clasificadorCuentaCentro: any[];
-  clasificadorCuentaComplejo: any[];
+export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
+  fg: FormGroup = new FormGroup({
+    tipo: new FormControl(1),
+  });
+
+  clasificadorCuentasTipoValues: SelectItem[] = [
+    { value: 1, label: 'Consolidado' },
+    { value: 2, label: 'Centro' },
+    { value: 3, label: 'Complejo' },
+  ];
+
+  clasificadorCuentas: any[];
 
   displayedColumns: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cuenta', type: 'string' },
@@ -63,45 +69,41 @@ export class ListClasificadorCuentaComponent
     }
   }
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this._loadClasificadorCuenta();
+
+    this._subscribeToFgChange();
   }
 
   private _loadClasificadorCuenta(): void {
     try {
+      this.loading = true;
+      this.clasificadorCuentas = [];
+
       this._clasificadorCuentaSvc.subscription.push(
-        this._clasificadorCuentaSvc.loadAllClasificadorCuenta().subscribe({
-          next: response => {
-            this.loading = false;
+        this._clasificadorCuentaSvc
+          .loadAllClasificadorCuenta(+this.fg.get('tipo')?.value)
+          .subscribe({
+            next: response => {
+              this.loading = false;
 
-            const result = response.getAllClasificadorCuentas;
-            if (!result.success) {
-              return SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: result.error,
-                confirmButtonText: 'Aceptar',
-              });
-            }
+              const result = response.getAllClasificadorCuentas;
+              if (!result.success) {
+                return SweetAlert.fire({
+                  icon: 'error',
+                  title: 'ERROR',
+                  text: result.error,
+                  confirmButtonText: 'Aceptar',
+                });
+              }
 
-            this.clasificadorCuentaConso = result.data.filter(
-              (f: { TipoClasificador: TiposClasificadorCuenta }) =>
-                f.TipoClasificador === TiposClasificadorCuenta.Consolidado
-            );
-            this.clasificadorCuentaCentro = result.data.filter(
-              (f: { TipoClasificador: TiposClasificadorCuenta }) =>
-                f.TipoClasificador === TiposClasificadorCuenta.Centro
-            );
-            this.clasificadorCuentaComplejo = result.data.filter(
-              (f: { TipoClasificador: TiposClasificadorCuenta }) =>
-                f.TipoClasificador === TiposClasificadorCuenta.Complejo
-            );
-          },
-          error: err => {
-            this.loading = false;
-            this._sweetalertSvc.error(err);
-          },
-        })
+              this.clasificadorCuentas = result.data;
+            },
+            error: err => {
+              this.loading = false;
+              this._sweetalertSvc.error(err);
+            },
+          })
       );
     } catch (err: any) {
       this.loading = false;
@@ -117,6 +119,14 @@ export class ListClasificadorCuentaComponent
 
   ngOnDestroy(): void {
     this._clasificadorCuentaSvc.dispose();
+  }
+
+  private _subscribeToFgChange(): void {
+    this._clasificadorCuentaSvc.subscription.push(
+      this.fg.valueChanges.subscribe(() => {
+        this._loadClasificadorCuenta();
+      })
+    );
   }
 
   hasAdvancedUserPermission(): boolean {
@@ -140,23 +150,10 @@ export class ListClasificadorCuentaComponent
   private _add(): void {
     try {
       if (this.hasAdvancedUserPermission()) {
-        const inputData = {
-          cuenta: '',
-          subcuenta: '',
-          descripcion: '',
-          naturaleza: null,
-          crit1: '',
-          crit2: '',
-          crit3: '',
-          obligacion: false,
-          tipoClasificador: null,
-          seUtiliza: null,
-          terminal: false,
-          crit1Consolidacion: '',
-          crit2Consolidacion: '',
-          crit3Consolidacion: '',
-        };
-        this._clasificadorCuentaSvc.fg.patchValue(inputData);
+        this._clasificadorCuentaSvc.fg.reset();
+        this._clasificadorCuentaSvc.fg.patchValue({
+          tipoClasificador: +this.fg.get('tipo')?.value,
+        });
         this._dinamicDialogSvc.open(
           'Agregar Cuenta',
           ClasificadorCuentaFormComponent

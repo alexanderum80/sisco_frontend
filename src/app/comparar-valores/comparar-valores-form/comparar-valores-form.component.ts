@@ -48,8 +48,8 @@ export class CompararValoresFormComponent implements OnInit {
   private _loadCentros(): void {
     try {
       this._compararValoresSvc.subscription.push(
-        this._unidadesSvc.getAllUnidades().subscribe(response => {
-          const result = response.getAllUnidades;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+          const result = response.getAllUnidadesByUsuario;
 
           if (!result.success) {
             throw new Error(result.error);

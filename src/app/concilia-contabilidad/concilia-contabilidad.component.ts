@@ -268,8 +268,8 @@ export class ConciliaContabilidadComponent
   private _getUnidades(): void {
     try {
       this._conciliaContabSvc.subscription.push(
-        this._unidadesSvc.getAllUnidades().subscribe(response => {
-          const result = response.getAllUnidades;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+          const result = response.getAllUnidadesByUsuario;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -295,46 +295,74 @@ export class ConciliaContabilidadComponent
     try {
       this.dataSourceCentrosSubordinados = [];
 
-      if (subordinadoA === 100) {
-        this._conciliaContabSvc.subscription.push(
-          this._divisionesSvc.getDivisiones().subscribe(response => {
-            const result = response.getAllDivisiones;
-
-            if (!result.success) {
-              this._swalSvc.error(result.error);
-            }
-
-            this.dataSourceCentrosSubordinados = result.data.map(
-              (u: { IdDivision: string; Division: string }) => {
-                return {
-                  IdCentro: u.IdDivision,
-                  Nombre: u.IdDivision + '-' + u.Division,
-                };
-              }
-            );
-          })
-        );
-      } else {
-        this._conciliaContabSvc.subscription.push(
-          this._subdivisionesSvc
-            .getSubdivisionesByIdDivision(subordinadoA)
-            .subscribe(response => {
-              const result = response.getSubdivisionesByIdDivision;
+      switch (subordinadoA) {
+        case 100:
+          this._conciliaContabSvc.subscription.push(
+            this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
+              const result = response.getAllDivisionesByUsuario;
 
               if (!result.success) {
                 this._swalSvc.error(result.error);
               }
 
               this.dataSourceCentrosSubordinados = result.data.map(
-                (u: { IdSubdivision: string; Subdivision: string }) => {
+                (u: { IdDivision: string; Division: string }) => {
                   return {
-                    IdCentro: u.IdSubdivision,
-                    Nombre: u.IdSubdivision + '-' + u.Subdivision,
+                    IdCentro: u.IdDivision,
+                    Nombre: u.IdDivision + '-' + u.Division,
                   };
                 }
               );
             })
-        );
+          );
+          break;
+        case 124:
+          this._conciliaContabSvc.subscription.push(
+            this._unidadesSvc
+              .getUnidadesByIdSubdivision(subordinadoA)
+              .subscribe(response => {
+                const result = response.getUnidadesByIdSubdivision;
+
+                if (!result.success) {
+                  this._swalSvc.error(result.error);
+                }
+
+                this.dataSourceCentrosSubordinados = result.data.map(
+                  (u: { IdUnidad: string; Nombre: string }) => {
+                    return {
+                      IdCentro: u.IdUnidad,
+                      Nombre: u.IdUnidad + '-' + u.Nombre,
+                    };
+                  }
+                );
+              })
+          );
+          break;
+        default:
+          this._conciliaContabSvc.subscription.push(
+            this._subdivisionesSvc
+              .getSubdivisionesByIdDivision(subordinadoA)
+              .subscribe(response => {
+                const result = response.getSubdivisionesByIdDivision;
+
+                if (!result.success) {
+                  this._swalSvc.error(result.error);
+                }
+
+                this.dataSourceCentrosSubordinados = result.data.map(
+                  (u: { IdSubdivision: string; Subdivision: string }) => {
+                    return {
+                      IdCentro: u.IdSubdivision,
+                      Nombre: u.IdSubdivision + '-' + u.Subdivision,
+                    };
+                  }
+                );
+              })
+          );
+          break;
+      }
+      if (subordinadoA === 100) {
+      } else {
       }
     } catch (err: any) {
       this._swalSvc.error(err);

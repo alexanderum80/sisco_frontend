@@ -12,38 +12,22 @@ import { Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'platform',
 })
-export class ConcilaInternaDwhService {
+export class ConcilaOperacionesDwhService {
   fg: FormGroup = new FormGroup({
-    idDivision: new FormControl(''),
-    idSubdivision: new FormControl(''),
-    idUnidad: new FormControl(''),
-    idDivisionOD: new FormControl(''),
-    idSubdivisionOD: new FormControl(''),
-    idUnidadOD: new FormControl(''),
-    fechaInicial: new FormControl(''),
-    fechaFinal: new FormControl(''),
-    soloDiferencias: new FormControl(true),
+    idDivision: new FormControl('', { initialValueIsDefault: true }),
+    idSubdivision: new FormControl('', { initialValueIsDefault: true }),
+    idUnidad: new FormControl('', { initialValueIsDefault: true }),
+    idDivisionOD: new FormControl('', { initialValueIsDefault: true }),
+    idSubdivisionOD: new FormControl('', { initialValueIsDefault: true }),
+    idUnidadOD: new FormControl('', { initialValueIsDefault: true }),
+    fechaInicial: new FormControl(new Date(), { initialValueIsDefault: true }),
+    fechaFinal: new FormControl(new Date(), { initialValueIsDefault: true }),
+    soloDiferencias: new FormControl(true, { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];
 
   constructor() {}
-
-  public inicializarFormGroup(): void {
-    const inputValues = {
-      idDivision: null,
-      idSubdivision: null,
-      idUnidad: null,
-      idDivisionOD: null,
-      idSubdivisionOD: null,
-      idUnidadOD: null,
-      fechaInicial: new Date(),
-      fechaFinal: new Date(),
-      soloDiferencias: true,
-    };
-
-    this.fg.patchValue(inputValues);
-  }
 
   public async getDivision(
     idDivision: number,

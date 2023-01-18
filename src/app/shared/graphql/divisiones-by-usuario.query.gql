@@ -1,0 +1,10 @@
+query GetAllDivisionesByUsuario {
+    getAllDivisionesByUsuario {
+        success
+        data {
+            IdDivision
+            Division
+        }
+        error
+    }
+}
