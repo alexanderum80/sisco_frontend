@@ -164,10 +164,10 @@ export class ConexionRodasFormComponent
             }
 
             this.unidadesValues = result.data.map(
-              (d: { IdUnidad: number; Nombre: string }) => {
+              (u: { IdUnidad: number; Nombre: string }) => {
                 return {
-                  value: d.IdUnidad,
-                  label: d.IdUnidad + '-' + d.Nombre,
+                  value: u.IdUnidad,
+                  label: u.Nombre,
                 };
               }
             );
@@ -196,12 +196,13 @@ export class ConexionRodasFormComponent
 
             that.baseDatosValues = res.entidadesRodas.map(d => {
               return {
-                value: d.Siglas,
-                label: d.Entidad,
+                value: d.sigla,
+                label: d.entidad,
               };
             });
           },
           error: err => {
+            this.loadingEntidadesRodas = false;
             return SweetAlert.fire({
               icon: 'error',
               title: 'ERROR',

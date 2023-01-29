@@ -1,0 +1,3 @@
+mutation DeleteActFijosClasificadorSubgrupo($grupo: Int!, $codigo: Int!) {
+	deleteActFijosClasificadorSubgrupo(grupo: $grupo, codigo: $codigo) 
+}

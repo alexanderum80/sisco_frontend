@@ -57,7 +57,7 @@ export class ArreglaClasificadorFormComponent implements OnInit, OnDestroy {
             (u: { IdUnidad: string; Nombre: string }) => {
               return {
                 value: u.IdUnidad,
-                label: u.IdUnidad + '-' + u.Nombre,
+                label: u.Nombre,
               };
             }
           );

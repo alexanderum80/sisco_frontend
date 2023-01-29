@@ -1,17 +1,19 @@
+import { clasificadorSubgruposApi } from './../graphql/clasificador-subgrupos.actions';
 import {
-  ClasificadorCNMBQueryResponse,
-  ClasificadorCNMBMutationResponse,
-} from './../models/clasificador-cnmb.model';
-import { clasificadorCnmbApi } from './../graphql/clasificador-cnmb.actions';
+  ClasificadorSubgruposQueryResponse,
+  ClasificadorSubgruposMutationResponse,
+  IActFijosClasificadorSubgrupos,
+} from './../models/clasificador-subgrupos.model';
 import { ApolloService } from './../../../shared/services/apollo.service';
-import { Subscription, Observable } from 'rxjs';
-import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs';
 
 @Injectable()
-export class ClasificadorCnmbService {
+export class ClasificadorSubgruposService {
   fg: FormGroup = new FormGroup({
-    cnmb: new FormControl(''),
+    grupo: new FormControl(''),
+    codigo: new FormControl(''),
     descripcion: new FormControl(''),
     tasa: new FormControl(0),
   });
@@ -20,11 +22,13 @@ export class ClasificadorCnmbService {
 
   constructor(private _apolloSvc: ApolloService) {}
 
-  loadAll(): Observable<ClasificadorCNMBQueryResponse> {
+  loadAll(): Observable<ClasificadorSubgruposQueryResponse> {
     return new Observable(subscriber => {
       this.subscription.push(
         this._apolloSvc
-          .watchQuery<ClasificadorCNMBQueryResponse>(clasificadorCnmbApi.all)
+          .watchQuery<ClasificadorSubgruposQueryResponse>(
+            clasificadorSubgruposApi.all
+          )
           .subscribe({
             next: result => {
               subscriber.next(result);
@@ -37,45 +41,20 @@ export class ClasificadorCnmbService {
     });
   }
 
-  loadOne(cnmb: number): Observable<ClasificadorCNMBQueryResponse> {
+  loadOne(
+    grupo: number,
+    codigo: number
+  ): Observable<ClasificadorSubgruposQueryResponse> {
     return new Observable(subscriber => {
       try {
         this.subscription.push(
           this._apolloSvc
-            .query<ClasificadorCNMBQueryResponse>(clasificadorCnmbApi.byId, {
-              cnmb,
-            })
-            .subscribe({
-              next: res => {
-                subscriber.next(res);
-                subscriber.complete();
-              },
-              error: err => {
-                subscriber.error(err.message || err);
-              },
-            })
-        );
-      } catch (err: any) {
-        subscriber.error(err);
-      }
-    });
-  }
-
-  save(): Observable<ClasificadorCNMBMutationResponse> {
-    return new Observable<ClasificadorCNMBMutationResponse>(subscriber => {
-      try {
-        const actfijosClasificadorCnmbInput = {
-          CNMB: this.fg.controls['cnmb'].value,
-          DCNMB: this.fg.controls['descripcion'].value,
-          TREPO: this.fg.controls['tasa'].value,
-        };
-
-        this.subscription.push(
-          this._apolloSvc
-            .mutation<ClasificadorCNMBMutationResponse>(
-              clasificadorCnmbApi.save,
-              { actfijosClasificadorCnmbInput },
-              ['GetAllActFijosClasificadorCnmb']
+            .query<ClasificadorSubgruposQueryResponse>(
+              clasificadorSubgruposApi.byId,
+              {
+                grupo,
+                codigo,
+              }
             )
             .subscribe({
               next: res => {
@@ -93,15 +72,54 @@ export class ClasificadorCnmbService {
     });
   }
 
-  delete(cnmb: number): Observable<ClasificadorCNMBMutationResponse> {
-    return new Observable<ClasificadorCNMBMutationResponse>(subscriber => {
+  save(): Observable<ClasificadorSubgruposMutationResponse> {
+    return new Observable<ClasificadorSubgruposMutationResponse>(subscriber => {
+      try {
+        const actFijosClasificadorSubgrupoInput: IActFijosClasificadorSubgrupos =
+          {
+            Grupo: this.fg.controls['grupo'].value,
+            Codigo: this.fg.controls['codigo'].value,
+            Descripcion: this.fg.controls['descripcion'].value,
+            Tasa: this.fg.controls['tasa'].value,
+          };
+
+        this.subscription.push(
+          this._apolloSvc
+            .mutation<ClasificadorSubgruposMutationResponse>(
+              clasificadorSubgruposApi.save,
+              {
+                actFijosClasificadorSubgrupoInput,
+              },
+              ['GetAllActFijosClasificadorSubgrupo']
+            )
+            .subscribe({
+              next: res => {
+                subscriber.next(res);
+                subscriber.complete();
+              },
+              error: err => {
+                subscriber.error(err.message || err);
+              },
+            })
+        );
+      } catch (err: any) {
+        subscriber.error(err);
+      }
+    });
+  }
+
+  delete(
+    grupo: number,
+    codigo: number
+  ): Observable<ClasificadorSubgruposMutationResponse> {
+    return new Observable<ClasificadorSubgruposMutationResponse>(subscriber => {
       try {
         this.subscription.push(
           this._apolloSvc
-            .mutation<ClasificadorCNMBMutationResponse>(
-              clasificadorCnmbApi.delete,
-              { cnmb },
-              ['GetAllActFijosClasificadorCnmb']
+            .mutation<ClasificadorSubgruposMutationResponse>(
+              clasificadorSubgruposApi.delete,
+              { grupo, codigo },
+              ['GetAllActFijosClasificadorSubgrupo']
             )
             .subscribe({
               next: res => {

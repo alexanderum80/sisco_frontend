@@ -1,0 +1,8 @@
+mutation SaveActFijosClasificadorSubgrupo($actFijosClasificadorSubgrupoInput: ActFijosClasificadorSubgrupoInput!) {
+		saveActFijosClasificadorSubgrupo(actFijosClasificadorSubgrupoInput: $actFijosClasificadorSubgrupoInput) {
+				Grupo
+				Codigo
+				Descripcion
+				Tasa
+		}
+}

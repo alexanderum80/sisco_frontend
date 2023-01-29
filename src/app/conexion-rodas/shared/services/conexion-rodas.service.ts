@@ -71,8 +71,8 @@ export class ConexionRodasService {
           Consolidado: this.fg.controls['consolidado'].value || false,
           IdDivision: toNumber(this.fg.controls['idDivision'].value),
           IpRodas: this.fg.controls['ip'].value,
-          Usuario: this.fg.controls['usuario'].value,
-          Contrasena: this.fg.controls['contrasena'].value,
+          // Usuario: this.fg.controls['usuario'].value,
+          // Contrasena: this.fg.controls['contrasena'].value,
           BaseDatos: this.fg.controls['baseDatos'].value,
         };
 
@@ -129,14 +129,12 @@ export class ConexionRodasService {
 
   getEntidadesRodas(): Observable<ConexionRodasQueryResponse> {
     const ip = this.fg.get('ip')?.value;
-    const usuario = this.fg.get('usuario')?.value;
-    const password = this.fg.get('contrasena')?.value;
 
     return new Observable<ConexionRodasQueryResponse>(subscribe => {
       this._apollo
         .query<ConexionRodasQueryResponse>({
           query: conexionRodasApi.entidades,
-          variables: { ip, usuario, password },
+          variables: { ip },
           fetchPolicy: 'network-only',
         })
         .subscribe({

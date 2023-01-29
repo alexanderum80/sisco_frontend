@@ -21,6 +21,7 @@ import {
   ChangeDetectionStrategy,
   AfterContentChecked,
 } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-concilia-aft',
@@ -186,7 +187,7 @@ export class ConciliaAftComponent
             (u: { IdUnidad: string; Nombre: string }) => {
               return {
                 value: u.IdUnidad,
-                label: u.IdUnidad + '-' + u.Nombre,
+                label: u.Nombre,
               };
             }
           );
@@ -317,7 +318,8 @@ export class ConciliaAftComponent
             'Conciliación Rodas vs Activos Fijos'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaAftSvc.getConciliacionDefinition(
             this.dataSourceConciliacion,
@@ -353,7 +355,8 @@ export class ConciliaAftComponent
             'Diferencias en el Clasificador CNMB'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaAftSvc.getClasificadorDefinition(
             this.dataSourceClasificador

@@ -23,6 +23,7 @@ import { TabView } from 'primeng/tabview';
 import { toNumber } from 'lodash';
 import { SubdivisionesService } from '../shared/services/subdivisiones.service';
 import { DivisionesService } from '../shared/services/divisiones.service';
+import * as moment from 'moment';
 
 const DISPLAYED_COLUMNS_CONSULTAS: ITableColumns[] = [
   { header: 'Cuenta', field: 'Cuenta', type: 'string' },
@@ -30,6 +31,8 @@ const DISPLAYED_COLUMNS_CONSULTAS: ITableColumns[] = [
   { header: 'Análisis 1', field: 'Analisis1', type: 'string' },
   { header: 'Análisis 2', field: 'Analisis2', type: 'string' },
   { header: 'Análisis 3', field: 'Analisis3', type: 'string' },
+  { header: 'Análisis 4', field: 'Analisis4', type: 'string' },
+  { header: 'Análisis 5', field: 'Analisis5', type: 'string' },
   { header: 'Total', field: 'Total', type: 'decimal' },
 ];
 
@@ -280,7 +283,7 @@ export class ConciliaContabilidadComponent
             (u: { IdUnidad: string; Nombre: string }) => {
               return {
                 value: u.IdUnidad,
-                label: u.IdUnidad + '-' + u.Nombre,
+                label: u.Nombre,
               };
             }
           );
@@ -442,6 +445,7 @@ export class ConciliaContabilidadComponent
               cloneDeep(JSON.parse(result.data.ReporteValores.data)) || [];
           },
           error: err => {
+            this.loading = false;
             this._swalSvc.error(err);
           },
         })
@@ -550,7 +554,12 @@ export class ConciliaContabilidadComponent
             'Reporte de incidencias de la entrega de los Estados Financieros'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            this.fg.get('apertura')?.value
+              ? 0
+              : this.fg.get('cierre')?.value
+              ? 13
+              : +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaContabSvc.getCentro(
             this.fg.get('idCentro')?.value,
@@ -599,7 +608,12 @@ export class ConciliaContabilidadComponent
             'Chequeo de Centros vs Consolidado'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            this.fg.get('apertura')?.value
+              ? 0
+              : this.fg.get('cierre')?.value
+              ? 13
+              : +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaContabSvc.getConsolidado(
             this.fg.get('idCentro')?.value,
@@ -638,7 +652,12 @@ export class ConciliaContabilidadComponent
             'Diferencias entre el Clasificador y el Clasificador del Rodas'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            this.fg.get('apertura')?.value
+              ? 0
+              : this.fg.get('cierre')?.value
+              ? 13
+              : +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaContabSvc.getCentro(
             this.fg.get('idCentro')?.value,

@@ -22,11 +22,10 @@ import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 })
 export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
   columns: ITableColumns[] = [
-    { header: 'División', field: 'Division', type: 'string' },
-    { header: 'Unidad', field: 'Unidad', type: 'string' },
+    { header: 'División', field: 'Unidad.Division', type: 'string' },
+    { header: 'Unidad', field: 'Unidad.Nombre', type: 'string' },
     { header: 'Consolidado', field: 'Consolidado', type: 'boolean' },
     { header: 'IP', field: 'IpRodas', type: 'string' },
-    { header: 'Usuario', field: 'Usuario', type: 'string' },
     { header: 'Siglas', field: 'BaseDatos', type: 'string' },
   ];
 
@@ -64,24 +63,36 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
   private _loadConexionesRodas(): void {
     try {
       this._conexionRodasSvc.subscription.push(
-        this._conexionRodasSvc.loadAllConexionesRodas().subscribe(response => {
-          this.loading = false;
+        this._conexionRodasSvc.loadAllConexionesRodas().subscribe({
+          next: response => {
+            this.loading = false;
 
-          const result = response.getAllContaConexiones;
-          if (!result.success) {
+            const result = response.getAllContaConexiones;
+            if (!result.success) {
+              return SweetAlert.fire({
+                icon: 'error',
+                title: 'ERROR',
+                text: result.error,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+              });
+            }
+
+            this.conexionesRodas = sortBy(result.data, [
+              'IdDivision',
+              'IdUnidad',
+            ]);
+          },
+          error: err => {
+            this.loading = false;
             return SweetAlert.fire({
               icon: 'error',
               title: 'ERROR',
-              text: result.error,
+              text: err,
               showConfirmButton: true,
               confirmButtonText: 'Aceptar',
             });
-          }
-
-          this.conexionesRodas = sortBy(result.data, [
-            'IdDivision',
-            'IdUnidad',
-          ]);
+          },
         })
       );
     } catch (err: any) {

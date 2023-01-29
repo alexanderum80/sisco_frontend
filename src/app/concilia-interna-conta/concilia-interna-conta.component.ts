@@ -16,6 +16,7 @@ import {
   AfterContentChecked,
 } from '@angular/core';
 import { cloneDeep } from 'lodash';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-concilia-interna-conta',
@@ -133,7 +134,7 @@ export class ConciliaInternaContaComponent
                 (u: { IdUnidad: string; Nombre: string }) => {
                   return {
                     value: u.IdUnidad,
-                    label: u.IdUnidad + '-' + u.Nombre,
+                    label: u.Nombre,
                   };
                 }
               );
@@ -237,7 +238,8 @@ export class ConciliaInternaContaComponent
             this.divisionesValues
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaInternaContaSvc.getConciliacionDefinition(
             this.dataSource

@@ -203,7 +203,7 @@ export class ConciliaContabilidadService {
 
     const returnValue = {
       table: {
-        widths: ['*', '*', '*', '*', '*', '*'],
+        widths: [50, 50, 55, 55, 55, 55, 55, 88],
         body: [
           [
             {
@@ -227,6 +227,14 @@ export class ConciliaContabilidadService {
               style: 'tableHeader',
             },
             {
+              text: 'Análisis 4',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Análisis 5',
+              style: 'tableHeader',
+            },
+            {
               text: 'Total',
               style: 'tableHeader',
               alignment: 'right',
@@ -240,6 +248,8 @@ export class ConciliaContabilidadService {
               al.Analisis1,
               al.Analisis2,
               al.Analisis3,
+              al.Analisis4,
+              al.Analisis5,
               {
                 text: numberFormatter.format(al.Total),
                 alignment: 'right',
@@ -247,6 +257,8 @@ export class ConciliaContabilidadService {
             ];
           }),
           [
+            {},
+            {},
             {},
             {},
             {},

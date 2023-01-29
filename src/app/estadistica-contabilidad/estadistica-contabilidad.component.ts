@@ -15,6 +15,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { cloneDeep } from 'lodash';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-estadistica-contabilidad',
@@ -146,7 +147,8 @@ export class EstadisticaContabilidadComponent
             this.divisionesValues
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._estadisticaContaSvc.getConciliacionDefinition(
             this.dataSource

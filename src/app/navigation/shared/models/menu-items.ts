@@ -59,19 +59,19 @@ export const MenuItems: MenuItem[] = [
         label: 'Clasificadores AFT',
         items: [
           {
-            label: 'Clasificador CNMB',
+            label: 'Clasificador de Subgrupos',
             icon: 'mdi mdi-format-list-checkbox',
-            routerLink: 'clasificador-cnmb',
+            routerLink: 'clasificador-subgrupos',
             disabled: false,
             title:
-              'Clasificador CNMB para activos fijos tangibles, solo lectura.  Es modificable solo en el departamento de contabilidad de la Empresa.',
+              'Clasificador de Subgrupos para activos fijos tangibles, solo lectura.  Es modificable solo en el departamento de contabilidad de la Empresa.',
           },
           {
-            label: 'Arregla Clasificador CNMB',
+            label: 'Arregla Clasificador de Subgrupos',
             icon: 'mdi mdi-format-list-checks',
             routerLink: '',
             disabled: true,
-            title: 'Arregla Clasificador CNMB de los Activos Fijos.',
+            title: 'Arregla Clasificador de Subgrupos de los Activos Fijos.',
           },
         ],
       },

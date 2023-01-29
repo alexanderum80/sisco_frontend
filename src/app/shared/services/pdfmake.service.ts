@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import * as moment from 'moment';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import { getMonthName } from '../models/date-range';
 
 @Injectable({
   providedIn: 'root',
@@ -98,14 +98,9 @@ export class PdfmakeService {
     });
   }
 
-  public getPeriodoDefinition(periodo: Date): any {
-    moment.locale('es');
+  public getPeriodoDefinition(periodo: number, año: string): any {
     return {
-      text:
-        'Período: ' +
-        moment(periodo).locale('es').format('MMMM') +
-        '/' +
-        moment(periodo).format('YYYY'),
+      text: `Período: ${getMonthName(periodo)}/${año}`,
       bold: true,
       margin: [0, 10, 0, 0],
     };

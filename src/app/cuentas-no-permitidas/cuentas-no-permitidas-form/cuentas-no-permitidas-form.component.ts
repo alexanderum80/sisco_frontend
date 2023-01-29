@@ -49,7 +49,7 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
           (u: { IdUnidad: string; Nombre: string }) => {
             return {
               value: String(u.IdUnidad),
-              label: u.IdUnidad + '-' + u.Nombre,
+              label: u.Nombre,
             };
           }
         );

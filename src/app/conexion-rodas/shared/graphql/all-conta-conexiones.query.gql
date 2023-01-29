@@ -4,12 +4,14 @@ query GetAllContaConexiones {
         data {
             Id
             IdUnidad
-            Unidad 
+            Unidad {
+              IdUnidad
+              Nombre
+              Division
+            }
             IdDivision
-            Division 
             Consolidado
             IpRodas
-            Usuario
             BaseDatos
         }
         error

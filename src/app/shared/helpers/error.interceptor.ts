@@ -28,7 +28,12 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.authenticationService.logout();
         }
 
-        const error = (err && err.error && err.error.message) || err.statusText;
+        const error =
+          err.error?.erros[0]?.message ??
+          err.error?.message ??
+          err.error ??
+          err.statusText ??
+          err;
         console.log(err);
         SweetAlert.fire({
           icon: 'error',

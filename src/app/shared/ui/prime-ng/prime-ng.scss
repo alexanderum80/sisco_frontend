@@ -142,6 +142,12 @@ p-inputnumber, .p-inputnumber {
     padding: 0.5rem 1rem !important;
 }
 
+.p-dropdown .p-dropdown-label {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+}
+
 .p-tooltip {
     label {
         padding: .5rem !important;
@@ -310,6 +316,8 @@ p-slidemenu {
 .p-column-filter-row .p-column-filter-menu-button, 
 .p-column-filter-row .p-column-filter-clear-button {
     margin-left: 0 !important;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
 }
 
 .p-sidebar {

@@ -23,7 +23,7 @@ export class SweetalertService {
     Swal.fire({
       icon: 'error',
       title: 'ERROR',
-      text: error,
+      html: error,
       confirmButtonText: 'Aceptar',
       allowOutsideClick: false,
     });

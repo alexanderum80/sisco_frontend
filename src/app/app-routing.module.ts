@@ -64,10 +64,10 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'clasificador-cnmb',
+    path: 'clasificador-subgrupos',
     loadChildren: () =>
-      import('./clasificador-cnmb/clasificador-cnmb.module').then(
-        m => m.ClasificadorCnmbModule
+      import('./clasificador-subgrupos/clasificador-subgrupos.module').then(
+        m => m.ClasificadorSubgruposModule
       ),
     canActivate: [AuthGuard],
   },
