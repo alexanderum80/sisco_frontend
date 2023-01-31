@@ -66,6 +66,11 @@ export class ConciliaContabilidadComponent
     { header: 'Valor Rodas', field: 'ValorRodas', type: 'decimal' },
     { header: 'Estado', field: 'Estado', type: 'string' },
   ];
+  displayedColumnsCuadreSistemas: ITableColumns[] = [
+    { header: 'Centro', field: 'Centro', type: 'string' },
+    { header: 'Sistema', field: 'Sistema', type: 'string' },
+    { header: 'Estado', field: 'Estado', type: 'string' },
+  ];
   displayedColumnsClasificador: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cuenta', type: 'string' },
     { header: 'SubCuenta', field: 'SubCuenta', type: 'string' },
@@ -116,6 +121,7 @@ export class ConciliaContabilidadComponent
   dataSourceAsientos = [];
   dataSourceExpresiones = [];
   dataSourceValores = [];
+  dataSourceCuadreSistemas = [];
   dataSourceClasificador = [];
   dataSourceCentrosSubordinados = [];
   dataSourceChequeo = [];
@@ -266,6 +272,7 @@ export class ConciliaContabilidadComponent
     this.dataSourceExpresiones = [];
     this.dataSourceValores = [];
     this.dataSourceClasificador = [];
+    this.dataSourceCuadreSistemas = [];
   }
 
   private _getUnidades(): void {
@@ -443,6 +450,18 @@ export class ConciliaContabilidadComponent
               cloneDeep(JSON.parse(result.data.ReporteExpresiones.data)) || [];
             this.dataSourceValores =
               cloneDeep(JSON.parse(result.data.ReporteValores.data)) || [];
+            this.dataSourceCuadreSistemas =
+              cloneDeep(JSON.parse(result.data.CuadreSistemas.data)) || [];
+
+            if (
+              this.dataSourceCuadreSistemas.filter(
+                (f: { Estado: string }) => f.Estado !== 'Correcto'
+              ).length > 0
+            ) {
+              this._swalSvc.warning(
+                'Existen incidencias en el Cuadre de los Sistemas. <br>Vaya a la pestaña Cuadre de los Sistemas para más información.'
+              );
+            }
           },
           error: err => {
             this.loading = false;
@@ -577,6 +596,9 @@ export class ConciliaContabilidadComponent
           ),
           await this._conciliaContabSvc.getReporteValoresDefinition(
             this.dataSourceValores
+          ),
+          await this._conciliaContabSvc.getReporteCuadreSistemasDefinition(
+            this.dataSourceCuadreSistemas
           ),
         ],
         footer: (page: string, pages: string) => {

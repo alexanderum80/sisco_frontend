@@ -288,7 +288,7 @@ export class ConciliaContabilidadService {
       },
       {
         table: {
-          widths: [135, 70, 20, 135, 70, 50],
+          widths: [135, 70, 18, 135, 70, 50],
           body: [
             [
               {
@@ -301,7 +301,7 @@ export class ConciliaContabilidadService {
                 alignment: 'right',
               },
               {
-                text: 'Opr.',
+                text: 'Op.',
                 style: 'tableHeader',
                 alignment: 'center',
               },
@@ -358,7 +358,7 @@ export class ConciliaContabilidadService {
       },
       {
         table: {
-          widths: [230, 80, 40, 80, 60],
+          widths: [230, 85, 20, 85, '*'],
           body: [
             [
               {
@@ -401,6 +401,52 @@ export class ConciliaContabilidadService {
                   text: d.Estado,
                   bold: true,
                   color: d.Estado === 'Incorrecto' ? 'red' : 'blue',
+                },
+              ];
+            }),
+          ],
+        },
+      }
+    );
+
+    return definition;
+  }
+
+  public async getReporteCuadreSistemasDefinition(data: any[]): Promise<any> {
+    const definition = [];
+
+    definition.push(
+      {
+        text: 'Cuadre de los Sistemas',
+        bold: true,
+        margin: [0, 10, 0, 0],
+      },
+      {
+        table: {
+          widths: ['*', 200, 200],
+          body: [
+            [
+              {
+                text: 'Centro',
+                style: 'tableHeader',
+              },
+              {
+                text: 'Sistema',
+                style: 'tableHeader',
+              },
+              {
+                text: 'Estado',
+                style: 'tableHeader',
+              },
+            ],
+            ...data.map((d: any) => {
+              return [
+                d.Centro,
+                d.Sistema,
+                {
+                  text: d.Estado,
+                  bold: true,
+                  color: d.Estado !== 'Correcto' ? 'red' : 'blue',
                 },
               ];
             }),

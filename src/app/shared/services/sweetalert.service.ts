@@ -12,7 +12,7 @@ export class SweetalertService {
     Swal.fire({
       icon: 'success',
       title: 'Satisfactorio',
-      text: message,
+      html: message,
       showConfirmButton: false,
       timer: 2000,
       allowOutsideClick: false,
@@ -33,7 +33,7 @@ export class SweetalertService {
     return Swal.fire({
       icon: 'question',
       title,
-      text: message,
+      html: message,
       confirmButtonText: 'Sí',
       showCancelButton: true,
       cancelButtonText: 'No',
@@ -51,7 +51,7 @@ export class SweetalertService {
     Swal.fire({
       icon: 'info',
       title: 'Información',
-      text: message,
+      html: message,
       confirmButtonText: 'Aceptar',
       allowOutsideClick: false,
     });
@@ -61,7 +61,7 @@ export class SweetalertService {
     Swal.fire({
       icon: 'warning',
       title: 'Advertencia',
-      text: message,
+      html: message,
       confirmButtonText: 'Aceptar',
       allowOutsideClick: false,
     });

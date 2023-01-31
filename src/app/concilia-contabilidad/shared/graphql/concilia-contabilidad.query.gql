@@ -22,6 +22,11 @@ query ConciliaContabilidad($conciliaContaInput: ConciliaContaInput!) {
                 data
                 error
             }
+            CuadreSistemas {
+                success
+                data
+                error
+            }
         }
         error
     }
