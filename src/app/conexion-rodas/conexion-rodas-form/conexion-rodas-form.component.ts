@@ -202,6 +202,8 @@ export class ConexionRodasFormComponent
             });
           },
           error: err => {
+            this.loadingEntidadesRodas = false;
+
             return SweetAlert.fire({
               icon: 'error',
               title: 'ERROR',
