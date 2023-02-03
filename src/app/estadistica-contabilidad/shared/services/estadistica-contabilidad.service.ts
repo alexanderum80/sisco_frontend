@@ -86,7 +86,7 @@ export class EstadisticaContabilidadService {
     let _totalComprobantes = 0;
     let _totalTraspasdos = 0;
     let _totalSinTraspasar = 0;
-    let _totalInvalidos = 0;
+    let _totalInconclusos = 0;
     let _totalAnulados = 0;
 
     const returnValue = [];
@@ -131,7 +131,7 @@ export class EstadisticaContabilidadService {
               alignment: 'right',
             },
             {
-              text: 'Inválidos',
+              text: 'Inconclusos',
               style: 'tableHeader',
               alignment: 'right',
             },
@@ -141,11 +141,11 @@ export class EstadisticaContabilidadService {
               alignment: 'right',
             },
           ],
-          ...conciliaInternaConta.map((p: any) => {
+          ...conciliaInternaConta.map((p: IEstadisticaContabilidad) => {
             _totalComprobantes += p.Comprobantes;
             _totalTraspasdos += p.Traspasados;
             _totalSinTraspasar += p.SinTraspasar;
-            _totalInvalidos += p.Invalidos;
+            _totalInconclusos += p.Inconclusos;
             _totalAnulados += p.Anulados;
 
             return [
@@ -187,7 +187,7 @@ export class EstadisticaContabilidadService {
                 alignment: 'right',
               },
               {
-                text: p.Invalidos,
+                text: p.Inconclusos,
                 alignment: 'right',
               },
               {
@@ -230,7 +230,7 @@ export class EstadisticaContabilidadService {
               alignment: 'right',
             },
             {
-              text: _totalInvalidos,
+              text: _totalInconclusos,
               style: 'tableHeader',
               alignment: 'right',
             },

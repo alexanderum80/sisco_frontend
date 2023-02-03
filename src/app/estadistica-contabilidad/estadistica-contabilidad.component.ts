@@ -52,7 +52,12 @@ export class EstadisticaContabilidadComponent
       type: 'number',
       totalize: true,
     },
-    { header: 'Inválidos', field: 'Invalidos', type: 'number', totalize: true },
+    {
+      header: 'Inconclusos',
+      field: 'Inconclusos',
+      type: 'number',
+      totalize: true,
+    },
     { header: 'Anulados', field: 'Anulados', type: 'number', totalize: true },
   ];
 

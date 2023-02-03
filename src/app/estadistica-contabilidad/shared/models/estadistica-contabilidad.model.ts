@@ -11,7 +11,7 @@ export interface IEstadisticaContabilidad {
   Comprobantes: number;
   Traspasados: number;
   SinTraspasar: number;
-  Invalidos: number;
+  Inconclusos: number;
   Anulados: number;
 }
 
