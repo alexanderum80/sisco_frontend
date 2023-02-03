@@ -160,7 +160,6 @@ export class ConciliaContabilidadComponent
     private _clasifEntidadesSvc: ClasificadorEntidadesService,
     private _conciliaContabSvc: ConciliaContabilidadService,
     private _pdfMakeSvc: PdfmakeService,
-    private _changeDedectionRef: ChangeDetectorRef,
     private _swalSvc: SweetalertService,
     private _cd: ChangeDetectorRef
   ) {
@@ -542,7 +541,7 @@ export class ConciliaContabilidadComponent
 
   reporte(): void {
     switch (this.selectedTabViewIndex) {
-      case 3:
+      case 4:
         this._reporteDiferenciaClasificador();
         break;
       default:
