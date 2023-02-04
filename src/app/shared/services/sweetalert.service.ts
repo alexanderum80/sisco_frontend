@@ -23,7 +23,7 @@ export class SweetalertService {
     Swal.fire({
       icon: 'error',
       title: 'ERROR',
-      html: error,
+      html: typeof error === 'string' ? error.replace('Error: ', '') : error,
       confirmButtonText: 'Aceptar',
       allowOutsideClick: false,
     });

@@ -5,6 +5,7 @@ export enum DateFormatEnum {
   ES_DATE = 'dd/MM/yyyy',
   ES_SHORT_DATE = 'dd/MM/yy',
   ES_DATE_HOUR = 'dd/MM/yyyy HH:mm:ss',
+  ES_DATE_HOUR_M = 'dd/MM/yyyy hh:mm:ss a',
 }
 
 export enum LocaleFormatEnum {

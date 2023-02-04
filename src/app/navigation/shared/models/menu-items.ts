@@ -247,20 +247,6 @@ export const MenuItems: MenuItem[] = [
     label: 'Configuración',
     items: [
       {
-        label: 'Unidades',
-        icon: 'mdi mdi-home',
-        routerLink: '',
-        disabled: true,
-        title: 'Configurar las Unidades.',
-      },
-      {
-        label: 'Complejos',
-        icon: 'mdi mdi-home-group',
-        routerLink: '',
-        disabled: true,
-        title: 'Configurar los Complejos.',
-      },
-      {
         label: 'Conexiones',
         items: [
           {

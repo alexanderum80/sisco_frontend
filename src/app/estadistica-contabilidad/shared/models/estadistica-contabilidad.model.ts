@@ -6,6 +6,7 @@ export interface IEstadisticaContabilidad {
   Consolidado: boolean;
   Annio: number;
   Periodo: number;
+  FechaActualizacion: Date;
   FechaInicio: Date;
   FechaFin: Date;
   Comprobantes: number;

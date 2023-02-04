@@ -18,8 +18,13 @@ export class UnidadesService {
             query: unidadesApi.all,
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
+          .subscribe({
+            next: response => {
+              subscriber.next(response.data);
+            },
+            error: err => {
+              subscriber.error(err);
+            },
           });
       } catch (err: any) {
         subscriber.error(err);
@@ -35,8 +40,13 @@ export class UnidadesService {
             query: unidadesApi.allByUsuario,
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
+          .subscribe({
+            next: response => {
+              subscriber.next(response.data);
+            },
+            error: err => {
+              subscriber.error(err);
+            },
           });
       } catch (err: any) {
         subscriber.error(err);
@@ -55,9 +65,14 @@ export class UnidadesService {
             variables: { idSubdivision },
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
-            subscriber.complete();
+          .subscribe({
+            next: response => {
+              subscriber.next(response.data);
+              subscriber.complete();
+            },
+            error: err => {
+              subscriber.error(err);
+            },
           });
       } catch (err: any) {
         subscriber.error(err);
@@ -76,9 +91,14 @@ export class UnidadesService {
             variables: { idDivision },
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
-            subscriber.complete();
+          .subscribe({
+            next: response => {
+              subscriber.next(response.data);
+              subscriber.complete();
+            },
+            error: err => {
+              subscriber.error(err);
+            },
           });
       } catch (err: any) {
         subscriber.error(err);

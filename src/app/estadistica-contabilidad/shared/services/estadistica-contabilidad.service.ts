@@ -82,7 +82,9 @@ export class EstadisticaContabilidadService {
     return definition;
   }
 
-  private _getConciliaInternaContaTable(conciliaInternaConta: any): any[] {
+  private _getConciliaInternaContaTable(
+    conciliaInternaConta: IEstadisticaContabilidad[]
+  ): any[] {
     let _totalComprobantes = 0;
     let _totalTraspasdos = 0;
     let _totalSinTraspasar = 0;
@@ -93,7 +95,7 @@ export class EstadisticaContabilidadService {
 
     returnValue.push({
       table: {
-        widths: [150, 55, 55, 55, 65, 65, 65, 60, 60],
+        widths: [150, 25, 60, 50, 50, 60, 55, 60, 50, 50],
         body: [
           [
             {
@@ -101,7 +103,12 @@ export class EstadisticaContabilidadService {
               style: 'tableHeader',
             },
             {
-              text: 'Consolidado',
+              text: 'Cons.',
+              style: 'tableHeader',
+              alignment: 'center',
+            },
+            {
+              text: 'Fecha Actualización',
               style: 'tableHeader',
               alignment: 'center',
             },
@@ -151,7 +158,17 @@ export class EstadisticaContabilidadService {
             return [
               p.Centro,
               {
-                text: p.Consolidado ? 'Sí' : 'No',
+                text: p.Consolidado ? 'X' : '',
+                alignment: 'center',
+              },
+              {
+                text: p.FechaActualizacion
+                  ? formatDate(
+                      p.FechaActualizacion,
+                      DateFormatEnum.ES_DATE_HOUR_M,
+                      LocaleFormatEnum.EN_US
+                    )
+                  : '',
                 alignment: 'center',
               },
               {
@@ -200,6 +217,10 @@ export class EstadisticaContabilidadService {
           [
             {
               text: 'TOTAL',
+              style: 'tableHeader',
+            },
+            {
+              text: '',
               style: 'tableHeader',
             },
             {

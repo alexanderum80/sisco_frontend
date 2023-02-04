@@ -32,6 +32,8 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
   inlineButtons: IButtons[] = [];
   topLeftButtons: IButtons[] = [];
 
+  loading = true;
+
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _usuarioSvc: UsuarioService,
@@ -61,6 +63,8 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
     try {
       this._empleadoSvc.subscription.push(
         this._empleadoSvc.loadAllEmpleados().subscribe(response => {
+          this.loading = false;
+
           const result = response.getAllEmpleados;
 
           if (result.success === false) {

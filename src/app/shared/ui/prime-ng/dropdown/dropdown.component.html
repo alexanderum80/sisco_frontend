@@ -1,4 +1,8 @@
-<div [class.p-float-label]="floatLabel" class="field" [formGroup]="fg">
+<div
+  [class.p-float-label]="floatLabel"
+  [class.mt-3]="floatLabel"
+  class="field"
+  [formGroup]="fg">
   <label
     *ngIf="!floatLabel"
     [for]="control"
@@ -28,6 +32,7 @@
   </p-dropdown>
   <label
     *ngIf="floatLabel"
+    class="mt-2"
     [for]="control"
     [ngClass]="{ 'label-required': required }"
     >{{ label }}</label

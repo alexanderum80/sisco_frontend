@@ -1,3 +1,4 @@
+import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { Subscription } from 'rxjs';
 import { ActionClicked } from './../../shared/models/list-items';
 import { SelectItem } from 'primeng/api';
@@ -6,7 +7,6 @@ import { DivisionesService } from './../../shared/services/divisiones.service';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { FormGroup } from '@angular/forms';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import SweetAlert from 'sweetalert2';
 import { UsuarioService } from '../../shared/services/usuario.service';
 import {
   Component,
@@ -44,7 +44,8 @@ export class ConexionRodasFormComponent
     private _dinamicDialogSvc: DinamicDialogService,
     private _divisionesSvc: DivisionesService,
     private _unidadesSvc: UnidadesService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private _swalSvc: SweetalertService
   ) {}
 
   ngOnInit(): void {
@@ -110,13 +111,7 @@ export class ConexionRodasFormComponent
           const result = response.getAllDivisionesByUsuario;
 
           if (!result.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: result.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
+            return this._swalSvc.error(result.error);
           }
 
           this.divisionesValues = result.data.map(
@@ -130,13 +125,7 @@ export class ConexionRodasFormComponent
         })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      return this._swalSvc.error(err);
     }
   }
 
@@ -154,13 +143,7 @@ export class ConexionRodasFormComponent
             const result = response.getUnidadesByIdDivision;
 
             if (!result.success) {
-              return SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: result.error,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-              });
+              return this._swalSvc.error(result.error);
             }
 
             this.unidadesValues = result.data.map(
@@ -174,13 +157,7 @@ export class ConexionRodasFormComponent
           })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -203,26 +180,13 @@ export class ConexionRodasFormComponent
           },
           error: err => {
             this.loadingEntidadesRodas = false;
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: err,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
+            return this._swalSvc.error(err.message || err);
           },
         })
       );
     } catch (err: any) {
       this.loadingEntidadesRodas = false;
-
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -308,24 +272,12 @@ export class ConexionRodasFormComponent
             this._closeModal(txtMessage);
           },
           error: error => {
-            SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
+            this._swalSvc.error(error);
           },
         })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 

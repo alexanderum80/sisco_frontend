@@ -32,6 +32,8 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
   inlineButtons: IButtons[] = [];
   topLeftButtons: IButtons[] = [];
 
+  loading = true;
+
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
@@ -54,6 +56,8 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
 
   private _loadElementosGastos(): void {
     this._elementosGastosSvc.loadAllElementosGastos().subscribe(response => {
+      this.loading = false;
+
       const result = response.getAllElementosGastos;
 
       if (!result.success) {

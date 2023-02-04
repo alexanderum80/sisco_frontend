@@ -40,6 +40,8 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
   inlineButtons: IButtons[] = DefaultInlineButtonsTable;
   topLeftButtons: IButtons[] = DefaultTopLeftButtonsTable;
 
+  loading = true;
+
   constructor(
     private _usuarioSvc: UsuarioService,
     private _expresionesSvc: ExpresionesService,
@@ -61,6 +63,8 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
     try {
       this._expresionesSvc.subscription.push(
         this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
+          this.loading = false;
+
           const result = response.getAllExpresionesResumen;
 
           if (result.success === false) {
