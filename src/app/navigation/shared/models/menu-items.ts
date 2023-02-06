@@ -204,7 +204,7 @@ export const MenuItems: MenuItem[] = [
         label: 'Arregla Clasificador',
         icon: 'mdi mdi-flash-auto',
         routerLink: 'clasificador-cuenta/arreglar',
-        disabled: true,
+        disabled: false,
         title: 'Arregla Clasificador de Cuentas del Rodas.',
       },
     ],

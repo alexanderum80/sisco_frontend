@@ -17,6 +17,8 @@ export class CuentasNoPermitidasService {
     crit1: new FormControl(''),
     crit2: new FormControl(''),
     crit3: new FormControl(''),
+    crit4: new FormControl(''),
+    crit5: new FormControl(''),
     centralizada: new FormControl(false),
     idDivision: new FormControl(0),
   });
@@ -34,6 +36,8 @@ export class CuentasNoPermitidasService {
       crit1: '',
       crit2: '',
       crit3: '',
+      crit4: '',
+      crit5: '',
       centralizada: false,
       idDivision: this._usuarioSvc.usuario.IdDivision,
     };
@@ -94,6 +98,8 @@ export class CuentasNoPermitidasService {
           Crit1: this.fg.controls['crit1'].value,
           Crit2: this.fg.controls['crit2'].value,
           Crit3: this.fg.controls['crit3'].value,
+          Crit4: this.fg.controls['crit4'].value,
+          Crit5: this.fg.controls['crit5'].value,
           Centralizada: this.fg.controls['centralizada'].value,
           IdDivision: this.fg.controls['idDivision'].value,
         };

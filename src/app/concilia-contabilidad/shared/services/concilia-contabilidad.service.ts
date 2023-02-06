@@ -13,33 +13,20 @@ import * as moment from 'moment';
 @Injectable()
 export class ConciliaContabilidadService {
   fg: FormGroup = new FormGroup({
-    tipoCentro: new FormControl('0'),
-    idCentro: new FormControl(null),
-    tipoEntidad: new FormControl(''),
-    periodo: new FormControl(''),
-    apertura: new FormControl(false),
-    cierre: new FormControl(false),
-    nota: new FormControl(''),
+    tipoCentro: new FormControl('0', { initialValueIsDefault: true }),
+    idCentro: new FormControl(null, { initialValueIsDefault: true }),
+    tipoEntidad: new FormControl('', { initialValueIsDefault: true }),
+    periodo: new FormControl(new Date(moment().year(), moment().month(), 0), {
+      initialValueIsDefault: true,
+    }),
+    apertura: new FormControl(false, { initialValueIsDefault: true }),
+    cierre: new FormControl(false, { initialValueIsDefault: true }),
+    nota: new FormControl('', { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];
 
   constructor(private _apollo: Apollo) {}
-
-  inicializarFg() {
-    const today = new Date();
-    const fgValues = {
-      tipoCentro: '0',
-      idCentro: null,
-      tipoEntidad: null,
-      periodo: new Date(today.getFullYear(), today.getMonth(), 0),
-      apertura: false,
-      cierre: false,
-      nota: '',
-    };
-
-    this.fg.patchValue(fgValues);
-  }
 
   public async getCentro(
     idUnidad: number,

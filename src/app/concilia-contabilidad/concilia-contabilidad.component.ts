@@ -16,7 +16,7 @@ import {
   ChangeDetectionStrategy,
   AfterContentChecked,
 } from '@angular/core';
-import { MenuItem, SelectItem } from 'primeng/api';
+import { MenuItem, SelectItem, MessageService } from 'primeng/api';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
 import { cloneDeep } from '@apollo/client/utilities';
 import { TabView } from 'primeng/tabview';
@@ -112,9 +112,11 @@ export class ConciliaContabilidadComponent
   displayedColumnsChequeo: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cuenta', type: 'string' },
     { header: 'SubCuenta', field: 'SubCuenta', type: 'string' },
-    { header: 'Análisis 1', field: 'Analisis1', type: 'string' },
-    { header: 'Análisis 2', field: 'Analisis2', type: 'string' },
-    { header: 'Análisis 3', field: 'Analisis3', type: 'string' },
+    { header: 'Análisis 1', field: 'Analisis_1', type: 'string' },
+    { header: 'Análisis 2', field: 'Analisis_2', type: 'string' },
+    { header: 'Análisis 3', field: 'Analisis_3', type: 'string' },
+    { header: 'Análisis 4', field: 'Analisis_4', type: 'string' },
+    { header: 'Análisis 5', field: 'Analisis_5', type: 'string' },
     { header: 'Total', field: 'Total', type: 'decimal' },
   ];
 
@@ -128,6 +130,7 @@ export class ConciliaContabilidadComponent
 
   isConsolidado = false;
   loading = false;
+  loadingCentros = true;
   chequeoCentro = false;
 
   centrosAChequear: any[] = [];
@@ -164,6 +167,7 @@ export class ConciliaContabilidadComponent
     private _conciliaContabSvc: ConciliaContabilidadService,
     private _pdfMakeSvc: PdfmakeService,
     private _swalSvc: SweetalertService,
+    private _msgSvc: MessageService,
     private _cd: ChangeDetectorRef
   ) {
     _cd.detach();
@@ -171,10 +175,9 @@ export class ConciliaContabilidadComponent
 
   ngOnInit(): void {
     this.fg = this._conciliaContabSvc.fg;
-    // this.fg.reset();
-    this._conciliaContabSvc.inicializarFg();
+    this.fg.reset();
+    // this._conciliaContabSvc.inicializarFg();
     this._subscribeToFgValueChanges();
-    // this._changeDedectionRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
@@ -270,14 +273,17 @@ export class ConciliaContabilidadComponent
     this.dataSourceAsientos = [];
     this.dataSourceExpresiones = [];
     this.dataSourceValores = [];
-    this.dataSourceClasificador = [];
     this.dataSourceCuadreSistemas = [];
+    this.dataSourceClasificador = [];
+    this.dataSourceChequeo = [];
   }
 
   private _getUnidades(): void {
     try {
       this._conciliaContabSvc.subscription.push(
         this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+          this.loadingCentros = false;
+
           const result = response.getAllUnidadesByUsuario;
 
           if (!result.success) {
@@ -429,6 +435,7 @@ export class ConciliaContabilidadComponent
     try {
       this.loading = true;
       this.chequeoCentro = false;
+      this._inicializarDatos();
 
       this._conciliaContabSvc.subscription.push(
         this._conciliaContabSvc.conciliar().subscribe({
@@ -482,6 +489,8 @@ export class ConciliaContabilidadComponent
         .then(res => {
           if (res === ActionClicked.Yes) {
             this.loading = true;
+            this._inicializarDatos();
+
             this._conciliaContabSvc.subscription.push(
               this._conciliaContabSvc.iniciarSaldo().subscribe({
                 next: response => {
@@ -489,7 +498,11 @@ export class ConciliaContabilidadComponent
                   const result = response.iniciarSaldos;
 
                   if (result.success) {
-                    this._swalSvc.success('Saldos Iniciados Correctamente.');
+                    this._msgSvc.add({
+                      severity: 'success',
+                      summary: 'Satisfactorio',
+                      detail: 'Saldos Iniciados Correctamente.',
+                    });
                   } else {
                     this._swalSvc.error(result.error);
                   }
@@ -516,7 +529,7 @@ export class ConciliaContabilidadComponent
       this.selectedTabViewIndex = 0;
       this.loading = true;
       this.chequeoCentro = true;
-      this.dataSourceChequeo = [];
+      this._inicializarDatos();
 
       const idCentrosAChequear = this.centrosAChequear.map(row => {
         return row.IdCentro;

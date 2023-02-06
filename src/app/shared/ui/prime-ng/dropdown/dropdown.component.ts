@@ -23,6 +23,7 @@ export class DropdownComponent {
   @Input() optionsValues: SelectItem[] = [];
   @Input() tooltip: string = '';
   @Input() tooltipPosition: 'right' | 'left' | 'top' | 'bottom' = 'right';
+  @Input() loading = false;
 
   constructor(
     // private cd: ChangeDetectorRef,

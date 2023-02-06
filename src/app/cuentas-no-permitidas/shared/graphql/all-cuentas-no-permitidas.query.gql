@@ -9,6 +9,8 @@ query GetAllNoUsarEnCuenta {
             Crit1
             Crit2
             Crit3
+            Crit4
+            Crit5
             Centralizada
             IdDivision
         }

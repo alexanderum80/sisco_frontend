@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import * as moment from 'moment';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { getMonthName } from '../models/date-range';
@@ -56,9 +57,16 @@ export class PdfmakeService {
 
   public getFooterDefinition(page: string, pages: string): any {
     return {
-      margin: [5, 0, 20, 0],
-      height: 30,
+      margin: [40, 0, 40, 0],
+      // height: 30,
       columns: [
+        {
+          text: 'SISCO',
+        },
+        {
+          alignment: 'center',
+          text: moment().format('DD/MM/YYYY hh:mm:ss a'),
+        },
         {
           alignment: 'right',
           text: [
