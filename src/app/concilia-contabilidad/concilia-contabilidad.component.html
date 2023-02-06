@@ -103,19 +103,19 @@
                 [scrollable]="true"
                 scrollHeight="calc(100vh - 350px)"></png-table>
             </p-tabPanel>
-            <p-tabPanel *ngIf="!chequeoCentro" header="Cuadre de los Sistemas">
+            <p-tabPanel *ngIf="!chequeoCentro" header="Chequeo de Valores">
               <png-table
-                [columns]="displayedColumnsCuadreSistemas"
-                [data]="dataSourceCuadreSistemas"
+                [columns]="displayedColumnsValores"
+                [data]="dataSourceValores"
                 [paginator]="false"
                 [filterData]="false"
                 [scrollable]="true"
                 scrollHeight="calc(100vh - 350px)"></png-table>
             </p-tabPanel>
-            <p-tabPanel *ngIf="!chequeoCentro" header="Chequeo de Valores">
+            <p-tabPanel *ngIf="!chequeoCentro" header="Cuadre de los Sistemas">
               <png-table
-                [columns]="displayedColumnsValores"
-                [data]="dataSourceValores"
+                [columns]="displayedColumnsCuadreSistemas"
+                [data]="dataSourceCuadreSistemas"
                 [paginator]="false"
                 [filterData]="false"
                 [scrollable]="true"
