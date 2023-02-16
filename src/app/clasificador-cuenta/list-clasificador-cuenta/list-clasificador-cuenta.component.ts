@@ -227,10 +227,9 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
                 clasificacion: data.Clasificacion,
                 tipo: data.Tipo,
                 estado: data.Estado,
-                seUtiliza:
-                  data.SeUtiliza !== ''
-                    ? data.SeUtiliza.split(', ').map(Number)
-                    : [],
+                seUtiliza: data.SeUtiliza
+                  ? data.SeUtiliza.split(', ').map(Number)
+                  : [],
                 crit1Consolidacion: data.Tipo_Analisis_1_Cons,
                 crit2Consolidacion: data.Tipo_Analisis_2_Cons,
                 crit3Consolidacion: data.Tipo_Analisis_3_Cons,

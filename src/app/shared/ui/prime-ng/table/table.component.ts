@@ -1,5 +1,12 @@
 import { ActionClicked } from './../../../models/list-items';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import { ITableColumns } from './table.model';
 import { get, upperCase } from 'lodash';
 import { IButtons } from '../button/button.model';
@@ -10,7 +17,7 @@ import { IButtons } from '../button/button.model';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
 })
-export class TableComponent {
+export class TableComponent implements OnChanges {
   @Input() caption: string;
   @Input() columns: ITableColumns[] = [];
   @Input() data: any[] = [];
@@ -41,9 +48,16 @@ export class TableComponent {
   get = get;
 
   selectedRowsData: any[] = [];
-  selectedRowDataIndex: number;
+  selectedRowDataIndex?: number;
 
   constructor() {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.selectedRowsData = [];
+    this.selectedRowDataIndex = undefined;
+
+    this.switchRowSelection();
+  }
 
   getFields(): string[] {
     return this.columns.map(c => c.field);
