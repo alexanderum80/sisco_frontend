@@ -1,4 +1,4 @@
-import { UsuarioService } from './../../shared/services/usuario.service';
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { VerticalMenuItem } from './../shared/models/menu.model';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 
@@ -13,10 +13,10 @@ export class MoreVertComponent {
 
   @Output() OnClick = new EventEmitter<any>();
 
-  constructor(private _usuarioSvc: UsuarioService) {}
+  constructor(private _authSvc: AuthenticationService) {}
 
   get isAdminPermission(): boolean {
-    return this._usuarioSvc.hasAdminPermission();
+    return this._authSvc.hasAdminPermission();
   }
 
   onClickItem(item: any): void {

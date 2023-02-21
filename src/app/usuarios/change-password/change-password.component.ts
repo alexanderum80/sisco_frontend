@@ -6,7 +6,7 @@ import { UsuariosMutationResponse } from './../shared/models/usuarios.model';
 import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs';
 import { toNumber } from 'lodash';
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
+import { UsuarioService } from 'src/app/usuarios/shared/services/usuario.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import SweetAlert from 'sweetalert2';
@@ -87,8 +87,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
               confirmButtonText: 'Aceptar',
             });
           }
-
-          this._authSvc.login();
 
           this._dinamicDialogSvc.close();
 

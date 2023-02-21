@@ -238,7 +238,7 @@ export const MenuItems: MenuItem[] = [
         label: 'Contabilidad (Externa)',
         icon: 'mdi mdi-cash-multiple',
         routerLink: 'concilia-externa-conta',
-        disabled: true,
+        disabled: false,
         title: 'Conciliación Externa por la Contabilidad.',
       },
     ],

@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { cloneDeep } from 'lodash';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
@@ -10,7 +11,6 @@ import {
 import { MessageService } from 'primeng/api';
 import { ClasificadorCnmbService } from './../shared/services/clasificador-cnmb.service';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { Component, AfterViewInit, OnDestroy } from '@angular/core';
@@ -40,8 +40,8 @@ export class ListClasificadorCnmbComponent implements AfterViewInit, OnDestroy {
   loading = true;
 
   constructor(
+    private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _usuarioSvc: UsuarioService,
     private _sweetalertSvc: SweetalertService,
     private _clasificadorCnmbSvc: ClasificadorCnmbService,
     private _msgSvc: MessageService
@@ -84,7 +84,7 @@ export class ListClasificadorCnmbComponent implements AfterViewInit, OnDestroy {
   }
 
   hasAdvancedUserPermission(): boolean {
-    return this._usuarioSvc.hasAdvancedUserPermission();
+    return this._authSvc.hasAdvancedUserPermission();
   }
 
   actionClicked(event: IActionItemClickedArgs) {

@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { SelectItem } from 'primeng/api';
 import { ActionClicked } from './../../shared/models/list-items';
 import { CargosService } from './../../shared/services/cargos.service';
@@ -6,7 +7,6 @@ import SweetAlert from 'sweetalert2';
 import { toNumber } from 'lodash';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SupervisoresService } from './../shared/services/supervisores.service';
-import { UsuarioService } from './../../shared/services/usuario.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 
@@ -25,7 +25,7 @@ export class SupervisoresFormComponent implements OnInit {
   cargosValues: SelectItem[] = [];
 
   constructor(
-    private _usuarioSvc: UsuarioService,
+    private _authSvc: AuthenticationService,
     private _divisionesSvc: DivisionesService,
     private _supervisoresSvc: SupervisoresService,
     private _cargosSvc: CargosService,
@@ -119,7 +119,7 @@ export class SupervisoresFormComponent implements OnInit {
   }
 
   get isSuperAdmin(): boolean {
-    return this._usuarioSvc.hasSuperAdminPermission();
+    return this._authSvc.hasSuperAdminPermission();
   }
 
   onActionClicked(action: ActionClicked) {

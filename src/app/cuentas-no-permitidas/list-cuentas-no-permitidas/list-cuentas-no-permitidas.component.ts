@@ -1,8 +1,8 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
-import { UsuarioService } from './../../shared/services/usuario.service';
 import {
   ActionClicked,
   IActionItemClickedArgs,
@@ -42,11 +42,11 @@ export class ListCuentasNoPermitidasComponent
   loading = true;
 
   constructor(
+    private _authSvc: AuthenticationService,
     private _cuentasNoPermitidasSvc: CuentasNoPermitidasService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _sweetAlertSvc: SweetalertService,
-    private _msgSvc: MessageService,
-    private _usuarioSvc: UsuarioService
+    private _msgSvc: MessageService
   ) {}
 
   ngAfterViewInit(): void {
@@ -122,8 +122,8 @@ export class ListCuentasNoPermitidasComponent
   private _edit(data: any): void {
     try {
       if (
-        this._usuarioSvc.usuario.IdDivision !== 100 &&
-        this._usuarioSvc.usuario.IdTipoUsuario !==
+        this._authSvc.usuario.IdDivision !== 100 &&
+        this._authSvc.usuario.IdTipoUsuario !==
           ETipoUsuarios['Usuario Avanzado'] &&
         data.Centralizada
       ) {
@@ -188,8 +188,8 @@ export class ListCuentasNoPermitidasComponent
             data = isArray(data) ? data : [data];
 
             if (
-              this._usuarioSvc.usuario.IdDivision !== 100 &&
-              this._usuarioSvc.usuario.IdTipoUsuario !==
+              this._authSvc.usuario.IdDivision !== 100 &&
+              this._authSvc.usuario.IdTipoUsuario !==
                 ETipoUsuarios['Usuario Avanzado']
             ) {
               const _centralizada: any[] = data.filter(

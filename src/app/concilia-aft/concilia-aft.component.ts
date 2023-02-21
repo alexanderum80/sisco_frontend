@@ -117,7 +117,6 @@ export class ConciliaAftComponent
     private _clasifEntidadesSvc: ClasificadorEntidadesService,
     private _conciliaAftSvc: ConciliaAftService,
     private _pdfMakeSvc: PdfmakeService,
-    private _changeDedectionRef: ChangeDetectorRef,
     private _swalSvc: SweetalertService,
     private cd: ChangeDetectorRef
   ) {}
@@ -126,8 +125,6 @@ export class ConciliaAftComponent
     this.fg = this._conciliaAftSvc.fg;
     this._conciliaAftSvc.inicializarFg();
     this._subscribeToFgValueChanges();
-
-    this._changeDedectionRef.detectChanges();
   }
 
   ngAfterViewInit(): void {

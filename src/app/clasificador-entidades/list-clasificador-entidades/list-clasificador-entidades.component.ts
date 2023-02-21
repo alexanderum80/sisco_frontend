@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
@@ -9,7 +10,6 @@ import {
 import { ClasificadorEntidadesFormComponent } from './../clasificador-entidades-form/clasificador-entidades-form.component';
 import SweetAlert from 'sweetalert2';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { MessageService } from 'primeng/api';
@@ -38,9 +38,9 @@ export class ListClasificadorEntidadesComponent
   loading = true;
 
   constructor(
+    private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
-    private _usuarioSvc: UsuarioService,
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService
   ) {
     if (this.hasAdvancedUserPermission()) {
@@ -106,7 +106,7 @@ export class ListClasificadorEntidadesComponent
   }
 
   hasAdvancedUserPermission(): boolean {
-    return this._usuarioSvc.hasAdvancedUserPermission();
+    return this._authSvc.hasAdvancedUserPermission();
   }
 
   actionClicked(event: IActionItemClickedArgs) {

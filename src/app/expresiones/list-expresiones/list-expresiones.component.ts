@@ -1,8 +1,8 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
-import { UsuarioService } from './../../shared/services/usuario.service';
 import { MessageService } from 'primeng/api';
 import {
   ActionClicked,
@@ -41,7 +41,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
   topLeftButtons: IButtons[] = DefaultTopLeftButtonsTable;
 
   constructor(
-    private _usuarioSvc: UsuarioService,
+    private _authSvc: AuthenticationService,
     private _expresionesSvc: ExpresionesService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _sweetAlertSvc: SweetalertService,
@@ -116,8 +116,8 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
   private _edit(data: any): void {
     try {
       if (
-        this._usuarioSvc.usuario.IdDivision !== 100 &&
-        this._usuarioSvc.usuario.IdTipoUsuario !==
+        this._authSvc.usuario.IdDivision !== 100 &&
+        this._authSvc.usuario.IdTipoUsuario !==
           ETipoUsuarios['Usuario Avanzado'] &&
         data.Centralizada
       ) {
@@ -178,8 +178,8 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
             data = isArray(data) ? data : [data];
 
             if (
-              this._usuarioSvc.usuario.IdDivision !== 100 &&
-              this._usuarioSvc.usuario.IdTipoUsuario !==
+              this._authSvc.usuario.IdDivision !== 100 &&
+              this._authSvc.usuario.IdTipoUsuario !==
                 ETipoUsuarios['Usuario Avanzado']
             ) {
               const _centralizada: any[] = data.filter(

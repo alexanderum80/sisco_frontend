@@ -1,4 +1,4 @@
-import { UsuarioService } from './../../../shared/services/usuario.service';
+import { AuthenticationService } from './../../../shared/services/authentication.service';
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Apollo } from 'apollo-angular';
@@ -24,7 +24,10 @@ export class ExpresionesService {
 
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
+  constructor(
+    private _apollo: Apollo,
+    private _authSvc: AuthenticationService
+  ) {}
 
   inicializarFg(): void {
     this.fg.controls['id'].setValue(0);
@@ -34,9 +37,7 @@ export class ExpresionesService {
     this.fg.controls['acumulado'].setValue(false);
     this.fg.controls['operacionesInternas'].setValue(false);
     this.fg.controls['centralizada'].setValue(false);
-    this.fg.controls['idDivision'].setValue(
-      this._usuarioSvc.usuario.IdDivision
-    );
+    this.fg.controls['idDivision'].setValue(this._authSvc.usuario.IdDivision);
   }
 
   loadAllExpresionesResumen(): Observable<ExpresionesQueryResponse> {

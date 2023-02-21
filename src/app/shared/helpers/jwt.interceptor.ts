@@ -6,11 +6,11 @@ import {
   HttpInterceptor,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { UsuarioService } from '../../shared/services/usuario.service';
+import { AuthenticationService } from './../services/authentication.service';
 
 @Injectable()
 export class JwtInterceptor implements HttpInterceptor {
-  constructor(private authenticationService: UsuarioService) {}
+  constructor(private authenticationService: AuthenticationService) {}
 
   intercept(
     request: HttpRequest<any>,

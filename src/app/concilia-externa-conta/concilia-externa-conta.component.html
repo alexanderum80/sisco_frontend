@@ -1,0 +1,162 @@
+<png-progress-spinner *ngIf="loading || saving"></png-progress-spinner>
+
+<div class="content">
+  <png-panel
+    class="h-full w-full"
+    header="Conciliación Externa por la Contabilidad">
+    <form [formGroup]="fg">
+      <div class="flex">
+        <p-fieldset class="col-4" legend="Centro a Analizar">
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="division"
+              label="División"
+              [optionsValues]="divisionesValues"
+              [filter]="true"
+              [required]="true"
+              [showClear]="false"></png-dropdown>
+          </div>
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="unidad"
+              label="Unidad"
+              [optionsValues]="unidadesValues"
+              [filter]="true"
+              [required]="true"
+              [showClear]="false"></png-dropdown>
+          </div>
+        </p-fieldset>
+        <p-fieldset class="col-4" legend="Emisor / Receptor">
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="divisionOD"
+              label="División"
+              [optionsValues]="divisionesODValues"
+              [filter]="true"
+              [required]="true"
+              [showClear]="false"></png-dropdown>
+          </div>
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="unidadOD"
+              label="Unidad"
+              [optionsValues]="unidadesODValues"
+              [filter]="true"
+              [required]="true"
+              [showClear]="false"></png-dropdown>
+          </div>
+        </p-fieldset>
+        <div class="ml-2 mt-2">
+          <div>
+            <png-calendar
+              class="w-full"
+              [fg]="fg"
+              label="Período"
+              control="periodo"
+              view="month"
+              dateFormat="MM/yy"
+              [required]="true"></png-calendar>
+          </div>
+          <div class="status">
+            <label
+              [class.abierta]="conciliacionStatus === 'ABIERTA'"
+              [class.noIniciada]="conciliacionStatus === 'NO INICIADA'"
+              [class.cerrada]="conciliacionStatus === 'CERRADA'"
+              >{{ conciliacionStatus }}</label
+            >
+          </div>
+        </div>
+      </div>
+      <div>
+        <p-tabView class="h-full" [(activeIndex)]="selectedTab">
+          <p-tabPanel header="Contabilidad">
+            <png-table
+              [columns]="displayedColumns"
+              [data]="conciliaContabData"
+              groupField="DivisionEmisor"
+              [filterData]="false"
+              [scrollable]="true"
+              [totalizeTable]="true"
+              [totalizeGroup]="true"
+              scrollHeight="calc(100vh - 395px)"></png-table>
+          </p-tabPanel>
+          <p-tabPanel header="Acta (Emisor)">
+            <div class="flex">
+              <div class="flex-1">
+                <png-table
+                  [columns]="actaDisplayedColumns"
+                  [data]="actaConciliaEmisorData"
+                  [filterData]="false"
+                  [scrollable]="true"
+                  scrollHeight="calc(100vh - 395px)"></png-table>
+              </div>
+              <div class="flex-1"></div>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel header="Acta (Receptor)">
+            <div class="flex">
+              <div class="flex-1">
+                <png-table
+                  [columns]="actaDisplayedColumns"
+                  [data]="actaConciliaReceptorData"
+                  [filterData]="false"
+                  [scrollable]="true"
+                  scrollHeight="calc(100vh - 395px)"></png-table>
+              </div>
+              <div class="flex-1"></div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+      <div [class.toggle]="!chatToggle">
+        <div class="flex justify-content-end mt-2">
+          <png-button
+            class="mr-2"
+            label="Exportar a Excel"
+            [style]="'secondary'"
+            icon="mdi mdi-file-excel"
+            [disabled]="isEditing || !conciliacionStatusAbierta"
+            (clicked)="exportar()"></png-button>
+          <png-split-button
+            class="mr-1"
+            label="Conciliar"
+            icon="mdi mdi-file-check-outline"
+            [items]="conciliarButtonItems"
+            [disabled]="!isFormValid"
+            (clicked)="conciliar()"></png-split-button>
+          <png-split-button
+            class="mr-1"
+            label="Reportes"
+            [style]="'secondary'"
+            icon="mdi mdi-printer"
+            [items]="reportesButtonItems"
+            [disabled]="!isFormValid || isEditing || !conciliacionStatusAbierta"
+            (clicked)="openReporte()"></png-split-button>
+        </div>
+      </div>
+    </form>
+  </png-panel>
+
+  <app-chat (OnToggle)="switchChatToggle($event)"></app-chat>
+  <!-- <app-reporte
+  class="reporte-container"
+  *ngIf="
+    showReport &&
+    !loadingConciliacionEntreUnidadesEmisor &&
+    !loadingConciliacionEntreUnidadesReceptor
+  "
+  [selectedActaConcTab]="selectedActaConcTab"
+  [reporteName]="reporteName"
+  [periodo]="fg.controls['periodo'].value"
+  [emisor]="getEmisor()"
+  [receptor]="getReceptor()"
+  (OnClose)="closeReporte()"></app-reporte> -->
+</div>

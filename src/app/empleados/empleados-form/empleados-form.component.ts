@@ -1,7 +1,7 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { CargosService } from './../../shared/services/cargos.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
-import { UsuarioService } from '../../shared/services/usuario.service';
 import { toNumber } from 'lodash';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { EmpleadosService } from './../shared/services/empleados.service';
@@ -25,7 +25,7 @@ export class EmpleadosFormComponent implements OnInit {
   cargosValues: SelectItem[] = [];
 
   constructor(
-    private _usuarioSvc: UsuarioService,
+    private _authSvc: AuthenticationService,
     private _empleadosSvc: EmpleadosService,
     private _cargosSvc: CargosService,
     private _dinamicDialogSvc: DinamicDialogService,
@@ -47,7 +47,7 @@ export class EmpleadosFormComponent implements OnInit {
 
   private _getCargos(): void {
     try {
-      this._usuarioSvc.subscription.push(
+      this._empleadosSvc.subscription.push(
         this._cargosSvc.getCargos().subscribe(response => {
           const result = response.getAllCargos;
 
@@ -72,7 +72,7 @@ export class EmpleadosFormComponent implements OnInit {
 
   private _getDivisiones(): void {
     try {
-      this._usuarioSvc.subscription.push(
+      this._empleadosSvc.subscription.push(
         this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
           const result = response.getAllDivisionesByUsuario;
 
@@ -96,7 +96,7 @@ export class EmpleadosFormComponent implements OnInit {
   }
 
   get isSuperAdmin(): boolean {
-    return this._usuarioSvc.hasSuperAdminPermission();
+    return this._authSvc.hasSuperAdminPermission();
   }
 
   onActionClicked(action: ActionClicked) {
@@ -111,7 +111,7 @@ export class EmpleadosFormComponent implements OnInit {
   }
 
   private _save(): void {
-    this._usuarioSvc.subscription.push(
+    this._empleadosSvc.subscription.push(
       this._empleadosSvc.save().subscribe(response => {
         let result;
         let txtMessage;

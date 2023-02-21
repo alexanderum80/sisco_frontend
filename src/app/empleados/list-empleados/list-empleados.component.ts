@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
@@ -9,7 +10,6 @@ import {
 import { EmpleadosService } from './../shared/services/empleados.service';
 import { EmpleadosFormComponent } from './../empleados-form/empleados-form.component';
 import SweetAlert from 'sweetalert2';
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
@@ -33,8 +33,8 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
   topLeftButtons: IButtons[] = [];
 
   constructor(
+    private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _usuarioSvc: UsuarioService,
     private _empleadoSvc: EmpleadosService,
     private _msgSvc: MessageService
   ) {
@@ -54,7 +54,7 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
   }
 
   hasAdminPermission(): boolean {
-    return this._usuarioSvc.hasAdminPermission();
+    return this._authSvc.hasAdminPermission();
   }
 
   private _getEmpleados(): void {
@@ -107,7 +107,7 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
         idEmpleado: '',
         empleado: '',
         cargo: null,
-        division: this._usuarioSvc.usuario.IdDivision,
+        division: this._authSvc.usuario.IdDivision,
       };
       this._empleadoSvc.fg.patchValue(inputData);
 

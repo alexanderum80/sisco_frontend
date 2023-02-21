@@ -162,16 +162,13 @@ export class ConciliaContabilidadComponent
     private _pdfMakeSvc: PdfmakeService,
     private _swalSvc: SweetalertService,
     private _cd: ChangeDetectorRef
-  ) {
-    _cd.detach();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.fg = this._conciliaContabSvc.fg;
     // this.fg.reset();
     this._conciliaContabSvc.inicializarFg();
     this._subscribeToFgValueChanges();
-    // this._changeDedectionRef.detectChanges();
   }
 
   ngAfterViewInit(): void {

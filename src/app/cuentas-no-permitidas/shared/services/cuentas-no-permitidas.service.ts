@@ -1,4 +1,4 @@
-import { UsuarioService } from './../../../shared/services/usuario.service';
+import { AuthenticationService } from './../../../shared/services/authentication.service';
 import { CuentasNoPermitidasMutation } from '../models/cuentas-no-permitidas.model';
 import { cuentasNoPermitidasApi } from '../graphql/cuentas-no-permitidas-api';
 import { Apollo } from 'apollo-angular';
@@ -23,7 +23,10 @@ export class CuentasNoPermitidasService {
 
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
+  constructor(
+    private _apollo: Apollo,
+    private _authSvc: AuthenticationService
+  ) {}
 
   inicializarFg(): void {
     const payload = {
@@ -35,7 +38,7 @@ export class CuentasNoPermitidasService {
       crit2: '',
       crit3: '',
       centralizada: false,
-      idDivision: this._usuarioSvc.usuario.IdDivision,
+      idDivision: this._authSvc.usuario.IdDivision,
     };
 
     this.fg.patchValue(payload);

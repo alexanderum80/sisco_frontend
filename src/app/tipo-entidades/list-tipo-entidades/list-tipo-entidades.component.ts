@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import {
   DefaultInlineButtonsTable,
   DefaultTopLeftButtonsTable,
@@ -9,7 +10,6 @@ import {
 } from './../../shared/models/list-items';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { TipoEntidadesService } from './../shared/services/tipo-entidades.service';
-import { UsuarioService } from './../../shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import SweetAlert from 'sweetalert2';
 import { TipoEntidadesFormComponent } from './../tipo-entidades-form/tipo-entidades-form.component';
@@ -34,9 +34,9 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
   topLeftButtons: IButtons[] = [];
 
   constructor(
+    private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
-    private _usuarioSvc: UsuarioService,
     private _tipoEntidadesSvc: TipoEntidadesService
   ) {
     if (this.hasAdvancedUserPermission()) {
@@ -84,7 +84,7 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
   }
 
   hasAdvancedUserPermission(): boolean {
-    return this._usuarioSvc.hasAdvancedUserPermission();
+    return this._authSvc.hasAdvancedUserPermission();
   }
 
   actionClicked(event: IActionItemClickedArgs) {

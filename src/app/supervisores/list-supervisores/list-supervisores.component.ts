@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
@@ -6,7 +7,6 @@ import {
   ActionClicked,
 } from './../../shared/models/list-items';
 import { SupervisoresService } from './../shared/services/supervisores.service';
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { SupervisoresFormComponent } from '../supervisores-form/supervisores-form.component';
@@ -34,8 +34,8 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
   topLeftButtons: IButtons[] = [];
 
   constructor(
+    private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _usuarioSvc: UsuarioService,
     private _supervisorSvc: SupervisoresService,
     private _msgSvc: MessageService
   ) {
@@ -56,7 +56,7 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
   }
 
   hasAdminPermission(): boolean {
-    return this._usuarioSvc.hasAdminPermission();
+    return this._authSvc.hasAdminPermission();
   }
 
   private _getSupervisores(): void {
@@ -109,7 +109,7 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
         idSupervisor: '',
         supervisor: '',
         cargo: null,
-        division: this._usuarioSvc.usuario.IdDivision,
+        division: this._authSvc.usuario.IdDivision,
       };
       this._supervisorSvc.fg.patchValue(inputData);
 

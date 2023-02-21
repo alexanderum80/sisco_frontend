@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DinamicDialogService } from 'src/app/shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { TipoUsuariosService } from './../../shared/services/tipo-usuarios.service';
@@ -9,7 +10,7 @@ import { UsuariosMutationResponse } from '../shared/models/usuarios.model';
 import SweetAlert from 'sweetalert2';
 import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
 import { Apollo } from 'apollo-angular';
-import { UsuarioService } from '../../shared/services/usuario.service';
+import { UsuarioService } from '../shared/services/usuario.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { IUsuario } from 'src/app/shared/models';
@@ -31,6 +32,7 @@ export class UsuarioFormComponent implements OnInit {
 
   constructor(
     private _usuarioSvc: UsuarioService,
+    private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _apollo: Apollo,
     private _tipoUsuariosSvc: TipoUsuariosService,
@@ -143,7 +145,7 @@ export class UsuarioFormComponent implements OnInit {
   }
 
   get isSuperAdmin(): boolean {
-    return this._usuarioSvc.hasSuperAdminPermission();
+    return this._authSvc.hasSuperAdminPermission();
   }
 
   get isUsuarioAvanzado(): boolean {

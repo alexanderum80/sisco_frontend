@@ -1,9 +1,8 @@
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { NavigationService } from './../../navigation/shared/services/navigation.service';
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
+import { UsuarioService } from 'src/app/usuarios/shared/services/usuario.service';
 import { ChangePasswordComponent } from './../change-password/change-password.component';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { Usuario } from '../../shared/models/usuarios';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -46,18 +45,11 @@ export class LoginComponent implements OnInit {
         Contrasena: this.fg.controls['password'].value,
       };
 
-      this._usuarioSvc.autenticateUsuario(authVariables).subscribe({
+      this._authSvc.login(authVariables).subscribe({
         next: response => {
           this.autenticando = false;
 
-          const result = response.authenticateUsuario;
-
-          if (!result.success) {
-            return this._swalSvc.error(result.error || '');
-          }
-          const usuario: Usuario = new Usuario(result.data);
-
-          this._usuarioSvc.updateUsuarioInfo(usuario);
+          const usuario = response.authenticateUsuario.data;
 
           if (usuario.CambiarContrasena) {
             this._usuarioSvc.fg.controls['idUsuario'].setValue(
@@ -72,8 +64,6 @@ export class LoginComponent implements OnInit {
               ChangePasswordComponent
             );
           } else {
-            this._authSvc.login();
-
             this._navigateSvc.navigateTo(this._navigateSvc.continueURL);
           }
         },
