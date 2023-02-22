@@ -90,7 +90,7 @@
           </p-tabPanel>
           <p-tabPanel header="Acta (Emisor)">
             <div class="flex">
-              <div class="flex-1">
+              <div class="w-full mt-2">
                 <png-table
                   [columns]="actaDisplayedColumns"
                   [data]="actaConciliaEmisorData"
@@ -98,12 +98,79 @@
                   [scrollable]="true"
                   scrollHeight="calc(100vh - 395px)"></png-table>
               </div>
-              <div class="flex-1"></div>
+              <div
+                style="height: calc(100vh - 345px); overflow: auto"
+                class="w-full ml-3">
+                <div class="flex">
+                  <p-fieldset class="w-full m-2" legend="Empleado Emisor">
+                    <png-dropdown
+                      class="w-full"
+                      [fg]="fg"
+                      control="usuarioEmisor"
+                      label="Empleado"
+                      [floatLabel]="true"
+                      [optionsValues]="empleadosValues"
+                      [filter]="true"
+                      [showClear]="false"
+                      (fgChange)="onDropdownChange($event)"></png-dropdown>
+                    <png-input-text
+                      class="w-full"
+                      [fg]="fg"
+                      control="cargoEmisor"
+                      label="Cargo"
+                      [floatLabel]="true"
+                      [readonly]="true"></png-input-text>
+                  </p-fieldset>
+                  <p-fieldset class="w-full m-2" legend="Empleado Receptor">
+                    <png-dropdown
+                      class="w-full"
+                      [fg]="fg"
+                      control="usuarioReceptor"
+                      label="Empleado"
+                      [floatLabel]="true"
+                      [optionsValues]="empleadosODValues"
+                      [filter]="true"
+                      [showClear]="false"
+                      (fgChange)="onDropdownChange($event)"></png-dropdown>
+                    <png-input-text
+                      class="w-full"
+                      [fg]="fg"
+                      control="cargoReceptor"
+                      label="Cargo"
+                      [floatLabel]="true"
+                      [readonly]="true"></png-input-text>
+                  </p-fieldset>
+                </div>
+                <p-fieldset class="w-full m-2" legend="Empleado Supervisor">
+                  <png-dropdown
+                    class="w-full"
+                    [fg]="fg"
+                    control="usuarioSupervisor"
+                    label="Empleado"
+                    [floatLabel]="true"
+                    [optionsValues]="empleadosSupervisorValues"
+                    [filter]="true"
+                    [showClear]="false"
+                    (fgChange)="onDropdownChange($event)"></png-dropdown>
+                  <png-input-text
+                    class="w-full"
+                    [fg]="fg"
+                    control="cargoSupervisor"
+                    label="Cargo"
+                    [floatLabel]="true"
+                    [readonly]="true"></png-input-text>
+                </p-fieldset>
+                <png-input-textarea
+                  class="w-full m-2"
+                  [fg]="fg"
+                  control="nota"
+                  label="Observaciones"></png-input-textarea>
+              </div>
             </div>
           </p-tabPanel>
           <p-tabPanel header="Acta (Receptor)">
             <div class="flex">
-              <div class="flex-1">
+              <div class="w-full mt-2">
                 <png-table
                   [columns]="actaDisplayedColumns"
                   [data]="actaConciliaReceptorData"
@@ -111,7 +178,74 @@
                   [scrollable]="true"
                   scrollHeight="calc(100vh - 395px)"></png-table>
               </div>
-              <div class="flex-1"></div>
+              <div
+                style="height: calc(100vh - 345px); overflow: auto"
+                class="w-full ml-3">
+                <div class="flex">
+                  <p-fieldset class="w-full m-2" legend="Empleado Emisor">
+                    <png-dropdown
+                      class="w-full"
+                      [fg]="fg"
+                      control="usuarioReceptor"
+                      label="Empleado"
+                      [floatLabel]="true"
+                      [optionsValues]="empleadosODValues"
+                      [filter]="true"
+                      [showClear]="false"
+                      (fgChange)="onDropdownChange($event)"></png-dropdown>
+                    <png-input-text
+                      class="w-full"
+                      [fg]="fg"
+                      control="cargoReceptor"
+                      label="Cargo"
+                      [floatLabel]="true"
+                      [readonly]="true"></png-input-text>
+                  </p-fieldset>
+                  <p-fieldset class="w-full m-2" legend="Empleado Receptor">
+                    <png-dropdown
+                      class="w-full"
+                      [fg]="fg"
+                      control="usuarioEmisor"
+                      label="Empleado"
+                      [floatLabel]="true"
+                      [optionsValues]="empleadosValues"
+                      [filter]="true"
+                      [showClear]="false"
+                      (fgChange)="onDropdownChange($event)"></png-dropdown>
+                    <png-input-text
+                      class="w-full"
+                      [fg]="fg"
+                      control="cargoEmisor"
+                      label="Cargo"
+                      [floatLabel]="true"
+                      [readonly]="true"></png-input-text>
+                  </p-fieldset>
+                </div>
+                <p-fieldset class="w-full m-2" legend="Empleado Supervisor">
+                  <png-dropdown
+                    class="w-full"
+                    [fg]="fg"
+                    control="usuarioSupervisor"
+                    label="Empleado"
+                    [floatLabel]="true"
+                    [optionsValues]="empleadosSupervisorValues"
+                    [filter]="true"
+                    [showClear]="false"
+                    (fgChange)="onDropdownChange($event)"></png-dropdown>
+                  <png-input-text
+                    class="w-full"
+                    [fg]="fg"
+                    control="cargoSupervisor"
+                    label="Cargo"
+                    [floatLabel]="true"
+                    [readonly]="true"></png-input-text>
+                </p-fieldset>
+                <png-input-textarea
+                  class="w-full m-2"
+                  [fg]="fg"
+                  control="nota"
+                  label="Observaciones"></png-input-textarea>
+              </div>
             </div>
           </p-tabPanel>
         </p-tabView>
@@ -139,7 +273,7 @@
             icon="mdi mdi-printer"
             [items]="reportesButtonItems"
             [disabled]="!isFormValid || isEditing || !conciliacionStatusAbierta"
-            (clicked)="openReporte()"></png-split-button>
+            (clicked)="reporte()"></png-split-button>
         </div>
       </div>
     </form>

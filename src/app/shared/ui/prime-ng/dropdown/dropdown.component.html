@@ -1,4 +1,7 @@
-<div [class.p-float-label]="floatLabel" class="field" [formGroup]="fg">
+<span
+  [ngClass]="{ 'p-float-label mt-3': floatLabel }"
+  class="field"
+  [formGroup]="fg">
   <label
     *ngIf="!floatLabel"
     [for]="control"
@@ -24,7 +27,8 @@
     [resetFilterOnHide]="true"
     [pTooltip]="getToolTip()"
     [tooltipPosition]="tooltipPosition"
-    [tooltipStyleClass]="getToolTipStyleClass()">
+    [tooltipStyleClass]="getToolTipStyleClass()"
+    (onChange)="onChange($event)">
   </p-dropdown>
   <label
     *ngIf="floatLabel"
@@ -32,4 +36,4 @@
     [ngClass]="{ 'label-required': required }"
     >{{ label }}</label
   >
-</div>
+</span>

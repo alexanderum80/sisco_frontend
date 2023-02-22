@@ -1,3 +1,4 @@
+import { PrimeInputTextareaModule } from './../shared/ui/prime-ng/input-textarea/input-textarea.module';
 import { PrimeTableModule } from './../shared/ui/prime-ng/table/table.module';
 import { PrimeSplitButtonModule } from './../shared/ui/prime-ng/split-button/split-button.module';
 import { PrimePanelModule } from './../shared/ui/prime-ng/panel/panel.module';
@@ -49,6 +50,7 @@ const config: SocketIoConfig = {
     PrimeButtonModule,
     PrimeMenuModule,
     PrimePanelModule,
+    PrimeInputTextareaModule,
   ],
   providers: [
     ChatService,

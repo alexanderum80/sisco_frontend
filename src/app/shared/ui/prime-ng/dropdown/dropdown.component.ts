@@ -1,5 +1,5 @@
 import { TooltipService } from './../tooltip/tooltip.service';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 
@@ -24,6 +24,8 @@ export class DropdownComponent {
   @Input() tooltip: string = '';
   @Input() tooltipPosition: 'right' | 'left' | 'top' | 'bottom' = 'right';
 
+  @Output() fgChange = new EventEmitter<any>();
+
   constructor(
     // private cd: ChangeDetectorRef,
     private _toolTipSvc: TooltipService
@@ -40,5 +42,12 @@ export class DropdownComponent {
     return this._toolTipSvc.getToolTipStyleClass(
       this.fg.controls[this.control]
     );
+  }
+
+  onChange(event: any) {
+    this.fgChange.emit({
+      control: this.control,
+      value: event.value,
+    });
   }
 }

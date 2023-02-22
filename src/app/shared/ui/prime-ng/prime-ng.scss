@@ -82,7 +82,7 @@ p-inputnumber, .p-inputnumber {
 .p-float-label input.p-filled ~ label, 
 .p-float-label .p-inputwrapper-focus ~ label,
 .p-float-label .p-inputwrapper-filled ~ label {
-    font-size: .8rem !important;
+    font-size: inherit !important;
     top: -0.6rem !important;
 }
 

@@ -36,6 +36,13 @@ export class ConciliaExternaContaService {
     periodo: new FormControl(moment(this.today).subtract(1, 'month').toDate(), {
       initialValueIsDefault: true,
     }),
+    usuarioEmisor: new FormControl(null, { initialValueIsDefault: true }),
+    cargoEmisor: new FormControl('', { initialValueIsDefault: true }),
+    usuarioReceptor: new FormControl(null, { initialValueIsDefault: true }),
+    cargoReceptor: new FormControl('', { initialValueIsDefault: true }),
+    usuarioSupervisor: new FormControl(null, { initialValueIsDefault: true }),
+    cargoSupervisor: new FormControl('', { initialValueIsDefault: true }),
+    nota: new FormControl('', { initialValueIsDefault: true }),
   });
 
   private _conciliaContabRowData: IConciliaContab[] = [];
@@ -146,9 +153,9 @@ export class ConciliaExternaContaService {
       Annio: +moment(controls['periodo'].value).format('YYYY'),
       Mes: +moment(controls['periodo'].value).format('MM'),
       Division: +controls['division'].value,
-      Unidad: +controls['unidad'].value,
+      Unidad: +controls['unidad'].value.IdUnidad,
       DivisionOD: +controls['divisionOD'].value,
-      UnidadOD: +controls['unidadOD'].value,
+      UnidadOD: +controls['unidadOD'].value.IdUnidad,
     };
 
     return new Observable<IConciliaExternaContabQueryReponse>(subscriber => {
@@ -197,14 +204,14 @@ export class ConciliaExternaContaService {
     const payload = this.fg.controls;
     return new Observable<ConciliaExternaContabMutationReponse>(subscriber => {
       this._apollo
-        .mutation<ConciliaExternaContabMutationReponse>({
-          mutation: conciliaExternaContaAPI.inicializarConciliacion,
-          variables: {
+        .mutation<ConciliaExternaContabMutationReponse>(
+          conciliaExternaContaAPI.inicializarConciliacion,
+          {
             annio: +moment(payload['periodo'].value).format('YYYY'),
             mes: +moment(payload['periodo'].value).format('MM'),
           },
-          refetchQueries: ['DatosConciliacion'],
-        })
+          ['DatosConciliacion']
+        )
         .subscribe({
           next: response => {
             subscriber.next(response);
@@ -371,14 +378,36 @@ export class ConciliaExternaContaService {
             },
           },
         };
-      case 1: // Acta Emisor
+      case 1:
         return {
           pageSize: 'LETTER',
           content: [
             await this._pdfMakeSvc.getHeaderDefinition(reportName),
             this._getPeriodoConciliacion(),
             this._getDatosEmisorReceptor(),
-            await this._getActaConciliacion(),
+            await this._getActaConciliacionEmisor(),
+            this._getPieDeFirmaEmisorReceptor(),
+            this._getPieDeFirmaSupervisor(),
+            this._getNota(),
+          ],
+          defaultStyle: {
+            fontSize: 10,
+            lineHeight: 1.3,
+          },
+          styles: {
+            bold: {
+              bold: true,
+            },
+          },
+        };
+      case 2:
+        return {
+          pageSize: 'LETTER',
+          content: [
+            await this._pdfMakeSvc.getHeaderDefinition(reportName),
+            this._getPeriodoConciliacion(),
+            this._getDatosEmisorReceptor(),
+            await this._getActaConciliacionReceptor(),
             this._getPieDeFirmaEmisorReceptor(),
             this._getPieDeFirmaSupervisor(),
             this._getNota(),
@@ -538,7 +567,6 @@ export class ConciliaExternaContaService {
   }
 
   // acta de conciliacion
-
   private _getPeriodoConciliacion() {
     return {
       columns: [
@@ -557,11 +585,11 @@ export class ConciliaExternaContaService {
       columns: [
         [
           {
-            text: `EMISOR:      ${this.emisorActa}`,
+            text: `EMISOR:      ${''}`,
             style: 'bold',
           },
           {
-            text: `RECEPTOR: ${this.receptorActa}`,
+            text: `RECEPTOR: ${''}`,
             style: 'bold',
             margin: [0, 0, 0, 10],
           },
@@ -583,7 +611,7 @@ export class ConciliaExternaContaService {
     };
   }
 
-  private async _getActaConciliacion() {
+  private async _getActaConciliacionEmisor() {
     return {
       table: {
         headerRows: 1,
@@ -597,23 +625,86 @@ export class ConciliaExternaContaService {
             {
               text: 'EMISOR',
               style: 'bold',
+              alignment: 'right',
             },
             {
               text: 'RECEPTOR',
               style: 'bold',
+              alignment: 'right',
             },
             {
               text: 'DIFERENCIA',
               style: 'bold',
+              alignment: 'right',
             },
           ],
           ...this.ActaConciliacionEmisorRowData.map(
             (item: IActaConciliacion) => {
               return [
                 item.Detalle,
-                Number(item.SaldoEmisor).toFixed(2),
-                Number(item.SaldoReceptor).toFixed(2),
-                Number(item.Diferencia).toFixed(2),
+                {
+                  text: numberFormatter.format(item.SaldoEmisor),
+                  alignment: 'right',
+                },
+                {
+                  text: numberFormatter.format(item.SaldoReceptor),
+                  alignment: 'right',
+                },
+                {
+                  text: numberFormatter.format(item.Diferencia),
+                  alignment: 'right',
+                },
+              ];
+            }
+          ),
+        ],
+      },
+    };
+  }
+
+  private async _getActaConciliacionReceptor() {
+    return {
+      table: {
+        headerRows: 1,
+        widths: ['*', 80, 80, 80],
+        body: [
+          [
+            {
+              text: 'DETALLE',
+              style: 'bold',
+            },
+            {
+              text: 'EMISOR',
+              style: 'bold',
+              alignment: 'right',
+            },
+            {
+              text: 'RECEPTOR',
+              style: 'bold',
+              alignment: 'right',
+            },
+            {
+              text: 'DIFERENCIA',
+              style: 'bold',
+              alignment: 'right',
+            },
+          ],
+          ...this.ActaConciliacionReceptorRowData.map(
+            (item: IActaConciliacion) => {
+              return [
+                item.Detalle,
+                {
+                  text: numberFormatter.format(item.SaldoEmisor),
+                  alignment: 'right',
+                },
+                {
+                  text: numberFormatter.format(item.SaldoReceptor),
+                  alignment: 'right',
+                },
+                {
+                  text: numberFormatter.format(item.Diferencia),
+                  alignment: 'right',
+                },
               ];
             }
           ),
@@ -694,29 +785,15 @@ export class ConciliaExternaContaService {
   }
 
   private _getNombreEmisor() {
-    return this.fg.controls['usuarioEmisor'].value
-      ? this.ActaConciliacionUsuariosEmisorList.find(
-          res => res.value === this.fg.controls['usuarioEmisor'].value
-        )?.label
-      : '';
+    return this.fg.get('usuarioEmisor')?.value?.Empleado || '';
   }
 
   private _getNombreReceptor() {
-    return this.fg.controls['usuarioReceptor'].value
-      ? this.ActaConciliacionUsuariosReceptorList.find(
-          res =>
-            res.value.toString() ===
-            this.fg.controls['usuarioReceptor'].value.toString()
-        )?.label
-      : '';
+    return this.fg.get('usuarioReceptor')?.value?.Empleado || '';
   }
 
   private _getNombreSupervisor() {
-    return this.fg.controls['usuarioSupervisor'].value
-      ? this.ActaConciliacionUsuariosSupervisorList.find(
-          res => res.value === this.fg.controls['usuarioSupervisor'].value
-        )?.label
-      : '';
+    return this.fg.get('usuarioSupervisor')?.value?.Empleado || '';
   }
 
   private _getNota() {
@@ -741,9 +818,9 @@ export class ConciliaExternaContaService {
 
   getPeriodo() {
     return (
-      getMonthName(this.fg.get('periodo')?.value.format('MM')) +
+      getMonthName(+moment(this.fg.get('periodo')?.value).format('MM')) +
       '/' +
-      this.fg.get('periodo')?.value.format('YYYY')
+      moment(this.fg.get('periodo')?.value).format('YYYY')
     );
   }
 

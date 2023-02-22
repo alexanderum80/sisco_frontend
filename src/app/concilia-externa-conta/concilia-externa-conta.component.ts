@@ -1,14 +1,21 @@
+import { ISupervisoresInfo } from './../supervisores/shared/models/supervisores.model';
+import { SupervisoresService } from './../supervisores/shared/services/supervisores.service';
+import { IEmpleadoInfo } from './../empleados/shared/models/empleados.model';
+import { EmpleadosService } from './../empleados/shared/services/empleados.service';
 import { AuthenticationService } from './../shared/services/authentication.service';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { PdfmakeService } from './../shared/services/pdfmake.service';
-import { orderBy, round } from 'lodash';
+import { orderBy } from 'lodash';
 import { ActionClicked } from './../shared/models/list-items';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
 import { DivisionesService } from './../shared/services/divisiones.service';
 import { SweetalertService } from './../shared/services/sweetalert.service';
 import { ExcelService } from './shared/service/excel.service';
 import { ConciliaExternaContaService } from './shared/service/concilia-externa.service';
-import { ConciliaMenuOptions } from './shared/models/concilia-externa.model';
+import {
+  ConciliaMenuOptions,
+  ConciliaStatus,
+} from './shared/models/concilia-externa.model';
 import { SocketService } from './../shared/services/socket.service';
 import { SelectItem, MenuItem } from 'primeng/api';
 import {
@@ -31,6 +38,7 @@ export class ConciliaExternaContaComponent
   private _conciliacionStatus = '';
   divisionesValues: SelectItem[] = [];
   divisionesODValues: SelectItem[] = [];
+
   unidadesValues: SelectItem[] = [
     {
       value: '0',
@@ -43,6 +51,10 @@ export class ConciliaExternaContaComponent
       label: '--TODAS--',
     },
   ];
+
+  empleadosValues: SelectItem[] = [];
+  empleadosODValues: SelectItem[] = [];
+  empleadosSupervisorValues: SelectItem[] = [];
 
   conciliaContabData: any[] = [];
   actaConciliaEmisorData: any[] = [];
@@ -204,12 +216,15 @@ export class ConciliaExternaContaComponent
     private _swalSvc: SweetalertService,
     private _divisionesSvc: DivisionesService,
     private _unidadesSvc: UnidadesService,
+    private _empleadosSvc: EmpleadosService,
+    private _supervisoresSvc: SupervisoresService,
     private _pdfMakeSvc: PdfmakeService,
     private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
     this.fg = this._conciliaExternaContaSvc.fg;
+    this.fg.reset();
 
     if (!this._authSvc.hasAdvancedUserPermission()) {
       this.fg.get('division')?.disable();
@@ -222,6 +237,7 @@ export class ConciliaExternaContaComponent
     );
 
     this._loadDivisiones();
+    this._loadSupervisores();
     // this._loadUsuarios();
   }
 
@@ -249,7 +265,7 @@ export class ConciliaExternaContaComponent
   }
 
   get conciliacionStatusAbierta() {
-    return this._conciliacionStatus === 'ABIERTA';
+    return this._conciliacionStatus === ConciliaStatus.Abierta;
   }
 
   hasAdminPermission() {
@@ -263,11 +279,15 @@ export class ConciliaExternaContaComponent
   private _loadDatosConciliacion() {
     this._conciliaExternaContaSvc.getDatosConciliacion().subscribe({
       next: res => {
-        this._updateConciliaStatus(res.getDatosConciliacionExterna.Abierta);
+        if (res.getDatosConciliacionExterna)
+          this._updateConciliaStatus(res.getDatosConciliacionExterna.Abierta);
+        else {
+          this.conciliacionStatus = ConciliaStatus.NoIniciada;
+          this._updateMenuOptions(ConciliaMenuOptions.IniciarConciliacion);
+        }
       },
-      error: () => {
-        this.conciliacionStatus = 'NO INICIADA';
-        this._updateMenuOptions(ConciliaMenuOptions.IniciarConciliacion);
+      error: err => {
+        this._swalSvc.error(err.message || err);
       },
     });
   }
@@ -275,11 +295,11 @@ export class ConciliaExternaContaComponent
   private _updateConciliaStatus(abierta: boolean) {
     switch (abierta) {
       case true:
-        this.conciliacionStatus = 'ABIERTA';
+        this.conciliacionStatus = ConciliaStatus.Abierta;
         this._updateMenuOptions(ConciliaMenuOptions.CerrarConciliacion);
         break;
       case false:
-        this.conciliacionStatus = 'CERRADA';
+        this.conciliacionStatus = ConciliaStatus.Cerrada;
         this._updateMenuOptions(ConciliaMenuOptions.ReabrirConciliacion);
         break;
     }
@@ -350,6 +370,9 @@ export class ConciliaExternaContaComponent
       return;
     }
 
+    if (origenDestino) this.unidadesODValues = [];
+    else this.unidadesValues = [];
+
     this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe({
       next: responseD => {
         this.loadingUnidades = false;
@@ -362,7 +385,7 @@ export class ConciliaExternaContaComponent
         if (origenDestino) {
           this.unidadesODValues = result.data.map((u: any) => {
             return {
-              value: u.IdUnidad,
+              value: u,
               label: u.IdUnidad + '-' + u.Nombre,
             };
           });
@@ -373,7 +396,7 @@ export class ConciliaExternaContaComponent
         } else {
           this.unidadesValues = result.data.map((u: any) => {
             return {
-              value: u.IdUnidad,
+              value: u,
               label: u.IdUnidad + '-' + u.Nombre,
             };
           });
@@ -389,27 +412,127 @@ export class ConciliaExternaContaComponent
     });
   }
 
-  private _subscribeToFgChange() {
-    this.fg.valueChanges.subscribe(() => {
-      this._inicializarDatos();
-    });
+  private _loadEmpleados(origenDestino: boolean) {
+    const idDivision = origenDestino
+      ? +this.fg.controls['divisionOD'].value
+      : +this.fg.controls['division'].value;
 
+    if (!idDivision) {
+      return;
+    }
+
+    if (origenDestino) this.empleadosODValues = [];
+    else this.empleadosValues = [];
+
+    this._empleadosSvc.loadEmpleadoByIdDivision(idDivision).subscribe({
+      next: res => {
+        this.loadingUnidades = false;
+        const result = res.getEmpleadosByIdDivision;
+
+        if (!result.success) {
+          return this._swalSvc.error(result.error);
+        }
+
+        if (origenDestino) {
+          this.empleadosODValues = result.data.map((u: IEmpleadoInfo) => {
+            return {
+              value: u,
+              label: u.Empleado,
+            };
+          });
+        } else {
+          this.empleadosValues = result.data.map((u: IEmpleadoInfo) => {
+            return {
+              value: u,
+              label: u.Empleado,
+            };
+          });
+        }
+      },
+      error: err => {
+        this._swalSvc.error(err.message || err);
+      },
+    });
+  }
+
+  private _loadSupervisores() {
+    this._supervisoresSvc.loadSupervisorByIdDivision(100).subscribe({
+      next: res => {
+        this.loadingUnidades = false;
+        const result = res.getSupervisoresByIdDivision;
+
+        if (!result.success) {
+          return this._swalSvc.error(result.error);
+        }
+
+        this.empleadosSupervisorValues = result.data.map(
+          (u: ISupervisoresInfo) => {
+            return {
+              value: u,
+              label: u.Supervisor,
+            };
+          }
+        );
+      },
+      error: err => {
+        this._swalSvc.error(err.message || err);
+      },
+    });
+  }
+
+  private _subscribeToFgChange() {
     this.fg.controls['division'].valueChanges.subscribe(() => {
       this.fg.controls['unidad'].setValue('0');
+      this._inicializarDatos();
+
       this._loadUnidades(false);
+      this._loadEmpleados(false);
     });
     this.fg.controls['divisionOD'].valueChanges.subscribe(() => {
       this.fg.controls['unidadOD'].setValue('0');
+      this._inicializarDatos();
+
       this._loadUnidades(true);
+      this._loadEmpleados(true);
     });
 
     this.fg.controls['periodo'].valueChanges.subscribe(() => {
+      this._inicializarDatos();
+
       this._loadDatosConciliacion();
+    });
+
+    this.fg.controls['unidad'].valueChanges.subscribe(() => {
+      this._inicializarDatos();
+    });
+
+    this.fg.controls['unidadOD'].valueChanges.subscribe(() => {
+      this._inicializarDatos();
+    });
+
+    this.fg.controls['usuarioEmisor'].valueChanges.subscribe(value => {
+      this.fg.controls['cargoEmisor'].reset();
+      if (value) {
+        this.fg.controls['cargoEmisor'].setValue(value.Cargo.Cargo);
+      }
+    });
+
+    this.fg.controls['usuarioReceptor'].valueChanges.subscribe(value => {
+      this.fg.controls['cargoReceptor'].reset();
+      if (value) {
+        this.fg.controls['cargoReceptor'].setValue(value.Cargo.Cargo);
+      }
+    });
+
+    this.fg.controls['usuarioSupervisor'].valueChanges.subscribe(value => {
+      this.fg.controls['cargoSupervisor'].reset();
+      if (value) {
+        this.fg.controls['cargoSupervisor'].setValue(value.Cargo.Cargo);
+      }
     });
   }
 
   private _inicializarDatos() {
-    this._conciliaExternaContaSvc.RecDifCantidadRowData = [];
     this.conciliaContabData = [];
     this._conciliaExternaContaSvc.ConciliaContabRowData = [];
     this.actaConciliaEmisorData = [];
@@ -525,14 +648,6 @@ export class ConciliaExternaContaComponent
     return this.fg ? this.fg.valid : false;
   }
 
-  salvar() {
-    switch (this.selectedTab) {
-      case 2:
-        this._salvaConciliaContabilidad();
-        break;
-    }
-  }
-
   get loading() {
     return (
       this.loadingConcNacVsAsiento ||
@@ -549,6 +664,13 @@ export class ConciliaExternaContaComponent
 
   conciliar() {
     try {
+      if (this.conciliacionStatus !== ConciliaStatus.Abierta) {
+        this._swalSvc.error(
+          'No se puede Conciliar porque la Conciliación no está Abierta.'
+        );
+        return;
+      }
+
       this.loadingConciliacion = true;
 
       this._conciliaExternaContaSvc.calculaConciliacion().subscribe({
@@ -601,28 +723,18 @@ export class ConciliaExternaContaComponent
     }
   }
 
-  changeTab(tab: number) {
-    this.selectedTab = tab;
-
+  async reporte() {
     switch (this.selectedTab) {
       case 0:
         this.reporteName = 'Conciliación Nacional en Rodas.';
+        this.generatePDF();
         break;
       case 1:
-        this.reporteName = 'Acta de Conciliación Cuentas por Cobrar y Pagar';
+        this._conciliacionEntreUnidadesEmisor();
         break;
-    }
-  }
-
-  async openReporte() {
-    if (this.selectedTab === 3) {
-      this._conciliacionEntreUnidadesEmisor();
-      this._conciliacionEntreUnidadesReceptor();
-      // this.updateActaConciliacionUsuariosList();
-
-      this.showReport = true;
-    } else {
-      this.generatePDF();
+      case 2:
+        this._conciliacionEntreUnidadesReceptor();
+        break;
     }
   }
 
@@ -633,21 +745,19 @@ export class ConciliaExternaContaComponent
       this._conciliaExternaContaSvc
         .conciliacionEntreUnidadesEmisor()
         .subscribe({
-          next: response => {
+          next: res => {
             this.loadingConciliacionEntreUnidadesEmisor = false;
 
-            const result = response.getConciliacionEntreUnidades;
-            if (!result.success) {
-              return this._swalSvc.error(result.error);
-            }
-
-            const data = result.data;
             this._conciliaExternaContaSvc.ConciliacionEntreUnidadesEmisorRowData =
-              data.length > 0 ? data[0] : null;
+              res.getConciliacionEntreUnidades;
 
-            this.loadingConciliacionEntreUnidadesEmisor = false;
+            this.reporteName =
+              'Acta de Conciliación Cuentas por Cobrar y Pagar';
+
+            this.generatePDF();
           },
           error: err => {
+            this.loadingConciliacionEntreUnidadesEmisor = false;
             this._swalSvc.error(err.message || err);
           },
         });
@@ -664,21 +774,19 @@ export class ConciliaExternaContaComponent
       this._conciliaExternaContaSvc
         .conciliacionEntreUnidadesReceptor()
         .subscribe({
-          next: response => {
+          next: res => {
             this.loadingConciliacionEntreUnidadesReceptor = false;
 
-            const result = response.getConciliacionEntreUnidades;
-            if (!result.success) {
-              return this._swalSvc.error(result.error);
-            }
-
-            const data = result.data;
             this._conciliaExternaContaSvc.ConciliacionEntreUnidadesReceptorRowData =
-              data.length > 0 ? data[0] : null;
+              res.getConciliacionEntreUnidades;
 
-            this.loadingConciliacionEntreUnidadesReceptor = false;
+            this.reporteName =
+              'Acta de Conciliación Cuentas por Cobrar y Pagar';
+
+            this.generatePDF();
           },
           error: err => {
+            this.loadingConciliacionEntreUnidadesReceptor = false;
             this._swalSvc.error(err.message || err);
           },
         });
@@ -717,6 +825,10 @@ export class ConciliaExternaContaComponent
     }
 
     this._excelService.exportAsExcelFile(data, this.reporteName);
+  }
+
+  onDropdownChange(event: any): void {
+    this.fg.controls[event.control].setValue(event.value);
   }
 
   // updateActaConciliacionUsuariosList() {
@@ -781,36 +893,6 @@ export class ConciliaExternaContaComponent
   //       };
   //     });
   // }
-
-  private _salvaConciliaContabilidad() {
-    const diferencia =
-      this._conciliaExternaContaSvc.ConciliaContabRowData.filter(
-        (f: { Recibido: boolean }) => f.Recibido === true
-      )
-        .map((c: { DiferenciaImporte: number }) => c.DiferenciaImporte)
-        .reduce((acc: number, value: number) => acc + value, 0);
-
-    if (round(diferencia, 2) !== 0) {
-      return this._swalSvc
-        .error(`Los documentos marcados como Recibidos deben coincidir en Importe.
-          <br>Es decir, se debe seleccionar un positivo y un negativo con el mismo monto.`);
-    }
-
-    this.saving = true;
-
-    this._conciliaExternaContaSvc.salvaConciliaContabilidad().subscribe({
-      next: response => {
-        const result = response.updateConciliaContab;
-        if (!result.success) {
-          return this._swalSvc.error(result.error);
-        }
-        this.saving = false;
-      },
-      error: err => {
-        this._swalSvc.error(err.message || err);
-      },
-    });
-  }
 
   // getEmisor() {
   //   if (this.selectedActaConcTab === 0) {

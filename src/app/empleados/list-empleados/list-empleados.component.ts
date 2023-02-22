@@ -73,7 +73,7 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
             });
           }
 
-          this.empleados = result.data;
+          this.empleados = [...result.data];
         })
       );
     } catch (err: any) {
