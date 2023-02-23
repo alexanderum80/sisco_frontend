@@ -1,3 +1,4 @@
+import { UsuarioService } from './../shared/services/usuario.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
@@ -6,7 +7,6 @@ import { UsuariosMutationResponse } from './../shared/models/usuarios.model';
 import { Apollo } from 'apollo-angular';
 import { Subscription } from 'rxjs';
 import { toNumber } from 'lodash';
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import SweetAlert from 'sweetalert2';
@@ -23,11 +23,11 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   subscription: Subscription[] = [];
 
   constructor(
-    private _usuarioSvc: UsuarioService,
+    private _authSvc: AuthenticationService,
     private _apollo: Apollo,
     private _navigationSvc: NavigationService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _authSvc: AuthenticationService
+    private _usuarioSvc: UsuarioService
   ) {}
 
   ngOnInit(): void {
@@ -87,8 +87,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
               confirmButtonText: 'Aceptar',
             });
           }
-
-          this._authSvc.login();
 
           this._dinamicDialogSvc.close();
 

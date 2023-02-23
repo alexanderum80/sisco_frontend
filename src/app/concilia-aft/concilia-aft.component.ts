@@ -127,8 +127,6 @@ export class ConciliaAftComponent
     this.fg = this._conciliaAftSvc.fg;
     this._conciliaAftSvc.inicializarFg();
     this._subscribeToFgValueChanges();
-
-    this._changeDedectionRef.detectChanges();
   }
 
   ngAfterViewInit(): void {

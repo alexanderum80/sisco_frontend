@@ -1,9 +1,9 @@
+import { AuthenticationService } from './../../../shared/services/authentication.service';
 import { ActionClicked } from './../../../shared/models/list-items';
 import {
   ClasificadorEntidadesQueryResponse,
   ClasificadorEntidadesMutationResponse,
 } from './../models/clasificador-entidades.model';
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { Apollo } from 'apollo-angular';
 import { Observable, Subscription } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -21,10 +21,13 @@ export class ClasificadorEntidadesService {
 
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
+  constructor(
+    private _apollo: Apollo,
+    private _authSvc: AuthenticationService
+  ) {}
 
   hasAdvancedUserPermission(): boolean {
-    return this._usuarioSvc.hasAdvancedUserPermission();
+    return this._authSvc.hasAdvancedUserPermission();
   }
 
   loadAllClasificadorEntidades(): Observable<ClasificadorEntidadesQueryResponse> {

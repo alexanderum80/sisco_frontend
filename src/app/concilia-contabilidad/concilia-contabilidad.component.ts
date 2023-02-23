@@ -169,9 +169,7 @@ export class ConciliaContabilidadComponent
     private _swalSvc: SweetalertService,
     private _msgSvc: MessageService,
     private _cd: ChangeDetectorRef
-  ) {
-    _cd.detach();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.fg = this._conciliaContabSvc.fg;
@@ -346,7 +344,7 @@ export class ConciliaContabilidadComponent
                   (u: { IdUnidad: string; Nombre: string }) => {
                     return {
                       IdCentro: u.IdUnidad,
-                      Nombre: u.IdUnidad + '-' + u.Nombre,
+                      Nombre: u.Nombre,
                     };
                   }
                 );

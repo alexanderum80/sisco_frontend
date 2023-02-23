@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
@@ -9,7 +10,7 @@ import {
 } from './../../shared/models/list-items';
 import { IUsuario } from './../../shared/models/usuarios';
 import { UsuarioFormComponent } from './../usuario-form/usuario-form.component';
-import { UsuarioService } from '../../shared/services/usuario.service';
+import { UsuarioService } from '../shared/services/usuario.service';
 import { UsuariosMutationResponse } from '../shared/models/usuarios.model';
 import SweetAlert from 'sweetalert2';
 import { QueryRef, Apollo } from 'apollo-angular';
@@ -46,9 +47,10 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
   loading = true;
 
   constructor(
+    private _authSvc: AuthenticationService,
+    private _usuarioSvc: UsuarioService,
     private _apollo: Apollo,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _usuarioSvc: UsuarioService,
     private _msgSvc: MessageService
   ) {
     if (this.hasAdminPermission()) {
@@ -66,21 +68,19 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
   }
 
   hasAdminPermission(): boolean {
-    return this._usuarioSvc.hasAdminPermission();
+    return this._authSvc.hasAdminPermission();
   }
 
   private _getUsuarios(): void {
     try {
       this._usuarioSvc.subscription.push(
-        this._apollo
-          .watchQuery<UsuariosQueryResponse>({
-            query: usuariosApi.all,
-            fetchPolicy: 'network-only',
-          })
-          .valueChanges.subscribe(({ data }) => {
+        this._usuarioSvc.getUsuarios().subscribe({
+          next: data => {
             this.loading = false;
 
-            const result = data.getAllUsuarios;
+            const result = this._authSvc.hasSuperAdminPermission()
+              ? data.getAllUsuarios
+              : data.getUsuariosByIdDivision;
 
             if (result.success === false) {
               return SweetAlert.fire({
@@ -93,7 +93,17 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
             }
 
             this.usuarios = cloneDeep(result.data);
-          })
+          },
+          error: err => {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: err,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          },
+        })
       );
     } catch (err: any) {
       this.loading = false;
@@ -131,7 +141,7 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
         tipoUsuario: null,
         cambiarContrasena: false,
         contrasenaAvanzada: '',
-        idDivision: this._usuarioSvc.usuario.IdDivision,
+        idDivision: this._authSvc.usuario.IdDivision,
       };
       this._usuarioSvc.fg.patchValue(inputData);
 

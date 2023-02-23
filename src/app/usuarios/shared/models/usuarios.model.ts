@@ -21,6 +21,7 @@ interface IUsuariosMutationResponse {
 export interface UsuariosQueryResponse {
   authenticateUsuario: IUsuarioQueryResponse;
   getAllUsuarios: IUsuariosQueryResponse;
+  getUsuariosByIdDivision: IUsuariosQueryResponse;
   getUsuarioById: IUsuarioQueryResponse;
 }
 
@@ -35,10 +36,12 @@ export const TipoUsuarios: ISelectableOptions[] = [
   { value: 1, description: 'Administrador' },
   { value: 2, description: 'Usuario' },
   { value: 3, description: 'Usuario Avanzado' },
+  { value: 4, description: 'Financista' },
 ];
 
 export enum ETipoUsuarios {
   'Administrador' = 1,
   'Usuario' = 2,
   'Usuario Avanzado' = 3,
+  'Financista' = 4,
 }

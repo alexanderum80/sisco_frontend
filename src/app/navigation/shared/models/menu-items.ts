@@ -52,7 +52,7 @@ export const MenuItems: MenuItem[] = [
         label: 'Activos Fijos Tangibles',
         icon: 'mdi mdi-home-city',
         routerLink: 'concilia-aft',
-        disabled: false,
+        disabled: true,
         title: 'Concilia los Activos Fijos con la Contabilidad.',
       },
       {
@@ -238,7 +238,7 @@ export const MenuItems: MenuItem[] = [
         label: 'Contabilidad (Externa)',
         icon: 'mdi mdi-cash-multiple',
         routerLink: 'concilia-externa-conta',
-        disabled: true,
+        disabled: false,
         title: 'Conciliación Externa por la Contabilidad.',
       },
     ],

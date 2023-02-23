@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-list-item',
@@ -9,5 +8,5 @@ import { UsuarioService } from '../../services/usuario.service';
 export class ListItemComponent {
   @Input() title: string;
 
-  constructor(public usuarioSvc: UsuarioService) {}
+  constructor() {}
 }

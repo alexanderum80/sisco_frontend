@@ -1,4 +1,3 @@
-import { UsuarioService } from './../../shared/services/usuario.service';
 import SweetAlert from 'sweetalert2';
 import { AuthenticationService } from '../../shared/services/authentication.service';
 import { Component } from '@angular/core';
@@ -19,10 +18,7 @@ export class UsuarioInfoComponent {
     },
   ];
 
-  constructor(
-    private _usarioSvc: UsuarioService,
-    private _authSvc: AuthenticationService
-  ) {}
+  constructor(private _authSvc: AuthenticationService) {}
 
   logout(): void {
     try {
@@ -39,6 +35,6 @@ export class UsuarioInfoComponent {
   }
 
   get userName(): string {
-    return this._usarioSvc.usuario.Usuario.toUpperCase();
+    return this._authSvc.usuario.Usuario.toUpperCase();
   }
 }

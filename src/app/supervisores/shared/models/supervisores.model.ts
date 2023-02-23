@@ -1,6 +1,6 @@
 import { IMutationResponse } from './../../../shared/models/mutation-response';
 
-interface ISupervisoresInfo {
+export interface ISupervisoresInfo {
   IdSupervisor: number;
   Supervisor: string;
   Cargo: any;
@@ -28,6 +28,7 @@ interface ISupervisoresQueryResponse {
 
 export interface SupervisoresQueryResponse {
   getAllSupervisores: ISupervisoresQueryResponse;
+  getSupervisoresByIdDivision: ISupervisoresQueryResponse;
   getSupervisorById: ISupervisorQueryResponse;
 }
 

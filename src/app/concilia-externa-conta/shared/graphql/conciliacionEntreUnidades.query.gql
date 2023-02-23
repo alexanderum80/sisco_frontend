@@ -1,0 +1,13 @@
+query GetConciliacionEntreUnidades($annio: Int!, $mes: Int!, $unidad: Int!, $unidadOD: Int!) {
+  getConciliacionEntreUnidades(annio: $annio, mes: $mes, unidad: $unidad, unidadOD: $unidadOD) {
+    ID
+    Annio
+    Mes
+    IdUnidad
+    IdUnidadOD
+    IdUsuarioEmisor
+    IdUsuarioReceptor
+    IdUsuarioSupervisor
+    Nota
+  }
+}

@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
 import { Subscription } from 'rxjs';
 import { ActionClicked } from './../../shared/models/list-items';
@@ -7,7 +8,6 @@ import { DivisionesService } from './../../shared/services/divisiones.service';
 import { ConexionRodasService } from './../shared/services/conexion-rodas.service';
 import { FormGroup } from '@angular/forms';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { UsuarioService } from '../../shared/services/usuario.service';
 import {
   Component,
   OnInit,
@@ -39,7 +39,7 @@ export class ConexionRodasFormComponent
   loadingEntidadesRodas = false;
 
   constructor(
-    private _usuarioSvc: UsuarioService,
+    private _authSvc: AuthenticationService,
     private _conexionRodasSvc: ConexionRodasService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _divisionesSvc: DivisionesService,
@@ -101,7 +101,7 @@ export class ConexionRodasFormComponent
   }
 
   get isAdminPermission(): boolean {
-    return this._usuarioSvc.hasAdminPermission();
+    return this._authSvc.hasAdminPermission();
   }
 
   private _getDivisiones(): void {

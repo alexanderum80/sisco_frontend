@@ -1,4 +1,4 @@
-import { UsuarioService } from './../../../shared/services/usuario.service';
+import { AuthenticationService } from './../../../shared/services/authentication.service';
 import { compararExpresionesApi } from './../graphql/comparar-expresiones-api';
 import { Apollo } from 'apollo-angular';
 import {
@@ -25,7 +25,10 @@ export class CompararExpresionesService {
 
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
+  constructor(
+    private _apollo: Apollo,
+    private _authSvc: AuthenticationService
+  ) {}
 
   inicializarFg(): void {
     const payload = {
@@ -37,7 +40,7 @@ export class CompararExpresionesService {
       complejo: false,
       consolidado: false,
       centralizada: false,
-      idDivision: this._usuarioSvc.usuario.IdDivision,
+      idDivision: this._authSvc.usuario.IdDivision,
     };
 
     this.fg.patchValue(payload);

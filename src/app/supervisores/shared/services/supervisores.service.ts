@@ -45,6 +45,32 @@ export class SupervisoresService {
     });
   }
 
+  loadSupervisorByIdDivision(
+    idDivision: number
+  ): Observable<SupervisoresQueryResponse> {
+    return new Observable<SupervisoresQueryResponse>(subscriber => {
+      try {
+        this.subscription.push(
+          this._apollo
+            .query<SupervisoresQueryResponse>({
+              query: supervisoresApi.byIdDivision,
+              variables: { idDivision },
+              fetchPolicy: 'network-only',
+            })
+            .subscribe({
+              next: response => {
+                subscriber.next(response.data);
+                subscriber.complete();
+              },
+              error: err => subscriber.error(err),
+            })
+        );
+      } catch (err: any) {
+        subscriber.error(err);
+      }
+    });
+  }
+
   loadSupervisorById(id: number): Observable<SupervisoresQueryResponse> {
     return new Observable<SupervisoresQueryResponse>(subscriber => {
       try {

@@ -1,0 +1,8 @@
+query GetDatosConciliacionExterna($anno: Int!, $mes: Int!) {
+   getDatosConciliacionExterna(anno: $anno, mes: $mes) {
+      IdConciliacion
+      Annio
+      Mes
+      Abierta
+  }
+}

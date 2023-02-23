@@ -115,18 +115,6 @@ export class ConexionRodasService {
     });
   }
 
-  estadoConexion(idDivision: number): Observable<ConexionRodasQueryResponse> {
-    return new Observable<ConexionRodasQueryResponse>(() => {
-      this._apollo
-        .query<ConexionRodasQueryResponse>({
-          query: conexionRodasApi.estado,
-          variables: { idDivision },
-          fetchPolicy: 'network-only',
-        })
-        .subscribe(() => {});
-    });
-  }
-
   getEntidadesRodas(): Observable<ConexionRodasQueryResponse> {
     const ip = this.fg.get('ip')?.value;
 

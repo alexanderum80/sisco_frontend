@@ -1,9 +1,9 @@
+import { AuthenticationService } from './../../../shared/services/authentication.service';
 import { elementosGastosApi } from './../graphql/elementos-gastos.actions';
 import {
   ElementosGastosQueryResponse,
   ElementosGastosMutationResponse,
 } from './../models/elementos-gastos.model';
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
 import { Apollo } from 'apollo-angular';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Injectable } from '@angular/core';
@@ -22,10 +22,13 @@ export class ElementosGastosService {
 
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
+  constructor(
+    private _apollo: Apollo,
+    private _authSvc: AuthenticationService
+  ) {}
 
   hasAdvancedUserPermission(): boolean {
-    return this._usuarioSvc.hasAdvancedUserPermission();
+    return this._authSvc.hasAdvancedUserPermission();
   }
 
   loadAllElementosGastos(): Observable<ElementosGastosQueryResponse> {

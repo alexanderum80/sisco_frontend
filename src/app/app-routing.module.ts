@@ -197,6 +197,14 @@ const routes: Routes = [
       ),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'concilia-externa-conta',
+    loadChildren: () =>
+      import('./concilia-externa-conta/concilia-externa-conta.module').then(
+        m => m.ConciliaExternaContaModule
+      ),
+    canActivate: [AuthGuard],
+  },
 
   // Cuando no se encuentra el path
   { path: '**', component: StartComponent, canActivate: [AuthGuard] },

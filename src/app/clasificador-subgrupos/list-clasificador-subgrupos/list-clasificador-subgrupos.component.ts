@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { ClasificadorSubgruposFormComponent } from './../clasificador-subgrupos-form/clasificador-subgrupos-form.component';
 import {
   ActionClicked,
@@ -10,7 +11,7 @@ import {
 import { ClasificadorSubgruposService } from './../shared/services/clasificador-subgrupos.service';
 import { MessageService } from 'primeng/api';
 import { SweetalertService } from './../../shared/services/sweetalert.service';
-import { UsuarioService } from './../../shared/services/usuario.service';
+
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
@@ -46,7 +47,7 @@ export class ListClasificadorSubgruposComponent
 
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
-    private _usuarioSvc: UsuarioService,
+    private _authSvc: AuthenticationService,
     private _sweetalertSvc: SweetalertService,
     private _clasificadorSubgruposSvc: ClasificadorSubgruposService,
     private _msgSvc: MessageService
@@ -89,7 +90,7 @@ export class ListClasificadorSubgruposComponent
   }
 
   hasAdvancedUserPermission(): boolean {
-    return this._usuarioSvc.hasAdvancedUserPermission();
+    return this._authSvc.hasAdvancedUserPermission();
   }
 
   actionClicked(event: IActionItemClickedArgs) {

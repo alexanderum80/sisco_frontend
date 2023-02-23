@@ -1,4 +1,4 @@
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
+import { AuthenticationService } from './../../../shared/services/authentication.service';
 import { EpigrafesApi as epigrafesApi } from './../graphql/epigrafes.actions';
 import {
   EpigrafesQueryResponse,
@@ -18,10 +18,13 @@ export class EpigrafesService {
 
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
+  constructor(
+    private _apollo: Apollo,
+    private _authSvc: AuthenticationService
+  ) {}
 
   hasAdvancedUserPermission(): boolean {
-    return this._usuarioSvc.hasAdvancedUserPermission();
+    return this._authSvc.hasAdvancedUserPermission();
   }
 
   loadAllEpigrafes(): Observable<EpigrafesQueryResponse> {

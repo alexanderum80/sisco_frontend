@@ -1,6 +1,6 @@
 import { IMutationResponse } from './../../../shared/models/mutation-response';
 
-interface IEmpleadoInfo {
+export interface IEmpleadoInfo {
   IdEmpleado: number;
   Empleado: string;
   Cargo: any;
@@ -28,6 +28,7 @@ interface IEmpleadosQueryResponse {
 
 export interface EmpleadosQueryResponse {
   getAllEmpleados: IEmpleadosQueryResponse;
+  getEmpleadosByIdDivision: IEmpleadosQueryResponse;
   getEmpleadoById: IEmpleadoQueryResponse;
 }
 

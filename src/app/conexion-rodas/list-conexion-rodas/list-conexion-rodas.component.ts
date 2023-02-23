@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
@@ -11,7 +12,6 @@ import { ConexionRodasService } from './../shared/services/conexion-rodas.servic
 import { ConexionRodasFormComponent } from './../conexion-rodas-form/conexion-rodas-form.component';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import SweetAlert from 'sweetalert2';
-import { UsuarioService } from '../../shared/services/usuario.service';
 import { isArray, sortBy } from 'lodash';
 import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 
@@ -37,7 +37,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
   loading = true;
 
   constructor(
-    private _usuarioSvc: UsuarioService,
+    private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _conexionRodasSvc: ConexionRodasService,
     private _msgSvc: MessageService
@@ -57,7 +57,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
   }
 
   hasAdminPermission(): boolean {
-    return this._usuarioSvc.hasAdminPermission();
+    return this._authSvc.hasAdminPermission();
   }
 
   private _loadConexionesRodas(): void {
@@ -126,7 +126,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
     try {
       this._conexionRodasSvc.fg.reset();
       this._conexionRodasSvc.fg.patchValue({
-        idDivision: this._usuarioSvc.usuario.IdDivision,
+        idDivision: this._authSvc.usuario.IdDivision,
       });
 
       this._dinamicDialogSvc.open(

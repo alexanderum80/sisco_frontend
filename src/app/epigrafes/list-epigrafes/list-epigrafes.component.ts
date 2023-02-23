@@ -1,3 +1,4 @@
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
@@ -9,7 +10,7 @@ import {
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import SweetAlert from 'sweetalert2';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
-import { UsuarioService } from './../../shared/services/usuario.service';
+
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { EpigrafesFormComponent } from '../epigrafes-form/epigrafes-form.component';
@@ -35,7 +36,7 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
-    private _usuarioSvc: UsuarioService,
+    private _authSvc: AuthenticationService,
     private _epigrafesSvc: EpigrafesService
   ) {
     if (this.hasAdvancedUserPermission()) {
@@ -75,7 +76,7 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
   }
 
   hasAdvancedUserPermission(): boolean {
-    return this._usuarioSvc.hasAdvancedUserPermission();
+    return this._authSvc.hasAdvancedUserPermission();
   }
 
   actionClicked(event: IActionItemClickedArgs) {

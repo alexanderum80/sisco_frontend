@@ -45,6 +45,32 @@ export class EmpleadosService {
     });
   }
 
+  loadEmpleadoByIdDivision(
+    idDivision: number
+  ): Observable<EmpleadosQueryResponse> {
+    return new Observable<EmpleadosQueryResponse>(subscriber => {
+      try {
+        this.subscription.push(
+          this._apollo
+            .query<EmpleadosQueryResponse>({
+              query: empleadosApi.byIdDivision,
+              variables: { idDivision: idDivision },
+              fetchPolicy: 'network-only',
+            })
+            .subscribe({
+              next: response => {
+                subscriber.next(response.data || undefined);
+                subscriber.complete();
+              },
+              error: err => subscriber.error(err),
+            })
+        );
+      } catch (err: any) {
+        subscriber.error(err);
+      }
+    });
+  }
+
   loadEmpleadoById(id: number): Observable<EmpleadosQueryResponse> {
     return new Observable<EmpleadosQueryResponse>(subscriber => {
       try {
@@ -57,8 +83,8 @@ export class EmpleadosService {
             })
             .subscribe({
               next: response => {
-                subscriber.next(response.data || undefined),
-                  subscriber.complete();
+                subscriber.next(response.data || undefined);
+                subscriber.complete();
               },
               error: err => subscriber.error(err),
             })
