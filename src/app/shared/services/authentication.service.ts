@@ -124,4 +124,26 @@ export class AuthenticationService {
 
     return this._allowAction;
   }
+
+  hasFinancistaPermission(): boolean {
+    const currentUsuario = this._usuarioSubject.value;
+
+    if (!currentUsuario) {
+      return false;
+    }
+
+    const isOwner = currentUsuario.Usuario === 'alexanderu';
+    if (isOwner) {
+      this._allowAction = true;
+    } else {
+      // tslint:disable-next-line: max-line-length
+      this._allowAction =
+        currentUsuario.IdTipoUsuario === ETipoUsuarios.Financista &&
+        currentUsuario.IdDivision === 100
+          ? true
+          : false;
+    }
+
+    return this._allowAction;
+  }
 }

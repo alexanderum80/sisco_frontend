@@ -276,6 +276,10 @@ export class ConciliaExternaContaComponent
     return this._authSvc.hasAdvancedUserPermission();
   }
 
+  hasFinancistaPermission() {
+    return this._authSvc.hasFinancistaPermission();
+  }
+
   private _loadDatosConciliacion() {
     this._conciliaExternaContaSvc.getDatosConciliacion().subscribe({
       next: res => {
@@ -308,7 +312,7 @@ export class ConciliaExternaContaComponent
   private _updateMenuOptions(menuOption: string) {
     this.conciliarButtonItems.map(menu => {
       menu.visible =
-        menu.id === menuOption && this._authSvc.usuario.IdTipoUsuario === 1;
+        menu.id === menuOption && this._authSvc.hasFinancistaPermission();
     });
 
     this.reportesButtonItems.map(menu => {
@@ -690,16 +694,16 @@ export class ConciliaExternaContaComponent
           const actaEmisor = datosActa.filter(
             (f: any) =>
               f.Emisor.toString() ===
-                this.fg.controls['unidad'].value.toString() &&
+                this.fg.controls['unidad'].value.IdUnidad.toString() &&
               f.Receptor.toString() ===
-                this.fg.controls['unidadOD'].value.toString()
+                this.fg.controls['unidadOD'].value.IdUnidad.toString()
           );
           const actaReceptor = datosActa.filter(
             (f: any) =>
               f.Receptor.toString() ===
-                this.fg.controls['unidad'].value.toString() &&
+                this.fg.controls['unidad'].value.IdUnidad.toString() &&
               f.Emisor.toString() ===
-                this.fg.controls['unidadOD'].value.toString()
+                this.fg.controls['unidadOD'].value.IdUnidad.toString()
           );
 
           this.actaConciliaEmisorData = [...actaEmisor];
@@ -830,97 +834,6 @@ export class ConciliaExternaContaComponent
   onDropdownChange(event: any): void {
     this.fg.controls[event.control].setValue(event.value);
   }
-
-  // updateActaConciliacionUsuariosList() {
-  //   switch (this.selectedActaConcTab) {
-  //     case 0:
-  //       this._conciliaExternaContaSvc.ActaConciliacionUsuariosEmisorList =
-  //         this._conciliaExternaContaSvc.Usuarios.filter(
-  //           f =>
-  //             f.Division.toString() ===
-  //             this.fg.controls['division'].value.toString()
-  //         ).map(u => {
-  //           return {
-  //             value: u.IdUsuario,
-  //             label: u.NombreApellidos,
-  //           };
-  //         });
-  //       this._conciliaExternaContaSvc.ActaConciliacionUsuariosReceptorList =
-  //         this._conciliaExternaContaSvc.Usuarios.filter(
-  //           f =>
-  //             f.Division.toString() ===
-  //             this.fg.controls['divisionOD'].value.toString()
-  //         ).map(u => {
-  //           return {
-  //             value: u.IdUsuario,
-  //             label: u.NombreApellidos,
-  //           };
-  //         });
-  //       break;
-  //     case 1:
-  //       this._conciliaExternaContaSvc.ActaConciliacionUsuariosEmisorList =
-  //         this._conciliaExternaContaSvc.Usuarios.filter(
-  //           f =>
-  //             f.Division.toString() ===
-  //             this.fg.controls['divisionOD'].value.toString()
-  //         ).map(u => {
-  //           return {
-  //             value: u.IdUsuario,
-  //             label: u.NombreApellidos,
-  //           };
-  //         });
-  //       this._conciliaExternaContaSvc.ActaConciliacionUsuariosReceptorList =
-  //         this._conciliaExternaContaSvc.Usuarios.filter(
-  //           f =>
-  //             f.Division.toString() ===
-  //             this.fg.controls['division'].value.toString()
-  //         ).map(u => {
-  //           return {
-  //             value: u.IdUsuario,
-  //             label: u.NombreApellidos,
-  //           };
-  //         });
-  //       break;
-  //   }
-
-  //   this._conciliaExternaContaSvc.ActaConciliacionUsuariosSupervisorList =
-  //     this._conciliaExternaContaSvc.Usuarios.filter(
-  //       f => f.Division.toString() === '100'
-  //     ).map(u => {
-  //       return {
-  //         value: u.IdUsuario,
-  //         label: u.NombreApellidos,
-  //       };
-  //     });
-  // }
-
-  // getEmisor() {
-  //   if (this.selectedActaConcTab === 0) {
-  //     return this.unidades
-  //       .filter(u => u.IdUnidad.toString() === this.fg.controls['unidad'].value)
-  //       .map(u => u.Unidad);
-  //   } else {
-  //     return this.unidades
-  //       .filter(
-  //         u => u.IdUnidad.toString() === this.fg.controls['unidadOD'].value
-  //       )
-  //       .map(u => u.Unidad);
-  //   }
-  // }
-
-  // getReceptor() {
-  //   if (this.selectedActaConcTab === 0) {
-  //     return this.unidades
-  //       .filter(
-  //         u => u.IdUnidad.toString() === this.fg.controls['unidadOD'].value
-  //       )
-  //       .map(u => u.Unidad);
-  //   } else {
-  //     return this.unidades
-  //       .filter(u => u.IdUnidad.toString() === this.fg.controls['unidad'].value)
-  //       .map(u => u.Unidad);
-  //   }
-  // }
 
   switchChatToggle(value: boolean) {
     this.chatToggle = value;

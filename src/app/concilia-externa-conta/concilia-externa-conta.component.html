@@ -259,14 +259,31 @@
             icon="mdi mdi-file-excel"
             [disabled]="isEditing || !conciliacionStatusAbierta"
             (clicked)="exportar()"></png-button>
+          <png-button
+            *ngIf="!hasFinancistaPermission()"
+            class="mr-1"
+            label="Conciliar"
+            icon="mdi mdi-file-check-outline"
+            [disabled]="!isFormValid"
+            (clicked)="conciliar()"></png-button>
           <png-split-button
+            *ngIf="hasFinancistaPermission()"
             class="mr-1"
             label="Conciliar"
             icon="mdi mdi-file-check-outline"
             [items]="conciliarButtonItems"
             [disabled]="!isFormValid"
             (clicked)="conciliar()"></png-split-button>
+          <png-button
+            *ngIf="!hasFinancistaPermission()"
+            class="mr-1"
+            label="Reportes"
+            [style]="'secondary'"
+            icon="mdi mdi-printer"
+            [disabled]="!isFormValid || isEditing || !conciliacionStatusAbierta"
+            (clicked)="reporte()"></png-button>
           <png-split-button
+            *ngIf="hasFinancistaPermission()"
             class="mr-1"
             label="Reportes"
             [style]="'secondary'"

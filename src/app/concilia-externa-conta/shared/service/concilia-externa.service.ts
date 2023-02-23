@@ -320,8 +320,8 @@ export class ConciliaExternaContaService {
           {
             annio: +moment(payload['periodo'].value).format('YYYY'),
             mes: +moment(payload['periodo'].value).format('MM'),
-            unidad: +payload['unidad'].value,
-            unidadOD: +payload['unidadOD'].value,
+            unidad: +payload['unidad'].value.IdUnidad,
+            unidadOD: +payload['unidadOD'].value.IdUnidad,
           }
         )
         .subscribe({
@@ -344,8 +344,8 @@ export class ConciliaExternaContaService {
           {
             annio: +moment(payload['periodo'].value).format('YYYY'),
             mes: +moment(payload['periodo'].value).format('MM'),
-            unidad: +payload['unidadOD'].value,
-            unidadOD: +payload['unidad'].value,
+            unidad: +payload['unidadOD'].value.IdUnidad,
+            unidadOD: +payload['unidad'].value.IdUnidad,
           }
         )
         .subscribe({
@@ -378,13 +378,13 @@ export class ConciliaExternaContaService {
             },
           },
         };
-      case 1:
+      case 1: // Acta Emisor
         return {
           pageSize: 'LETTER',
           content: [
             await this._pdfMakeSvc.getHeaderDefinition(reportName),
             this._getPeriodoConciliacion(),
-            this._getDatosEmisorReceptor(),
+            this._getDatosEmisor(),
             await this._getActaConciliacionEmisor(),
             this._getPieDeFirmaEmisorReceptor(),
             this._getPieDeFirmaSupervisor(),
@@ -400,13 +400,13 @@ export class ConciliaExternaContaService {
             },
           },
         };
-      case 2:
+      case 2: // Acta Receptor
         return {
           pageSize: 'LETTER',
           content: [
             await this._pdfMakeSvc.getHeaderDefinition(reportName),
             this._getPeriodoConciliacion(),
-            this._getDatosEmisorReceptor(),
+            this._getDatosReceptor(),
             await this._getActaConciliacionReceptor(),
             this._getPieDeFirmaEmisorReceptor(),
             this._getPieDeFirmaSupervisor(),
@@ -580,16 +580,82 @@ export class ConciliaExternaContaService {
     };
   }
 
-  private _getDatosEmisorReceptor() {
+  private _getDatosEmisor() {
+    const emisor = this.fg.get('unidad')?.value
+      ? this.fg.get('unidad')?.value?.IdUnidad +
+        '-' +
+        this.fg.get('unidad')?.value?.Nombre +
+        ' (' +
+        this.fg.get('unidad')?.value?.IdDivision +
+        ')'
+      : '';
+
+    const receptor = this.fg.get('unidadOD')?.value
+      ? this.fg.get('unidadOD')?.value?.IdUnidad +
+        '-' +
+        this.fg.get('unidadOD')?.value?.Nombre +
+        ' (' +
+        this.fg.get('unidadOD')?.value?.IdDivision +
+        ')'
+      : '';
+
     return {
       columns: [
         [
           {
-            text: `EMISOR:      ${''}`,
+            text: `EMISOR:      ${emisor}`,
             style: 'bold',
           },
           {
-            text: `RECEPTOR: ${''}`,
+            text: `RECEPTOR: ${receptor}`,
+            style: 'bold',
+            margin: [0, 0, 0, 10],
+          },
+        ],
+        [
+          {
+            text: 'Cuenta: 135/0040',
+            style: 'bold',
+            alignment: 'right',
+          },
+          {
+            text: 'Cuenta: 405/0040',
+            style: 'bold',
+            alignment: 'right',
+            margin: [0, 0, 0, 20],
+          },
+        ],
+      ],
+    };
+  }
+
+  private _getDatosReceptor() {
+    const emisor = this.fg.get('unidadOD')?.value
+      ? this.fg.get('unidadOD')?.value?.IdUnidad +
+        '-' +
+        this.fg.get('unidadOD')?.value?.Nombre +
+        ' (' +
+        this.fg.get('unidadOD')?.value?.IdDivision +
+        ')'
+      : '';
+    const receptor = this.fg.get('unidad')?.value
+      ? this.fg.get('unidad')?.value?.IdUnidad +
+        '-' +
+        this.fg.get('unidad')?.value?.Nombre +
+        ' (' +
+        this.fg.get('unidad')?.value?.IdDivision +
+        ')'
+      : '';
+
+    return {
+      columns: [
+        [
+          {
+            text: `EMISOR:      ${emisor}`,
+            style: 'bold',
+          },
+          {
+            text: `RECEPTOR: ${receptor}`,
             style: 'bold',
             margin: [0, 0, 0, 10],
           },
