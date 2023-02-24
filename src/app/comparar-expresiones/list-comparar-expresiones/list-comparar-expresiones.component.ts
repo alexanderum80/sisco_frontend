@@ -40,6 +40,8 @@ export class ListCompararExpresionesComponent
   inlineButtons: IButtons[] = DefaultInlineButtonsTable;
   topLeftButtons: IButtons[] = DefaultTopLeftButtonsTable;
 
+  loading = true;
+
   constructor(
     private _authSvc: AuthenticationService,
     private _compararExpresionesSvc: CompararExpresionesService,
@@ -61,6 +63,8 @@ export class ListCompararExpresionesComponent
     try {
       this._compararExpresionesSvc.subscription.push(
         this._compararExpresionesSvc.loadAll().subscribe(response => {
+          this.loading = false;
+
           const result = response.getAllComprobarExpresiones;
 
           if (result.success === false) {
@@ -95,7 +99,8 @@ export class ListCompararExpresionesComponent
 
       this._dinamicDialogSvc.open(
         'Agregar Comparación de Expresión',
-        CompararExpresionesFormComponent
+        CompararExpresionesFormComponent,
+        '800px'
       );
       this._compararExpresionesSvc.subscription.push(
         this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
@@ -151,7 +156,8 @@ export class ListCompararExpresionesComponent
 
           this._dinamicDialogSvc.open(
             'Editar Comparación de Expresión',
-            CompararExpresionesFormComponent
+            CompararExpresionesFormComponent,
+            '800px'
           );
           this._compararExpresionesSvc.subscription.push(
             this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {

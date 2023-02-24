@@ -15,6 +15,7 @@ import {
   ChangeDetectionStrategy,
 } from '@angular/core';
 import { cloneDeep } from 'lodash';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-estadistica-contabilidad',
@@ -31,6 +32,12 @@ export class EstadisticaContabilidadComponent
   displayedColumns: ITableColumns[] = [
     { header: 'Centro', field: 'Centro', type: 'string' },
     { header: 'Consolidado', field: 'Consolidado', type: 'boolean' },
+    {
+      header: 'Fecha Actualización',
+      field: 'FechaActualizacion',
+      type: 'date',
+      dateFormat: 'dd/MM/yyyy hh:mm:ss a',
+    },
     { header: 'Fecha Inicio', field: 'FechaInicio', type: 'date' },
     { header: 'Fecha Fin', field: 'FechaFin', type: 'date' },
     {
@@ -51,7 +58,12 @@ export class EstadisticaContabilidadComponent
       type: 'number',
       totalize: true,
     },
-    { header: 'Inválidos', field: 'Invalidos', type: 'number', totalize: true },
+    {
+      header: 'Inconclusos',
+      field: 'Inconclusos',
+      type: 'number',
+      totalize: true,
+    },
     { header: 'Anulados', field: 'Anulados', type: 'number', totalize: true },
   ];
 
@@ -146,7 +158,8 @@ export class EstadisticaContabilidadComponent
             this.divisionesValues
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._estadisticaContaSvc.getConciliacionDefinition(
             this.dataSource

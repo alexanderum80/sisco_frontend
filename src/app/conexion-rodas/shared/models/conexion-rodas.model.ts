@@ -2,8 +2,8 @@ import { IMutationResponse } from '../../../shared/models/mutation-response';
 import { IQueryResponse } from '../../../shared/models/query-response';
 
 export interface IEntidadesRodas {
-  Siglas: string;
-  Entidad: string;
+  sigla: string;
+  entidad: string;
 }
 
 export interface ConexionRodasQueryResponse {

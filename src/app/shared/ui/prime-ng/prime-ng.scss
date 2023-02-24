@@ -75,7 +75,8 @@ p-inputnumber, .p-inputnumber {
 }
 
 .p-float-label label {
-    margin-top: -.3rem !important;
+    margin-top: -.35rem !important;
+    margin-left: -.35rem !important;
 }
 
 .p-float-label input:focus ~ label,
@@ -140,6 +141,12 @@ p-inputnumber, .p-inputnumber {
 
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item, .p-multiselect-item {
     padding: 0.5rem 1rem !important;
+}
+
+.p-dropdown .p-dropdown-label {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
 }
 
 .p-tooltip {
@@ -310,6 +317,8 @@ p-slidemenu {
 .p-column-filter-row .p-column-filter-menu-button, 
 .p-column-filter-row .p-column-filter-clear-button {
     margin-left: 0 !important;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
 }
 
 .p-sidebar {

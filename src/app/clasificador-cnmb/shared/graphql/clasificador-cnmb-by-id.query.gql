@@ -1,7 +1,0 @@
-query GetActFijosClasificadorCnmb($cnmb: String!) {
-    getActFijosClasificadorCnmb(cnmb: $cnmb) {
-        CNMB
-        DCNMB
-        TREPO
-    }
-}

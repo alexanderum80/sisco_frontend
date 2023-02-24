@@ -1,6 +1,6 @@
 import { numberFormatter } from './../../../shared/models/number';
 import { conciliaUhApi } from './../graphql/concilia-uh.actions';
-import { toNumber } from 'lodash';
+import { orderBy, toNumber } from 'lodash';
 import {
   ConciliaUH,
   ConciliaUHQueryResponse,
@@ -235,6 +235,12 @@ export class ConciliaUhService {
     const result = [];
 
     if (data && data.length) {
+      const _orderArray =
+        tipoCentro === '0'
+          ? ['IdDivision', 'IdUnidad', 'Tipo']
+          : ['IdDivision', 'Tipo', 'IdUnidad'];
+      data = orderBy(data, _orderArray);
+
       data.forEach(element => {
         if (element.IdDivision !== _idDivision) {
           result.push({
@@ -245,6 +251,14 @@ export class ConciliaUhService {
             IsGroupBy: true,
           });
           _idDivision = element.IdDivision;
+
+          if (tipoCentro === '0')
+            result.push({
+              Tipo: element.Tipo,
+              Field: 'Centro',
+              Value: element.Centro,
+              IsGroupBy: true,
+            });
         }
         if (
           tipoCentro === '0' &&
@@ -260,6 +274,8 @@ export class ConciliaUhService {
               Analisis1: '',
               Analisis2: '',
               Analisis3: '',
+              Analisis4: '',
+              Analisis5: '',
               SaldoUH: _totalUH,
               SaldoRodas: _totalRodas,
               Diferencia: _totalDif,
@@ -292,6 +308,8 @@ export class ConciliaUhService {
             Analisis1: element.Analisis1,
             Analisis2: element.Analisis2,
             Analisis3: element.Analisis3,
+            Analisis4: element.Analisis4,
+            Analisis5: element.Analisis5,
             SaldoUH: element.SaldoUH,
             SaldoRodas: element.SaldoRodas,
             Diferencia: element.Diferencia,
@@ -316,6 +334,8 @@ export class ConciliaUhService {
               Analisis1: '',
               Analisis2: '',
               Analisis3: '',
+              Analisis4: '',
+              Analisis5: '',
               SaldoUH: _totalUH,
               SaldoRodas: _totalRodas,
               Diferencia: _totalDif,
@@ -336,6 +356,8 @@ export class ConciliaUhService {
             Analisis1: element.Analisis1,
             Analisis2: element.Analisis2,
             Analisis3: element.Analisis3,
+            Analisis4: element.Analisis4,
+            Analisis5: element.Analisis5,
             SaldoUH: element.SaldoUH,
             SaldoRodas: element.SaldoRodas,
             Diferencia: element.Diferencia,
@@ -369,6 +391,8 @@ export class ConciliaUhService {
             Analisis1: element.Analisis1,
             Analisis2: element.Analisis2,
             Analisis3: element.Analisis3,
+            Analisis4: element.Analisis4,
+            Analisis5: element.Analisis5,
             SaldoUH: element.SaldoUH,
             SaldoRodas: element.SaldoRodas,
             Diferencia: element.Diferencia,
@@ -389,6 +413,8 @@ export class ConciliaUhService {
         Analisis1: '',
         Analisis2: '',
         Analisis3: '',
+        Analisis4: '',
+        Analisis5: '',
         SaldoUH: _totalUH,
         SaldoRodas: _totalRodas,
         Diferencia: _totalDif,
@@ -408,7 +434,7 @@ export class ConciliaUhService {
       case '0':
         returnValue = {
           table: {
-            widths: [40, 50, 40, 40, 40, '*', '*', '*'],
+            widths: [50, 60, 50, 50, 50, 50, 50, '*', '*', '*'],
             body: [
               [
                 {
@@ -432,7 +458,15 @@ export class ConciliaUhService {
                   style: 'tableHeader',
                 },
                 {
-                  text: 'Saldo Activos',
+                  text: 'Análisis 4',
+                  style: 'tableHeader',
+                },
+                {
+                  text: 'Análisis 5',
+                  style: 'tableHeader',
+                },
+                {
+                  text: 'Saldo Útiles',
                   style: 'tableHeader',
                   alignment: 'right',
                 },
@@ -457,6 +491,8 @@ export class ConciliaUhService {
                   al.Analisis1,
                   al.Analisis2,
                   al.Analisis3,
+                  al.Analisis4,
+                  al.Analisis5,
                   {
                     text: numberFormatter.format(al.SaldoUH),
                     bold: al.Cuenta === 'TOTAL',
@@ -489,7 +525,7 @@ export class ConciliaUhService {
                   style: 'tableHeader',
                 },
                 {
-                  text: 'Saldo Activos',
+                  text: 'Saldo Útiles',
                   style: 'tableHeader',
                   alignment: 'right',
                 },

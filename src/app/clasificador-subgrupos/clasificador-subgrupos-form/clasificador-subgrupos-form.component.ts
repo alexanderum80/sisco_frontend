@@ -1,22 +1,22 @@
 import { SweetalertService } from './../../shared/services/sweetalert.service';
-import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { ClasificadorCnmbService } from './../shared/services/clasificador-cnmb.service';
-import { FormGroup } from '@angular/forms';
+import { ClasificadorSubgruposService } from './../shared/services/clasificador-subgrupos.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { DinamicDialogService } from 'src/app/shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 
 @Component({
-  selector: 'app-clasificador-cnmb-form',
-  templateUrl: './clasificador-cnmb-form.component.html',
-  styleUrls: ['./clasificador-cnmb-form.component.scss'],
+  selector: 'app-clasificador-subgrupos-form',
+  templateUrl: './clasificador-subgrupos-form.component.html',
+  styleUrls: ['./clasificador-subgrupos-form.component.scss'],
 })
-export class ClasificadorCnmbFormComponent implements OnInit {
+export class ClasificadorSubgruposFormComponent implements OnInit {
   action: ActionClicked;
   fg: FormGroup;
 
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
-    private _clasificadorSvc: ClasificadorCnmbService,
+    private _clasificadorSvc: ClasificadorSubgruposService,
     private _swalSvc: SweetalertService
   ) {}
 
@@ -24,7 +24,7 @@ export class ClasificadorCnmbFormComponent implements OnInit {
     this.fg = this._clasificadorSvc.fg;
 
     this.action =
-      this.fg.controls['cnmb'].value === ''
+      this.fg.controls['grupo'].value === ''
         ? ActionClicked.Add
         : ActionClicked.Edit;
   }
@@ -48,9 +48,9 @@ export class ClasificadorCnmbFormComponent implements OnInit {
             let txtMessage;
 
             if (this.action === ActionClicked.Add) {
-              txtMessage = 'El CNMB se ha creado correctamente.';
+              txtMessage = 'El Subgrupo se ha creado correctamente.';
             } else {
-              txtMessage = 'El CNMB se ha actualizado correctamente.';
+              txtMessage = 'El Subgrupo se ha actualizado correctamente.';
             }
 
             this._closeModal(txtMessage);

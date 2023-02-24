@@ -59,7 +59,7 @@ export class CompararValoresFormComponent implements OnInit {
             (u: { IdUnidad: number; Nombre: string }) => {
               return {
                 value: u.IdUnidad,
-                label: u.IdUnidad + '-' + u.Nombre,
+                label: u.Nombre,
               };
             }
           );

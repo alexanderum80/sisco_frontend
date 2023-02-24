@@ -12,7 +12,12 @@ import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
 import { Apollo } from 'apollo-angular';
 import { UsuarioService } from '../shared/services/usuario.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectorRef,
+  AfterContentChecked,
+} from '@angular/core';
 import { IUsuario } from 'src/app/shared/models';
 import { toNumber } from 'lodash';
 
@@ -21,7 +26,7 @@ import { toNumber } from 'lodash';
   templateUrl: './usuario-form.component.html',
   styleUrls: ['./usuario-form.component.scss'],
 })
-export class UsuarioFormComponent implements OnInit {
+export class UsuarioFormComponent implements OnInit, AfterContentChecked {
   action: ActionClicked;
 
   fg: FormGroup;
@@ -31,13 +36,14 @@ export class UsuarioFormComponent implements OnInit {
   tipoUsuariosValues: SelectItem[] = [];
 
   constructor(
-    private _usuarioSvc: UsuarioService,
     private _authSvc: AuthenticationService,
+    private _usuarioSvc: UsuarioService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _apollo: Apollo,
     private _tipoUsuariosSvc: TipoUsuariosService,
     private _divisionesSvc: DivisionesService,
-    private _sweetAlertSvc: SweetalertService
+    private _sweetAlertSvc: SweetalertService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +54,10 @@ export class UsuarioFormComponent implements OnInit {
     this._getDivisiones();
 
     this._subscribeToFgChanges();
+  }
+
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
   }
 
   private _getTipoUsuarios(): void {

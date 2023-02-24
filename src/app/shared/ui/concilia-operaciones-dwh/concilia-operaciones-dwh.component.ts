@@ -205,14 +205,14 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
               this.unidadesODValues = result.data.map((u: any) => {
                 return {
                   value: u.IdUnidad,
-                  label: u.IdUnidad + '-' + u.Nombre,
+                  label: u.Nombre,
                 };
               });
             } else {
               this.unidadesValues = result.data.map((u: any) => {
                 return {
                   value: u.IdUnidad,
-                  label: u.IdUnidad + '-' + u.Nombre,
+                  label: u.Nombre,
                 };
               });
             }

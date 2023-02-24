@@ -30,6 +30,8 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
   inlineButtons: IButtons[] = [];
   topLeftButtons: IButtons[] = [];
 
+  loading = true;
+
   constructor(
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
@@ -53,6 +55,8 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
   private _loadEpigrafes(): void {
     this._epigrafesSvc.subscription.push(
       this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
+        this.loading = false;
+
         const result = response.getAllEpigrafes;
 
         if (!result.success) {

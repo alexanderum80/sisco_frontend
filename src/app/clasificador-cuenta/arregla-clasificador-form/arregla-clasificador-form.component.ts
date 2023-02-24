@@ -5,14 +5,24 @@ import { SweetalertService } from '../../shared/services/sweetalert.service';
 import { UnidadesService } from '../../unidades/shared/services/unidades.service';
 import { SelectItem } from 'primeng/api';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  OnChanges,
+  SimpleChanges,
+  ChangeDetectorRef,
+  AfterContentChecked,
+} from '@angular/core';
 
 @Component({
   selector: 'app-arregla-clasificador-form',
   templateUrl: './arregla-clasificador-form.component.html',
   styleUrls: ['./arregla-clasificador-form.component.scss'],
 })
-export class ArreglaClasificadorFormComponent implements OnInit, OnDestroy {
+export class ArreglaClasificadorFormComponent
+  implements OnInit, AfterContentChecked, OnDestroy
+{
   fg: FormGroup;
 
   centrosValues: SelectItem[] = [];
@@ -28,7 +38,8 @@ export class ArreglaClasificadorFormComponent implements OnInit, OnDestroy {
     private _clasificadorCuentasSvc: ClasificadorCuentaService,
     private _unidadesSvc: UnidadesService,
     private _swalSvc: SweetalertService,
-    private _dinamicDialogSvc: DinamicDialogService
+    private _dinamicDialogSvc: DinamicDialogService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -36,6 +47,10 @@ export class ArreglaClasificadorFormComponent implements OnInit, OnDestroy {
     this.fg.reset();
 
     this._getUnidades();
+  }
+
+  ngAfterContentChecked(): void {
+    this.cd.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -57,7 +72,7 @@ export class ArreglaClasificadorFormComponent implements OnInit, OnDestroy {
             (u: { IdUnidad: string; Nombre: string }) => {
               return {
                 value: u.IdUnidad,
-                label: u.IdUnidad + '-' + u.Nombre,
+                label: u.Nombre,
               };
             }
           );
@@ -73,7 +88,7 @@ export class ArreglaClasificadorFormComponent implements OnInit, OnDestroy {
       this._swalSvc
         .question(
           `Antes de continuar con el proceso de Actualización, debe hacer una salva de este Centro en el Rodas, ya que este proceso es irreversible. 
-        \n\n¿Desea continuar con la Actualización del Clasificador?`
+        <br>¿Desea continuar con la Actualización del Clasificador?`
         )
         .then(res => {
           if (res === ActionClicked.Yes) {
@@ -82,6 +97,7 @@ export class ArreglaClasificadorFormComponent implements OnInit, OnDestroy {
               this._clasificadorCuentasSvc.arreglaClasificador().subscribe({
                 next: () => {
                   this.loading = false;
+                  this._swalSvc.info('Clasificador actualizado corectamente.');
                 },
                 error: err => {
                   this.loading = false;

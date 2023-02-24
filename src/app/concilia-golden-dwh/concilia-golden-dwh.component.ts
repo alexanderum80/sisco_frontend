@@ -19,6 +19,7 @@ import {
   ChangeDetectorRef,
   AfterContentChecked,
 } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-concilia-golden-dwh',
@@ -267,7 +268,7 @@ export class ConciliaGoldenDwhComponent
             this.centrosValues = this.unidadesList.map(d => {
               return {
                 value: d.IdUnidad,
-                label: d.IdUnidad + '-' + d.Nombre,
+                label: d.Nombre,
               };
             });
           })
@@ -403,7 +404,8 @@ export class ConciliaGoldenDwhComponent
             'Conciliación Rodas vs Golden DWH'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaDWHSvc.getConciliacionDefinition(
             this.rodasDWHInventarioVentas,
@@ -440,7 +442,8 @@ export class ConciliaGoldenDwhComponent
             'Conciliación de Almacenes del Rodas Vs Golden DWH'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaDWHSvc.getAlmacenesDefinition(
             this.dataSourceAlmacenes

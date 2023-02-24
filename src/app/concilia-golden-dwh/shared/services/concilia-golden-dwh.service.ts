@@ -205,6 +205,15 @@ export class ConciliaGoldenDwhService {
             isGroupBy: true,
           });
           _idDivision = element.IdDivision;
+
+          if (tipoCentro === '0') {
+            result.push({
+              Tipo: element.Tipo,
+              field: 'Centro',
+              value: element.Centro,
+              isGroupBy: true,
+            });
+          }
         }
         if (
           tipoCentro === '0' &&

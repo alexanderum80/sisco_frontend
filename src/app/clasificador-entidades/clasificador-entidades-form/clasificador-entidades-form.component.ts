@@ -58,7 +58,7 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
           (unidad: { IdUnidad: string; Nombre: string }) => {
             return {
               value: unidad.IdUnidad,
-              label: unidad.IdUnidad + '-' + unidad.Nombre,
+              label: unidad.Nombre,
             };
           }
         );

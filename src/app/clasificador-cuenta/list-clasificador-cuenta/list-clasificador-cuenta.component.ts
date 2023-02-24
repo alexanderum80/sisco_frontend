@@ -35,20 +35,21 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
   clasificadorCuentas: any[];
 
   displayedColumns: ITableColumns[] = [
-    { header: 'Cuenta', field: 'Cuenta', type: 'string' },
+    { header: 'Cuenta', field: 'Cuenta', type: 'string', width: '100px' },
     { header: 'SubCuenta', field: 'SubCuenta', type: 'string' },
     {
-      header: 'Descripción',
-      field: 'Descripcion',
+      header: 'Nombre',
+      field: 'Nombre',
       type: 'string',
       width: '350px',
     },
     { header: 'Naturaleza', field: 'Naturaleza', type: 'string' },
     { header: 'Obligación', field: 'Obligacion', type: 'boolean' },
-    { header: 'Terminal', field: 'Terminal', type: 'boolean' },
-    { header: 'Crit1', field: 'Crit1', type: 'string' },
-    { header: 'Crit2', field: 'Crit2', type: 'string' },
-    { header: 'Crit3', field: 'Crit3', type: 'string' },
+    { header: 'Crit 1', field: 'Tipo_Analisis_1', type: 'string' },
+    { header: 'Crit 2', field: 'Tipo_Analisis_2', type: 'string' },
+    { header: 'Crit 3', field: 'Tipo_Analisis_3', type: 'string' },
+    { header: 'Crit 4', field: 'Tipo_Analisis_4', type: 'string' },
+    { header: 'Crit 5', field: 'Tipo_Analisis_5', type: 'string' },
   ];
 
   inlineButtons: IButtons[] = [];
@@ -209,29 +210,38 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
               const data = result.data;
 
               const inputData = {
+                tipoClasificador: data.TipoClasificador,
                 cuenta: data.Cuenta,
                 subcuenta: data.SubCuenta,
-                descripcion: data.Descripcion,
+                nombre: data.Nombre,
                 naturaleza: data.Naturaleza,
-                crit1: data.Crit1,
-                crit2: data.Crit2,
-                crit3: data.Crit3,
+                crit1: data.Tipo_Analisis_1,
+                crit2: data.Tipo_Analisis_2,
+                crit3: data.Tipo_Analisis_3,
+                crit4: data.Tipo_Analisis_4,
+                crit5: data.Tipo_Analisis_5,
                 obligacion: data.Obligacion,
-                tipoClasificador: data.TipoClasificador,
-                seUtiliza:
-                  data.SeUtiliza !== ''
-                    ? data.SeUtiliza.split(', ').map(Number)
-                    : [],
-                terminal: data.Terminal,
-                crit1Consolidacion: data.Crit1Consolidacion,
-                crit2Consolidacion: data.Crit2Consolidacion,
-                crit3Consolidacion: data.Crit3Consolidacion,
+                grupo: data.Grupo.trim(),
+                clase: data.Clase.trim(),
+                categoria: data.Categoria.trim(),
+                clasificacion: data.Clasificacion,
+                tipo: data.Tipo,
+                estado: data.Estado,
+                seUtiliza: data.SeUtiliza
+                  ? data.SeUtiliza.split(', ').map(Number)
+                  : [],
+                crit1Consolidacion: data.Tipo_Analisis_1_Cons,
+                crit2Consolidacion: data.Tipo_Analisis_2_Cons,
+                crit3Consolidacion: data.Tipo_Analisis_3_Cons,
+                crit4Consolidacion: data.Tipo_Analisis_4_Cons,
+                crit5Consolidacion: data.Tipo_Analisis_5_Cons,
               };
 
               this._clasificadorCuentaSvc.fg.patchValue(inputData);
               this._dinamicDialogSvc.open(
                 'Modificar Cuenta',
-                ClasificadorCuentaFormComponent
+                ClasificadorCuentaFormComponent,
+                '1000px'
               );
               this._clasificadorCuentaSvc.subscription.push(
                 this._dinamicDialogSvc.ref.onClose.subscribe(

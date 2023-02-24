@@ -156,8 +156,8 @@ export class PrimeNgModule {
       medium: 'Medio',
       strong: 'Fuerte',
       passwordPrompt: 'Introduzca la contraseña',
-      emptyMessage: 'No se han encontrado resultados',
-      emptyFilterMessage: 'No se han encontrado resultados',
+      emptyMessage: 'No hay datos para mostrar',
+      emptyFilterMessage: 'No se ha encontrado coincidencia',
     });
   }
 }

@@ -33,6 +33,8 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
   inlineButtons: IButtons[] = [];
   topLeftButtons: IButtons[] = [];
 
+  loading = true;
+
   constructor(
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
@@ -57,6 +59,8 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
     try {
       this._tipoEntidadesSvc.subscription.push(
         this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
+          this.loading = false;
+
           const result = response.getAllTipoEntidades;
 
           if (!result.success) {

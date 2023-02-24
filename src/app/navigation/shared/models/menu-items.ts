@@ -52,26 +52,26 @@ export const MenuItems: MenuItem[] = [
         label: 'Activos Fijos Tangibles',
         icon: 'mdi mdi-home-city',
         routerLink: 'concilia-aft',
-        disabled: false,
+        disabled: true,
         title: 'Concilia los Activos Fijos con la Contabilidad.',
       },
       {
         label: 'Clasificadores AFT',
         items: [
           {
-            label: 'Clasificador CNMB',
+            label: 'Clasificador de Subgrupos',
             icon: 'mdi mdi-format-list-checkbox',
-            routerLink: 'clasificador-cnmb',
+            routerLink: 'clasificador-subgrupos',
             disabled: false,
             title:
-              'Clasificador CNMB para activos fijos tangibles, solo lectura.  Es modificable solo en el departamento de contabilidad de la Empresa.',
+              'Clasificador de Subgrupos para activos fijos tangibles, solo lectura.  Es modificable solo en el departamento de contabilidad de la Empresa.',
           },
           {
-            label: 'Arregla Clasificador CNMB',
+            label: 'Arregla Clasificador de Subgrupos',
             icon: 'mdi mdi-format-list-checks',
             routerLink: '',
             disabled: true,
-            title: 'Arregla Clasificador CNMB de los Activos Fijos.',
+            title: 'Arregla Clasificador de Subgrupos de los Activos Fijos.',
           },
         ],
       },
@@ -204,7 +204,7 @@ export const MenuItems: MenuItem[] = [
         label: 'Arregla Clasificador',
         icon: 'mdi mdi-flash-auto',
         routerLink: 'clasificador-cuenta/arreglar',
-        disabled: true,
+        disabled: false,
         title: 'Arregla Clasificador de Cuentas del Rodas.',
       },
     ],
@@ -246,20 +246,6 @@ export const MenuItems: MenuItem[] = [
   {
     label: 'Configuración',
     items: [
-      {
-        label: 'Unidades',
-        icon: 'mdi mdi-home',
-        routerLink: '',
-        disabled: true,
-        title: 'Configurar las Unidades.',
-      },
-      {
-        label: 'Complejos',
-        icon: 'mdi mdi-home-group',
-        routerLink: '',
-        disabled: true,
-        title: 'Configurar los Complejos.',
-      },
       {
         label: 'Conexiones',
         items: [

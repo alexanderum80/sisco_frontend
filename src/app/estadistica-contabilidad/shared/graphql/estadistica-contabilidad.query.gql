@@ -7,12 +7,13 @@
       Consolidado
       Annio
       Periodo
+      FechaActualizacion
       FechaInicio
       FechaFin
       Comprobantes
       Traspasados
       SinTraspasar
-      Invalidos
+      Inconclusos
       Anulados
     }
   }

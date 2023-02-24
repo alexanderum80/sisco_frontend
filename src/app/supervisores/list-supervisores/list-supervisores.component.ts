@@ -33,6 +33,8 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
   inlineButtons: IButtons[] = [];
   topLeftButtons: IButtons[] = [];
 
+  loading = true;
+
   constructor(
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
@@ -63,6 +65,8 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
     try {
       this._supervisorSvc.subscription.push(
         this._supervisorSvc.loadAllSupervisores().subscribe(response => {
+          this.loading = false;
+
           const result = response.getAllSupervisores;
 
           if (result.success === false) {

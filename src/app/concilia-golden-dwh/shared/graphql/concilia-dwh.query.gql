@@ -4,6 +4,7 @@ query ConciliaDWH($conciliaDWHInput: ConciliaDWHInput!) {
         data {
             Tipo
             IdCentro
+            Centro
             IdUnidad
             Unidad
             IdPiso

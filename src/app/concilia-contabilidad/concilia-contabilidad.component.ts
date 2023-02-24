@@ -16,13 +16,14 @@ import {
   ChangeDetectionStrategy,
   AfterContentChecked,
 } from '@angular/core';
-import { MenuItem, SelectItem } from 'primeng/api';
+import { MenuItem, SelectItem, MessageService } from 'primeng/api';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
 import { cloneDeep } from '@apollo/client/utilities';
 import { TabView } from 'primeng/tabview';
 import { toNumber } from 'lodash';
 import { SubdivisionesService } from '../shared/services/subdivisiones.service';
 import { DivisionesService } from '../shared/services/divisiones.service';
+import * as moment from 'moment';
 
 const DISPLAYED_COLUMNS_CONSULTAS: ITableColumns[] = [
   { header: 'Cuenta', field: 'Cuenta', type: 'string' },
@@ -30,6 +31,8 @@ const DISPLAYED_COLUMNS_CONSULTAS: ITableColumns[] = [
   { header: 'Análisis 1', field: 'Analisis1', type: 'string' },
   { header: 'Análisis 2', field: 'Analisis2', type: 'string' },
   { header: 'Análisis 3', field: 'Analisis3', type: 'string' },
+  { header: 'Análisis 4', field: 'Analisis4', type: 'string' },
+  { header: 'Análisis 5', field: 'Analisis5', type: 'string' },
   { header: 'Total', field: 'Total', type: 'decimal' },
 ];
 
@@ -109,9 +112,11 @@ export class ConciliaContabilidadComponent
   displayedColumnsChequeo: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cuenta', type: 'string' },
     { header: 'SubCuenta', field: 'SubCuenta', type: 'string' },
-    { header: 'Análisis 1', field: 'Analisis1', type: 'string' },
-    { header: 'Análisis 2', field: 'Analisis2', type: 'string' },
-    { header: 'Análisis 3', field: 'Analisis3', type: 'string' },
+    { header: 'Análisis 1', field: 'Analisis_1', type: 'string' },
+    { header: 'Análisis 2', field: 'Analisis_2', type: 'string' },
+    { header: 'Análisis 3', field: 'Analisis_3', type: 'string' },
+    { header: 'Análisis 4', field: 'Analisis_4', type: 'string' },
+    { header: 'Análisis 5', field: 'Analisis_5', type: 'string' },
     { header: 'Total', field: 'Total', type: 'decimal' },
   ];
 
@@ -125,6 +130,7 @@ export class ConciliaContabilidadComponent
 
   isConsolidado = false;
   loading = false;
+  loadingCentros = true;
   chequeoCentro = false;
 
   centrosAChequear: any[] = [];
@@ -161,13 +167,14 @@ export class ConciliaContabilidadComponent
     private _conciliaContabSvc: ConciliaContabilidadService,
     private _pdfMakeSvc: PdfmakeService,
     private _swalSvc: SweetalertService,
+    private _msgSvc: MessageService,
     private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.fg = this._conciliaContabSvc.fg;
-    // this.fg.reset();
-    this._conciliaContabSvc.inicializarFg();
+    this.fg.reset();
+    // this._conciliaContabSvc.inicializarFg();
     this._subscribeToFgValueChanges();
   }
 
@@ -264,14 +271,18 @@ export class ConciliaContabilidadComponent
     this.dataSourceAsientos = [];
     this.dataSourceExpresiones = [];
     this.dataSourceValores = [];
+    this.dataSourceCuadreSistemas = [];
     this.dataSourceClasificador = [];
     this.dataSourceCuadreSistemas = [];
+    this.dataSourceChequeo = [];
   }
 
   private _getUnidades(): void {
     try {
       this._conciliaContabSvc.subscription.push(
         this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+          this.loadingCentros = false;
+
           const result = response.getAllUnidadesByUsuario;
 
           if (!result.success) {
@@ -283,7 +294,7 @@ export class ConciliaContabilidadComponent
             (u: { IdUnidad: string; Nombre: string }) => {
               return {
                 value: u.IdUnidad,
-                label: u.IdUnidad + '-' + u.Nombre,
+                label: u.Nombre,
               };
             }
           );
@@ -334,7 +345,7 @@ export class ConciliaContabilidadComponent
                   (u: { IdUnidad: string; Nombre: string }) => {
                     return {
                       IdCentro: u.IdUnidad,
-                      Nombre: u.IdUnidad + '-' + u.Nombre,
+                      Nombre: u.Nombre,
                     };
                   }
                 );
@@ -423,6 +434,7 @@ export class ConciliaContabilidadComponent
     try {
       this.loading = true;
       this.chequeoCentro = false;
+      this._inicializarDatos();
 
       this._conciliaContabSvc.subscription.push(
         this._conciliaContabSvc.conciliar().subscribe({
@@ -457,6 +469,7 @@ export class ConciliaContabilidadComponent
             }
           },
           error: err => {
+            this.loading = false;
             this._swalSvc.error(err);
           },
         })
@@ -475,6 +488,8 @@ export class ConciliaContabilidadComponent
         .then(res => {
           if (res === ActionClicked.Yes) {
             this.loading = true;
+            this._inicializarDatos();
+
             this._conciliaContabSvc.subscription.push(
               this._conciliaContabSvc.iniciarSaldo().subscribe({
                 next: response => {
@@ -482,7 +497,11 @@ export class ConciliaContabilidadComponent
                   const result = response.iniciarSaldos;
 
                   if (result.success) {
-                    this._swalSvc.success('Saldos Iniciados Correctamente.');
+                    this._msgSvc.add({
+                      severity: 'success',
+                      summary: 'Satisfactorio',
+                      detail: 'Saldos Iniciados Correctamente.',
+                    });
                   } else {
                     this._swalSvc.error(result.error);
                   }
@@ -509,7 +528,7 @@ export class ConciliaContabilidadComponent
       this.selectedTabViewIndex = 0;
       this.loading = true;
       this.chequeoCentro = true;
-      this.dataSourceChequeo = [];
+      this._inicializarDatos();
 
       const idCentrosAChequear = this.centrosAChequear.map(row => {
         return row.IdCentro;
@@ -565,7 +584,12 @@ export class ConciliaContabilidadComponent
             'Reporte de incidencias de la entrega de los Estados Financieros'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            this.fg.get('apertura')?.value
+              ? 0
+              : this.fg.get('cierre')?.value
+              ? 13
+              : +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaContabSvc.getCentro(
             this.fg.get('idCentro')?.value,
@@ -617,7 +641,12 @@ export class ConciliaContabilidadComponent
             'Chequeo de Centros vs Consolidado'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            this.fg.get('apertura')?.value
+              ? 0
+              : this.fg.get('cierre')?.value
+              ? 13
+              : +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaContabSvc.getConsolidado(
             this.fg.get('idCentro')?.value,
@@ -656,7 +685,12 @@ export class ConciliaContabilidadComponent
             'Diferencias entre el Clasificador y el Clasificador del Rodas'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            this.fg.get('apertura')?.value
+              ? 0
+              : this.fg.get('cierre')?.value
+              ? 13
+              : +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaContabSvc.getCentro(
             this.fg.get('idCentro')?.value,

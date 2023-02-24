@@ -3,9 +3,12 @@ import { FormGroup, FormControl } from '@angular/forms';
 import {
   ClasificadorCuentasQueryResponse,
   ClasificadorCuentasMutationResponse,
+  IGrupoCuenta,
+  IClaseCuenta,
+  ICategoriaCuenta,
 } from './../models/clasificador-cuenta.model';
 import { Injectable } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
 import SweetAlert from 'sweetalert2';
 import { clasificadorCuentaApi } from '../graphql/clasificador-cuenta.actions';
 import * as moment from 'moment';
@@ -13,20 +16,30 @@ import * as moment from 'moment';
 @Injectable()
 export class ClasificadorCuentaService {
   fg: FormGroup = new FormGroup({
-    cuenta: new FormControl(''),
-    subcuenta: new FormControl(''),
-    descripcion: new FormControl(''),
-    naturaleza: new FormControl(''),
-    crit1: new FormControl(''),
-    crit2: new FormControl(''),
-    crit3: new FormControl(''),
-    obligacion: new FormControl(false),
-    tipoClasificador: new FormControl(''),
-    seUtiliza: new FormControl(''),
-    terminal: new FormControl(false),
-    crit1Consolidacion: new FormControl(''),
-    crit2Consolidacion: new FormControl(''),
-    crit3Consolidacion: new FormControl(''),
+    tipoClasificador: new FormControl('', { initialValueIsDefault: true }),
+    cuenta: new FormControl('', { initialValueIsDefault: true }),
+    subcuenta: new FormControl('', { initialValueIsDefault: true }),
+    nombre: new FormControl('', { initialValueIsDefault: true }),
+    naturaleza: new FormControl('', { initialValueIsDefault: true }),
+    crit1: new FormControl('', { initialValueIsDefault: true }),
+    crit2: new FormControl('', { initialValueIsDefault: true }),
+    crit3: new FormControl('', { initialValueIsDefault: true }),
+    crit4: new FormControl('', { initialValueIsDefault: true }),
+    crit5: new FormControl('', { initialValueIsDefault: true }),
+    obligacion: new FormControl(false, { initialValueIsDefault: true }),
+    grupo: new FormControl(null, { initialValueIsDefault: true }),
+    clase: new FormControl(null, { initialValueIsDefault: true }),
+    categoria: new FormControl(null, { initialValueIsDefault: true }),
+    clasificacion: new FormControl(null, { initialValueIsDefault: true }),
+    tipo: new FormControl(null, { initialValueIsDefault: true }),
+    estado: new FormControl('A', { initialValueIsDefault: true }),
+    terminal: new FormControl(false, { initialValueIsDefault: true }),
+    crit1Consolidacion: new FormControl('', { initialValueIsDefault: true }),
+    crit2Consolidacion: new FormControl('', { initialValueIsDefault: true }),
+    crit3Consolidacion: new FormControl('', { initialValueIsDefault: true }),
+    crit4Consolidacion: new FormControl('', { initialValueIsDefault: true }),
+    crit5Consolidacion: new FormControl('', { initialValueIsDefault: true }),
+    seUtiliza: new FormControl('', { initialValueIsDefault: true }),
   });
 
   fgArreglaClasif: FormGroup = new FormGroup({
@@ -38,6 +51,10 @@ export class ClasificadorCuentaService {
   });
 
   subscription: Subscription[] = [];
+
+  grupoCuentas$ = new BehaviorSubject<IGrupoCuenta[]>([]);
+  claseCuentas$ = new BehaviorSubject<IClaseCuenta[]>([]);
+  categoriaCuentas$ = new BehaviorSubject<ICategoriaCuenta[]>([]);
 
   constructor(private _apolloSvc: ApolloService) {}
 
@@ -108,20 +125,29 @@ export class ClasificadorCuentaService {
     return new Observable<ClasificadorCuentasMutationResponse>(subscriber => {
       try {
         const clasificadorInfo = {
+          TipoClasificador: this.fg.controls['tipoClasificador'].value,
           Cuenta: this.fg.controls['cuenta'].value,
           SubCuenta: this.fg.controls['subcuenta'].value,
-          Descripcion: this.fg.controls['descripcion'].value,
+          Nombre: this.fg.controls['nombre'].value,
           Naturaleza: this.fg.controls['naturaleza'].value,
-          Crit1: this.fg.controls['crit1'].value,
-          Crit2: this.fg.controls['crit2'].value,
-          Crit3: this.fg.controls['crit3'].value,
+          Tipo_Analisis_1: this.fg.controls['crit1'].value,
+          Tipo_Analisis_2: this.fg.controls['crit2'].value,
+          Tipo_Analisis_3: this.fg.controls['crit3'].value,
+          Tipo_Analisis_4: this.fg.controls['crit4'].value,
+          Tipo_Analisis_5: this.fg.controls['crit5'].value,
           Obligacion: this.fg.controls['obligacion'].value,
-          TipoClasificador: this.fg.controls['tipoClasificador'].value,
+          Grupo: this.fg.controls['grupo'].value,
+          Clase: this.fg.controls['clase'].value,
+          Categoria: this.fg.controls['categoria'].value,
+          Clasificacion: this.fg.controls['clasificacion'].value,
+          Tipo: this.fg.controls['tipo'].value,
+          Estado: this.fg.controls['estado'].value,
+          Tipo_Analisis_1_Cons: this.fg.controls['crit1Consolidacion'].value,
+          Tipo_Analisis_2_Cons: this.fg.controls['crit2Consolidacion'].value,
+          Tipo_Analisis_3_Cons: this.fg.controls['crit3Consolidacion'].value,
+          Tipo_Analisis_4_Cons: this.fg.controls['crit4Consolidacion'].value,
+          Tipo_Analisis_5_Cons: this.fg.controls['crit5Consolidacion'].value,
           SeUtiliza: this.fg.controls['seUtiliza'].value.join(', '),
-          Terminal: this.fg.controls['terminal'].value,
-          Crit1Consolidacion: this.fg.controls['crit1Consolidacion'].value,
-          Crit2Consolidacion: this.fg.controls['crit2Consolidacion'].value,
-          Crit3Consolidacion: this.fg.controls['crit3Consolidacion'].value,
         };
 
         this.subscription.push(
@@ -203,6 +229,71 @@ export class ClasificadorCuentaService {
         );
       } catch (err: any) {
         throw new Error(err);
+      }
+    });
+  }
+
+  loadGrupoCuenta(): Observable<ClasificadorCuentasQueryResponse> {
+    this.grupoCuentas$.next([]);
+
+    return new Observable(subscriber => {
+      try {
+        this.subscription.push(
+          this._apolloSvc
+            .watchQuery<ClasificadorCuentasQueryResponse>(
+              clasificadorCuentaApi.grupoCuenta
+            )
+            .subscribe(res => {
+              this.grupoCuentas$.next(res.getAllGrupoCuenta);
+              subscriber.next();
+            })
+        );
+      } catch (err: any) {
+        subscriber.error(err);
+      }
+    });
+  }
+
+  loadClaseCuenta(
+    idGrupo: string
+  ): Observable<ClasificadorCuentasQueryResponse> {
+    return new Observable(subscriber => {
+      try {
+        this.subscription.push(
+          this._apolloSvc
+            .watchQuery<ClasificadorCuentasQueryResponse>(
+              clasificadorCuentaApi.claseCuenta,
+              { idGrupo }
+            )
+            .subscribe(res => {
+              this.claseCuentas$.next(res.getClaseCuentaByIdGrupo);
+              subscriber.next();
+            })
+        );
+      } catch (err: any) {
+        subscriber.error(err);
+      }
+    });
+  }
+
+  loadCategoriaCuenta(
+    idClase: number
+  ): Observable<ClasificadorCuentasQueryResponse> {
+    return new Observable(subscriber => {
+      try {
+        this.subscription.push(
+          this._apolloSvc
+            .watchQuery<ClasificadorCuentasQueryResponse>(
+              clasificadorCuentaApi.categoriaCuenta,
+              { idClase }
+            )
+            .subscribe(res => {
+              this.categoriaCuentas$.next(res.getCategoriaCuentaByIdClase);
+              subscriber.next();
+            })
+        );
+      } catch (err: any) {
+        subscriber.error(err);
       }
     });
   }

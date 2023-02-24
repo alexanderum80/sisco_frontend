@@ -15,20 +15,26 @@ import {
   ChangeDetectorRef,
   AfterViewInit,
   OnDestroy,
+  AfterContentChecked,
 } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-concilia-uh',
   templateUrl: './concilia-uh.component.html',
   styleUrls: ['./concilia-uh.component.scss'],
 })
-export class ConciliaUhComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ConciliaUhComponent
+  implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy
+{
   displayedColumnsInventario: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cuenta', type: 'string' },
     { header: 'SubCuenta', field: 'SubCuenta', type: 'string' },
     { header: 'Análisis 1', field: 'Analisis1', type: 'string' },
     { header: 'Análisis 2', field: 'Analisis2', type: 'string' },
     { header: 'Análisis 3', field: 'Analisis3', type: 'string' },
+    { header: 'Análisis 4', field: 'Analisis4', type: 'string' },
+    { header: 'Análisis 5', field: 'Analisis5', type: 'string' },
     {
       header: 'Saldo Inventario',
       field: 'SaldoUH',
@@ -55,8 +61,10 @@ export class ConciliaUhComponent implements OnInit, AfterViewInit, OnDestroy {
     { header: 'Análisis 1', field: 'Analisis1', type: 'string' },
     { header: 'Análisis 2', field: 'Analisis2', type: 'string' },
     { header: 'Análisis 3', field: 'Analisis3', type: 'string' },
+    { header: 'Análisis 4', field: 'Analisis4', type: 'string' },
+    { header: 'Análisis 5', field: 'Analisis5', type: 'string' },
     {
-      header: 'Saldo Depreciación',
+      header: 'Saldo Desgaste',
       field: 'SaldoUH',
       type: 'decimal',
       totalize: true,
@@ -116,13 +124,15 @@ export class ConciliaUhComponent implements OnInit, AfterViewInit, OnDestroy {
     this.fg = this._conciliaUhSvc.fg;
     this._conciliaUhSvc.inicializarFg();
     this._subscribeToFgValueChanges();
-
-    this._changeDedectionRef.detectChanges();
   }
 
   ngAfterViewInit(): void {
     this._getUnidades();
     this._getTipoEntidades();
+  }
+
+  ngAfterContentChecked(): void {
+    this._changeDedectionRef.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -169,7 +179,7 @@ export class ConciliaUhComponent implements OnInit, AfterViewInit, OnDestroy {
             (u: { IdUnidad: string; Nombre: string }) => {
               return {
                 value: u.IdUnidad,
-                label: u.IdUnidad + '-' + u.Nombre,
+                label: u.Nombre,
               };
             }
           );
@@ -260,24 +270,21 @@ export class ConciliaUhComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
-  reporte(): void {
-    this._reporteConcilia();
-  }
-
-  private async _reporteConcilia(): Promise<any> {
+  async reporte(): Promise<void> {
     try {
       const documentDefinitions = {
         info: {
           title: 'Conciliación Rodas vs UH | SISCO',
         },
         pageSize: 'LETTER',
-        // pageOrientation: 'landscape',
+        pageOrientation: 'landscape',
         content: [
           await this._pdfMakeSvc.getHeaderDefinition(
             'Conciliación Rodas vs Útiles y Herramientas'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
-            this.fg.controls['periodo'].value
+            +moment(this.fg.controls['periodo'].value).format('MM'),
+            moment(this.fg.controls['periodo'].value).format('YYYY')
           ),
           await this._conciliaUhSvc.getConciliacionDefinition(
             this.dataSourceConciliacion,

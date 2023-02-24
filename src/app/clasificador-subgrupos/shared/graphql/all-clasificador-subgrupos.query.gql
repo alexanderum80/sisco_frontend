@@ -1,0 +1,8 @@
+query GetAllActFijosClasificadorSubgrupo {
+    getAllActFijosClasificadorSubgrupo {
+        Grupo
+        Codigo
+        Descripcion
+        Tasa
+    }
+}

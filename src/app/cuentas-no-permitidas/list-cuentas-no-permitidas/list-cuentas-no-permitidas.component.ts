@@ -28,9 +28,11 @@ export class ListCuentasNoPermitidasComponent
   columns: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cta', type: 'string' },
     { header: 'SubCuenta', field: 'SubCta', type: 'string' },
-    { header: 'Crit1', field: 'Crit1', type: 'string' },
-    { header: 'Crit2', field: 'Crit2', type: 'string' },
-    { header: 'Crit3', field: 'Crit3', type: 'string' },
+    { header: 'Crit 1', field: 'Crit1', type: 'string' },
+    { header: 'Crit 2', field: 'Crit2', type: 'string' },
+    { header: 'Crit 3', field: 'Crit3', type: 'string' },
+    { header: 'Crit 4', field: 'Crit4', type: 'string' },
+    { header: 'Crit 5', field: 'Crit5', type: 'string' },
     { header: 'Centralizada', field: 'Centralizada', type: 'boolean' },
   ];
 

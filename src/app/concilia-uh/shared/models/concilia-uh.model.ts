@@ -13,6 +13,8 @@ export interface ConciliaUH {
   Analisis1: string;
   Analisis2: string;
   Analisis3: string;
+  Analisis4: string;
+  Analisis5: string;
   SaldoUH: number;
   SaldoRodas: number;
   Diferencia: number;

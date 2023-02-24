@@ -390,7 +390,7 @@ export class ConciliaExternaContaComponent
           this.unidadesODValues = result.data.map((u: any) => {
             return {
               value: u,
-              label: u.IdUnidad + '-' + u.Nombre,
+              label: u.Nombre,
             };
           });
           this.unidadesODValues.unshift({
@@ -401,7 +401,7 @@ export class ConciliaExternaContaComponent
           this.unidadesValues = result.data.map((u: any) => {
             return {
               value: u,
-              label: u.IdUnidad + '-' + u.Nombre,
+              label: u.Nombre,
             };
           });
           this.unidadesValues.unshift({
@@ -726,6 +726,7 @@ export class ConciliaExternaContaComponent
       this._swalSvc.error(err.message || err);
     }
   }
+  /* #region Reportes */
 
   async reporte() {
     switch (this.selectedTab) {
@@ -812,6 +813,7 @@ export class ConciliaExternaContaComponent
   closeReporte() {
     this.showReport = false;
   }
+  /* #endregion */
 
   exportar() {
     let data = [];

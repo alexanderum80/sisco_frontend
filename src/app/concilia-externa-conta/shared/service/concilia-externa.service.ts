@@ -386,7 +386,7 @@ export class ConciliaExternaContaService {
             this._getPeriodoConciliacion(),
             this._getDatosEmisor(),
             await this._getActaConciliacionEmisor(),
-            this._getPieDeFirmaEmisorReceptor(),
+            this._getPieDeFirmaEmisor(),
             this._getPieDeFirmaSupervisor(),
             this._getNota(),
           ],
@@ -408,7 +408,7 @@ export class ConciliaExternaContaService {
             this._getPeriodoConciliacion(),
             this._getDatosReceptor(),
             await this._getActaConciliacionReceptor(),
-            this._getPieDeFirmaEmisorReceptor(),
+            this._getPieDeFirmaReceptor(),
             this._getPieDeFirmaSupervisor(),
             this._getNota(),
           ],
@@ -779,7 +779,7 @@ export class ConciliaExternaContaService {
     };
   }
 
-  private _getPieDeFirmaEmisorReceptor() {
+  private _getPieDeFirmaEmisor() {
     return {
       columns: [
         [
@@ -789,7 +789,9 @@ export class ConciliaExternaContaService {
             margin: [0, 40, 0, 0],
           },
           {
-            text: `Nombre y Apellidos: ${this._getNombreEmisor()}`,
+            text: `Nombre y Apellidos: ${
+              this.fg.get('usuarioEmisor')?.value?.Empleado || ''
+            }`,
             margin: [0, 10, 0, 0],
           },
           {
@@ -808,11 +810,62 @@ export class ConciliaExternaContaService {
             margin: [0, 40, 0, 0],
           },
           {
-            text: `Nombre y Apellidos: ${this._getNombreReceptor()}`,
+            text: `Nombre y Apellidos: ${
+              this.fg.get('usuarioReceptor')?.value?.Empleado || ''
+            }`,
             margin: [0, 10, 0, 0],
           },
           {
             text: `Cargo:                         ${this.fg.controls['cargoReceptor'].value}`,
+            margin: [0, 10, 0, 0],
+          },
+          {
+            text: `Firma:                         _______________________`,
+            margin: [0, 10, 0, 0],
+          },
+        ],
+      ],
+    };
+  }
+
+  private _getPieDeFirmaReceptor() {
+    return {
+      columns: [
+        [
+          {
+            text: 'Por el emisor:',
+            style: 'bold',
+            margin: [0, 40, 0, 0],
+          },
+          {
+            text: `Nombre y Apellidos: ${
+              this.fg.get('usuarioReceptor')?.value?.Empleado || ''
+            }`,
+            margin: [0, 10, 0, 0],
+          },
+          {
+            text: `Cargo:                         ${this.fg.controls['cargoReceptor'].value}`,
+            margin: [0, 10, 0, 0],
+          },
+          {
+            text: `Firma:                         _______________________`,
+            margin: [0, 10, 0, 0],
+          },
+        ],
+        [
+          {
+            text: 'Por el Receptor:',
+            style: 'bold',
+            margin: [0, 40, 0, 0],
+          },
+          {
+            text: `Nombre y Apellidos: ${
+              this.fg.get('usuarioEmisor')?.value?.Empleado || ''
+            }`,
+            margin: [0, 10, 0, 0],
+          },
+          {
+            text: `Cargo:                         ${this.fg.controls['cargoEmisor'].value}`,
             margin: [0, 10, 0, 0],
           },
           {
@@ -834,7 +887,9 @@ export class ConciliaExternaContaService {
             margin: [150, 40, 0, 0],
           },
           {
-            text: `Nombre y Apellidos: ${this._getNombreSupervisor()}`,
+            text: `Nombre y Apellidos: ${
+              this.fg.get('usuarioSupervisor')?.value?.Empleado || ''
+            }`,
             margin: [150, 10, 0, 0],
           },
           {
@@ -848,18 +903,6 @@ export class ConciliaExternaContaService {
         ],
       ],
     };
-  }
-
-  private _getNombreEmisor() {
-    return this.fg.get('usuarioEmisor')?.value?.Empleado || '';
-  }
-
-  private _getNombreReceptor() {
-    return this.fg.get('usuarioReceptor')?.value?.Empleado || '';
-  }
-
-  private _getNombreSupervisor() {
-    return this.fg.get('usuarioSupervisor')?.value?.Empleado || '';
   }
 
   private _getNota() {

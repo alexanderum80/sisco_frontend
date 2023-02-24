@@ -11,10 +11,10 @@
         [required]="true"
         [filter]="true"
         [showClear]="true"></png-dropdown>
-    </div>
-    <div class="field">
+      <!-- </div>
+    <div class="field"> -->
       <png-input-text
-        class="w-full mt-1"
+        class="w-full mt-1 ml-3"
         label="Cuenta"
         [fg]="fg"
         control="cuenta"
@@ -31,15 +31,25 @@
     <div class="field">
       <png-input-text
         class="w-full mt-1"
-        label="Descripción"
+        label="Nombre"
         [fg]="fg"
-        control="descripcion"
+        control="nombre"
         [required]="true"
         autocomplete="off"></png-input-text>
     </div>
     <div class="field">
       <png-dropdown
         class="w-full mt-1"
+        [fg]="fg"
+        control="clasificacion"
+        label="Clasificación"
+        [optionsValues]="clasificacionCuentaValues"
+        placeholder="&lt;Clasificación&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-full mt-1 ml-3"
         [fg]="fg"
         control="naturaleza"
         label="Naturaleza"
@@ -48,11 +58,16 @@
         [required]="true"
         [filter]="true"
         [showClear]="true"></png-dropdown>
-      <png-checkbox
-        class="mt-1 ml-3"
+      <png-dropdown
+        class="w-full mt-1 ml-3"
         [fg]="fg"
-        control="terminal"
-        label="Terminal"></png-checkbox>
+        control="estado"
+        label="Estado"
+        [optionsValues]="estadoValues"
+        placeholder="&lt;Estado&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
       <png-checkbox
         class="mt-1 ml-3"
         [fg]="fg"
@@ -78,6 +93,60 @@
         [fg]="fg"
         control="crit3"
         autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit4"
+        [fg]="fg"
+        control="crit4"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit5"
+        [fg]="fg"
+        control="crit5"
+        autocomplete="off"></png-input-text>
+    </div>
+    <div class="field">
+      <png-dropdown
+        class="w-9rem mt-1"
+        [fg]="fg"
+        control="tipo"
+        label="Tipo"
+        [optionsValues]="tipoCuentaValues"
+        placeholder="&lt;Tipo&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-13rem mt-1 ml-3"
+        [fg]="fg"
+        control="grupo"
+        label="Grupo"
+        [optionsValues]="grupoCuentaValues"
+        placeholder="&lt;Grupo&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-16rem mt-1 ml-3"
+        [fg]="fg"
+        control="clase"
+        label="Clase"
+        [optionsValues]="claseCuentaValues"
+        placeholder="&lt;Clase&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-21rem mt-1 ml-3"
+        [fg]="fg"
+        control="categoria"
+        label="Categoria"
+        [optionsValues]="categoriaCuentaValues"
+        placeholder="&lt;Categoria&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
     </div>
     <div class="field">
       <png-multi-select
@@ -107,6 +176,18 @@
         label="Crit3 Consolidación"
         [fg]="fg"
         control="crit3Consolidacion"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit4 Consolidación"
+        [fg]="fg"
+        control="crit4Consolidacion"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit5 Consolidación"
+        [fg]="fg"
+        control="crit5Consolidacion"
         autocomplete="off"></png-input-text>
     </div>
   </form>
