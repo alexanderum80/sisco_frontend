@@ -42,9 +42,7 @@ export class AuthenticationService {
         })
         .subscribe({
           next: response => {
-            const _usuario: Usuario = new Usuario(
-              response.authenticateUsuario.data
-            );
+            const _usuario: Usuario = new Usuario(response.authenticateUsuario);
             this._usuarioSubject.next(_usuario);
 
             subscriber.next(response);

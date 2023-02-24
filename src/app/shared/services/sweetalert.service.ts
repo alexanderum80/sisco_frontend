@@ -19,11 +19,14 @@ export class SweetalertService {
     });
   }
 
-  error(error: string): void {
+  error(error: any): void {
     Swal.fire({
       icon: 'error',
       title: 'ERROR',
-      html: typeof error === 'string' ? error.replace('Error: ', '') : error,
+      html:
+        typeof error === 'string'
+          ? error.replace('Error: ', '')
+          : error.graphQLErrors[0]?.message || error,
       confirmButtonText: 'Aceptar',
       allowOutsideClick: false,
     });

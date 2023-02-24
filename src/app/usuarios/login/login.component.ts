@@ -49,7 +49,7 @@ export class LoginComponent implements OnInit {
         next: response => {
           this.autenticando = false;
 
-          const usuario = response.authenticateUsuario.data;
+          const usuario = response.authenticateUsuario;
 
           if (usuario.CambiarContrasena) {
             this._usuarioSvc.fg.controls['idUsuario'].setValue(
