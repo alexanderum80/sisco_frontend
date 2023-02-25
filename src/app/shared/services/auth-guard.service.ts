@@ -30,6 +30,11 @@ export class AuthGuard implements CanActivate {
     activatedRoute: ActivatedRouteSnapshot,
     routerStateSnapshot: RouterStateSnapshot
   ): boolean {
+    const usuarioLogged = localStorage.getItem('usuario');
+    if (usuarioLogged)
+      this._authenticationSvc.udpateUsuario(JSON.parse(usuarioLogged));
+    else this._authenticationSvc.udpateUsuario(null);
+
     if (!this._authenticationSvc.authenticated) {
       if (routerStateSnapshot.url === '/') {
         this._router.navigate(['/login']);

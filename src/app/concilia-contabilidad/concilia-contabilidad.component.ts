@@ -375,9 +375,6 @@ export class ConciliaContabilidadComponent
           );
           break;
       }
-      if (subordinadoA === 100) {
-      } else {
-      }
     } catch (err: any) {
       this._swalSvc.error(err);
     }

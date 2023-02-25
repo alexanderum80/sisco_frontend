@@ -42,8 +42,12 @@ export class AuthenticationService {
         })
         .subscribe({
           next: response => {
-            const _usuario: Usuario = new Usuario(response.authenticateUsuario);
-            this._usuarioSubject.next(_usuario);
+            localStorage.setItem(
+              'usuario',
+              JSON.stringify(response.authenticateUsuario)
+            );
+
+            this.udpateUsuario(response.authenticateUsuario);
 
             subscriber.next(response);
           },
@@ -54,7 +58,13 @@ export class AuthenticationService {
     });
   }
 
+  udpateUsuario(usuario: IUsuario | null): void {
+    const _usuario = usuario ? new Usuario(usuario) : null;
+    this._usuarioSubject.next(_usuario);
+  }
+
   logout(): void {
+    localStorage.clear();
     this._usuarioSubject.next(null);
     this._router.navigate(['login']);
   }
