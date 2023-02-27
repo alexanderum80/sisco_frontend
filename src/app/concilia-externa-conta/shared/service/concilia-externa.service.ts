@@ -153,9 +153,9 @@ export class ConciliaExternaContaService {
       Annio: +moment(controls['periodo'].value).format('YYYY'),
       Mes: +moment(controls['periodo'].value).format('MM'),
       Division: +controls['division'].value,
-      Unidad: +controls['unidad'].value.IdUnidad,
+      Unidad: +controls['unidad'].value.IdUnidad || 0,
       DivisionOD: +controls['divisionOD'].value,
-      UnidadOD: +controls['unidadOD'].value.IdUnidad,
+      UnidadOD: +controls['unidadOD'].value.IdUnidad || 0,
     };
 
     return new Observable<IConciliaExternaContabQueryReponse>(subscriber => {

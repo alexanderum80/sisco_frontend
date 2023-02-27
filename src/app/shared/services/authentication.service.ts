@@ -42,11 +42,6 @@ export class AuthenticationService {
         })
         .subscribe({
           next: response => {
-            localStorage.setItem(
-              'usuario',
-              JSON.stringify(response.authenticateUsuario)
-            );
-
             this.udpateUsuario(response.authenticateUsuario);
 
             subscriber.next(response);

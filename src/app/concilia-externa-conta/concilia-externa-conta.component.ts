@@ -547,11 +547,7 @@ export class ConciliaExternaContaComponent
 
   private _iniciarConciliacion() {
     this._conciliaExternaContaSvc.iniciarConciliacion().subscribe({
-      next: response => {
-        const result = response.inicializarConciliacion;
-        if (!result.success) {
-          return this._swalSvc.error(result.error);
-        }
+      next: () => {
         this._socketService.emitSocket('concilia-status-change', true);
 
         this._swalSvc.info('Se ha iniciado la Conciliación correctamente.');
@@ -563,12 +559,8 @@ export class ConciliaExternaContaComponent
   }
 
   private _cerrarConciliacion() {
-    this._conciliaExternaContaSvc.iniciarConciliacion().subscribe({
-      next: response => {
-        const result = response.cerrarConciliacion;
-        if (!result.success) {
-          return this._swalSvc.error(result.error);
-        }
+    this._conciliaExternaContaSvc.cerrarConciliacion().subscribe({
+      next: () => {
         this._socketService.emitSocket('concilia-status-change', false);
 
         this._swalSvc.info('Se ha cerrado la Conciliación correctamente.');

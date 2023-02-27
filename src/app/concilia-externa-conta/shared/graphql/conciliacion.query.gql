@@ -1,5 +1,5 @@
 query GetConciliacionExternaContab($conciliaExternaInput: ConciliaExternaContabilidadInput!) {
-   getConciliacionExternaContab(conciliaExternaInput: $conciliaExternaInput) {
+  getConciliacionExternaContab(conciliaExternaInput: $conciliaExternaInput) {
     getConciliaContab {
       Id
       Annio

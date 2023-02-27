@@ -1,3 +1,4 @@
+import { PrimeCheckboxModule } from './shared/ui/prime-ng/checkbox/checkbox.module';
 import { Apollo } from 'apollo-angular';
 import { PrimeMenubarModule } from './shared/ui/prime-ng/menubar/menubar.module';
 import { PrimeButtonModule } from './shared/ui/prime-ng/button/button.module';
@@ -35,6 +36,7 @@ import { DialogService } from 'primeng/dynamicdialog';
     PrimePasswordModule,
     PrimeButtonModule,
     PrimeMenubarModule,
+    PrimeCheckboxModule,
 
     // Apollo
     HttpClientModule, // provides HttpClient for HttpLink

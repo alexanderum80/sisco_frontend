@@ -30,6 +30,7 @@ export class LoginComponent implements OnInit {
     this.fg = new FormGroup({
       usuario: new FormControl(''),
       password: new FormControl(''),
+      sesionAbierta: new FormControl(false),
     });
 
     this._navigateSvc.continueURL =
@@ -50,6 +51,9 @@ export class LoginComponent implements OnInit {
           this.autenticando = false;
 
           const usuario = response.authenticateUsuario;
+
+          // if (this.fg.get('sesionAbierta')?.value)
+          //   localStorage.setItem('usuario', JSON.stringify(usuario));
 
           if (usuario.CambiarContrasena) {
             this._usuarioSvc.fg.controls['idUsuario'].setValue(
