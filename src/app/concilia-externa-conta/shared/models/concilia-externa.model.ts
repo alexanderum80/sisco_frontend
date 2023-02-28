@@ -59,7 +59,7 @@ export interface IConciliaExternaContabilidad {
 }
 
 export interface IConciliaExternaContabQueryReponse {
-  getRecepcionesDifCantidad: IQueryResponse;
+  // getRecepcionesDifCantidad: IQueryResponse;
   getDatosConciliacionExterna: IConciliaExternaDatosConcilicion;
   getConciliacionExternaContab: IConciliaExternaContabilidad;
   // getActaConciliacion: IActaConciliacion[];

@@ -722,14 +722,14 @@ export class ConciliaExternaContaComponent
 
   async reporte() {
     switch (this.selectedTab) {
-      case 0:
+      case 0: // reporte conciliación
         this.reporteName = 'Conciliación Nacional en Rodas.';
         this.generatePDF();
         break;
-      case 1:
+      case 1: // acta emisor
         this._conciliacionEntreUnidadesEmisor();
         break;
-      case 2:
+      case 2: // acta receptor
         this._conciliacionEntreUnidadesReceptor();
         break;
     }
@@ -737,6 +737,14 @@ export class ConciliaExternaContaComponent
 
   private _conciliacionEntreUnidadesEmisor() {
     try {
+      if (
+        this.fg.get('unidad')?.value === '0' ||
+        this.fg.get('unidadOD')?.value === '0'
+      )
+        return this._swalSvc.warning(
+          'Para poder emitir el Acta debe seleccionar las Unidades.'
+        );
+
       this.loadingConciliacionEntreUnidadesEmisor = true;
 
       this._conciliaExternaContaSvc
@@ -766,6 +774,14 @@ export class ConciliaExternaContaComponent
 
   private _conciliacionEntreUnidadesReceptor() {
     try {
+      if (
+        this.fg.get('unidad')?.value === '0' ||
+        this.fg.get('unidadOD')?.value === '0'
+      )
+        return this._swalSvc.warning(
+          'Para poder emitir el Acta debe seleccionar las Unidades.'
+        );
+
       this.loadingConciliacionEntreUnidadesReceptor = true;
 
       this._conciliaExternaContaSvc

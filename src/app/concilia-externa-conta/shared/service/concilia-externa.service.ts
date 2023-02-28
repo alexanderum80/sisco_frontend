@@ -320,8 +320,8 @@ export class ConciliaExternaContaService {
           {
             annio: +moment(payload['periodo'].value).format('YYYY'),
             mes: +moment(payload['periodo'].value).format('MM'),
-            unidad: +payload['unidad'].value.IdUnidad,
-            unidadOD: +payload['unidadOD'].value.IdUnidad,
+            unidad: +payload['unidad'].value.IdUnidad || 0,
+            unidadOD: +payload['unidadOD'].value.IdUnidad || 0,
           }
         )
         .subscribe({
@@ -344,8 +344,8 @@ export class ConciliaExternaContaService {
           {
             annio: +moment(payload['periodo'].value).format('YYYY'),
             mes: +moment(payload['periodo'].value).format('MM'),
-            unidad: +payload['unidadOD'].value.IdUnidad,
-            unidadOD: +payload['unidad'].value.IdUnidad,
+            unidad: +payload['unidadOD'].value.IdUnidad || 0,
+            unidadOD: +payload['unidad'].value.IdUnidad || 0,
           }
         )
         .subscribe({
@@ -359,214 +359,8 @@ export class ConciliaExternaContaService {
     });
   }
 
-  public async getPdfDefinition(reportName: string, selectedTab: number) {
-    switch (selectedTab) {
-      case 0: // Conciliación Contabilidad
-        return {
-          pageSize: 'LETTER',
-          pageOrientation: 'landscape',
-          content: [
-            await this._pdfMakeSvc.getHeaderDefinition(reportName),
-            await this._getConciliaContab(),
-          ],
-          defaultStyle: {
-            fontSize: 9,
-          },
-          styles: {
-            tableHeader: {
-              bold: true,
-            },
-          },
-        };
-      case 1: // Acta Emisor
-        return {
-          pageSize: 'LETTER',
-          content: [
-            await this._pdfMakeSvc.getHeaderDefinition(reportName),
-            this._getPeriodoConciliacion(),
-            this._getDatosEmisor(),
-            await this._getActaConciliacionEmisor(),
-            this._getPieDeFirmaEmisor(),
-            this._getPieDeFirmaSupervisor(),
-            this._getNota(),
-          ],
-          defaultStyle: {
-            fontSize: 10,
-            lineHeight: 1.3,
-          },
-          styles: {
-            bold: {
-              bold: true,
-            },
-          },
-        };
-      case 2: // Acta Receptor
-        return {
-          pageSize: 'LETTER',
-          content: [
-            await this._pdfMakeSvc.getHeaderDefinition(reportName),
-            this._getPeriodoConciliacion(),
-            this._getDatosReceptor(),
-            await this._getActaConciliacionReceptor(),
-            this._getPieDeFirmaReceptor(),
-            this._getPieDeFirmaSupervisor(),
-            this._getNota(),
-          ],
-          defaultStyle: {
-            fontSize: 10,
-            lineHeight: 1.3,
-          },
-          styles: {
-            bold: {
-              bold: true,
-            },
-          },
-        };
-      case 10: // Diferencias en la conciliación
-        return {
-          pageSize: 'LETTER',
-          pageOrientation: 'landscape',
-          content: [
-            await this._pdfMakeSvc.getHeaderDefinition(reportName),
-            await this._getDiferenciasConciliacion(),
-          ],
-          defaultStyle: {
-            fontSize: 9,
-          },
-          styles: {
-            tableHeader: {
-              bold: true,
-            },
-          },
-        };
-      case 11: // Centros que no conciliaron
-        return {
-          pageSize: 'LETTER',
-          content: [
-            await this._pdfMakeSvc.getHeaderDefinition(reportName),
-            await this._centrosNoConciliados(),
-          ],
-          defaultStyle: {
-            fontSize: 11,
-          },
-          styles: {
-            tableHeader: {
-              bold: true,
-            },
-          },
-        };
-    }
-  }
-
-  private async _getConciliaContab() {
-    return {
-      table: {
-        headerRows: 1,
-        widths: [
-          'auto',
-          'auto',
-          'auto',
-          50,
-          'auto',
-          'auto',
-          'auto',
-          'auto',
-          'auto',
-          50,
-          'auto',
-          'auto',
-          'auto',
-        ],
-        body: [
-          [
-            {
-              text: 'Tipo',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Documento',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Cuenta Emisor',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Emisor',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Fecha Emision',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Importe Emisor',
-              style: 'tableHeader',
-              alignment: 'right',
-            },
-            {
-              text: '|',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Cuenta Receptor',
-              style: 'tableHeader',
-            },
-            {
-              text: 'División Receptor',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Receptor',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Fecha Recepción',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Importe Receptor',
-              style: 'tableHeader',
-              alignment: 'right',
-            },
-            {
-              text: 'Diferencia',
-              style: 'tableHeader',
-              alignment: 'right',
-            },
-          ],
-          ...this.ConciliaContabRowData.map((item: IConciliaContab) => {
-            return [
-              item.Tipo,
-              item.Documento,
-              item.CuentaEmisor,
-              item.Emisor,
-              item.FechaEmision,
-              {
-                text: numberFormatter.format(item.ValorEmisor),
-                alignment: 'right',
-              },
-              '|',
-              item.CuentaReceptor,
-              item.DivisionReceptor,
-              item.Receptor,
-              item.FechaRecepcion,
-              {
-                text: numberFormatter.format(item.ValorReceptor),
-                alignment: 'right',
-              },
-              {
-                text: numberFormatter.format(item.DiferenciaImporte),
-                alignment: 'right',
-              },
-            ];
-          }),
-        ],
-      },
-    };
-  }
-
   // acta de conciliacion
+
   private _getPeriodoConciliacion() {
     return {
       columns: [
@@ -934,6 +728,213 @@ export class ConciliaExternaContaService {
   }
 
   // reportes de la conciliacion
+
+  public async getPdfDefinition(reportName: string, selectedTab: number) {
+    switch (selectedTab) {
+      case 0: // Conciliación Contabilidad
+        return {
+          pageSize: 'LETTER',
+          pageOrientation: 'landscape',
+          content: [
+            await this._pdfMakeSvc.getHeaderDefinition(reportName),
+            await this._getConciliaContab(),
+          ],
+          defaultStyle: {
+            fontSize: 9,
+          },
+          styles: {
+            tableHeader: {
+              bold: true,
+            },
+          },
+        };
+      case 1: // Acta Emisor
+        return {
+          pageSize: 'LETTER',
+          content: [
+            await this._pdfMakeSvc.getHeaderDefinition(reportName),
+            this._getPeriodoConciliacion(),
+            this._getDatosEmisor(),
+            await this._getActaConciliacionEmisor(),
+            this._getPieDeFirmaEmisor(),
+            this._getPieDeFirmaSupervisor(),
+            this._getNota(),
+          ],
+          defaultStyle: {
+            fontSize: 10,
+            lineHeight: 1.3,
+          },
+          styles: {
+            bold: {
+              bold: true,
+            },
+          },
+        };
+      case 2: // Acta Receptor
+        return {
+          pageSize: 'LETTER',
+          content: [
+            await this._pdfMakeSvc.getHeaderDefinition(reportName),
+            this._getPeriodoConciliacion(),
+            this._getDatosReceptor(),
+            await this._getActaConciliacionReceptor(),
+            this._getPieDeFirmaReceptor(),
+            this._getPieDeFirmaSupervisor(),
+            this._getNota(),
+          ],
+          defaultStyle: {
+            fontSize: 10,
+            lineHeight: 1.3,
+          },
+          styles: {
+            bold: {
+              bold: true,
+            },
+          },
+        };
+      case 10: // Diferencias en la conciliación
+        return {
+          pageSize: 'LETTER',
+          pageOrientation: 'landscape',
+          content: [
+            await this._pdfMakeSvc.getHeaderDefinition(reportName),
+            await this._getDiferenciasConciliacion(),
+          ],
+          defaultStyle: {
+            fontSize: 9,
+          },
+          styles: {
+            tableHeader: {
+              bold: true,
+            },
+          },
+        };
+      case 11: // Centros que no conciliaron
+        return {
+          pageSize: 'LETTER',
+          content: [
+            await this._pdfMakeSvc.getHeaderDefinition(reportName),
+            await this._centrosNoConciliados(),
+          ],
+          defaultStyle: {
+            fontSize: 11,
+          },
+          styles: {
+            tableHeader: {
+              bold: true,
+            },
+          },
+        };
+    }
+  }
+
+  private async _getConciliaContab() {
+    return {
+      table: {
+        headerRows: 1,
+        widths: [
+          'auto',
+          'auto',
+          'auto',
+          50,
+          'auto',
+          'auto',
+          'auto',
+          'auto',
+          'auto',
+          50,
+          'auto',
+          'auto',
+          'auto',
+        ],
+        body: [
+          [
+            {
+              text: 'Tipo',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Documento',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Cuenta Emisor',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Emisor',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Fecha Emision',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Importe Emisor',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: '|',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Cuenta Receptor',
+              style: 'tableHeader',
+            },
+            {
+              text: 'División Receptor',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Receptor',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Fecha Recepción',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Importe Receptor',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: 'Diferencia',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+          ],
+          ...this.ConciliaContabRowData.map((item: IConciliaContab) => {
+            return [
+              item.Tipo,
+              item.Documento,
+              item.CuentaEmisor,
+              item.Emisor,
+              item.FechaEmision,
+              {
+                text: numberFormatter.format(item.ValorEmisor),
+                alignment: 'right',
+              },
+              '|',
+              item.CuentaReceptor,
+              item.DivisionReceptor,
+              item.Receptor,
+              item.FechaRecepcion,
+              {
+                text: numberFormatter.format(item.ValorReceptor),
+                alignment: 'right',
+              },
+              {
+                text: numberFormatter.format(item.DiferenciaImporte),
+                alignment: 'right',
+              },
+            ];
+          }),
+        ],
+      },
+    };
+  }
   private async _getDiferenciasConciliacion() {
     return {
       table: {
