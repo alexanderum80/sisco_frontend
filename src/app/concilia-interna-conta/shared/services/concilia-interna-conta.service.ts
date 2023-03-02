@@ -138,11 +138,11 @@ export class ConciliaInternaContaService {
               style: 'tableHeader',
             },
             {
-              text: 'Emisor',
+              text: 'Receptor',
               style: 'tableHeader',
             },
             {
-              text: 'Receptor',
+              text: 'Emisor',
               style: 'tableHeader',
             },
             {
@@ -172,8 +172,8 @@ export class ConciliaInternaContaService {
               p.CuentaR,
               p.SubCuentaR,
               p.TipoR,
-              p.EmisorR,
               p.ReceptorR,
+              p.EmisorR,
               { text: numberFormatter.format(p.ValorR), alignment: 'right' },
               {
                 text: numberFormatter.format(p.Diferencia),

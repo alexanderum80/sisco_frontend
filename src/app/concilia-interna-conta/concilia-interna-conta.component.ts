@@ -43,8 +43,8 @@ export class ConciliaInternaContaComponent
     { header: 'Cuenta', field: 'CuentaR', type: 'string' },
     { header: 'SubCuenta', field: 'SubCuentaR', type: 'string' },
     { header: 'Tipo', field: 'TipoR', type: 'string' },
-    { header: 'Emisor', field: 'EmisorR', type: 'string' },
     { header: 'Receptor', field: 'ReceptorR', type: 'string' },
+    { header: 'Emisor', field: 'EmisorR', type: 'string' },
     { header: 'Valor', field: 'ValorR', type: 'decimal', totalize: true },
     {
       header: 'Diferencia',
