@@ -489,21 +489,17 @@ export class ConciliaContabilidadComponent
 
             this._conciliaContabSvc.subscription.push(
               this._conciliaContabSvc.iniciarSaldo().subscribe({
-                next: response => {
+                next: () => {
                   this.loading = false;
-                  const result = response.iniciarSaldos;
 
-                  if (result.success) {
-                    this._msgSvc.add({
-                      severity: 'success',
-                      summary: 'Satisfactorio',
-                      detail: 'Saldos Iniciados Correctamente.',
-                    });
-                  } else {
-                    this._swalSvc.error(result.error);
-                  }
+                  this._msgSvc.add({
+                    severity: 'success',
+                    summary: 'Satisfactorio',
+                    detail: 'Saldos Iniciados Correctamente.',
+                  });
                 },
                 error: err => {
+                  this.loading = false;
                   this._swalSvc.error(err);
                 },
               })
