@@ -100,7 +100,7 @@ export class ConciliaExternaContaComponent
     },
     {
       header: 'Saldo Receptor',
-      field: 'SaldoEmisor',
+      field: 'SaldoReceptor',
       type: 'decimal',
       totalize: true,
     },

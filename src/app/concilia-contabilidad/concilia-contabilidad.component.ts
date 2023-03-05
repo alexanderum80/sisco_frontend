@@ -124,8 +124,9 @@ export class ConciliaContabilidadComponent
   dataSourceExpresiones = [];
   dataSourceValores = [];
   dataSourceCuadreSistemas = [];
+  dataSourceInformacion = [];
   dataSourceClasificador = [];
-  dataSourceCentrosSubordinados = [];
+  dataSourceCentrosSubordinados: any[] = [];
   dataSourceChequeo = [];
 
   isConsolidado = false;
@@ -327,6 +328,20 @@ export class ConciliaContabilidadComponent
                   };
                 }
               );
+
+              this.dataSourceCentrosSubordinados.push({
+                IdCentro: '124',
+                Nombre: '124-DAOCC',
+              });
+              this.dataSourceCentrosSubordinados.push({
+                IdCentro: '655',
+                Nombre: '655-C.C COMPRAS DE LA CADENA',
+              });
+
+              this.dataSourceCentrosSubordinados =
+                this.dataSourceCentrosSubordinados.sort(
+                  (a, b) => a.IdCentro - b.IdCentro
+                );
             })
           );
           break;
@@ -454,6 +469,8 @@ export class ConciliaContabilidadComponent
               cloneDeep(JSON.parse(result.data.ReporteValores.data)) || [];
             this.dataSourceCuadreSistemas =
               cloneDeep(JSON.parse(result.data.CuadreSistemas.data)) || [];
+            this.dataSourceInformacion =
+              cloneDeep(JSON.parse(result.data.Informacion.data)) || [];
 
             if (
               this.dataSourceCuadreSistemas.filter(
@@ -603,6 +620,9 @@ export class ConciliaContabilidadComponent
           ),
           await this._conciliaContabSvc.getReporteCuadreSistemasDefinition(
             this.dataSourceCuadreSistemas
+          ),
+          await this._conciliaContabSvc.getReporteInformacionDefinition(
+            this.dataSourceInformacion
           ),
         ],
         footer: (page: string, pages: string) => {

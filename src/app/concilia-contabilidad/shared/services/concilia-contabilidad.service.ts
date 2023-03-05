@@ -445,6 +445,47 @@ export class ConciliaContabilidadService {
     return definition;
   }
 
+  public async getReporteInformacionDefinition(data: any[]): Promise<any> {
+    const definition = [];
+
+    definition.push(
+      {
+        text: 'Datos Informativos',
+        bold: true,
+        margin: [0, 10, 0, 0],
+      },
+      {
+        table: {
+          widths: [250, 100],
+          body: [
+            [
+              {
+                text: 'Criterio',
+                style: 'tableHeader',
+              },
+              {
+                text: 'Saldo',
+                style: 'tableHeader',
+                alignment: 'right',
+              },
+            ],
+            ...data.map((d: any) => {
+              return [
+                d.Criterio,
+                {
+                  text: numberFormatter.format(d.Saldo),
+                  alignment: 'right',
+                },
+              ];
+            }),
+          ],
+        },
+      }
+    );
+
+    return definition;
+  }
+
   public async getReporteDiferenciaClasificadorDefinition(
     data: any[]
   ): Promise<any> {
@@ -607,7 +648,7 @@ export class ConciliaContabilidadService {
 
     const returnValue = {
       table: {
-        widths: ['*', '*', '*', '*', '*', '*'],
+        widths: ['*', '*', '*', '*', '*', '*', '*', '*'],
         body: [
           [
             {
@@ -631,6 +672,14 @@ export class ConciliaContabilidadService {
               style: 'tableHeader',
             },
             {
+              text: 'Análisis 4',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Análisis 5',
+              style: 'tableHeader',
+            },
+            {
               text: 'Total',
               style: 'tableHeader',
               alignment: 'right',
@@ -641,9 +690,11 @@ export class ConciliaContabilidadService {
             return [
               al.Cuenta,
               al.SubCuenta,
-              al.Analisis1,
-              al.Analisis2,
-              al.Analisis3,
+              al.Analisis_1,
+              al.Analisis_2,
+              al.Analisis_3,
+              al.Analisis_4,
+              al.Analisis_5,
               {
                 text: numberFormatter.format(al.Total),
                 alignment: 'right',
@@ -651,6 +702,8 @@ export class ConciliaContabilidadService {
             ];
           }),
           [
+            {},
+            {},
             {},
             {},
             {},

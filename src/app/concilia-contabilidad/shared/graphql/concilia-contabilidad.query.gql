@@ -27,6 +27,11 @@ query ConciliaContabilidad($conciliaContaInput: ConciliaContaInput!) {
                 data
                 error
             }
+            Informacion {
+                success
+                data
+                error
+            }
         }
         error
     }
