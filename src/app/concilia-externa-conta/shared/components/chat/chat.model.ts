@@ -5,6 +5,7 @@ export interface IChat {
 }
 
 export interface IUsuariosChat {
+  IdDivision?: string;
   IdUsuario?: string;
   Usuario: string;
   Conectado: boolean;

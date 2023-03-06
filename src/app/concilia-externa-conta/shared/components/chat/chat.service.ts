@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 import { Apollo } from 'apollo-angular';
 import { IUsuariosChat } from './chat.model';
 import { Injectable } from '@angular/core';
-import { startCase, sortBy } from 'lodash';
+import { startCase, sortBy, orderBy } from 'lodash';
 
 @Injectable()
 export class ChatService {
@@ -43,14 +43,17 @@ export class ChatService {
           query: usuariosApi.all,
         })
         .subscribe(response => {
-          const usuarios = sortBy(response.data.getAllUsuarios.data, [
-            'Division.IdDivision',
-            'Usuario',
-          ]);
+          const usuarios = [
+            ...sortBy(response.data.getAllUsuarios.data, [
+              'Division.IdDivision',
+              'Usuario',
+            ]),
+          ];
           this.usuariosList = usuarios
             .filter(f => f.IdUsuario !== this.userInfo.IdUsuario)
             .map(u => {
               return {
+                IdDivision: u.Division.IdDivision.toString(),
                 IdUsuario: u.IdUsuario?.toString(),
                 Usuario:
                   startCase(u.Usuario) + ' (' + u.Division.IdDivision + ')',
@@ -78,6 +81,12 @@ export class ChatService {
     if (userIndex !== -1) {
       this.usuariosList[userIndex].Conectado = estado;
     }
+
+    this.usuariosList = orderBy(
+      this.usuariosList,
+      ['Conectado', 'IdDivision', 'Usuario'],
+      ['desc', 'asc', 'asc']
+    );
   }
 
   sendMessage(message: string) {
