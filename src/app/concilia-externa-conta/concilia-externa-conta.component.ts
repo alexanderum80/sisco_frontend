@@ -36,8 +36,18 @@ export class ConciliaExternaContaComponent
   implements OnInit, AfterViewInit, AfterContentChecked
 {
   private _conciliacionStatus = '';
-  divisionesValues: SelectItem[] = [];
-  divisionesODValues: SelectItem[] = [];
+  divisionesValues: SelectItem[] = [
+    {
+      value: '0',
+      label: '--TODAS--',
+    },
+  ];
+  divisionesODValues: SelectItem[] = [
+    {
+      value: '0',
+      label: '--TODAS--',
+    },
+  ];
 
   unidadesValues: SelectItem[] = [
     {
@@ -226,15 +236,18 @@ export class ConciliaExternaContaComponent
     this.fg = this._conciliaExternaContaSvc.fg;
     this.fg.reset();
 
-    if (!this._authSvc.hasAdvancedUserPermission()) {
+    if (
+      (this._authSvc.hasSuperAdminPermission() ||
+        this._authSvc.hasAdminPermission() ||
+        this._authSvc.hasFinancistaPermission()) &&
+      this._authSvc.usuario.IdDivision === 100
+    ) {
+      this.fg.get('division')?.enable();
+    } else {
       this.fg.get('division')?.disable();
     }
 
     this._subscribeToFgChange();
-
-    this.fg.controls['division'].setValue(
-      this._authSvc.usuario.IdDivision.toString()
-    );
 
     this._loadDivisiones();
     this._loadSupervisores();
@@ -328,6 +341,20 @@ export class ConciliaExternaContaComponent
   }
 
   private _loadDivisiones() {
+    this.divisionesValues = [
+      {
+        value: '0',
+        label: '--TODAS--',
+      },
+    ];
+
+    this.divisionesODValues = [
+      {
+        value: '0',
+        label: '--TODAS--',
+      },
+    ];
+
     this._divisionesSvc.getDivisiones().subscribe({
       next: responseD => {
         this.loadingDivisiones = false;
@@ -337,27 +364,27 @@ export class ConciliaExternaContaComponent
           return this._swalSvc.error(result.error);
         }
 
-        this.divisionesValues = result.data.map((d: any) => {
-          return {
-            value: d.IdDivision.toString(),
+        result.data.map((d: any) => {
+          this.divisionesValues.push({
+            value: d,
             label: d.IdDivision.toString() + '-' + d.Division,
-          };
-        });
-        this.divisionesValues.unshift({
-          value: '0',
-          label: '--TODAS--',
+          });
         });
 
-        this.divisionesODValues = result.data.map((d: any) => {
-          return {
-            value: d.IdDivision.toString(),
+        result.data.map((d: any) => {
+          this.divisionesODValues.push({
+            value: d,
             label: d.IdDivision.toString() + '-' + d.Division,
-          };
+          });
         });
-        this.divisionesODValues.unshift({
-          value: '0',
-          label: '--TODAS--',
-        });
+
+        // get division del usuario loggeado y se lo asigno a la división a analizar
+        const _userDivision = result.data.find(
+          (d: { IdDivision: number; Division: string }) =>
+            d.IdDivision === this._authSvc.usuario.IdDivision
+        );
+
+        this.fg.controls['division'].setValue(_userDivision || '0');
       },
       error: err => {
         this._swalSvc.error(err.message || err);
@@ -366,16 +393,28 @@ export class ConciliaExternaContaComponent
   }
 
   private _loadUnidades(origenDestino: boolean) {
+    if (origenDestino)
+      this.unidadesODValues = [
+        {
+          value: '0',
+          label: '--TODAS--',
+        },
+      ];
+    else
+      this.unidadesValues = [
+        {
+          value: '0',
+          label: '--TODAS--',
+        },
+      ];
+
     const idDivision = origenDestino
-      ? +this.fg.controls['divisionOD'].value
-      : +this.fg.controls['division'].value;
+      ? +this.fg.controls['divisionOD'].value.IdDivision || null
+      : +this.fg.controls['division'].value.IdDivision || null;
 
     if (!idDivision) {
       return;
     }
-
-    if (origenDestino) this.unidadesODValues = [];
-    else this.unidadesValues = [];
 
     this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe({
       next: responseD => {
@@ -387,26 +426,18 @@ export class ConciliaExternaContaComponent
         }
 
         if (origenDestino) {
-          this.unidadesODValues = result.data.map((u: any) => {
-            return {
+          result.data.map((u: any) => {
+            this.unidadesODValues.push({
               value: u,
               label: u.Nombre,
-            };
-          });
-          this.unidadesODValues.unshift({
-            value: '0',
-            label: '--TODAS--',
+            });
           });
         } else {
-          this.unidadesValues = result.data.map((u: any) => {
-            return {
+          result.data.map((u: any) => {
+            this.unidadesValues.push({
               value: u,
               label: u.Nombre,
-            };
-          });
-          this.unidadesValues.unshift({
-            value: '0',
-            label: '--TODAS--',
+            });
           });
         }
       },
@@ -718,6 +749,7 @@ export class ConciliaExternaContaComponent
       this._swalSvc.error(err.message || err);
     }
   }
+
   /* #region Reportes */
 
   async reporte() {

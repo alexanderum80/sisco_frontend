@@ -96,7 +96,8 @@
                   [data]="actaConciliaEmisorData"
                   [filterData]="false"
                   [scrollable]="true"
-                  scrollHeight="calc(100vh - 395px)"></png-table>
+                  [paginator]="false"
+                  scrollHeight="calc(100vh - 355px)"></png-table>
               </div>
               <div
                 style="height: calc(100vh - 345px); overflow: auto"
@@ -176,7 +177,8 @@
                   [data]="actaConciliaReceptorData"
                   [filterData]="false"
                   [scrollable]="true"
-                  scrollHeight="calc(100vh - 395px)"></png-table>
+                  [paginator]="false"
+                  scrollHeight="calc(100vh - 355px)"></png-table>
               </div>
               <div
                 style="height: calc(100vh - 345px); overflow: auto"
@@ -255,7 +257,7 @@
           <png-button
             class="mr-2"
             label="Exportar a Excel"
-            [style]="'secondary'"
+            [style]="'success'"
             icon="mdi mdi-file-excel"
             [disabled]="isEditing || !conciliacionStatusAbierta"
             (clicked)="exportar()"></png-button>

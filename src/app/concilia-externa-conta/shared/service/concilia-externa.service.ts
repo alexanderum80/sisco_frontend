@@ -152,9 +152,9 @@ export class ConciliaExternaContaService {
     const payload = {
       Annio: +moment(controls['periodo'].value).format('YYYY'),
       Mes: +moment(controls['periodo'].value).format('MM'),
-      Division: +controls['division'].value,
+      Division: +controls['division'].value.IdDivision || 0,
       Unidad: +controls['unidad'].value.IdUnidad || 0,
-      DivisionOD: +controls['divisionOD'].value,
+      DivisionOD: +controls['divisionOD'].value.IdDivision || 0,
       UnidadOD: +controls['unidadOD'].value.IdUnidad || 0,
     };
 
@@ -360,34 +360,29 @@ export class ConciliaExternaContaService {
   }
 
   // acta de conciliacion
-
-  private _getPeriodoConciliacion() {
+  private _getPeriodoConciliacion(_alignment = 'center') {
     return {
       columns: [
         {
-          text: `PERIODO A CONCILIAR: ${this.getPeriodo()}`,
+          text: `PERIODO A CONCILIAR: ${this._getPeriodo()}`,
           style: 'bold',
-          alignment: 'center',
-          margin: [0, 0, 0, 20],
+          alignment: _alignment,
+          margin: [0, 10, 0, 10],
         },
       ],
     };
   }
 
-  private _getDatosEmisor() {
+  private _getDatosEmisorActa() {
     const emisor = this.fg.get('unidad')?.value
-      ? this.fg.get('unidad')?.value?.IdUnidad +
-        '-' +
-        this.fg.get('unidad')?.value?.Nombre +
+      ? this.fg.get('unidad')?.value?.Nombre +
         ' (' +
         this.fg.get('unidad')?.value?.IdDivision +
         ')'
       : '';
 
     const receptor = this.fg.get('unidadOD')?.value
-      ? this.fg.get('unidadOD')?.value?.IdUnidad +
-        '-' +
-        this.fg.get('unidadOD')?.value?.Nombre +
+      ? this.fg.get('unidadOD')?.value?.Nombre +
         ' (' +
         this.fg.get('unidadOD')?.value?.IdDivision +
         ')'
@@ -423,19 +418,15 @@ export class ConciliaExternaContaService {
     };
   }
 
-  private _getDatosReceptor() {
+  private _getDatosReceptorActa() {
     const emisor = this.fg.get('unidadOD')?.value
-      ? this.fg.get('unidadOD')?.value?.IdUnidad +
-        '-' +
-        this.fg.get('unidadOD')?.value?.Nombre +
+      ? this.fg.get('unidadOD')?.value?.Nombre +
         ' (' +
         this.fg.get('unidadOD')?.value?.IdDivision +
         ')'
       : '';
     const receptor = this.fg.get('unidad')?.value
-      ? this.fg.get('unidad')?.value?.IdUnidad +
-        '-' +
-        this.fg.get('unidad')?.value?.Nombre +
+      ? this.fg.get('unidad')?.value?.Nombre +
         ' (' +
         this.fg.get('unidad')?.value?.IdDivision +
         ')'
@@ -719,7 +710,7 @@ export class ConciliaExternaContaService {
     };
   }
 
-  getPeriodo() {
+  private _getPeriodo() {
     return (
       getMonthName(+moment(this.fg.get('periodo')?.value).format('MM')) +
       '/' +
@@ -728,15 +719,20 @@ export class ConciliaExternaContaService {
   }
 
   // reportes de la conciliacion
-
   public async getPdfDefinition(reportName: string, selectedTab: number) {
     switch (selectedTab) {
       case 0: // Conciliación Contabilidad
         return {
+          info: {
+            title:
+              'Reporte de Conciliación Externa por la Contabilidad | SISCO',
+          },
           pageSize: 'LETTER',
           pageOrientation: 'landscape',
           content: [
             await this._pdfMakeSvc.getHeaderDefinition(reportName),
+            await this._getEmisorReceptorReporte(),
+            await this._getPeriodoConciliacion('left'),
             await this._getConciliaContab(),
           ],
           defaultStyle: {
@@ -750,11 +746,14 @@ export class ConciliaExternaContaService {
         };
       case 1: // Acta Emisor
         return {
+          info: {
+            title: 'Acta de Conciliación Externa por la Contabilidad | SISCO',
+          },
           pageSize: 'LETTER',
           content: [
             await this._pdfMakeSvc.getHeaderDefinition(reportName),
             this._getPeriodoConciliacion(),
-            this._getDatosEmisor(),
+            this._getDatosEmisorActa(),
             await this._getActaConciliacionEmisor(),
             this._getPieDeFirmaEmisor(),
             this._getPieDeFirmaSupervisor(),
@@ -772,11 +771,14 @@ export class ConciliaExternaContaService {
         };
       case 2: // Acta Receptor
         return {
+          info: {
+            title: 'Acta de Conciliación Externa por la Contabilidad | SISCO',
+          },
           pageSize: 'LETTER',
           content: [
             await this._pdfMakeSvc.getHeaderDefinition(reportName),
             this._getPeriodoConciliacion(),
-            this._getDatosReceptor(),
+            this._getDatosReceptorActa(),
             await this._getActaConciliacionReceptor(),
             this._getPieDeFirmaReceptor(),
             this._getPieDeFirmaSupervisor(),
@@ -828,7 +830,65 @@ export class ConciliaExternaContaService {
     }
   }
 
+  private async _getEmisorReceptorReporte() {
+    return {
+      margin: [0, 10, 0, 0],
+      columns: [
+        [
+          {
+            text: 'Centro a Analizar',
+            bold: true,
+            margin: [0, 0, 0, 5],
+          },
+          {
+            text: `División: ${
+              this.fg.get('division')?.value?.IdDivision
+                ? this.fg.get('division')?.value?.IdDivision +
+                  '-' +
+                  this.fg.get('division')?.value?.Division
+                : '--TODAS--'
+            }`,
+            margin: [0, 0, 0, 5],
+          },
+          {
+            text: `Unidad:   ${
+              this.fg.get('unidad')?.value?.Nombre || '--TODAS--'
+            }`,
+            margin: [0, 0, 0, 5],
+          },
+        ],
+        [
+          {
+            text: 'Centro Emisor / Receptor',
+            bold: true,
+            margin: [0, 0, 0, 5],
+          },
+          {
+            text: `División: ${
+              this.fg.get('divisionOD')?.value?.IdDivision
+                ? this.fg.get('divisionOD')?.value?.IdDivision +
+                  '-' +
+                  this.fg.get('divisionOD')?.value?.Division
+                : '--TODAS--'
+            }`,
+            margin: [0, 0, 0, 5],
+          },
+          {
+            text: `Unidad:   ${
+              this.fg.get('unidadOD')?.value?.Nombre || '--TODAS--'
+            }`,
+            margin: [0, 0, 0, 5],
+          },
+        ],
+      ],
+    };
+  }
+
   private async _getConciliaContab() {
+    let totalEmisor = 0;
+    let totalReceptor = 0;
+    let totalDiferencia = 0;
+
     return {
       table: {
         headerRows: 1,
@@ -906,6 +966,10 @@ export class ConciliaExternaContaService {
             },
           ],
           ...this.ConciliaContabRowData.map((item: IConciliaContab) => {
+            totalEmisor += item.ValorEmisor;
+            totalReceptor += item.ValorReceptor;
+            totalDiferencia += item.DiferenciaImporte;
+
             return [
               item.Tipo,
               item.Documento,
@@ -931,10 +995,38 @@ export class ConciliaExternaContaService {
               },
             ];
           }),
+          [
+            { text: 'TOTAL', bold: true, alignment: 'right' },
+            {},
+            {},
+            {},
+            {},
+            {
+              text: numberFormatter.format(totalEmisor),
+              bold: true,
+              alignment: 'right',
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              text: numberFormatter.format(totalReceptor),
+              bold: true,
+              alignment: 'right',
+            },
+            {
+              text: numberFormatter.format(totalDiferencia),
+              bold: true,
+              alignment: 'right',
+            },
+          ],
         ],
       },
     };
   }
+
   private async _getDiferenciasConciliacion() {
     return {
       table: {

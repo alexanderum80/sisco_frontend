@@ -139,7 +139,6 @@ export const MenuItems: MenuItem[] = [
         disabled: false,
         title: 'Establecer valores de las expresiones.',
       },
-      { separator: true },
       {
         label: 'No Permitidas',
         icon: 'mdi mdi-bookmark-off',
@@ -147,6 +146,7 @@ export const MenuItems: MenuItem[] = [
         disabled: false,
         title: 'Cuentas no permitidas para la Entidad.',
       },
+      { separator: true },
       {
         label: 'Estadísticas',
         icon: 'mdi mdi-book-information-variant',
