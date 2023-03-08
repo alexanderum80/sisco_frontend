@@ -259,14 +259,14 @@
             label="Exportar a Excel"
             [style]="'success'"
             icon="mdi mdi-file-excel"
-            [disabled]="isEditing || !conciliacionStatusAbierta"
+            [disabled]="!conciliacionStatusAbierta"
             (clicked)="exportar()"></png-button>
           <png-button
             *ngIf="!hasFinancistaPermission()"
             class="mr-1"
             label="Conciliar"
             icon="mdi mdi-file-check-outline"
-            [disabled]="!isFormValid"
+            [disabled]="!isFormValid || !conciliacionStatusAbierta"
             (clicked)="conciliar()"></png-button>
           <png-split-button
             *ngIf="hasFinancistaPermission()"
@@ -282,7 +282,7 @@
             label="Reportes"
             [style]="'secondary'"
             icon="mdi mdi-printer"
-            [disabled]="!isFormValid || isEditing || !conciliacionStatusAbierta"
+            [disabled]="!isFormValid || !conciliacionStatusAbierta"
             (clicked)="reporte()"></png-button>
           <png-split-button
             *ngIf="hasFinancistaPermission()"
@@ -291,7 +291,7 @@
             [style]="'secondary'"
             icon="mdi mdi-printer"
             [items]="reportesButtonItems"
-            [disabled]="!isFormValid || isEditing || !conciliacionStatusAbierta"
+            [disabled]="!isFormValid || !conciliacionStatusAbierta"
             (clicked)="reporte()"></png-split-button>
         </div>
       </div>

@@ -4,6 +4,7 @@ import {
   ConciliaExternaContabMutationReponse,
   IConciliaContab,
   IActaConciliacion,
+  IConciliaContabResumen,
 } from './../models/concilia-externa.model';
 import { conciliaExternaContaAPI } from './../graphql/concilia-externa-conta-api';
 import { Observable } from 'rxjs';
@@ -46,6 +47,7 @@ export class ConciliaExternaContaService {
   });
 
   private _conciliaContabRowData: IConciliaContab[] = [];
+  private _conciliaContabResumenRowData: IConciliaContabResumen[] = [];
   private _actaConciliacionEmisorRowData: IActaConciliacion[] = [];
   private _actaConciliacionReceptorRowData: IActaConciliacion[] = [];
   private _diferenciasConciliacionRowData = [];
@@ -64,6 +66,14 @@ export class ConciliaExternaContaService {
 
   get ConciliaContabRowData(): IConciliaContab[] {
     return this._conciliaContabRowData;
+  }
+
+  set ConciliaContabResumenRowData(data: IConciliaContabResumen[]) {
+    this._conciliaContabResumenRowData = data;
+  }
+
+  get ConciliaContabResumenRowData(): IConciliaContabResumen[] {
+    return this._conciliaContabResumenRowData;
   }
 
   set ActaConciliacionEmisorRowData(data: any) {
@@ -164,6 +174,34 @@ export class ConciliaExternaContaService {
           conciliaExternaContaAPI.conciliacion,
           {
             conciliaExternaInput: payload,
+          }
+        )
+        .subscribe({
+          next: response => {
+            subscriber.next(response);
+          },
+          error: err => {
+            subscriber.error(err);
+          },
+        });
+    });
+  }
+
+  public calculaConciliacionResumen(): Observable<IConciliaExternaContabQueryReponse> {
+    const controls = this.fg.controls;
+
+    const payload = {
+      Annio: +moment(controls['periodo'].value).format('YYYY'),
+      Mes: +moment(controls['periodo'].value).format('MM'),
+    };
+
+    return new Observable<IConciliaExternaContabQueryReponse>(subscriber => {
+      this._apollo
+        .watchQuery<IConciliaExternaContabQueryReponse>(
+          conciliaExternaContaAPI.conciliacionResumen,
+          {
+            annio: payload.Annio,
+            mes: payload.Mes,
           }
         )
         .subscribe({
@@ -794,8 +832,45 @@ export class ConciliaExternaContaService {
             },
           },
         };
-      case 10: // Diferencias en la conciliación
+      case 10: // Deudas Resumen
         return {
+          info: {
+            title:
+              'Deudas Resumen en Conciliación Externa por la Contabilidad | SISCO',
+          },
+          pageSize: 'LETTER',
+          pageOrientation: 'landscape',
+          content: [
+            await this._pdfMakeSvc.getHeaderDefinition(reportName),
+            {
+              columns: [
+                {
+                  text: `PERIODO: ${this._getPeriodo()}`,
+                  bold: true,
+                  margin: [0, 10, 0, 10],
+                },
+              ],
+            },
+            await this._getConciliaContabResumen(),
+          ],
+          footer: (page: string, pages: string) => {
+            return this._pdfMakeSvc.getFooterDefinition(page, pages);
+          },
+          defaultStyle: {
+            fontSize: 9,
+          },
+          styles: {
+            tableHeader: {
+              bold: true,
+            },
+          },
+        };
+      case 11: // Diferencias en la conciliación
+        return {
+          info: {
+            title:
+              'Diferencias en la Conciliación Externa por la Contabilidad | SISCO',
+          },
           pageSize: 'LETTER',
           pageOrientation: 'landscape',
           content: [
@@ -811,8 +886,12 @@ export class ConciliaExternaContaService {
             },
           },
         };
-      case 11: // Centros que no conciliaron
+      case 12: // Centros que no conciliaron
         return {
+          info: {
+            title:
+              'Centro que no han realizado la Conciliación Externa por la Contabilidad | SISCO',
+          },
           pageSize: 'LETTER',
           content: [
             await this._pdfMakeSvc.getHeaderDefinition(reportName),
@@ -1010,6 +1089,89 @@ export class ConciliaExternaContaService {
             {},
             {},
             {},
+            {},
+            {
+              text: numberFormatter.format(totalReceptor),
+              bold: true,
+              alignment: 'right',
+            },
+            {
+              text: numberFormatter.format(totalDiferencia),
+              bold: true,
+              alignment: 'right',
+            },
+          ],
+        ],
+      },
+    };
+  }
+
+  private async _getConciliaContabResumen() {
+    let totalEmisor = 0;
+    let totalReceptor = 0;
+    let totalDiferencia = 0;
+
+    return {
+      table: {
+        headerRows: 1,
+        widths: [200, 90, 200, 90, 90],
+        body: [
+          [
+            {
+              text: 'División Emisor',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Importe Emisor',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: 'División Receptor',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Importe Receptor',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: 'Diferencia',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+          ],
+          ...this.ConciliaContabResumenRowData.map(
+            (item: IConciliaContabResumen) => {
+              totalEmisor += item.ValorEmisor;
+              totalReceptor += item.ValorReceptor;
+              totalDiferencia += item.Diferencia;
+
+              return [
+                item.DivisionEmisor,
+                {
+                  text: numberFormatter.format(item.ValorEmisor),
+                  alignment: 'right',
+                },
+                item.DivisionReceptor,
+                {
+                  text: numberFormatter.format(item.ValorReceptor),
+                  alignment: 'right',
+                },
+                {
+                  text: numberFormatter.format(item.Diferencia),
+                  alignment: 'right',
+                },
+              ];
+            }
+          ),
+          [
+            { text: 'TOTAL', bold: true },
+            {
+              text: numberFormatter.format(totalEmisor),
+              bold: true,
+              alignment: 'right',
+            },
             {},
             {
               text: numberFormatter.format(totalReceptor),

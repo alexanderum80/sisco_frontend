@@ -31,6 +31,16 @@ export interface IConciliaContab {
   Recibido: boolean;
 }
 
+export interface IConciliaContabResumen {
+  Annio: number;
+  Mes: number;
+  DivisionEmisor: string;
+  ValorEmisor: number;
+  DivisionReceptor: string;
+  ValorReceptor: number;
+  Diferencia: number;
+}
+
 export interface IActaConciliacion {
   ID: number;
   Detalle: string;
@@ -59,10 +69,9 @@ export interface IConciliaExternaContabilidad {
 }
 
 export interface IConciliaExternaContabQueryReponse {
-  // getRecepcionesDifCantidad: IQueryResponse;
   getDatosConciliacionExterna: IConciliaExternaDatosConcilicion;
   getConciliacionExternaContab: IConciliaExternaContabilidad;
-  // getActaConciliacion: IActaConciliacion[];
+  getConciliacionExternaContabResumen: IConciliaContabResumen[];
   getConciliacionEntreUnidades: IConciliaEntreUnidades;
   getDiferenciasEnConciliacion: IQueryResponse;
   getCentrosNoConciliados: IQueryResponse;
@@ -83,6 +92,7 @@ export enum ConciliaMenuOptions {
   'ReabrirConciliacion' = 'reabrirConcilia',
   'DiferenciasConciliacion' = 'diferenciasConciliacion',
   'CentroNoConciliados' = 'centroNoConciliados',
+  'DeudasResumen' = 'deudasResumen',
 }
 
 export enum ConciliaStatus {
