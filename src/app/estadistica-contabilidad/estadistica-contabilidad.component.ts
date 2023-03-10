@@ -32,12 +32,12 @@ export class EstadisticaContabilidadComponent
   displayedColumns: ITableColumns[] = [
     { header: 'Centro', field: 'Centro', type: 'string' },
     { header: 'Consolidado', field: 'Consolidado', type: 'boolean' },
-    // {
-    //   header: 'Fecha Actualización',
-    //   field: 'FechaActualizacion',
-    //   type: 'date',
-    //   dateFormat: 'dd/MM/yyyy hh:mm:ss a',
-    // },
+    {
+      header: 'Fecha Actualización',
+      field: 'FechaActualizacion',
+      type: 'date',
+      dateFormat: 'dd/MM/yyyy hh:mm:ss a',
+    },
     { header: 'Fecha Inicio', field: 'FechaInicio', type: 'date' },
     { header: 'Fecha Fin', field: 'FechaFin', type: 'date' },
     {
