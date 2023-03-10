@@ -71,20 +71,8 @@ export class EstadisticaContabilidadService {
   }
 
   public async getConciliacionDefinition(
-    conciliacionData: any[]
-  ): Promise<any[]> {
-    const definition = [];
-
-    if (conciliacionData.length) {
-      definition.push(this._getConciliaInternaContaTable(conciliacionData));
-    }
-
-    return definition;
-  }
-
-  private _getConciliaInternaContaTable(
     conciliaInternaConta: IEstadisticaContabilidad[]
-  ): any[] {
+  ): Promise<any[]> {
     let _totalComprobantes = 0;
     let _totalTraspasdos = 0;
     let _totalSinTraspasar = 0;
@@ -95,7 +83,7 @@ export class EstadisticaContabilidadService {
 
     returnValue.push({
       table: {
-        widths: [150, 25, 60, 50, 50, 60, 55, 60, 50, 50],
+        widths: [180, 25, 55, 55, 60, 60, 60, 60, 60],
         body: [
           [
             {
@@ -107,11 +95,11 @@ export class EstadisticaContabilidadService {
               style: 'tableHeader',
               alignment: 'center',
             },
-            {
-              text: 'Fecha Actualización',
-              style: 'tableHeader',
-              alignment: 'center',
-            },
+            // {
+            //   text: 'Fecha Actualización',
+            //   style: 'tableHeader',
+            //   alignment: 'center',
+            // },
             {
               text: 'Fecha Inicio',
               style: 'tableHeader',
@@ -161,16 +149,16 @@ export class EstadisticaContabilidadService {
                 text: p.Consolidado ? 'X' : '',
                 alignment: 'center',
               },
-              {
-                text: p.FechaActualizacion
-                  ? formatDate(
-                      p.FechaActualizacion,
-                      DateFormatEnum.ES_DATE_HOUR_M,
-                      LocaleFormatEnum.EN_US
-                    )
-                  : '',
-                alignment: 'center',
-              },
+              // {
+              //   text: p.FechaActualizacion
+              //     ? formatDate(
+              //         p.FechaActualizacion,
+              //         DateFormatEnum.ES_DATE_HOUR_M,
+              //         LocaleFormatEnum.EN_US
+              //       )
+              //     : '',
+              //   alignment: 'center',
+              // },
               {
                 text: p.FechaInicio
                   ? formatDate(
@@ -223,10 +211,10 @@ export class EstadisticaContabilidadService {
               text: '',
               style: 'tableHeader',
             },
-            {
-              text: '',
-              style: 'tableHeader',
-            },
+            // {
+            //   text: '',
+            //   style: 'tableHeader',
+            // },
             {
               text: '',
               style: 'tableHeader',

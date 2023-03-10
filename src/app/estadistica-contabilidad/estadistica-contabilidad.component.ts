@@ -14,7 +14,7 @@ import {
   ChangeDetectorRef,
   ChangeDetectionStrategy,
 } from '@angular/core';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, orderBy } from 'lodash';
 import * as moment from 'moment';
 
 @Component({
@@ -32,12 +32,12 @@ export class EstadisticaContabilidadComponent
   displayedColumns: ITableColumns[] = [
     { header: 'Centro', field: 'Centro', type: 'string' },
     { header: 'Consolidado', field: 'Consolidado', type: 'boolean' },
-    {
-      header: 'Fecha Actualización',
-      field: 'FechaActualizacion',
-      type: 'date',
-      dateFormat: 'dd/MM/yyyy hh:mm:ss a',
-    },
+    // {
+    //   header: 'Fecha Actualización',
+    //   field: 'FechaActualizacion',
+    //   type: 'date',
+    //   dateFormat: 'dd/MM/yyyy hh:mm:ss a',
+    // },
     { header: 'Fecha Inicio', field: 'FechaInicio', type: 'date' },
     { header: 'Fecha Fin', field: 'FechaFin', type: 'date' },
     {
@@ -132,7 +132,7 @@ export class EstadisticaContabilidadComponent
     this._estadisticaContaSvc.getEstadistica().subscribe({
       next: res => {
         this.loading = false;
-        this.dataSource = cloneDeep(res);
+        this.dataSource = cloneDeep(orderBy(res, ['IdDivision', 'IdCentro']));
       },
       error: err => {
         this.loading = false;
