@@ -8,7 +8,7 @@ export interface IConciliaExternaDatosConcilicion {
   Abierta: boolean;
 }
 
-export interface IConciliaContab {
+export interface IConciliaExtContab {
   Id: number;
   Annio: number;
   Mes: number;
@@ -31,7 +31,7 @@ export interface IConciliaContab {
   Recibido: boolean;
 }
 
-export interface IConciliaContabResumen {
+export interface IConciliaExtContabResumen {
   Annio: number;
   Mes: number;
   DivisionEmisor: string;
@@ -64,14 +64,14 @@ export interface IConciliaEntreUnidades {
 }
 
 export interface IConciliaExternaContabilidad {
-  getConciliaContab: IConciliaContab[];
+  getConciliaContab: IConciliaExtContab[];
   getActaConciliacion: IActaConciliacion[];
 }
 
 export interface IConciliaExternaContabQueryReponse {
   getDatosConciliacionExterna: IConciliaExternaDatosConcilicion;
   getConciliacionExternaContab: IConciliaExternaContabilidad;
-  getConciliacionExternaContabResumen: IConciliaContabResumen[];
+  getConciliacionExternaContabResumen: IConciliaExtContabResumen[];
   getConciliacionEntreUnidades: IConciliaEntreUnidades;
   getDiferenciasEnConciliacion: IQueryResponse;
   getCentrosNoConciliados: IQueryResponse;

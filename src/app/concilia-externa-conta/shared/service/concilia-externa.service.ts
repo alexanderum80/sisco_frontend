@@ -1,10 +1,11 @@
+import { uniq, sortBy } from 'lodash';
 import { numberFormatter } from './../../../shared/models/number';
 import {
   IConciliaExternaContabQueryReponse,
   ConciliaExternaContabMutationReponse,
-  IConciliaContab,
+  IConciliaExtContab,
   IActaConciliacion,
-  IConciliaContabResumen,
+  IConciliaExtContabResumen,
 } from './../models/concilia-externa.model';
 import { conciliaExternaContaAPI } from './../graphql/concilia-externa-conta-api';
 import { Observable } from 'rxjs';
@@ -46,8 +47,8 @@ export class ConciliaExternaContaService {
     nota: new FormControl('', { initialValueIsDefault: true }),
   });
 
-  private _conciliaContabRowData: IConciliaContab[] = [];
-  private _conciliaContabResumenRowData: IConciliaContabResumen[] = [];
+  private _conciliaContabRowData: IConciliaExtContab[] = [];
+  private _conciliaContabResumenRowData: IConciliaExtContabResumen[] = [];
   private _actaConciliacionEmisorRowData: IActaConciliacion[] = [];
   private _actaConciliacionReceptorRowData: IActaConciliacion[] = [];
   private _diferenciasConciliacionRowData = [];
@@ -60,19 +61,27 @@ export class ConciliaExternaContaService {
   private _actaConciliaUsuariosReceptorList: SelectItem[] = [];
   private _actaConciliaUsuariosSupervisorList: SelectItem[] = [];
 
-  set ConciliaContabRowData(data: IConciliaContab[]) {
+  private _totalEmisorDivision = 0;
+  private _totalReceptorDivision = 0;
+  private _totalDiferenciaDivision = 0;
+
+  private _totalEmisorTipo = 0;
+  private _totalReceptorTipo = 0;
+  private _totalDiferenciaTipo = 0;
+
+  set ConciliaContabRowData(data: IConciliaExtContab[]) {
     this._conciliaContabRowData = data;
   }
 
-  get ConciliaContabRowData(): IConciliaContab[] {
+  get ConciliaContabRowData(): IConciliaExtContab[] {
     return this._conciliaContabRowData;
   }
 
-  set ConciliaContabResumenRowData(data: IConciliaContabResumen[]) {
+  set ConciliaContabResumenRowData(data: IConciliaExtContabResumen[]) {
     this._conciliaContabResumenRowData = data;
   }
 
-  get ConciliaContabResumenRowData(): IConciliaContabResumen[] {
+  get ConciliaContabResumenRowData(): IConciliaExtContabResumen[] {
     return this._conciliaContabResumenRowData;
   }
 
@@ -963,35 +972,108 @@ export class ConciliaExternaContaService {
     };
   }
 
-  private async _getConciliaContab() {
+  private async _getConciliaContab(): Promise<any> {
+    const definition: any[] = [];
+
+    const divisionesEmisor = uniq([
+      ...this.ConciliaContabRowData.map(c => c.DivisionEmisor),
+    ]);
+
+    divisionesEmisor.forEach(div => {
+      this._totalEmisorDivision = 0;
+      this._totalReceptorDivision = 0;
+      this._totalDiferenciaDivision = 0;
+
+      definition.push({
+        text: 'División Emisor: ' + div,
+        bold: true,
+        decoration: 'underline',
+        margin: [0, 10, 0, 0],
+      });
+
+      const tipos = sortBy(
+        uniq([
+          ...this.ConciliaContabRowData.filter(
+            f => f.DivisionEmisor === div
+          ).map(c => c.Tipo),
+        ])
+      );
+
+      tipos.forEach(tipo => {
+        this._totalEmisorTipo = 0;
+        this._totalReceptorTipo = 0;
+        this._totalDiferenciaTipo = 0;
+
+        definition.push({
+          text: 'Tipo: ' + tipo,
+          bold: true,
+          italics: true,
+          margin: [0, 10, 0, 0],
+        });
+
+        const annios = sortBy(
+          uniq([
+            ...this.ConciliaContabRowData.filter(
+              f => f.DivisionEmisor === div && f.Tipo === tipo
+            ).map(c => {
+              const _fecha = String(
+                c.FechaEmision ? c.FechaEmision : c.FechaRecepcion
+              ).split('/');
+
+              return moment(`${_fecha[2]}-${_fecha[1]}-${_fecha[0]}`).format(
+                'YYYY'
+              );
+            }),
+          ])
+        );
+
+        annios.forEach(annio => {
+          definition.push({
+            text: 'Año: ' + annio,
+            bold: true,
+            margin: [0, 10, 0, 5],
+          });
+
+          const _filteredData = [
+            ...this.ConciliaContabRowData.filter(f => {
+              const _fecha = String(
+                f.FechaEmision ? f.FechaEmision : f.FechaRecepcion
+              ).split('/');
+
+              if (
+                f.DivisionEmisor === div &&
+                f.Tipo === tipo &&
+                moment(`${_fecha[2]}-${_fecha[1]}-${_fecha[0]}`).format(
+                  'YYYY'
+                ) === annio
+              ) {
+                return f;
+              }
+            }),
+          ];
+
+          definition.push(this._getConciliaContabTabla(_filteredData));
+        });
+
+        definition.push(this._getTotalesTipoTabla());
+      });
+
+      definition.push(this._getTotalesDivisionTabla());
+    });
+
+    return definition;
+  }
+
+  private _getConciliaContabTabla(data: IConciliaExtContab[]): object {
     let totalEmisor = 0;
     let totalReceptor = 0;
     let totalDiferencia = 0;
 
-    return {
+    const returnValue = {
       table: {
-        headerRows: 1,
-        widths: [
-          'auto',
-          'auto',
-          'auto',
-          50,
-          'auto',
-          'auto',
-          'auto',
-          'auto',
-          'auto',
-          50,
-          'auto',
-          'auto',
-          'auto',
-        ],
+        widths: [70, 30, 30, 50, 80, 5, 40, 40, 40, 50, 80, 80],
         body: [
           [
-            {
-              text: 'Tipo',
-              style: 'tableHeader',
-            },
             {
               text: 'Documento',
               style: 'tableHeader',
@@ -1044,13 +1126,20 @@ export class ConciliaExternaContaService {
               alignment: 'right',
             },
           ],
-          ...this.ConciliaContabRowData.map((item: IConciliaContab) => {
+          ...data.map((item: IConciliaExtContab) => {
             totalEmisor += item.ValorEmisor;
             totalReceptor += item.ValorReceptor;
             totalDiferencia += item.DiferenciaImporte;
 
+            this._totalEmisorTipo += item.ValorEmisor;
+            this._totalReceptorTipo += item.ValorReceptor;
+            this._totalDiferenciaTipo += item.DiferenciaImporte;
+
+            this._totalEmisorDivision += item.ValorEmisor;
+            this._totalReceptorDivision += item.ValorReceptor;
+            this._totalDiferenciaDivision += item.DiferenciaImporte;
+
             return [
-              item.Tipo,
               item.Documento,
               item.CuentaEmisor,
               item.Emisor,
@@ -1075,8 +1164,7 @@ export class ConciliaExternaContaService {
             ];
           }),
           [
-            { text: 'TOTAL', bold: true, alignment: 'right' },
-            {},
+            { text: 'TOTAL AÑO', bold: true },
             {},
             {},
             {},
@@ -1104,6 +1192,86 @@ export class ConciliaExternaContaService {
         ],
       },
     };
+
+    return returnValue;
+  }
+
+  private _getTotalesTipoTabla(): object {
+    const returnValue = {
+      table: {
+        margin: [0, 10, 0, 0],
+        widths: [70, 30, 30, 50, 80, 5, 40, 40, 40, 50, 80, 80],
+        body: [
+          [
+            { text: 'TOTAL TIPO', bold: true },
+            {},
+            {},
+            {},
+            {
+              text: numberFormatter.format(this._totalEmisorTipo),
+              bold: true,
+              alignment: 'right',
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              text: numberFormatter.format(this._totalReceptorTipo),
+              bold: true,
+              alignment: 'right',
+            },
+            {
+              text: numberFormatter.format(this._totalDiferenciaTipo),
+              bold: true,
+              alignment: 'right',
+            },
+          ],
+        ],
+      },
+    };
+
+    return returnValue;
+  }
+
+  private _getTotalesDivisionTabla(): object {
+    const returnValue = {
+      table: {
+        margin: [0, 10, 0, 0],
+        widths: [70, 30, 30, 50, 80, 5, 40, 40, 40, 50, 80, 80],
+        body: [
+          [
+            { text: 'TOTAL DIVISION', bold: true },
+            {},
+            {},
+            {},
+            {
+              text: numberFormatter.format(this._totalEmisorDivision),
+              bold: true,
+              alignment: 'right',
+            },
+            {},
+            {},
+            {},
+            {},
+            {},
+            {
+              text: numberFormatter.format(this._totalReceptorDivision),
+              bold: true,
+              alignment: 'right',
+            },
+            {
+              text: numberFormatter.format(this._totalDiferenciaDivision),
+              bold: true,
+              alignment: 'right',
+            },
+          ],
+        ],
+      },
+    };
+
+    return returnValue;
   }
 
   private async _getConciliaContabResumen() {
@@ -1142,7 +1310,7 @@ export class ConciliaExternaContaService {
             },
           ],
           ...this.ConciliaContabResumenRowData.map(
-            (item: IConciliaContabResumen) => {
+            (item: IConciliaExtContabResumen) => {
               totalEmisor += item.ValorEmisor;
               totalReceptor += item.ValorReceptor;
               totalDiferencia += item.Diferencia;
