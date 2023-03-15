@@ -185,6 +185,16 @@ export class ConciliaExternaContaComponent
         this._calculaConciliacionResumen();
       },
     },
+    {
+      id: ConciliaMenuOptions.DeudasResumen,
+      label: 'Deudas Por Edades',
+      icon: 'mdi mdi-file-clock',
+      disabled: false,
+      visible: true,
+      command: () => {
+        this._calculaConciliacionDeudasPorEdades();
+      },
+    },
     // {
     //   id: ConciliaMenuOptions.DiferenciasConciliacion,
     //   label: 'Diferencias en Conciliación',
@@ -744,6 +754,35 @@ export class ConciliaExternaContaComponent
     }
   }
 
+  private _calculaConciliacionDeudasPorEdades() {
+    try {
+      this.loadingConciliacion = true;
+
+      this._conciliaExternaContaSvc
+        .calculaConciliacionDeudasPorEdades()
+        .subscribe({
+          next: res => {
+            this.loadingConciliacion = false;
+
+            this._conciliaExternaContaSvc.ConciliaContabDeudasPorEdadesRowData =
+              res.getConciliacionExternaContabDeudasPorEdades;
+
+            this.reporteName =
+              'Deudas Resumen por Edades en la Conciliación Nacional';
+
+            this.generatePDF(11);
+          },
+          error: err => {
+            this.loadingConciliacion = false;
+            this._swalSvc.error(err.message || err);
+          },
+        });
+    } catch (err: any) {
+      this.loadingConciliacion = false;
+      this._swalSvc.error(err.message || err);
+    }
+  }
+
   private _conciliacionEntreUnidadesEmisor() {
     try {
       if (
@@ -834,7 +873,7 @@ export class ConciliaExternaContaComponent
           result.data;
         this.reporteName = 'Documentos con Diferencias en la Conciliación';
 
-        this.generatePDF(11);
+        this.generatePDF(15);
       },
       error: err => {
         this.loadingDiferenciasConciliacion = false;
@@ -862,7 +901,7 @@ export class ConciliaExternaContaComponent
           this._conciliaExternaContaSvc.CentrosNoConciliadosRowData = data;
           this.reporteName = 'Centros que no realizaron la Conciliación';
 
-          this.generatePDF(12);
+          this.generatePDF(16);
         },
         error: err => {
           this._swalSvc.error(err.message || err);

@@ -6,6 +6,7 @@ import {
   IConciliaExtContab,
   IActaConciliacion,
   IConciliaExtContabResumen,
+  IConciliaExtContabDeudasPorEdades,
 } from './../models/concilia-externa.model';
 import { conciliaExternaContaAPI } from './../graphql/concilia-externa-conta-api';
 import { Observable } from 'rxjs';
@@ -49,6 +50,8 @@ export class ConciliaExternaContaService {
 
   private _conciliaContabRowData: IConciliaExtContab[] = [];
   private _conciliaContabResumenRowData: IConciliaExtContabResumen[] = [];
+  private _conciliaContabPorEdadesRowData: IConciliaExtContabDeudasPorEdades[] =
+    [];
   private _actaConciliacionEmisorRowData: IActaConciliacion[] = [];
   private _actaConciliacionReceptorRowData: IActaConciliacion[] = [];
   private _diferenciasConciliacionRowData = [];
@@ -83,6 +86,16 @@ export class ConciliaExternaContaService {
 
   get ConciliaContabResumenRowData(): IConciliaExtContabResumen[] {
     return this._conciliaContabResumenRowData;
+  }
+
+  set ConciliaContabDeudasPorEdadesRowData(
+    data: IConciliaExtContabDeudasPorEdades[]
+  ) {
+    this._conciliaContabPorEdadesRowData = data;
+  }
+
+  get ConciliaContabDeudasPorEdadesRowData(): IConciliaExtContabDeudasPorEdades[] {
+    return this._conciliaContabPorEdadesRowData;
   }
 
   set ActaConciliacionEmisorRowData(data: any) {
@@ -208,6 +221,34 @@ export class ConciliaExternaContaService {
       this._apollo
         .watchQuery<IConciliaExternaContabQueryReponse>(
           conciliaExternaContaAPI.conciliacionResumen,
+          {
+            annio: payload.Annio,
+            mes: payload.Mes,
+          }
+        )
+        .subscribe({
+          next: response => {
+            subscriber.next(response);
+          },
+          error: err => {
+            subscriber.error(err);
+          },
+        });
+    });
+  }
+
+  public calculaConciliacionDeudasPorEdades(): Observable<IConciliaExternaContabQueryReponse> {
+    const controls = this.fg.controls;
+
+    const payload = {
+      Annio: +moment(controls['periodo'].value).format('YYYY'),
+      Mes: +moment(controls['periodo'].value).format('MM'),
+    };
+
+    return new Observable<IConciliaExternaContabQueryReponse>(subscriber => {
+      this._apollo
+        .watchQuery<IConciliaExternaContabQueryReponse>(
+          conciliaExternaContaAPI.conciliacionPorEdades,
           {
             annio: payload.Annio,
             mes: payload.Mes,
@@ -874,7 +915,40 @@ export class ConciliaExternaContaService {
             },
           },
         };
-      case 11: // Diferencias en la conciliación
+      case 11: // Deudas Por Edades
+        return {
+          info: {
+            title:
+              'Deudas Por Edades en Conciliación Externa por la Contabilidad | SISCO',
+          },
+          pageSize: 'LETTER',
+          pageOrientation: 'landscape',
+          content: [
+            await this._pdfMakeSvc.getHeaderDefinition(reportName),
+            {
+              columns: [
+                {
+                  text: `PERIODO: ${this._getPeriodo()}`,
+                  bold: true,
+                  margin: [0, 10, 0, 10],
+                },
+              ],
+            },
+            await this._getConciliaContabDeudasPorEdades(),
+          ],
+          footer: (page: string, pages: string) => {
+            return this._pdfMakeSvc.getFooterDefinition(page, pages);
+          },
+          defaultStyle: {
+            fontSize: 9,
+          },
+          styles: {
+            tableHeader: {
+              bold: true,
+            },
+          },
+        };
+      case 15: // Diferencias en la conciliación
         return {
           info: {
             title:
@@ -895,7 +969,7 @@ export class ConciliaExternaContaService {
             },
           },
         };
-      case 12: // Centros que no conciliaron
+      case 16: // Centros que no conciliaron
         return {
           info: {
             title:
@@ -1348,6 +1422,157 @@ export class ConciliaExternaContaService {
             },
             {
               text: numberFormatter.format(totalDiferencia),
+              bold: true,
+              alignment: 'right',
+            },
+          ],
+        ],
+      },
+    };
+  }
+
+  private async _getConciliaContabDeudasPorEdades() {
+    const definition: any[] = [];
+
+    const tipoOperaciones = uniq(
+      this.ConciliaContabDeudasPorEdadesRowData.map(d => d.TipoOperacion)
+    );
+
+    tipoOperaciones.forEach(tipo => {
+      definition.push({
+        text: 'Tipo: ' + tipo,
+        bold: true,
+        margin: [0, 10, 0, 0],
+      });
+
+      const filteredData = this.ConciliaContabDeudasPorEdadesRowData.filter(
+        f => f.TipoOperacion === tipo
+      );
+
+      definition.push(
+        this._getConciliaContabDeudasPorEdadesTable(filteredData)
+      );
+    });
+
+    return definition;
+  }
+
+  private _getConciliaContabDeudasPorEdadesTable(
+    data: IConciliaExtContabDeudasPorEdades[]
+  ): object {
+    let totalValor = 0;
+    let totalDe0A30 = 0;
+    let totalDe30A60 = 0;
+    let totalDe60A90 = 0;
+    let totalDe90A365 = 0;
+    let totalMasDe1Anio = 0;
+
+    return {
+      table: {
+        headerRows: 1,
+        widths: [160, 80, 80, 80, 80, 80, 80],
+        body: [
+          [
+            {
+              text: 'División',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Valor',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: 'De 0 a 30',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: 'De 30 a 60',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: 'De 60 a 90',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: 'De 90 a 365',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+            {
+              text: 'Más de 1 Año',
+              style: 'tableHeader',
+              alignment: 'right',
+            },
+          ],
+          ...data.map((item: IConciliaExtContabDeudasPorEdades) => {
+            totalValor += item.Valor;
+            totalDe0A30 += item.De0a30;
+            totalDe30A60 += item.De30a60;
+            totalDe60A90 += item.De60a90;
+            totalDe90A365 += item.De90a365;
+            totalMasDe1Anio += item.MasDe1Anno;
+
+            return [
+              item.Division,
+              {
+                text: numberFormatter.format(item.Valor),
+                alignment: 'right',
+              },
+              {
+                text: numberFormatter.format(item.De0a30),
+                alignment: 'right',
+              },
+              {
+                text: numberFormatter.format(item.De30a60),
+                alignment: 'right',
+              },
+              {
+                text: numberFormatter.format(item.De60a90),
+                alignment: 'right',
+              },
+              {
+                text: numberFormatter.format(item.De90a365),
+                alignment: 'right',
+              },
+              {
+                text: numberFormatter.format(item.MasDe1Anno),
+                alignment: 'right',
+              },
+            ];
+          }),
+          [
+            { text: 'TOTAL', bold: true },
+            {
+              text: numberFormatter.format(totalValor),
+              bold: true,
+              alignment: 'right',
+            },
+            {
+              text: numberFormatter.format(totalDe0A30),
+              bold: true,
+              alignment: 'right',
+            },
+            {
+              text: numberFormatter.format(totalDe30A60),
+              bold: true,
+              alignment: 'right',
+            },
+            {
+              text: numberFormatter.format(totalDe60A90),
+              bold: true,
+              alignment: 'right',
+            },
+            {
+              text: numberFormatter.format(totalDe90A365),
+              bold: true,
+              alignment: 'right',
+            },
+            {
+              text: numberFormatter.format(totalMasDe1Anio),
               bold: true,
               alignment: 'right',
             },

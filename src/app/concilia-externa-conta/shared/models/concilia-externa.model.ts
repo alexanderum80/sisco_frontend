@@ -41,6 +41,20 @@ export interface IConciliaExtContabResumen {
   Diferencia: number;
 }
 
+export interface IConciliaExtContabDeudasPorEdades {
+  TipoOperacion: string;
+  Annio: number;
+  Mes: number;
+  IdDivision: number;
+  Division: string;
+  Valor: number;
+  De0a30: number;
+  De30a60: number;
+  De60a90: number;
+  De90a365: number;
+  MasDe1Anno: number;
+}
+
 export interface IActaConciliacion {
   ID: number;
   Detalle: string;
@@ -72,6 +86,7 @@ export interface IConciliaExternaContabQueryReponse {
   getDatosConciliacionExterna: IConciliaExternaDatosConcilicion;
   getConciliacionExternaContab: IConciliaExternaContabilidad;
   getConciliacionExternaContabResumen: IConciliaExtContabResumen[];
+  getConciliacionExternaContabDeudasPorEdades: IConciliaExtContabDeudasPorEdades[];
   getConciliacionEntreUnidades: IConciliaEntreUnidades;
   getDiferenciasEnConciliacion: IQueryResponse;
   getCentrosNoConciliados: IQueryResponse;
