@@ -13,7 +13,14 @@ const routes: Routes = [
     path: 'usuarios',
     loadChildren: () =>
       import('./usuarios/usuarios.module').then(m => m.UsuariosModule),
-    canActivate: [AuthGuard],
+    canActivate: [
+      AuthGuard,
+      // RoleGuard.forRoles(
+      //   ETipoUsuarios.Administrador,
+      //   ETipoUsuarios.Usuario,
+      //   ETipoUsuarios['Usuario Avanzado']
+      // ),
+    ],
   },
   {
     path: 'conexion-rodas',
@@ -203,6 +210,14 @@ const routes: Routes = [
       import('./concilia-externa-conta/concilia-externa-conta.module').then(
         m => m.ConciliaExternaContaModule
       ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'informe-cuentas-cobrar-pagar',
+    loadChildren: () =>
+      import(
+        './informe-cuentas-cobrar-pagar/informe-cuentas-cobrar-pagar.module'
+      ).then(m => m.InformeCuentasCobrarPagarModule),
     canActivate: [AuthGuard],
   },
 

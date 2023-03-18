@@ -154,6 +154,13 @@ export const MenuItems: MenuItem[] = [
         disabled: false,
         title: 'Muestra información sobre la gestión de los Centros.',
       },
+      {
+        label: 'Cuentas por Cobrar y Pagar',
+        icon: 'mdi mdi-book-clock',
+        routerLink: 'informe-cuentas-cobrar-pagar',
+        disabled: false,
+        title: 'Muestra Informe de Cuentas por Cobrar y Pagar.',
+      },
       { separator: true },
       {
         label: 'Clasificadores',

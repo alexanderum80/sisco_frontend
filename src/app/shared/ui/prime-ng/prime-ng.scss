@@ -363,3 +363,12 @@ small.p-error {
 .p-menubar .p-submenu-list {
     border: 1px solid lightblue !important;
 }
+
+a.p-ripple.p-element.p-menuitem-link.ng-star-inserted.p-menuitem-link-active {
+    background-color: skyblue;
+    cursor: default !important;
+
+    & span {
+        color: white;
+    }
+}
