@@ -44,7 +44,7 @@ export class TipoEntidadesService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -65,7 +65,7 @@ export class TipoEntidadesService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -91,12 +91,12 @@ export class TipoEntidadesService {
               variables: { tipoEntidadInfo },
               refetchQueries: ['GetAllTipoEntidades'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -111,12 +111,12 @@ export class TipoEntidadesService {
               variables: { IDs },
               refetchQueries: ['GetAllTipoEntidades'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

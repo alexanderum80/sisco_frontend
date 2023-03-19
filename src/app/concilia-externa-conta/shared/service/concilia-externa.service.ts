@@ -199,11 +199,11 @@ export class ConciliaExternaContaService {
           }
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -227,11 +227,11 @@ export class ConciliaExternaContaService {
           }
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -255,11 +255,11 @@ export class ConciliaExternaContaService {
           }
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -278,11 +278,11 @@ export class ConciliaExternaContaService {
           }
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -301,11 +301,11 @@ export class ConciliaExternaContaService {
           ['DatosConciliacion']
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -323,11 +323,11 @@ export class ConciliaExternaContaService {
           }
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -345,11 +345,11 @@ export class ConciliaExternaContaService {
           }
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -367,11 +367,11 @@ export class ConciliaExternaContaService {
           }
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -389,11 +389,11 @@ export class ConciliaExternaContaService {
           }
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -413,11 +413,11 @@ export class ConciliaExternaContaService {
           }
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -437,11 +437,11 @@ export class ConciliaExternaContaService {
           }
         )
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });

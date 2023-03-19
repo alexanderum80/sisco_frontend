@@ -42,15 +42,15 @@ export class TipoEntidadesFormComponent implements OnInit {
 
   private _save(): void {
     this._tipoEntidadesSvc.subscription.push(
-      this._tipoEntidadesSvc.save().subscribe(response => {
+      this._tipoEntidadesSvc.save().subscribe(res => {
         let result;
         let txtMessage;
 
         if (this.action === ActionClicked.Add) {
-          result = response.createTipoEntidad;
+          result = res.createTipoEntidad;
           txtMessage = 'El Tipo de Entidad se ha creado correctamente.';
         } else {
-          result = response.updateTipoEntidad;
+          result = res.updateTipoEntidad;
           txtMessage = 'El Tipo de Entidad se ha actualizado correctamente.';
         }
 

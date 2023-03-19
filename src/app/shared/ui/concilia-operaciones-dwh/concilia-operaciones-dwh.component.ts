@@ -98,8 +98,8 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
     try {
       if (this.interna) {
         this._conciliarDWHSvc.subscription.push(
-          this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
-            const result = response.getAllDivisionesByUsuario;
+          this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
+            const result = res.getAllDivisionesByUsuario;
 
             if (!result.success) {
               return this._sweetAlertSvc.error(result.error);
@@ -117,8 +117,8 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
         );
       } else {
         this._conciliarDWHSvc.subscription.push(
-          this._divisionesSvc.getDivisiones().subscribe(response => {
-            const result = response.getAllDivisiones;
+          this._divisionesSvc.getDivisiones().subscribe(res => {
+            const result = res.getAllDivisiones;
 
             if (!result.success) {
               return this._sweetAlertSvc.error(result.error);
@@ -153,8 +153,8 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
       this._conciliarDWHSvc.subscription.push(
         this._subdivisionesSvc
           .getSubdivisionesByIdDivision(idDivision)
-          .subscribe(response => {
-            const result = response.getSubdivisionesByIdDivision;
+          .subscribe(res => {
+            const result = res.getSubdivisionesByIdDivision;
 
             if (!result.success) {
               return this._sweetAlertSvc.error(result.error);
@@ -194,8 +194,8 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
       this._conciliarDWHSvc.subscription.push(
         this._unidadesSvc
           .getUnidadesByIdSubdivision(idSubdivision)
-          .subscribe(response => {
-            const result = response.getUnidadesByIdSubdivision;
+          .subscribe(res => {
+            const result = res.getUnidadesByIdSubdivision;
 
             if (!result.success) {
               return this._sweetAlertSvc.error(result.error);
@@ -354,11 +354,11 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
             variables: _variable,
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
+          .subscribe(res => {
             this.loading = false;
             const result = this.interna
-              ? response.data.conciliaInternaDWH
-              : response.data.conciliaExternaDWH;
+              ? res.data.conciliaInternaDWH
+              : res.data.conciliaExternaDWH;
 
             if (!result.success) {
               return this._sweetAlertSvc.error(result.error);

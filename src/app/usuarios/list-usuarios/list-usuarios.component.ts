@@ -95,6 +95,8 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
             this.usuarios = cloneDeep(result.data);
           },
           error: err => {
+            this.loading = false;
+
             return SweetAlert.fire({
               icon: 'error',
               title: 'ERROR',
@@ -171,8 +173,8 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
             variables: { id: idUsuario },
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            const result = response.data.getUsuarioById;
+          .subscribe(res => {
+            const result = res.data.getUsuarioById;
 
             if (!result.success) {
               return SweetAlert.fire({
@@ -244,8 +246,8 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
                 variables: { IDs: IDsToRemove },
                 refetchQueries: ['GetAllUsuarios'],
               })
-              .subscribe(response => {
-                const result = response.data?.deleteUsuario;
+              .subscribe(res => {
+                const result = res.data?.deleteUsuario;
 
                 if (result?.success === false) {
                   return SweetAlert.fire({

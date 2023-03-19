@@ -281,10 +281,10 @@ export class ConciliaContabilidadComponent
   private _getUnidades(): void {
     try {
       this._conciliaContabSvc.subscription.push(
-        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
           this.loadingCentros = false;
 
-          const result = response.getAllUnidadesByUsuario;
+          const result = res.getAllUnidadesByUsuario;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -313,8 +313,8 @@ export class ConciliaContabilidadComponent
       switch (subordinadoA) {
         case 100:
           this._conciliaContabSvc.subscription.push(
-            this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
-              const result = response.getAllDivisionesByUsuario;
+            this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
+              const result = res.getAllDivisionesByUsuario;
 
               if (!result.success) {
                 this._swalSvc.error(result.error);
@@ -349,8 +349,8 @@ export class ConciliaContabilidadComponent
           this._conciliaContabSvc.subscription.push(
             this._unidadesSvc
               .getUnidadesByIdSubdivision(subordinadoA)
-              .subscribe(response => {
-                const result = response.getUnidadesByIdSubdivision;
+              .subscribe(res => {
+                const result = res.getUnidadesByIdSubdivision;
 
                 if (!result.success) {
                   this._swalSvc.error(result.error);
@@ -371,8 +371,8 @@ export class ConciliaContabilidadComponent
           this._conciliaContabSvc.subscription.push(
             this._subdivisionesSvc
               .getSubdivisionesByIdDivision(subordinadoA)
-              .subscribe(response => {
-                const result = response.getSubdivisionesByIdDivision;
+              .subscribe(res => {
+                const result = res.getSubdivisionesByIdDivision;
 
                 if (!result.success) {
                   this._swalSvc.error(result.error);
@@ -398,8 +398,8 @@ export class ConciliaContabilidadComponent
   private _getTipoEntidades(): void {
     try {
       this._conciliaContabSvc.subscription.push(
-        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-          const result = response.getAllTipoEntidades;
+        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(res => {
+          const result = res.getAllTipoEntidades;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -425,8 +425,8 @@ export class ConciliaContabilidadComponent
     this._conciliaContabSvc.subscription.push(
       this._clasifEntidadesSvc
         .loadClasificadorEntidad(idUnidad)
-        .subscribe(response => {
-          const result = response.getClasificadorEntidad;
+        .subscribe(res => {
+          const result = res.getClasificadorEntidad;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -450,10 +450,10 @@ export class ConciliaContabilidadComponent
 
       this._conciliaContabSvc.subscription.push(
         this._conciliaContabSvc.conciliar().subscribe({
-          next: response => {
+          next: res => {
             this.loading = false;
 
-            const result = response.conciliaContabilidad;
+            const result = res.conciliaContabilidad;
 
             if (!result.success) {
               this._swalSvc.error(result.error);
@@ -547,9 +547,9 @@ export class ConciliaContabilidadComponent
       this._conciliaContabSvc.subscription.push(
         this._conciliaContabSvc
           .chequearCentros(idCentrosAChequear)
-          .subscribe(response => {
+          .subscribe(res => {
             this.loading = false;
-            const result = response.chequearCentros;
+            const result = res.chequearCentros;
 
             if (!result?.success) {
               this._swalSvc.error(result.error);

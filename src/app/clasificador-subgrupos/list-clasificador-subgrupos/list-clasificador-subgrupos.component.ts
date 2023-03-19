@@ -66,11 +66,11 @@ export class ListClasificadorSubgruposComponent
     try {
       this._clasificadorSubgruposSvc.subscription.push(
         this._clasificadorSubgruposSvc.loadAll().subscribe({
-          next: response => {
+          next: res => {
             this.loading = false;
 
             this.clasificadorSubgrupo = cloneDeep(
-              response.getAllActFijosClasificadorSubgrupo
+              res.getAllActFijosClasificadorSubgrupo
             );
           },
           error: err => {
@@ -139,8 +139,8 @@ export class ListClasificadorSubgruposComponent
           this._clasificadorSubgruposSvc
             .loadOne(clasificador.Grupo, clasificador.Codigo)
             .subscribe({
-              next: response => {
-                const data = response.getActFijosClasificadorSubgrupo;
+              next: res => {
+                const data = res.getActFijosClasificadorSubgrupo;
 
                 const inputData = {
                   grupo: data.Grupo,

@@ -97,8 +97,8 @@ export class EstadisticaContabilidadComponent
   private _getDivisiones(): void {
     try {
       this._estadisticaContaSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
-          const result = response.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
+          const result = res.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return this._sweetAlertSvc.error(result.error);

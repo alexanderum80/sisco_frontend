@@ -47,10 +47,10 @@ export class LoginComponent implements OnInit {
       };
 
       this._authSvc.login(authVariables).subscribe({
-        next: response => {
+        next: res => {
           this.autenticando = false;
 
-          const usuario = response.authenticateUsuario;
+          const usuario = res.authenticateUsuario;
 
           // if (this.fg.get('sesionAbierta')?.value)
           //   localStorage.setItem('usuario', JSON.stringify(usuario));

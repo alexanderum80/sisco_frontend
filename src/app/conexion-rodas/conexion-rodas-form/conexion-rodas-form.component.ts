@@ -107,8 +107,8 @@ export class ConexionRodasFormComponent
   private _getDivisiones(): void {
     try {
       this.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
-          const result = response.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
+          const result = res.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return this._swalSvc.error(result.error);
@@ -137,24 +137,22 @@ export class ConexionRodasFormComponent
       if (!idDivision) return;
 
       this.subscription.push(
-        this._unidadesSvc
-          .getUnidadesByIdDivision(idDivision)
-          .subscribe(response => {
-            const result = response.getUnidadesByIdDivision;
+        this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe(res => {
+          const result = res.getUnidadesByIdDivision;
 
-            if (!result.success) {
-              return this._swalSvc.error(result.error);
+          if (!result.success) {
+            return this._swalSvc.error(result.error);
+          }
+
+          this.unidadesValues = result.data.map(
+            (u: { IdUnidad: number; Nombre: string }) => {
+              return {
+                value: u.IdUnidad,
+                label: u.Nombre,
+              };
             }
-
-            this.unidadesValues = result.data.map(
-              (u: { IdUnidad: number; Nombre: string }) => {
-                return {
-                  value: u.IdUnidad,
-                  label: u.Nombre,
-                };
-              }
-            );
-          })
+          );
+        })
       );
     } catch (err: any) {
       this._swalSvc.error(err);
@@ -202,10 +200,10 @@ export class ConexionRodasFormComponent
   //     this._conexionRodasSvc.subscription.push(
   //       this._databasesSvc
   //         .getDataBases(ip, usuario, password)
-  //         .subscribe(response => {
+  //         .subscribe(res => {
   //           this.loadingDataBase = false;
 
-  //           const result = response.getDataBases;
+  //           const result = res.getDataBases;
 
   //           if (!result.success) {
   //             return SweetAlert.fire({
@@ -253,15 +251,15 @@ export class ConexionRodasFormComponent
     try {
       this.subscription.push(
         this._conexionRodasSvc.save().subscribe({
-          next: (response: any) => {
+          next: (res: any) => {
             let result;
             let txtMessage;
 
             if (this.action === ActionClicked.Add) {
-              result = response.createContaConexion;
+              result = res.createContaConexion;
               txtMessage = 'La Conexión se ha creado correctamente.';
             } else {
-              result = response.updateContaConexion;
+              result = res.updateContaConexion;
               txtMessage = 'La Conexión se ha actualizado correctamente.';
             }
 

@@ -41,7 +41,7 @@ export class EpigrafesService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -56,13 +56,13 @@ export class EpigrafesService {
               variables: { id },
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(response => {
-              subscriber.next(response.data);
+            .valueChanges.subscribe(res => {
+              subscriber.next(res.data);
               subscriber.complete();
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -87,12 +87,12 @@ export class EpigrafesService {
               variables: { epigrafeInfo },
               refetchQueries: ['GetAllEpigrafes'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -107,12 +107,12 @@ export class EpigrafesService {
               variables: { IDs },
               refetchQueries: ['GetAllEpigrafes'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

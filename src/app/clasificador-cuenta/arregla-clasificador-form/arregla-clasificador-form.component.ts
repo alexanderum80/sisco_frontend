@@ -60,8 +60,8 @@ export class ArreglaClasificadorFormComponent
   private _getUnidades(): void {
     try {
       this._clasificadorCuentasSvc.subscription.push(
-        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
-          const result = response.getAllUnidadesByUsuario;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
+          const result = res.getAllUnidadesByUsuario;
 
           if (!result.success) {
             this._swalSvc.error(result.error);

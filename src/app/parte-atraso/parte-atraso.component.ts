@@ -2,7 +2,13 @@ import { SelectItem } from 'primeng/api';
 import { DivisionesService } from './../shared/services/divisiones.service';
 import { FormGroup } from '@angular/forms';
 import { ParteAtrasoService } from './shared/services/parte-atraso.service';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterContentChecked,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { PdfmakeService } from './../shared/services/pdfmake.service';
 import SweetAlert from 'sweetalert2';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
@@ -12,7 +18,9 @@ import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
   templateUrl: './parte-atraso.component.html',
   styleUrls: ['./parte-atraso.component.scss'],
 })
-export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ParteAtrasoComponent
+  implements OnInit, OnDestroy, AfterContentChecked
+{
   selectedTabViewIndex = 0;
 
   displayedColumnsParteAtraso: ITableColumns[] = [
@@ -47,17 +55,19 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _divisionesSvc: DivisionesService,
     private _parteAtrasoSvc: ParteAtrasoService,
-    private _pdfMakeSvc: PdfmakeService
+    private _pdfMakeSvc: PdfmakeService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.fg = this._parteAtrasoSvc.fg;
-
     this._subscribeToFgChanges();
+
+    this._getDivisiones();
   }
 
-  ngAfterViewInit(): void {
-    this._getDivisiones();
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -67,8 +77,8 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   private _getDivisiones(): void {
     try {
       this._parteAtrasoSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
-          const result = response.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
+          const result = res.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return SweetAlert.fire({
@@ -119,10 +129,9 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loading = true;
 
       this._parteAtrasoSvc.subscription.push(
-        this._parteAtrasoSvc.calcular().subscribe(response => {
+        this._parteAtrasoSvc.calcular().subscribe(res => {
           this.loading = false;
-          const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } =
-            response;
+          const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } = res;
 
           if (!_parteAtrasos.success || !_datosIdGAM.success) {
             return SweetAlert.fire({

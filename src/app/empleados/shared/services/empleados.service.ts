@@ -35,12 +35,12 @@ export class EmpleadosService {
               fetchPolicy: 'network-only',
             })
             .valueChanges.subscribe({
-              next: response => subscriber.next(response.data || undefined),
-              error: err => subscriber.error(err),
+              next: res =>subscriber.next(res.data || undefined),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -58,15 +58,15 @@ export class EmpleadosService {
               fetchPolicy: 'network-only',
             })
             .subscribe({
-              next: response => {
-                subscriber.next(response.data || undefined);
+              next: res => {
+                subscriber.next(res.data || undefined);
                 subscriber.complete();
               },
-              error: err => subscriber.error(err),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -82,15 +82,15 @@ export class EmpleadosService {
               fetchPolicy: 'network-only',
             })
             .subscribe({
-              next: response => {
-                subscriber.next(response.data || undefined);
+              next: res => {
+                subscriber.next(res.data || undefined);
                 subscriber.complete();
               },
-              error: err => subscriber.error(err),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -118,12 +118,12 @@ export class EmpleadosService {
               refetchQueries: ['GetAllEmpleados'],
             })
             .subscribe({
-              next: response => subscriber.next(response.data || undefined),
-              error: err => subscriber.error(err),
+              next: res =>subscriber.next(res.data || undefined),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -139,12 +139,12 @@ export class EmpleadosService {
               refetchQueries: ['GetAllEmpleados'],
             })
             .subscribe({
-              next: response => subscriber.next(response.data || undefined),
-              error: err => subscriber.error(err),
+              next: res =>subscriber.next(res.data || undefined),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

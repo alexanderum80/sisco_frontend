@@ -1,3 +1,4 @@
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { StartComponent } from './shared/ui/start/start.component';
 import { AuthGuard } from './shared/services/auth-guard.service';
 import { NgModule } from '@angular/core';
@@ -219,6 +220,10 @@ const routes: Routes = [
         './informe-cuentas-cobrar-pagar/informe-cuentas-cobrar-pagar.module'
       ).then(m => m.InformeCuentasCobrarPagarModule),
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'unauthorized',
+    component: UnauthorizedComponent,
   },
 
   // Cuando no se encuentra el path

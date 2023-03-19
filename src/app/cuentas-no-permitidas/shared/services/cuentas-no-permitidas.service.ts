@@ -57,12 +57,12 @@ export class CuentasNoPermitidasService {
               query: cuentasNoPermitidasApi.all,
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(response => {
-              subscriber.next(response.data);
+            .valueChanges.subscribe(res => {
+              subscriber.next(res.data);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -79,13 +79,13 @@ export class CuentasNoPermitidasService {
               variables: { id },
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(response => {
-              subscriber.next(response.data);
+            .valueChanges.subscribe(res => {
+              subscriber.next(res.data);
               subscriber.complete();
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -119,12 +119,12 @@ export class CuentasNoPermitidasService {
               variables: { noUsarEnCuentaInput: payload },
               refetchQueries: ['GetAllNoUsarEnCuenta'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -141,12 +141,12 @@ export class CuentasNoPermitidasService {
               variables: { IDs },
               refetchQueries: ['GetAllNoUsarEnCuenta'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

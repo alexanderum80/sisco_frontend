@@ -63,8 +63,8 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
   private _getTipoUsuarios(): void {
     try {
       this._usuarioSvc.subscription.push(
-        this._tipoUsuariosSvc.getAllTipoUsuarios().subscribe(response => {
-          const result = response.getAllTipoUsuarios;
+        this._tipoUsuariosSvc.getAllTipoUsuarios().subscribe(res => {
+          const result = res.getAllTipoUsuarios;
 
           this.tipoUsuariosValues = result.data.map(
             (c: { IdTipo: any; TipoUsuario: any }) => {
@@ -90,8 +90,8 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
   private _getDivisiones(): void {
     try {
       this._usuarioSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
-          const result = response.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
+          const result = res.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return SweetAlert.fire({
@@ -211,15 +211,15 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
           variables: { usuarioInfo },
           refetchQueries: ['GetAllUsuarios'],
         })
-        .subscribe(response => {
+        .subscribe(res => {
           let result;
           let txtMessage;
 
           if (usuarioInfo.IdUsuario === 0) {
-            result = response.data?.createUsuario;
+            result = res.data?.createUsuario;
             txtMessage = 'El Usuario se ha creado correctamente.';
           } else {
-            result = response.data?.updateUsuario;
+            result = res.data?.updateUsuario;
             txtMessage = 'El Usuario se ha actualizado correctamente.';
           }
 

@@ -44,8 +44,8 @@ export class CompararExpresionesFormComponent implements OnInit {
   private _loadExpresiones(): void {
     try {
       this._compararExpresionesSvc.subscription.push(
-        this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
-          const result = response.getAllExpresionesResumen;
+        this._expresionesSvc.loadAllExpresionesResumen().subscribe(res => {
+          const result = res.getAllExpresionesResumen;
 
           if (!result.success) {
             throw new Error(result.error);
@@ -67,8 +67,8 @@ export class CompararExpresionesFormComponent implements OnInit {
   private _loadOperadores(): void {
     try {
       this._compararExpresionesSvc.subscription.push(
-        this._operadoresSvc.getOperadores().subscribe(response => {
-          const result = response.getAllOperadores;
+        this._operadoresSvc.getOperadores().subscribe(res => {
+          const result = res.getAllOperadores;
 
           if (!result.success) {
             throw new Error(result.error);
@@ -103,11 +103,11 @@ export class CompararExpresionesFormComponent implements OnInit {
   private _save(): void {
     try {
       this._compararExpresionesSvc.subscription.push(
-        this._compararExpresionesSvc.save().subscribe(response => {
+        this._compararExpresionesSvc.save().subscribe(res => {
           const result =
             this.action === ActionClicked.Add
-              ? response.createComprobarExpresion
-              : response.updateComprobarExpresion;
+              ? res.createComprobarExpresion
+              : res.updateComprobarExpresion;
 
           if (!result.success) {
             throw new Error(result.error);

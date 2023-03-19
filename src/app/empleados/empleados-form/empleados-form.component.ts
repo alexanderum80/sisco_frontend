@@ -48,8 +48,8 @@ export class EmpleadosFormComponent implements OnInit {
   private _getCargos(): void {
     try {
       this._empleadosSvc.subscription.push(
-        this._cargosSvc.getCargos().subscribe(response => {
-          const result = response.getAllCargos;
+        this._cargosSvc.getCargos().subscribe(res => {
+          const result = res.getAllCargos;
 
           if (!result.success) {
             return this._sweetAlertSvc.error(result.error);
@@ -73,8 +73,8 @@ export class EmpleadosFormComponent implements OnInit {
   private _getDivisiones(): void {
     try {
       this._empleadosSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
-          const result = response.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
+          const result = res.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return this._sweetAlertSvc.error(result.error);
@@ -112,15 +112,15 @@ export class EmpleadosFormComponent implements OnInit {
 
   private _save(): void {
     this._empleadosSvc.subscription.push(
-      this._empleadosSvc.save().subscribe(response => {
+      this._empleadosSvc.save().subscribe(res => {
         let result;
         let txtMessage;
 
         if (this.action === ActionClicked.Add) {
-          result = response.createEmpleado;
+          result = res.createEmpleado;
           txtMessage = 'El Empleado se ha creado correctamente.';
         } else {
-          result = response.updateEmpleado;
+          result = res.updateEmpleado;
           txtMessage = 'El Empleado se ha actualizado correctamente.';
         }
 

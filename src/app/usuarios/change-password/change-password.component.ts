@@ -75,8 +75,8 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
           mutation: usuariosApi.changePassword,
           variables: { idUsuario: _idUsuario, password: _password },
         })
-        .subscribe(response => {
-          const result = response.data?.changePassword;
+        .subscribe(res => {
+          const result = res.data?.changePassword;
 
           if (!result?.success) {
             return SweetAlert.fire({

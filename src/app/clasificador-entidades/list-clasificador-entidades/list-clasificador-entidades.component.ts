@@ -59,10 +59,10 @@ export class ListClasificadorEntidadesComponent
         this._clasificadorEntidadesSvc
           .loadAllClasificadorEntidades()
           .subscribe({
-            next: response => {
+            next: res => {
               this.loading = false;
 
-              const result = response.getAllClasificadorEntidades;
+              const result = res.getAllClasificadorEntidades;
 
               if (!result.success) {
                 return SweetAlert.fire({
@@ -164,8 +164,8 @@ export class ListClasificadorEntidadesComponent
       this._clasificadorEntidadesSvc.subscription.push(
         this._clasificadorEntidadesSvc
           .loadClasificadorEntidad(clasificadorEntidad.IdUnidad)
-          .subscribe(response => {
-            const result = response.getClasificadorEntidad;
+          .subscribe(res => {
+            const result = res.getClasificadorEntidad;
 
             if (!result.success) {
               return SweetAlert.fire({
@@ -237,8 +237,8 @@ export class ListClasificadorEntidadesComponent
             this._clasificadorEntidadesSvc.subscription.push(
               this._clasificadorEntidadesSvc
                 .delete(IDsToRemove)
-                .subscribe(response => {
-                  const result = response.deleteClasificadorEntidad;
+                .subscribe(res => {
+                  const result = res.deleteClasificadorEntidad;
 
                   if (!result.success) {
                     return SweetAlert.fire({

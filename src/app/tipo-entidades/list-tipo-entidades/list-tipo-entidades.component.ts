@@ -58,10 +58,10 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
   private _loadAllTipoEntidades(): void {
     try {
       this._tipoEntidadesSvc.subscription.push(
-        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
+        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(res => {
           this.loading = false;
 
-          const result = response.getAllTipoEntidades;
+          const result = res.getAllTipoEntidades;
 
           if (!result.success) {
             return SweetAlert.fire({
@@ -147,8 +147,8 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
       this._tipoEntidadesSvc.subscription.push(
         this._tipoEntidadesSvc
           .loadTipoEntidadById(tipoEntidad.Id)
-          .subscribe(response => {
-            const result = response.getTipoEntidadById;
+          .subscribe(res => {
+            const result = res.getTipoEntidadById;
 
             if (!result.success) {
               return SweetAlert.fire({
@@ -220,8 +220,8 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
                 });
 
             this._tipoEntidadesSvc.subscription.push(
-              this._tipoEntidadesSvc.delete(IDsToRemove).subscribe(response => {
-                const result = response.deleteTipoEntidad;
+              this._tipoEntidadesSvc.delete(IDsToRemove).subscribe(res => {
+                const result = res.deleteTipoEntidad;
 
                 if (!result.success) {
                   return SweetAlert.fire({

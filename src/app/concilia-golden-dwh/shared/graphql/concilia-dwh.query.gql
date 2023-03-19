@@ -1,28 +1,24 @@
 query ConciliaDWH($conciliaDWHInput: ConciliaDWHInput!) {
     conciliaDWH(conciliaDWHInput: $conciliaDWHInput) {
-        success
-        data {
-            Tipo
-            IdCentro
-            Centro
-            IdUnidad
-            Unidad
-            IdPiso
-            Almacen
-            Cuenta
-            Periodo
-            SaldoGolden
-            SaldoRestaurador
-            DifGoldenRest
-            SaldoDistribuidor
-            DifGoldenDist
-            SaldoRodas
-            DifGoldenRodas
-            IdDivision
-            Division
-            CuentaR
-            Nota
-        }
-        error
+        Tipo
+        IdCentro
+        Centro
+        IdUnidad
+        Unidad
+        IdPiso
+        Almacen
+        Cuenta
+        Periodo
+        SaldoGolden
+        SaldoRestaurador
+        DifGoldenRest
+        SaldoDistribuidor
+        DifGoldenDist
+        SaldoRodas
+        DifGoldenRodas
+        IdDivision
+        Division
+        CuentaR
+        Nota
     }
 }

@@ -41,11 +41,11 @@ export class ClasificadorEntidadesService {
             })
             .valueChanges.subscribe({
               next: res => subscriber.next(res.data),
-              error: err => subscriber.error(err),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -68,12 +68,12 @@ export class ClasificadorEntidadesService {
                 subscriber.complete();
               },
               error: err => {
-                subscriber.error(err);
+                subscriber.error(err.message || err);
               },
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -101,16 +101,16 @@ export class ClasificadorEntidadesService {
               refetchQueries: ['GetAllClasificadorEntidades'],
             })
             .subscribe({
-              next: response => {
-                subscriber.next(response.data || undefined);
+              next: res => {
+                subscriber.next(res.data || undefined);
               },
               error: err => {
-                subscriber.error(err);
+                subscriber.error(err.message || err);
               },
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -126,16 +126,16 @@ export class ClasificadorEntidadesService {
               refetchQueries: ['GetAllClasificadorEntidades'],
             })
             .subscribe({
-              next: response => {
-                subscriber.next(response.data || undefined);
+              next: res => {
+                subscriber.next(res.data || undefined);
               },
               error: err => {
-                subscriber.error(err);
+                subscriber.error(err.message || err);
               },
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

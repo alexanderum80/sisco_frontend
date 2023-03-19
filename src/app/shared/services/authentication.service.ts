@@ -41,13 +41,13 @@ export class AuthenticationService {
           passw: authVariables.Contrasena,
         })
         .subscribe({
-          next: response => {
-            this.udpateUsuario(response.authenticateUsuario);
+          next: res => {
+            this.udpateUsuario(res.authenticateUsuario);
 
-            subscriber.next(response);
+            subscriber.next(res);
           },
-          error: error => {
-            subscriber.error(error);
+          error: err => {
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -57,6 +57,12 @@ export class AuthenticationService {
     const _usuario = usuario ? new Usuario(usuario) : null;
     this._usuarioSubject.next(_usuario);
   }
+
+  // private _refreshToken(): void {
+  //   if (this.usuario) {
+  //     setTimeout({}, 90000);
+  //   }
+  // }
 
   logout(): void {
     localStorage.clear();

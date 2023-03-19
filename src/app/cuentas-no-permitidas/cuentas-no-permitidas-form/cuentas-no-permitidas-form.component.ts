@@ -38,8 +38,8 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
 
   private _loadCentros(): void {
     try {
-      this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
-        const result = response.getAllUnidadesByUsuario;
+      this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
+        const result = res.getAllUnidadesByUsuario;
 
         if (!result.success) {
           throw new Error(result.error);
@@ -72,23 +72,21 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
 
   private _save(): void {
     try {
-      this._cuentasNoPermitidasSvc
-        .saveCuentaNoPermitida()
-        .subscribe(response => {
-          const result =
-            this.action === ActionClicked.Add
-              ? response.createNoUsarEnCuenta
-              : response.updateNoUsarEnCuenta;
+      this._cuentasNoPermitidasSvc.saveCuentaNoPermitida().subscribe(res => {
+        const result =
+          this.action === ActionClicked.Add
+            ? res.createNoUsarEnCuenta
+            : res.updateNoUsarEnCuenta;
 
-          if (!result.success) {
-            throw new Error(result.error);
-          }
+        if (!result.success) {
+          throw new Error(result.error);
+        }
 
-          let txtMessage = `La Cuenta no Permitida se ha ${
-            this.action === ActionClicked.Add ? 'creado' : 'actualizado'
-          } correctamente.`;
-          this._dinamicDialogSvc.close(txtMessage);
-        });
+        let txtMessage = `La Cuenta no Permitida se ha ${
+          this.action === ActionClicked.Add ? 'creado' : 'actualizado'
+        } correctamente.`;
+        this._dinamicDialogSvc.close(txtMessage);
+      });
     } catch (err: any) {
       this._sweetAlertSvc.error(err);
     }

@@ -66,8 +66,8 @@ export class ConexionGoldenDwhService {
             variables: { dwhConexionInput: inputData },
             refetchQueries: ['GetDWHConexion'],
           })
-          .subscribe(response => {
-            subscriber.next(response.data || undefined);
+          .subscribe(res => {
+            subscriber.next(res.data || undefined);
           })
       );
     });

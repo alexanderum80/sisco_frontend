@@ -54,10 +54,10 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
   private _getCompararValores(): void {
     try {
       this._compararValoresSvc.subscription.push(
-        this._compararValoresSvc.loadAll().subscribe(response => {
+        this._compararValoresSvc.loadAll().subscribe(res => {
           this.loading = false;
 
-          const result = response.getAllComprobarValores;
+          const result = res.getAllComprobarValores;
 
           if (result.success === false) {
             return this._sweetAlertSvc.error(
@@ -116,8 +116,8 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
     try {
       this._compararValoresSvc.fg.reset();
       this._compararValoresSvc.subscription.push(
-        this._compararValoresSvc.loadOne(data.Id).subscribe(response => {
-          const result = response.getComprobarValorById;
+        this._compararValoresSvc.loadOne(data.Id).subscribe(res => {
+          const result = res.getComprobarValorById;
 
           if (!result.success) {
             return this._sweetAlertSvc.error(result.error);
@@ -172,22 +172,19 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
             });
 
             this._compararValoresSvc.subscription.push(
-              this._compararValoresSvc
-                .delete(IDsToRemove)
-                .subscribe(response => {
-                  const result = response.deleteComprobarValor;
+              this._compararValoresSvc.delete(IDsToRemove).subscribe(res => {
+                const result = res.deleteComprobarValor;
 
-                  if (!result.success) {
-                    return this._sweetAlertSvc.error(result.error);
-                  }
+                if (!result.success) {
+                  return this._sweetAlertSvc.error(result.error);
+                }
 
-                  this._msgSvc.add({
-                    severity: 'success',
-                    summary: 'Satisfactorio',
-                    detail:
-                      'La Comparación se ha eliminado Satisfactoriamente.',
-                  });
-                })
+                this._msgSvc.add({
+                  severity: 'success',
+                  summary: 'Satisfactorio',
+                  detail: 'La Comparación se ha eliminado Satisfactoriamente.',
+                });
+              })
             );
           }
         });

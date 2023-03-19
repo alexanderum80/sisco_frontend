@@ -70,7 +70,7 @@ export class ClasificadorCuentaService {
           )
           .subscribe({
             next: res => subscriber.next(res),
-            error: err => subscriber.error(err),
+            error: err => subscriber.error(err.message || err),
           })
       );
     });
@@ -101,7 +101,7 @@ export class ClasificadorCuentaService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -162,7 +162,7 @@ export class ClasificadorCuentaService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -223,7 +223,7 @@ export class ClasificadorCuentaService {
                 subscriber.next(res);
               },
               error: err => {
-                subscriber.error(err);
+                subscriber.error(err.message || err);
               },
             })
         );
@@ -249,7 +249,7 @@ export class ClasificadorCuentaService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -271,7 +271,7 @@ export class ClasificadorCuentaService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -293,7 +293,7 @@ export class ClasificadorCuentaService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

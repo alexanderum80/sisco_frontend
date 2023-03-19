@@ -47,7 +47,7 @@ export class EstadisticaContabilidadService {
             subscriber.next(res.contaEstadistica);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });

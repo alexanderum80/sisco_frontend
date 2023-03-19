@@ -51,7 +51,7 @@ export class UsuarioService {
               subscriber.next(res.data);
             },
             error: err => {
-              subscriber.error(err);
+              subscriber.error(err.message || err);
             },
           })
       );

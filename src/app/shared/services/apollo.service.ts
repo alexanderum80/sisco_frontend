@@ -31,8 +31,8 @@ export class ApolloService {
     }
     return new Observable<T>(subscriber => {
       this._apollo.query<T>(queryDetails).subscribe({
-        next: response => {
-          subscriber.next(response.data);
+        next: res => {
+          subscriber.next(res.data);
         },
         error: err => {
           subscriber.error(this.handleError(err));
@@ -52,8 +52,8 @@ export class ApolloService {
     }
     return new Observable<T>(subscriber => {
       this._apollo.watchQuery<T>(queryDetails).valueChanges.subscribe({
-        next: response => {
-          subscriber.next(response.data);
+        next: res => {
+          subscriber.next(res.data);
         },
         error: err => {
           subscriber.error(this.handleError(err));
@@ -82,8 +82,8 @@ export class ApolloService {
 
     return new Observable<T>(subscriber => {
       this._apollo.mutate<T>(definition).subscribe({
-        next: response => {
-          subscriber.next(response.data!);
+        next: res => {
+          subscriber.next(res.data!);
         },
         error: err => {
           subscriber.error(this.handleError(err));

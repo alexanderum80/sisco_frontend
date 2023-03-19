@@ -1,42 +1,36 @@
-import SweetAlert from 'sweetalert2';
-import { Injectable } from '@angular/core';
 import {
-  HttpRequest,
-  HttpHandler,
   HttpEvent,
-  HttpInterceptor,
+  HttpHandler,
+  HttpRequest,
+  HttpErrorResponse,
 } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthenticationService } from './../services/authentication.service';
+import { Injectable } from '@angular/core';
 
 @Injectable()
-export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private authenticationService: AuthenticationService) {}
-
+export class HttpErrorInterceptorService extends HttpErrorResponse {
+  constructor() {
+    super({});
+  }
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      catchError(err => {
-        if (
-          [401, 403].includes(err.status) &&
-          this.authenticationService.authenticated
-        ) {
-          // auto logout if 401 or 403 response returned from api
-          this.authenticationService.logout();
-        }
+      catchError((httpErrorResponse: HttpErrorResponse) => {
+        let errorMesagge = '';
 
-        const error = (err && err.error && err.error.message) || err.statusText;
-        console.log(err);
-        SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: error,
-          confirmButtonText: 'Aceptar',
-        });
-        throw error;
+        if (httpErrorResponse.error instanceof ErrorEvent) {
+          errorMesagge = httpErrorResponse.error.error;
+        } else {
+          if (httpErrorResponse.status === 0) {
+            errorMesagge = 'No hay conexión con el servidor';
+          } else {
+            errorMesagge = `${httpErrorResponse.status}: ${httpErrorResponse.error.error}`;
+          }
+        }
+        return throwError(() => new Error(errorMesagge));
       })
     );
   }

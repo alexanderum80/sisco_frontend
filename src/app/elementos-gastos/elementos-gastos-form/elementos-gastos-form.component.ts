@@ -50,8 +50,8 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
   private _loadTipoEntidades(): void {
     try {
       this._elementoGastoSvc.subscription.push(
-        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-          const result = response.getAllTipoEntidades;
+        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(res => {
+          const result = res.getAllTipoEntidades;
           if (result.success) {
             this.tipoEntidadValues = result.data.map(
               (tipo: { Id: any; Entidades: any }) => {
@@ -78,8 +78,8 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
   private _loadEpigrafes(): void {
     try {
       this._elementoGastoSvc.subscription.push(
-        this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
-          const result = response.getAllEpigrafes;
+        this._epigrafesSvc.loadAllEpigrafes().subscribe(res => {
+          const result = res.getAllEpigrafes;
           if (result.success) {
             this.epigrafesValues = result.data.map(
               (epigrafe: { IdEpigafre: any; Epigrafe: any }) => {
@@ -151,10 +151,10 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
 
   private _save(): void {
     try {
-      this._elementoGastoSvc.save().subscribe(response => {
+      this._elementoGastoSvc.save().subscribe(res => {
         let result;
 
-        result = response.saveElementoGasto;
+        result = res.saveElementoGasto;
         if (!result.success) {
           return SweetAlert.fire({
             icon: 'error',

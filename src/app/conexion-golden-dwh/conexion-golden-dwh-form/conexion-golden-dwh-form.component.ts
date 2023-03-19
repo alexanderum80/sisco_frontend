@@ -68,8 +68,8 @@ export class ConexionGoldenDwhFormComponent
   private _getDivisiones(): void {
     try {
       this._conexionDWHSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
-          const result = response.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
+          const result = res.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return SweetAlert.fire({
@@ -160,8 +160,8 @@ export class ConexionGoldenDwhFormComponent
     this.subscription.forEach(subs => subs.unsubscribe());
 
     this._conexionDWHSvc.subscription.push(
-      this._conexionDWHSvc.loadDWHConexion(idDivision).subscribe(response => {
-        const result = response.getDWHConexion;
+      this._conexionDWHSvc.loadDWHConexion(idDivision).subscribe(res => {
+        const result = res.getDWHConexion;
 
         if (!result.success) {
           return SweetAlert.fire({
@@ -235,11 +235,11 @@ export class ConexionGoldenDwhFormComponent
       this._conexionDWHSvc.subscription.push(
         this._databasesSvc
           .getDataBases(ip, usuario, password)
-          .subscribe(response => {
+          .subscribe(res => {
             this.loadingDWHDataBase = false;
             this.loadingRestDataBase = false;
 
-            const result = response.getDataBases;
+            const result = res.getDataBases;
 
             if (!result.success) {
               return SweetAlert.fire({
@@ -296,8 +296,8 @@ export class ConexionGoldenDwhFormComponent
   private _save(): void {
     try {
       this._conexionDWHSvc.subscription.push(
-        this._conexionDWHSvc.save().subscribe(response => {
-          const result = response.updateDWhConexion;
+        this._conexionDWHSvc.save().subscribe(res => {
+          const result = res.updateDWhConexion;
 
           if (!result?.success) {
             return SweetAlert.fire({

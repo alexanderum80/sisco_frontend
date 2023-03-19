@@ -85,10 +85,10 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
         this._clasificadorCuentaSvc
           .loadAllClasificadorCuenta(+this.fg.get('tipo')?.value)
           .subscribe({
-            next: response => {
+            next: res => {
               this.loading = false;
 
-              const result = response.getAllClasificadorCuentas;
+              const result = res.getAllClasificadorCuentas;
               if (!result.success) {
                 return SweetAlert.fire({
                   icon: 'error',
@@ -196,8 +196,8 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
               clasificador.SubCuenta,
               clasificador.TipoClasificador
             )
-            .subscribe(response => {
-              const result = response.getClasificadorCuenta;
+            .subscribe(res => {
+              const result = res.getClasificadorCuenta;
               if (!result.success) {
                 return SweetAlert.fire({
                   icon: 'error',
@@ -285,8 +285,8 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
           if (res.value) {
             this._clasificadorCuentaSvc.subscription.push(
               this._clasificadorCuentaSvc.delete(clasificador).subscribe({
-                next: response => {
-                  const result = response.deleteClasificadorCuenta;
+                next: res => {
+                  const result = res.deleteClasificadorCuenta;
 
                   if (!result.success) {
                     return SweetAlert.fire({

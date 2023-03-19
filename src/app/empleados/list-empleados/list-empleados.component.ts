@@ -32,6 +32,8 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
   inlineButtons: IButtons[] = [];
   topLeftButtons: IButtons[] = [];
 
+  loading = true;
+
   constructor(
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
@@ -60,8 +62,10 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
   private _getEmpleados(): void {
     try {
       this._empleadoSvc.subscription.push(
-        this._empleadoSvc.loadAllEmpleados().subscribe(response => {
-          const result = response.getAllEmpleados;
+        this._empleadoSvc.loadAllEmpleados().subscribe(res => {
+          this.loading = false;
+
+          const result = res.getAllEmpleados;
 
           if (result.success === false) {
             return SweetAlert.fire({
@@ -77,6 +81,8 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
         })
       );
     } catch (err: any) {
+      this.loading = false;
+
       SweetAlert.fire({
         icon: 'error',
         title: 'ERROR',
@@ -129,50 +135,46 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
   private _edit(data: any): void {
     if (this.hasAdminPermission()) {
       this._empleadoSvc.subscription.push(
-        this._empleadoSvc
-          .loadEmpleadoById(data.IdEmpleado)
-          .subscribe(response => {
-            const result = response.getEmpleadoById;
+        this._empleadoSvc.loadEmpleadoById(data.IdEmpleado).subscribe(res => {
+          const result = res.getEmpleadoById;
 
-            if (!result.success) {
-              return SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: result.error,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-              });
-            }
+          if (!result.success) {
+            return SweetAlert.fire({
+              icon: 'error',
+              title: 'ERROR',
+              text: result.error,
+              showConfirmButton: true,
+              confirmButtonText: 'Aceptar',
+            });
+          }
 
-            const data = result.data;
+          const data = result.data;
 
-            const inputData = {
-              idEmpleado: data.IdEmpleado,
-              empleado: data.Empleado,
-              cargo: data.Cargo.IdCargo,
-              division: data.Division.IdDivision,
-            };
+          const inputData = {
+            idEmpleado: data.IdEmpleado,
+            empleado: data.Empleado,
+            cargo: data.Cargo.IdCargo,
+            division: data.Division.IdDivision,
+          };
 
-            this._empleadoSvc.fg.patchValue(inputData);
+          this._empleadoSvc.fg.patchValue(inputData);
 
-            this._dinamicDialogSvc.open(
-              'Modificar Empleado',
-              EmpleadosFormComponent
-            );
-            this._empleadoSvc.subscription.push(
-              this._dinamicDialogSvc.ref.onClose.subscribe(
-                (message: string) => {
-                  if (message) {
-                    this._msgSvc.add({
-                      severity: 'success',
-                      summary: 'Satisfactorio',
-                      detail: message,
-                    });
-                  }
-                }
-              )
-            );
-          })
+          this._dinamicDialogSvc.open(
+            'Modificar Empleado',
+            EmpleadosFormComponent
+          );
+          this._empleadoSvc.subscription.push(
+            this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
+              if (message) {
+                this._msgSvc.add({
+                  severity: 'success',
+                  summary: 'Satisfactorio',
+                  detail: message,
+                });
+              }
+            })
+          );
+        })
       );
     }
   }
@@ -195,8 +197,8 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
                 return d.IdEmpleado;
               });
 
-          this._empleadoSvc.delete(IDsToRemove).subscribe(response => {
-            const result = response.deleteEmpleado;
+          this._empleadoSvc.delete(IDsToRemove).subscribe(res => {
+            const result = res.deleteEmpleado;
 
             if (!result.success) {
               return SweetAlert.fire({

@@ -42,8 +42,8 @@ export class ExpresionesFormComponent implements OnInit {
 
   private _loadTipoValorExpresiones(): void {
     try {
-      this._expresionesSvc.loadAllTipoValorExpresiones().subscribe(response => {
-        const result = response.getAllContaTipoValorExpresiones;
+      this._expresionesSvc.loadAllTipoValorExpresiones().subscribe(res => {
+        const result = res.getAllContaTipoValorExpresiones;
 
         if (!result.success) {
           throw new Error(result.error);
@@ -72,8 +72,8 @@ export class ExpresionesFormComponent implements OnInit {
       const idExpresionResumen = this.fg.controls['idExpresion'].value;
       this._expresionesSvc
         .loadExpresionDetalleByIdResumen(idExpresionResumen)
-        .subscribe(response => {
-          const result = response.getExpresionesDetalleByIdResumen;
+        .subscribe(res => {
+          const result = res.getExpresionesDetalleByIdResumen;
 
           if (!result.success) {
             throw new Error(result.error);
@@ -191,11 +191,11 @@ export class ExpresionesFormComponent implements OnInit {
         ExpresionesDetalle,
       };
 
-      this._expresionesSvc.saveExpresion(payload).subscribe(response => {
+      this._expresionesSvc.saveExpresion(payload).subscribe(res => {
         const result =
           ExpresionResumen.IdExpresion === 0
-            ? response.createExpresion
-            : response.updateExpresion;
+            ? res.createExpresion
+            : res.updateExpresion;
         const txtMessage = `La Expresión se ha ${
           ExpresionResumen.IdExpresion === 0 ? 'creado' : 'actualizado'
         } correctamente.`;

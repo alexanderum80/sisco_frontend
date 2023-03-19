@@ -62,10 +62,10 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
   private _getExpresionesResumen(): void {
     try {
       this._expresionesSvc.subscription.push(
-        this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
+        this._expresionesSvc.loadAllExpresionesResumen().subscribe(res => {
           this.loading = false;
 
-          const result = response.getAllExpresionesResumen;
+          const result = res.getAllExpresionesResumen;
 
           if (result.success === false) {
             return this._sweetAlertSvc.error(result.error);
@@ -133,8 +133,8 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
       this._expresionesSvc.inicializarFg();
       this._expresionesSvc
         .loadExpresionResumenById(data.IdExpresion)
-        .subscribe(response => {
-          const result = response.getExpresionResumenById;
+        .subscribe(res => {
+          const result = res.getExpresionResumenById;
 
           if (!result.success) {
             return this._sweetAlertSvc.error(result.error);
@@ -204,8 +204,8 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
 
             this._expresionesSvc
               .deleteExpresionResumen(IDsToRemove)
-              .subscribe(response => {
-                const result = response.deleteExpresionResumen;
+              .subscribe(res => {
+                const result = res.deleteExpresionResumen;
 
                 if (!result.success) {
                   return this._sweetAlertSvc.error(result.error);

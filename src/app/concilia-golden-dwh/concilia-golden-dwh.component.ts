@@ -1,3 +1,4 @@
+import { IConciliaDWH } from './shared/models/concilia-dwh.model';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { ActionClicked } from './../shared/models/list-items';
 import { SweetalertService } from './../shared/services/sweetalert.service';
@@ -134,10 +135,10 @@ export class ConciliaGoldenDwhComponent
   empleadosValues: SelectItem[] = [];
   supervisoresValues: SelectItem[] = [];
 
-  rodasDWHInventarioVentas = [];
-  dataSourceInventario = [];
-  dataSourceVenta = [];
-  dataSourceAlmacenes = [];
+  rodasDWHInventarioVentas: IConciliaDWH[] = [];
+  dataSourceInventario: IConciliaDWH[] = [];
+  dataSourceVenta: IConciliaDWH[] = [];
+  dataSourceAlmacenes: IConciliaDWH[] = [];
 
   isConsolidado = false;
   loading = false;
@@ -223,8 +224,8 @@ export class ConciliaGoldenDwhComponent
   private _getDivisiones(): void {
     try {
       this._conciliaDWHSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
-          const result = response.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
+          const result = res.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return this._sweetAlertSvc.error(result.error);
@@ -255,23 +256,21 @@ export class ConciliaGoldenDwhComponent
       }
 
       this._conciliaDWHSvc.subscription.push(
-        this._unidadesSvc
-          .getUnidadesByIdDivision(idDivision)
-          .subscribe(response => {
-            const result = response.getUnidadesByIdDivision;
+        this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe(res => {
+          const result = res.getUnidadesByIdDivision;
 
-            if (!result.success) {
-              return this._sweetAlertSvc.error(result.error);
-            }
+          if (!result.success) {
+            return this._sweetAlertSvc.error(result.error);
+          }
 
-            this.unidadesList = result.data;
-            this.centrosValues = this.unidadesList.map(d => {
-              return {
-                value: d.IdUnidad,
-                label: d.Nombre,
-              };
-            });
-          })
+          this.unidadesList = result.data;
+          this.centrosValues = this.unidadesList.map(d => {
+            return {
+              value: d.IdUnidad,
+              label: d.Nombre,
+            };
+          });
+        })
       );
     } catch (err: any) {
       this._sweetAlertSvc.error(err);
@@ -281,8 +280,8 @@ export class ConciliaGoldenDwhComponent
   private _getEmpleados(): void {
     try {
       this._conciliaDWHSvc.subscription.push(
-        this._empleadosSvc.loadAllEmpleados().subscribe(response => {
-          const result = response.getAllEmpleados;
+        this._empleadosSvc.loadAllEmpleados().subscribe(res => {
+          const result = res.getAllEmpleados;
 
           if (!result.success) {
             return this._sweetAlertSvc.error(result.error);
@@ -304,8 +303,8 @@ export class ConciliaGoldenDwhComponent
   private _getSupervisores(): void {
     try {
       this._conciliaDWHSvc.subscription.push(
-        this._supervisoresSvc.loadAllSupervisores().subscribe(response => {
-          const result = response.getAllSupervisores;
+        this._supervisoresSvc.loadAllSupervisores().subscribe(res => {
+          const result = res.getAllSupervisores;
 
           if (!result.success) {
             return this._sweetAlertSvc.error(result.error);
@@ -349,28 +348,29 @@ export class ConciliaGoldenDwhComponent
       this._inicializarDatos();
 
       this._conciliaDWHSvc.subscription.push(
-        this._conciliaDWHSvc.conciliar().subscribe(response => {
-          this.loading = false;
+        this._conciliaDWHSvc.conciliar().subscribe({
+          next: res => {
+            this.loading = false;
 
-          const result = response.conciliaDWH;
+            this.rodasDWHInventarioVentas = res.conciliaDWH;
 
-          if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
-          }
+            this.dataSourceInventario = [
+              ...this.rodasDWHInventarioVentas,
+            ].filter(f => f.Tipo === 'Inventario');
 
-          this.rodasDWHInventarioVentas = result.data;
+            this.dataSourceVenta = [...this.rodasDWHInventarioVentas].filter(
+              f => f.Tipo === 'Ventas'
+            );
 
-          this.dataSourceInventario = this.rodasDWHInventarioVentas.filter(
-            (f: { Tipo: string }) => f.Tipo === 'Inventario'
-          );
+            this.dataSourceAlmacenes = [
+              ...this.rodasDWHInventarioVentas,
+            ].filter(f => f.Tipo === 'Almacenes');
+          },
+          error: err => {
+            this.loading = false;
 
-          this.dataSourceVenta = this.rodasDWHInventarioVentas.filter(
-            (f: { Tipo: string }) => f.Tipo === 'Ventas'
-          );
-
-          this.dataSourceAlmacenes = this.rodasDWHInventarioVentas.filter(
-            (f: { Tipo: string }) => f.Tipo === 'Almacenes'
-          );
+            this._sweetAlertSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
@@ -382,7 +382,7 @@ export class ConciliaGoldenDwhComponent
 
   reporte(): void {
     switch (this.selectedTabViewIndex) {
-      case 2:
+      case 3:
         this.reporteAlmacenes();
         break;
       default:

@@ -127,8 +127,8 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
   private _loadTipoUnidades(): void {
     try {
       this.subscription.push(
-        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-          const result = response.getAllTipoEntidades;
+        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(res => {
+          const result = res.getAllTipoEntidades;
           if (!result.success) {
             return SweetAlert.fire({
               icon: 'error',
@@ -267,8 +267,8 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
   private _save(): void {
     try {
       this.subscription.push(
-        this._clasificadorSvc.save().subscribe(response => {
-          const result = response.saveClasificadorCuenta;
+        this._clasificadorSvc.save().subscribe(res => {
+          const result = res.saveClasificadorCuenta;
           if (!result.success) {
             return SweetAlert.fire({
               icon: 'error',

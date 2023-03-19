@@ -55,10 +55,10 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
   }
 
   private _loadElementosGastos(): void {
-    this._elementosGastosSvc.loadAllElementosGastos().subscribe(response => {
+    this._elementosGastosSvc.loadAllElementosGastos().subscribe(res => {
       this.loading = false;
 
-      const result = response.getAllElementosGastos;
+      const result = res.getAllElementosGastos;
 
       if (!result.success) {
         return SweetAlert.fire({
@@ -136,8 +136,8 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
     this._elementosGastosSvc.subscription.push(
       this._elementosGastosSvc
         .loadElementoGastoById(data.Egasto)
-        .subscribe(response => {
-          const result = response.getElementoGastoById;
+        .subscribe(res => {
+          const result = res.getElementoGastoById;
           if (!result.success) {
             return SweetAlert.fire({
               icon: 'error',
@@ -200,28 +200,25 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
                 });
 
             this._elementosGastosSvc.subscription.push(
-              this._elementosGastosSvc
-                .delete(IDsToRemove)
-                .subscribe(response => {
-                  const result = response.deleteElementoGasto;
+              this._elementosGastosSvc.delete(IDsToRemove).subscribe(res => {
+                const result = res.deleteElementoGasto;
 
-                  if (result.success === false) {
-                    return SweetAlert.fire({
-                      icon: 'error',
-                      title: 'ERROR',
-                      text: result.error,
-                      showConfirmButton: true,
-                      confirmButtonText: 'Aceptar',
-                    });
-                  }
-
-                  this._msgSvc.add({
-                    severity: 'success',
-                    summary: 'Satisfactorio',
-                    detail:
-                      'El Elemento de Gasto se ha eliminado correctamente.',
+                if (result.success === false) {
+                  return SweetAlert.fire({
+                    icon: 'error',
+                    title: 'ERROR',
+                    text: result.error,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Aceptar',
                   });
-                })
+                }
+
+                this._msgSvc.add({
+                  severity: 'success',
+                  summary: 'Satisfactorio',
+                  detail: 'El Elemento de Gasto se ha eliminado correctamente.',
+                });
+              })
             );
           }
         });

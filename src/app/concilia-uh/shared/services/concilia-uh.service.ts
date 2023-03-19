@@ -109,11 +109,11 @@ export class ConciliaUhService {
           conciliaUhInput,
         })
         .subscribe({
-          next: response => {
-            subscriber.next(response);
+          next: res => {
+            subscriber.next(res);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });

@@ -1,3 +1,4 @@
+import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { PrimeCheckboxModule } from './shared/ui/prime-ng/checkbox/checkbox.module';
 import { Apollo } from 'apollo-angular';
 import { PrimeMenubarModule } from './shared/ui/prime-ng/menubar/menubar.module';
@@ -13,7 +14,7 @@ import { LoginComponent } from './usuarios/login/login.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StartComponent } from './shared/ui/start/start.component';
 import { GraphQLModule } from './graphql.module';
-import { ErrorInterceptor } from './shared/helpers/error.interceptor';
+import { HttpErrorInterceptorService } from './shared/helpers/error.interceptor';
 import { JwtInterceptor } from './shared/helpers/jwt.interceptor';
 import { PrimeCardModule } from './shared/ui/prime-ng/card/card.module';
 import { PrimeInputTextModule } from './shared/ui/prime-ng/input-text/input-text.module';
@@ -21,7 +22,12 @@ import { PrimePasswordModule } from './shared/ui/prime-ng/password/password.modu
 import { DialogService } from 'primeng/dynamicdialog';
 
 @NgModule({
-  declarations: [AppComponent, StartComponent, LoginComponent],
+  declarations: [
+    AppComponent,
+    StartComponent,
+    LoginComponent,
+    UnauthorizedComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -50,7 +56,11 @@ import { DialogService } from 'primeng/dynamicdialog';
     DialogService,
     Apollo,
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptorService,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

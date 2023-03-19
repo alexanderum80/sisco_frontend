@@ -19,15 +19,15 @@ export class UnidadesService {
             fetchPolicy: 'network-only',
           })
           .subscribe({
-            next: response => {
-              subscriber.next(response.data);
+            next: res => {
+              subscriber.next(res.data);
             },
             error: err => {
-              subscriber.error(err);
+              subscriber.error(err.message || err);
             },
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -41,15 +41,15 @@ export class UnidadesService {
             fetchPolicy: 'network-only',
           })
           .subscribe({
-            next: response => {
-              subscriber.next(response.data);
+            next: res => {
+              subscriber.next(res.data);
             },
             error: err => {
-              subscriber.error(err);
+              subscriber.error(err.message || err);
             },
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -66,16 +66,16 @@ export class UnidadesService {
             fetchPolicy: 'network-only',
           })
           .subscribe({
-            next: response => {
-              subscriber.next(response.data);
+            next: res => {
+              subscriber.next(res.data);
               subscriber.complete();
             },
             error: err => {
-              subscriber.error(err);
+              subscriber.error(err.message || err);
             },
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -92,16 +92,16 @@ export class UnidadesService {
             fetchPolicy: 'network-only',
           })
           .subscribe({
-            next: response => {
-              subscriber.next(response.data);
+            next: res => {
+              subscriber.next(res.data);
               subscriber.complete();
             },
             error: err => {
-              subscriber.error(err);
+              subscriber.error(err.message || err);
             },
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

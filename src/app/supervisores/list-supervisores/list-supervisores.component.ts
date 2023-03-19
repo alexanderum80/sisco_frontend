@@ -64,10 +64,10 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
   private _getSupervisores(): void {
     try {
       this._supervisorSvc.subscription.push(
-        this._supervisorSvc.loadAllSupervisores().subscribe(response => {
+        this._supervisorSvc.loadAllSupervisores().subscribe(res => {
           this.loading = false;
 
-          const result = response.getAllSupervisores;
+          const result = res.getAllSupervisores;
 
           if (result.success === false) {
             return Swal.fire({
@@ -83,6 +83,8 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
         })
       );
     } catch (err: any) {
+      this.loading = false;
+
       Swal.fire({
         icon: 'error',
         title: 'ERROR',
@@ -140,8 +142,8 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
       this._supervisorSvc.subscription.push(
         this._supervisorSvc
           .loadSupervisorById(data.IdSupervisor)
-          .subscribe(response => {
-            const result = response.getSupervisorById;
+          .subscribe(res => {
+            const result = res.getSupervisorById;
 
             if (!result.success) {
               return Swal.fire({
@@ -206,8 +208,8 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
               });
 
           this._supervisorSvc.subscription.push(
-            this._supervisorSvc.delete(IDsToRemove).subscribe(response => {
-              const result = response.deleteSupervisor;
+            this._supervisorSvc.delete(IDsToRemove).subscribe(res => {
+              const result = res.deleteSupervisor;
 
               if (!result.success) {
                 return Swal.fire({

@@ -663,18 +663,18 @@ export class ConciliaExternaContaComponent
       this.loadingConciliacion = true;
 
       this._conciliaExternaContaSvc.calculaConciliacion().subscribe({
-        next: response => {
+        next: res => {
           this.loadingConciliacion = false;
 
           this.conciliaContabData = [
-            ...response.getConciliacionExternaContab.getConciliaContab,
+            ...res.getConciliacionExternaContab.getConciliaContab,
           ];
           this._conciliaExternaContaSvc.ConciliaContabRowData = [
             ...this.conciliaContabData,
           ];
 
           const datosActa = [
-            ...response.getConciliacionExternaContab.getActaConciliacion,
+            ...res.getConciliacionExternaContab.getActaConciliacion,
           ];
           const actaEmisor = datosActa.filter(
             (f: any) =>
@@ -861,10 +861,10 @@ export class ConciliaExternaContaComponent
     this.loadingDiferenciasConciliacion = true;
 
     this._conciliaExternaContaSvc.diferenciasConciliacion().subscribe({
-      next: response => {
+      next: res => {
         this.loadingDiferenciasConciliacion = false;
 
-        const result = response.getDiferenciasEnConciliacion;
+        const result = res.getDiferenciasEnConciliacion;
         if (!result.success) {
           return this._swalSvc.error(result.error);
         }
@@ -887,10 +887,10 @@ export class ConciliaExternaContaComponent
       this.loadingCentrosNoConciliados = true;
 
       this._conciliaExternaContaSvc.diferenciasConciliacion().subscribe({
-        next: response => {
+        next: res => {
           this.loadingCentrosNoConciliados = false;
 
-          const result = response.getDiferenciasEnConciliacion;
+          const result = res.getDiferenciasEnConciliacion;
           if (!result.success) {
             return this._swalSvc.error(result.error);
           }

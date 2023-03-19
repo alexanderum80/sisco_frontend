@@ -47,7 +47,7 @@ export class ConciliaInternaContaService {
               subscriber.next(res);
             },
             error: err => {
-              subscriber.error(err);
+              subscriber.error(err.message || err);
             },
           })
       );

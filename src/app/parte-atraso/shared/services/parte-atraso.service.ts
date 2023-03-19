@@ -37,7 +37,7 @@ export class ParteAtrasoService {
             subscriber.next(reponse.data);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });

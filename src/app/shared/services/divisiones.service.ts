@@ -20,11 +20,11 @@ export class DivisionesService {
             query: divisionesQuery,
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
+          .subscribe(res => {
+            subscriber.next(res.data);
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -37,11 +37,11 @@ export class DivisionesService {
             query: divisionesByUsuarioQuery,
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
+          .subscribe(res => {
+            subscriber.next(res.data);
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

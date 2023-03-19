@@ -65,10 +65,10 @@ export class ListCuentasNoPermitidasComponent
       this._cuentasNoPermitidasSvc.subscription.push(
         this._cuentasNoPermitidasSvc
           .loadAllCuentasNoPermitidas()
-          .subscribe(response => {
+          .subscribe(res => {
             this.loading = false;
 
-            const result = response.getAllNoUsarEnCuenta;
+            const result = res.getAllNoUsarEnCuenta;
 
             if (result.success === false) {
               return this._sweetAlertSvc.error(result.error);
@@ -137,8 +137,8 @@ export class ListCuentasNoPermitidasComponent
       this._cuentasNoPermitidasSvc.inicializarFg();
       this._cuentasNoPermitidasSvc
         .loadCuentaNoPermitida(data.Id)
-        .subscribe(response => {
-          const result = response.getNoUsarEnCuentaById;
+        .subscribe(res => {
+          const result = res.getNoUsarEnCuentaById;
 
           if (!result.success) {
             return this._sweetAlertSvc.error(result.error);
@@ -210,8 +210,8 @@ export class ListCuentasNoPermitidasComponent
 
             this._cuentasNoPermitidasSvc
               .deleteCuentaNoPermitida(IDsToRemove)
-              .subscribe(response => {
-                const result = response.deleteNoUsarEnCuenta;
+              .subscribe(res => {
+                const result = res.deleteNoUsarEnCuenta;
 
                 if (!result.success) {
                   return this._sweetAlertSvc.error(result.error);

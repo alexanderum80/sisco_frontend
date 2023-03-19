@@ -67,7 +67,7 @@ export class ClasificadorSubgruposService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -103,7 +103,7 @@ export class ClasificadorSubgruposService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -132,7 +132,7 @@ export class ClasificadorSubgruposService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

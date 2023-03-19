@@ -62,10 +62,10 @@ export class ListCompararExpresionesComponent
   private _getCompararExpresiones(): void {
     try {
       this._compararExpresionesSvc.subscription.push(
-        this._compararExpresionesSvc.loadAll().subscribe(response => {
+        this._compararExpresionesSvc.loadAll().subscribe(res => {
           this.loading = false;
 
-          const result = response.getAllComprobarExpresiones;
+          const result = res.getAllComprobarExpresiones;
 
           if (result.success === false) {
             return this._sweetAlertSvc.error(result.error);
@@ -133,8 +133,8 @@ export class ListCompararExpresionesComponent
 
       this._compararExpresionesSvc.inicializarFg();
       this._compararExpresionesSvc.subscription.push(
-        this._compararExpresionesSvc.loadOne(data.Id).subscribe(response => {
-          const result = response.getComprobarExpresionById;
+        this._compararExpresionesSvc.loadOne(data.Id).subscribe(res => {
+          const result = res.getComprobarExpresionById;
 
           if (!result.success) {
             throw new Error(result.error);
@@ -207,8 +207,8 @@ export class ListCompararExpresionesComponent
             this._compararExpresionesSvc.subscription.push(
               this._compararExpresionesSvc
                 .delete(IDsToRemove)
-                .subscribe(response => {
-                  const result = response.deleteComprobarExpresion;
+                .subscribe(res => {
+                  const result = res.deleteComprobarExpresion;
 
                   if (!result.success) {
                     throw new Error(result.error);

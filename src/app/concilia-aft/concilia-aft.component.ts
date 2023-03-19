@@ -172,8 +172,8 @@ export class ConciliaAftComponent
   private _getUnidades(): void {
     try {
       this._conciliaAftSvc.subscription.push(
-        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
-          const result = response.getAllUnidadesByUsuario;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
+          const result = res.getAllUnidadesByUsuario;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -198,8 +198,8 @@ export class ConciliaAftComponent
   private _getTipoEntidades(): void {
     try {
       this._conciliaAftSvc.subscription.push(
-        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-          const result = response.getAllTipoEntidades;
+        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(res => {
+          const result = res.getAllTipoEntidades;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -225,8 +225,8 @@ export class ConciliaAftComponent
     this._conciliaAftSvc.subscription.push(
       this._clasifEntidadesSvc
         .loadClasificadorEntidad(idUnidad)
-        .subscribe(response => {
-          const result = response.getClasificadorEntidad;
+        .subscribe(res => {
+          const result = res.getClasificadorEntidad;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -246,11 +246,11 @@ export class ConciliaAftComponent
 
       this._conciliaAftSvc.subscription.push(
         this._conciliaAftSvc.conciliar().subscribe({
-          next: response => {
+          next: res => {
             this.loading = false;
 
             this.dataSourceClasificador =
-              cloneDeep(response.conciliaAFT.DiferenciaClasificadorCNMB) || [];
+              cloneDeep(res.conciliaAFT.DiferenciaClasificadorCNMB) || [];
 
             if (this.dataSourceClasificador.length) {
               return this._swalSvc.error(
@@ -260,7 +260,7 @@ export class ConciliaAftComponent
             }
 
             this.dataSourceConciliacion = cloneDeep(
-              response.conciliaAFT.ConciliaAFT || []
+              res.conciliaAFT.ConciliaAFT || []
             );
             this.dataSourceInventario = this.dataSourceConciliacion
               ? cloneDeep(

@@ -54,10 +54,10 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
 
   private _loadEpigrafes(): void {
     this._epigrafesSvc.subscription.push(
-      this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
+      this._epigrafesSvc.loadAllEpigrafes().subscribe(res => {
         this.loading = false;
 
-        const result = response.getAllEpigrafes;
+        const result = res.getAllEpigrafes;
 
         if (!result.success) {
           return SweetAlert.fire({
@@ -129,8 +129,8 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
     this._epigrafesSvc.subscription.push(
       this._epigrafesSvc
         .loadEpigrafeById(clasificador.IdEpigafre)
-        .subscribe(response => {
-          const result = response.getEpigrafeById;
+        .subscribe(res => {
+          const result = res.getEpigrafeById;
 
           if (!result.success) {
             return SweetAlert.fire({
@@ -189,8 +189,8 @@ export class ListEpigrafesComponent implements AfterViewInit, OnDestroy {
                 });
 
             this._epigrafesSvc.subscription.push(
-              this._epigrafesSvc.delete(IDsToRemove).subscribe(response => {
-                const result = response.deleteEpigrafe;
+              this._epigrafesSvc.delete(IDsToRemove).subscribe(res => {
+                const result = res.deleteEpigrafe;
 
                 if (result.success === false) {
                   return SweetAlert.fire({

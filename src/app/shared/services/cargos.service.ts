@@ -19,11 +19,11 @@ export class CargosService {
             query: cargosQuery,
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
+          .subscribe(res => {
+            subscriber.next(res.data);
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

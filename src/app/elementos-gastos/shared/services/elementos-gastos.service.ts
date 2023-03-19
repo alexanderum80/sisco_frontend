@@ -42,11 +42,11 @@ export class ElementosGastosService {
             })
             .valueChanges.subscribe({
               next: res => subscriber.next(res.data || undefined),
-              error: err => subscriber.error(err),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -61,14 +61,14 @@ export class ElementosGastosService {
             fetchPolicy: 'network-only',
           })
           .subscribe({
-            next: response => {
-              subscriber.next(response.data || undefined);
+            next: res => {
+              subscriber.next(res.data || undefined);
               subscriber.complete();
             },
-            error: err => subscriber.error(err),
+            error: err => subscriber.error(err.message || err),
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -94,11 +94,11 @@ export class ElementosGastosService {
             })
             .subscribe({
               next: res => subscriber.next(res.data || undefined),
-              error: err => subscriber.error(err),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -115,11 +115,11 @@ export class ElementosGastosService {
             })
             .subscribe({
               next: res => subscriber.next(res.data || undefined),
-              error: err => subscriber.error(err),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

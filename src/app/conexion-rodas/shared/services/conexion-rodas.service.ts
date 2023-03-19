@@ -35,12 +35,12 @@ export class ConexionRodasService {
               query: conexionRodasApi.all,
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(response => {
-              subscriber.next(response.data);
+            .valueChanges.subscribe(res => {
+              subscriber.next(res.data);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -54,8 +54,8 @@ export class ConexionRodasService {
             variables: { id },
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
+          .subscribe(res => {
+            subscriber.next(res.data);
             subscriber.complete();
           })
       );
@@ -89,12 +89,12 @@ export class ConexionRodasService {
               refetchQueries: ['GetAllContaConexiones'],
             })
             .subscribe({
-              next: response => subscriber.next(response.data || undefined),
-              error: error => subscriber.error(error),
+              next: res => subscriber.next(res.data || undefined),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -108,8 +108,8 @@ export class ConexionRodasService {
             variables: { IDs },
             refetchQueries: ['GetAllContaConexiones'],
           })
-          .subscribe(response => {
-            subscriber.next(response.data || undefined);
+          .subscribe(res => {
+            subscriber.next(res.data || undefined);
           })
       );
     });

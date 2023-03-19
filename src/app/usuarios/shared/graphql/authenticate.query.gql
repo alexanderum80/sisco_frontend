@@ -6,5 +6,6 @@ query AuthenticateUsuario($usuario: String!, $passw: String!) {
     IdTipoUsuario
     IdDivision
     Token
+    RefreshToken
   }
 }

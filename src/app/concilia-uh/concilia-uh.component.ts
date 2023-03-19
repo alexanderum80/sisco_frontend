@@ -167,8 +167,8 @@ export class ConciliaUhComponent
   private _getUnidades(): void {
     try {
       this._conciliaUhSvc.subscription.push(
-        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
-          const result = response.getAllUnidadesByUsuario;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
+          const result = res.getAllUnidadesByUsuario;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -193,8 +193,8 @@ export class ConciliaUhComponent
   private _getTipoEntidades(): void {
     try {
       this._conciliaUhSvc.subscription.push(
-        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-          const result = response.getAllTipoEntidades;
+        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(res => {
+          const result = res.getAllTipoEntidades;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -220,8 +220,8 @@ export class ConciliaUhComponent
     this._conciliaUhSvc.subscription.push(
       this._clasifEntidadesSvc
         .loadClasificadorEntidad(idUnidad)
-        .subscribe(response => {
-          const result = response.getClasificadorEntidad;
+        .subscribe(res => {
+          const result = res.getClasificadorEntidad;
 
           if (!result.success) {
             this._swalSvc.error(result.error);
@@ -239,10 +239,10 @@ export class ConciliaUhComponent
 
       this._conciliaUhSvc.subscription.push(
         this._conciliaUhSvc.conciliar().subscribe({
-          next: response => {
+          next: res => {
             this.loading = false;
 
-            this.dataSourceConciliacion = cloneDeep(response.conciliaUH || []);
+            this.dataSourceConciliacion = cloneDeep(res.conciliaUH || []);
             this.dataSourceInventario = this.dataSourceConciliacion
               ? cloneDeep(
                   this.dataSourceConciliacion.filter(

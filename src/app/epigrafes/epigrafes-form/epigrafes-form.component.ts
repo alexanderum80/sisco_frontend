@@ -44,15 +44,15 @@ export class EpigrafesFormComponent implements OnInit {
   private _save(): void {
     try {
       this._epigrafesSvc.subscription.push(
-        this._epigrafesSvc.save().subscribe(response => {
+        this._epigrafesSvc.save().subscribe(res => {
           let result;
           let txtMessage;
 
           if (this.action === ActionClicked.Add) {
-            result = response.createEpigrafe;
+            result = res.createEpigrafe;
             txtMessage = 'El Epígrafe se ha creado correctamente.';
           } else {
-            result = response.updateEpigrafe;
+            result = res.updateEpigrafe;
             txtMessage = 'El Epígrafe se ha actualizado correctamente.';
           }
 

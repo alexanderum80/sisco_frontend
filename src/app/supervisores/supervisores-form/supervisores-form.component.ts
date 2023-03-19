@@ -47,8 +47,8 @@ export class SupervisoresFormComponent implements OnInit {
   private _getCargos(): void {
     try {
       this._supervisoresSvc.subscription.push(
-        this._cargosSvc.getCargos().subscribe(response => {
-          const result = response.getAllCargos;
+        this._cargosSvc.getCargos().subscribe(res => {
+          const result = res.getAllCargos;
 
           if (!result.success) {
             return SweetAlert.fire({
@@ -84,8 +84,8 @@ export class SupervisoresFormComponent implements OnInit {
   private _getDivisiones(): void {
     try {
       this._supervisoresSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(response => {
-          const result = response.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
+          const result = res.getAllDivisionesByUsuario;
 
           if (!result.success) {
             return SweetAlert.fire({
@@ -135,15 +135,15 @@ export class SupervisoresFormComponent implements OnInit {
 
   private _save(): void {
     this._supervisoresSvc.subscription.push(
-      this._supervisoresSvc.save().subscribe(response => {
+      this._supervisoresSvc.save().subscribe(res => {
         let result;
         let txtMessage;
 
         if (this.action === ActionClicked.Add) {
-          result = response.createSupervisor;
+          result = res.createSupervisor;
           txtMessage = 'El Supervisor se ha creado correctamente.';
         } else {
-          result = response.updateSupervisor;
+          result = res.updateSupervisor;
           txtMessage = 'El Supervisor se ha actualizado correctamente.';
         }
 

@@ -48,8 +48,8 @@ export class CompararValoresFormComponent implements OnInit {
   private _loadCentros(): void {
     try {
       this._compararValoresSvc.subscription.push(
-        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
-          const result = response.getAllUnidadesByUsuario;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
+          const result = res.getAllUnidadesByUsuario;
 
           if (!result.success) {
             throw new Error(result.error);
@@ -73,8 +73,8 @@ export class CompararValoresFormComponent implements OnInit {
   private _loadExpresiones(): void {
     try {
       this._compararValoresSvc.subscription.push(
-        this._expresionesSvc.loadAllExpresionesResumen().subscribe(response => {
-          const result = response.getAllExpresionesResumen;
+        this._expresionesSvc.loadAllExpresionesResumen().subscribe(res => {
+          const result = res.getAllExpresionesResumen;
 
           if (!result.success) {
             throw new Error(result.error);
@@ -96,8 +96,8 @@ export class CompararValoresFormComponent implements OnInit {
   private _loadOperadores(): void {
     try {
       this._compararValoresSvc.subscription.push(
-        this._operadoresSvc.getOperadores().subscribe(response => {
-          const result = response.getAllOperadores;
+        this._operadoresSvc.getOperadores().subscribe(res => {
+          const result = res.getAllOperadores;
 
           if (!result.success) {
             throw new Error(result.error);
@@ -132,11 +132,11 @@ export class CompararValoresFormComponent implements OnInit {
   private _save(): void {
     try {
       this._compararValoresSvc.subscription.push(
-        this._compararValoresSvc.save().subscribe(response => {
+        this._compararValoresSvc.save().subscribe(res => {
           const result =
             this.action === ActionClicked.Add
-              ? response.createComprobarValor
-              : response.updateComprobarValor;
+              ? res.createComprobarValor
+              : res.updateComprobarValor;
 
           if (!result.success) {
             throw new Error(result.error);

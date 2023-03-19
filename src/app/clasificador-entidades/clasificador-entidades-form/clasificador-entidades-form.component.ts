@@ -42,8 +42,8 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
 
   private _loadUnidades(): void {
     this._clasificadorEntidadesSvc.subscription.push(
-      this._unidadesSvc.getAllUnidadesByUsuario().subscribe(response => {
-        const result = response.getAllUnidadesByUsuario;
+      this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
+        const result = res.getAllUnidadesByUsuario;
         if (!result.success) {
           return SweetAlert.fire({
             icon: 'error',
@@ -68,8 +68,8 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
 
   private _loadTipoEntidades(): void {
     this._clasificadorEntidadesSvc.subscription.push(
-      this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-        const result = response.getAllTipoEntidades;
+      this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(res => {
+        const result = res.getAllTipoEntidades;
         if (!result.success) {
           return SweetAlert.fire({
             icon: 'error',
@@ -105,11 +105,11 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
 
   private _save(): void {
     this._clasificadorEntidadesSvc.subscription.push(
-      this._clasificadorEntidadesSvc.save(this.action).subscribe(response => {
+      this._clasificadorEntidadesSvc.save(this.action).subscribe(res => {
         const result =
           this.action === ActionClicked.Add
-            ? response.createClasificadorEntidad
-            : response.updateClasificadorEntidad;
+            ? res.createClasificadorEntidad
+            : res.updateClasificadorEntidad;
 
         if (!result.success) {
           return SweetAlert.fire({

@@ -101,8 +101,8 @@ export class ConciliaContabilidadService {
           variables: { conciliaContaInput },
           fetchPolicy: 'network-only',
         })
-        .subscribe(response => {
-          subscriber.next(response.data);
+        .subscribe(res => {
+          subscriber.next(res.data);
         });
     });
   }
@@ -121,11 +121,11 @@ export class ConciliaContabilidadService {
           variables: { iniciarSaldosInput },
         })
         .subscribe({
-          next: response => {
-            subscriber.next(response.data || undefined);
+          next: res => {
+            subscriber.next(res.data || undefined);
           },
           error: err => {
-            subscriber.error(err);
+            subscriber.error(err.message || err);
           },
         });
     });
@@ -153,8 +153,8 @@ export class ConciliaContabilidadService {
           mutation: conciliaContabilidadApi.chequearCentros,
           variables: { chequearCentrosInput },
         })
-        .subscribe(response => {
-          subscriber.next(response.data || undefined);
+        .subscribe(res => {
+          subscriber.next(res.data || undefined);
         });
     });
   }

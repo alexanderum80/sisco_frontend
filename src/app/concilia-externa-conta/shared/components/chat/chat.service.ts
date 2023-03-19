@@ -42,9 +42,9 @@ export class ChatService {
         .query<UsuariosQueryResponse>({
           query: usuariosApi.all,
         })
-        .subscribe(response => {
+        .subscribe(res => {
           const usuarios = [
-            ...sortBy(response.data.getAllUsuarios.data, [
+            ...sortBy(res.data.getAllUsuarios.data, [
               'Division.IdDivision',
               'Usuario',
             ]),
