@@ -124,7 +124,7 @@ export class ConciliaOperacionesDwhComponent
         this._conciliarDWHSvc.subscription.push(
           this._divisionesSvc.getDivisiones().subscribe({
             next: res => {
-              const result = res.getAllDivisionesByUsuario;
+              const result = res.getAllDivisiones;
 
               this.divisionesValues = result.map(d => {
                 return {
