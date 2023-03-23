@@ -1,5 +1,5 @@
 import { AuthenticationService } from './../../shared/services/authentication.service';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { Subscription } from 'rxjs';
 import { ActionClicked } from './../../shared/models/list-items';
 import { SelectItem } from 'primeng/api';
@@ -107,21 +107,20 @@ export class ConexionRodasFormComponent
   private _getDivisiones(): void {
     try {
       this.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-          const result = res.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return this._swalSvc.error(result.error);
-          }
-
-          this.divisionesValues = result.data.map(
-            (d: { IdDivision: number; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {

@@ -1,4 +1,4 @@
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { EpigrafesService } from './../shared/services/epigrafes.service';
@@ -18,7 +18,7 @@ export class EpigrafesFormComponent implements OnInit {
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _epigrafesSvc: EpigrafesService,
-    private _sweetAlertSvc: SweetalertService
+    private _swalSvc: SweetalertService
   ) {}
 
   ngOnInit(): void {
@@ -64,7 +64,7 @@ export class EpigrafesFormComponent implements OnInit {
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 

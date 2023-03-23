@@ -1,7 +1,7 @@
 import { ConciliaUhService } from './shared/services/concilia-uh.service';
 import { cloneDeep } from 'lodash';
-import { SweetalertService } from './../shared/services/sweetalert.service';
-import { PdfmakeService } from './../shared/services/pdfmake.service';
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
+import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { ClasificadorEntidadesService } from './../clasificador-entidades/shared/services/clasificador-entidades.service';
 import { TipoEntidadesService } from './../tipo-entidades/shared/services/tipo-entidades.service';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
@@ -122,7 +122,8 @@ export class ConciliaUhComponent
 
   ngOnInit(): void {
     this.fg = this._conciliaUhSvc.fg;
-    this._conciliaUhSvc.inicializarFg();
+    this.fg.reset();
+
     this._subscribeToFgValueChanges();
   }
 

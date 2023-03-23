@@ -1,3 +1,4 @@
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { DatabasesService } from './../../shared/services/databases.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
@@ -14,7 +15,6 @@ import {
   AfterContentChecked,
   ChangeDetectorRef,
 } from '@angular/core';
-import SweetAlert from 'sweetalert2';
 import { SelectItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
@@ -43,6 +43,7 @@ export class ConexionGoldenDwhFormComponent
     private _divisionesSvc: DivisionesService,
     private _databasesSvc: DatabasesService,
     private _dinamicDialogSvc: DinamicDialogService,
+    private _swalSvc: SweetalertService,
     public router: Router,
     private _cd: ChangeDetectorRef
   ) {}
@@ -68,37 +69,24 @@ export class ConexionGoldenDwhFormComponent
   private _getDivisiones(): void {
     try {
       this._conexionDWHSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-          const result = res.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: result.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
-          }
-
-          this.divisionesValues = result.data.map(
-            (d: { IdDivision: string; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -164,13 +152,7 @@ export class ConexionGoldenDwhFormComponent
         const result = res.getDWHConexion;
 
         if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar',
-          });
+          this._swalSvc.error(result.error);
         }
 
         const conexionRest = JSON.parse(result.data.ConexionRest);
@@ -242,13 +224,7 @@ export class ConexionGoldenDwhFormComponent
             const result = res.getDataBases;
 
             if (!result.success) {
-              return SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: result.error,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-              });
+              this._swalSvc.error(result.error);
             }
 
             if (tipo === 'DWH') {
@@ -272,13 +248,7 @@ export class ConexionGoldenDwhFormComponent
       this.loadingDWHDataBase = false;
       this.loadingRestDataBase = false;
 
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -300,26 +270,14 @@ export class ConexionGoldenDwhFormComponent
           const result = res.updateDWhConexion;
 
           if (!result?.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: result?.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
+            this._swalSvc.error(result.error);
           }
 
           this._dinamicDialogSvc.close();
         })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 

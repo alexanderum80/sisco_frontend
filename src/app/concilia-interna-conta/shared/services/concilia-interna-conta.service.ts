@@ -1,7 +1,8 @@
+import { getPreviousMonth } from '../../../shared/models/date-range';
 import { numberFormatter } from './../../../shared/models/number';
 import { SelectItem } from 'primeng/api';
 import { conciliaInternaContaApi } from './../graphql/concilia-interna-conta.api';
-import { ApolloService } from './../../../shared/services/apollo.service';
+import { ApolloService } from '../../../shared/helpers/apollo.service';
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
@@ -14,7 +15,9 @@ export class ConciliaInternaContaService {
     idDivision: new FormControl('', { initialValueIsDefault: true }),
     idUnidad: new FormControl(null, { initialValueIsDefault: true }),
     idUnidadOD: new FormControl(null, { initialValueIsDefault: true }),
-    periodo: new FormControl('', { initialValueIsDefault: true }),
+    periodo: new FormControl(getPreviousMonth(new Date()), {
+      initialValueIsDefault: true,
+    }),
     tipoCentro: new FormControl('1', { initialValueIsDefault: true }),
     soloDiferencias: new FormControl(true, { initialValueIsDefault: true }),
   });

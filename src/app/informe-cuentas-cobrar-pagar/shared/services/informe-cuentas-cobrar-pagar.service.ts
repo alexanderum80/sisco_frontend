@@ -5,11 +5,12 @@ import {
   InformeCtasCobrarPagarQueryReponse,
   IInformeCtasCobrarPagar,
 } from './../models/informe-cuentas-cobrar-pagar.model';
-import { ApolloService } from './../../../shared/services/apollo.service';
+import { ApolloService } from '../../../shared/helpers/apollo.service';
 import { Subscription, Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { gql } from 'apollo-angular';
 import * as moment from 'moment';
+import { getPreviousMonth } from '../../../shared/models';
 
 const query = gql`
   query ContaInformeCtasCobrarPagar(
@@ -42,7 +43,7 @@ const query = gql`
 export class InformeCuentasCobrarPagarService {
   fg: FormGroup = new FormGroup({
     idDivision: new FormControl(null, { initialValueIsDefault: true }),
-    periodo: new FormControl(new Date(moment().year(), moment().month(), 0), {
+    periodo: new FormControl(getPreviousMonth(new Date()), {
       initialValueIsDefault: true,
     }),
   });

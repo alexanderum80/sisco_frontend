@@ -4,7 +4,7 @@ import {
   ClasificadorSubgruposMutationResponse,
   IActFijosClasificadorSubgrupos,
 } from './../models/clasificador-subgrupos.model';
-import { ApolloService } from './../../../shared/services/apollo.service';
+import { ApolloService } from '../../../shared/helpers/apollo.service';
 import { Injectable } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs';

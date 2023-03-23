@@ -10,14 +10,17 @@ import {
 } from './../models/concilia-externa.model';
 import { conciliaExternaContaAPI } from './../graphql/concilia-externa-conta-api';
 import { Observable } from 'rxjs';
-import { ApolloService } from './../../../shared/services/apollo.service';
-import { PdfmakeService } from '../../../shared/services/pdfmake.service';
+import { ApolloService } from '../../../shared/helpers/apollo.service';
+import { PdfmakeService } from '../../../shared/helpers/pdfmake.service';
 import { SelectItem } from 'primeng/api';
 import { Injectable } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import * as moment from 'moment';
 import { FormControl, FormGroup } from '@angular/forms';
-import { getMonthName } from 'src/app/shared/models/date-range';
+import {
+  getMonthName,
+  getPreviousMonth,
+} from '../../../shared/models/date-range';
 
 @Injectable()
 export class ConciliaExternaContaService {
@@ -27,8 +30,6 @@ export class ConciliaExternaContaService {
     private _apollo: ApolloService
   ) {}
 
-  today = new Date(moment().toDate());
-
   fg = new FormGroup({
     division: new FormControl('0', {
       initialValueIsDefault: true,
@@ -36,7 +37,7 @@ export class ConciliaExternaContaService {
     unidad: new FormControl('0', { initialValueIsDefault: true }),
     divisionOD: new FormControl('0', { initialValueIsDefault: true }),
     unidadOD: new FormControl('0', { initialValueIsDefault: true }),
-    periodo: new FormControl(moment(this.today).subtract(1, 'month').toDate(), {
+    periodo: new FormControl(getPreviousMonth(new Date()), {
       initialValueIsDefault: true,
     }),
     usuarioEmisor: new FormControl(null, { initialValueIsDefault: true }),

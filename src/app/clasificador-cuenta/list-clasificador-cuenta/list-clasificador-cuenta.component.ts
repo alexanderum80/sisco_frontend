@@ -8,7 +8,7 @@ import {
   IActionItemClickedArgs,
   ActionClicked,
 } from './../../shared/models/list-items';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import SweetAlert from 'sweetalert2';
 import { ClasificadorCuentaFormComponent } from './../clasificador-cuenta-form/clasificador-cuenta-form.component';
@@ -60,7 +60,7 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
   constructor(
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _sweetalertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private _clasificadorCuentaSvc: ClasificadorCuentaService,
     private _msgSvc: MessageService
   ) {
@@ -102,7 +102,7 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
             },
             error: err => {
               this.loading = false;
-              this._sweetalertSvc.error(err);
+              this._swalSvc.error(err);
             },
           })
       );
@@ -305,7 +305,7 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
                   });
                 },
                 error: err => {
-                  this._sweetalertSvc.error(err);
+                  this._swalSvc.error(err);
                 },
               })
             );

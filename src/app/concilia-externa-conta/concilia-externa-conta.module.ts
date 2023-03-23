@@ -2,7 +2,7 @@ import { PrimeInputTextareaModule } from './../shared/ui/prime-ng/input-textarea
 import { PrimeTableModule } from './../shared/ui/prime-ng/table/table.module';
 import { PrimeSplitButtonModule } from './../shared/ui/prime-ng/split-button/split-button.module';
 import { PrimePanelModule } from './../shared/ui/prime-ng/panel/panel.module';
-import { ExcelService } from './shared/service/excel.service';
+import { ExcelService } from '../shared/helpers/excel.service';
 import { SocketService } from './../shared/services/socket.service';
 import { ConciliaExternaContaService } from './shared/service/concilia-externa.service';
 import { ChatService } from './shared/components/chat/chat.service';

@@ -4,7 +4,7 @@ import {
 } from './../../usuarios/shared/models/usuarios.model';
 import { usuariosApi } from './../../usuarios/shared/graphql/usuarioActions.gql';
 import { Usuario } from './../models/usuarios';
-import { ApolloService } from './apollo.service';
+import { ApolloService } from '../helpers/apollo.service';
 import { IUsuario } from 'src/app/shared/models';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';

@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
@@ -10,7 +11,6 @@ import { SupervisoresService } from './../shared/services/supervisores.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { SupervisoresFormComponent } from '../supervisores-form/supervisores-form.component';
-import { MessageService } from 'primeng/api';
 import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 import { cloneDeep } from '@apollo/client/utilities';
 import Swal from 'sweetalert2';
@@ -39,7 +39,7 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _supervisorSvc: SupervisoresService,
-    private _msgSvc: MessageService
+    private _toastrSvc: ToastrService
   ) {
     if (this.hasAdminPermission()) {
       this.inlineButtons = DefaultInlineButtonsTable;
@@ -126,11 +126,7 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
       this._supervisorSvc.subscription.push(
         this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
-            this._msgSvc.add({
-              severity: 'success',
-              summary: 'Satisfactorio',
-              detail: message,
-            });
+            this._toastrSvc.success(message, 'Satisfactorio');
           }
         })
       );
@@ -175,11 +171,7 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
               this._dinamicDialogSvc.ref.onClose.subscribe(
                 (message: string) => {
                   if (message) {
-                    this._msgSvc.add({
-                      severity: 'success',
-                      summary: 'Satisfactorio',
-                      detail: message,
-                    });
+                    this._toastrSvc.success(message, 'Satisfactorio');
                   }
                 }
               )
@@ -221,11 +213,10 @@ export class ListSupervisoresComponent implements AfterViewInit, OnDestroy {
                 });
               }
 
-              this._msgSvc.add({
-                severity: 'success',
-                summary: 'Satisfactorio',
-                detail: 'El Supervisor se ha eliminado correctamente.',
-              });
+              this._toastrSvc.success(
+                'El Supervisor se ha eliminado correctamente.',
+                'Satisfactorio'
+              );
             })
           );
         }

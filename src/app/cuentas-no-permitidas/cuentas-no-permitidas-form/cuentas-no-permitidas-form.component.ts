@@ -1,7 +1,7 @@
 import { ActionClicked } from './../../shared/models/list-items';
 import { UnidadesService } from './../../unidades/shared/services/unidades.service';
 import { CuentasNoPermitidasService } from './../shared/services/cuentas-no-permitidas.service';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SelectItem } from 'primeng/api';
 import { FormGroup } from '@angular/forms';
@@ -23,7 +23,7 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
     private _cuentasNoPermitidasSvc: CuentasNoPermitidasService,
     private _unidadesSvc: UnidadesService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _sweetAlertSvc: SweetalertService
+    private _swalSvc: SweetalertService
   ) {
     this.fg = _cuentasNoPermitidasSvc.fg;
   }
@@ -55,7 +55,7 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
         );
       });
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -88,7 +88,7 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
         this._dinamicDialogSvc.close(txtMessage);
       });
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

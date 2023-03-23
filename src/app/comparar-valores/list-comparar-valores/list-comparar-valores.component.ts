@@ -1,7 +1,7 @@
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { MessageService } from 'primeng/api';
 import { CompararValoresFormComponent } from './../comparar-valores-form/comparar-valores-form.component';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
@@ -40,7 +40,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
     private _compararValoresSvc: CompararValoresService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _msgSvc: MessageService,
-    private _sweetAlertSvc: SweetalertService
+    private _swalSvc: SweetalertService
   ) {}
 
   ngOnInit(): void {
@@ -60,7 +60,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
           const result = res.getAllComprobarValores;
 
           if (result.success === false) {
-            return this._sweetAlertSvc.error(
+            return this._swalSvc.error(
               `Ocurrió el siguiente error: ${result.error}`
             );
           }
@@ -69,7 +69,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -108,7 +108,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -120,7 +120,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
           const result = res.getComprobarValorById;
 
           if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
+            return this._swalSvc.error(result.error);
           }
 
           const inputValue = {
@@ -155,13 +155,13 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
   private _delete(data: any): void {
     try {
-      this._sweetAlertSvc
+      this._swalSvc
         .question('¿Desea Eliminar la(s) Comparación(es) seleccionada(s)?')
         .then(res => {
           if (res === ActionClicked.Yes) {
@@ -176,7 +176,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
                 const result = res.deleteComprobarValor;
 
                 if (!result.success) {
-                  return this._sweetAlertSvc.error(result.error);
+                  return this._swalSvc.error(result.error);
                 }
 
                 this._msgSvc.add({
@@ -189,7 +189,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
           }
         });
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

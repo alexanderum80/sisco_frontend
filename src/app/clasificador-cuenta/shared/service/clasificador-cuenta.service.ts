@@ -1,4 +1,4 @@
-import { ApolloService } from './../../../shared/services/apollo.service';
+import { ApolloService } from '../../../shared/helpers/apollo.service';
 import { FormGroup, FormControl } from '@angular/forms';
 import {
   ClasificadorCuentasQueryResponse,

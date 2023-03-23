@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tipo-entidades.service';

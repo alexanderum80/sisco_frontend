@@ -1,6 +1,7 @@
 import {
   LocaleFormatEnum,
   DateFormatEnum,
+  getFirtsDateOfMonth,
 } from './../../../shared/models/date-range';
 import { numberFormatter } from './../../../shared/models/number';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -20,7 +21,9 @@ export class ConcilaOperacionesDwhService {
     idDivisionOD: new FormControl('', { initialValueIsDefault: true }),
     idSubdivisionOD: new FormControl('', { initialValueIsDefault: true }),
     idUnidadOD: new FormControl('', { initialValueIsDefault: true }),
-    fechaInicial: new FormControl(new Date(), { initialValueIsDefault: true }),
+    fechaInicial: new FormControl(getFirtsDateOfMonth(new Date()), {
+      initialValueIsDefault: true,
+    }),
     fechaFinal: new FormControl(new Date(), { initialValueIsDefault: true }),
     soloDiferencias: new FormControl(true, { initialValueIsDefault: true }),
   });

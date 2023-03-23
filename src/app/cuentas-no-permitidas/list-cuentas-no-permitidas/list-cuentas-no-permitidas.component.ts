@@ -9,7 +9,7 @@ import {
 } from './../../shared/models/list-items';
 import { cloneDeep } from '@apollo/client/utilities';
 import { CuentasNoPermitidasService } from './../shared/services/cuentas-no-permitidas.service';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { MessageService } from 'primeng/api';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
@@ -47,7 +47,7 @@ export class ListCuentasNoPermitidasComponent
     private _authSvc: AuthenticationService,
     private _cuentasNoPermitidasSvc: CuentasNoPermitidasService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _sweetAlertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private _msgSvc: MessageService
   ) {}
 
@@ -71,7 +71,7 @@ export class ListCuentasNoPermitidasComponent
             const result = res.getAllNoUsarEnCuenta;
 
             if (result.success === false) {
-              return this._sweetAlertSvc.error(result.error);
+              return this._swalSvc.error(result.error);
             }
 
             this.cuentasNoPermitidas = cloneDeep(result.data);
@@ -79,7 +79,7 @@ export class ListCuentasNoPermitidasComponent
       );
     } catch (err: any) {
       this.loading = false;
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -117,7 +117,7 @@ export class ListCuentasNoPermitidasComponent
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -129,7 +129,7 @@ export class ListCuentasNoPermitidasComponent
           ETipoUsuarios['Usuario Avanzado'] &&
         data.Centralizada
       ) {
-        return this._sweetAlertSvc.warning(
+        return this._swalSvc.warning(
           'No tiene permisos para modificar una Cuenta no Permitida Centralizada.'
         );
       }
@@ -141,7 +141,7 @@ export class ListCuentasNoPermitidasComponent
           const result = res.getNoUsarEnCuentaById;
 
           if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
+            return this._swalSvc.error(result.error);
           }
 
           const inputValue = {
@@ -175,13 +175,13 @@ export class ListCuentasNoPermitidasComponent
           );
         });
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
   private _delete(data: any): void {
     try {
-      this._sweetAlertSvc
+      this._swalSvc
         .question(
           '¿Desea Eliminar la(s) Cuenta(s) no Permitida(s) seleccionada(s)?'
         )
@@ -198,7 +198,7 @@ export class ListCuentasNoPermitidasComponent
                 (f: { Centralizada: boolean }) => f.Centralizada === true
               );
               if (_centralizada.length) {
-                return this._sweetAlertSvc.warning(
+                return this._swalSvc.warning(
                   'No tiene permisos para eliminar Cuentas no Permitidas Centralizadas. Seleccione sólo sus Cuentas no Permitidas.'
                 );
               }
@@ -214,7 +214,7 @@ export class ListCuentasNoPermitidasComponent
                 const result = res.deleteNoUsarEnCuenta;
 
                 if (!result.success) {
-                  return this._sweetAlertSvc.error(result.error);
+                  return this._swalSvc.error(result.error);
                 }
                 this._msgSvc.add({
                   severity: 'success',
@@ -226,7 +226,7 @@ export class ListCuentasNoPermitidasComponent
           }
         });
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

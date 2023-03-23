@@ -7,7 +7,7 @@ import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/
 import { EmpleadosService } from './../shared/services/empleados.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
-import { SweetalertService } from '../../shared/services/sweetalert.service';
+import { SweetalertService } from '../../shared/helpers/sweetalert.service';
 import { SelectItem } from 'primeng/api';
 
 @Component({
@@ -30,7 +30,7 @@ export class EmpleadosFormComponent implements OnInit {
     private _cargosSvc: CargosService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _divisionesSvc: DivisionesService,
-    private _sweetAlertSvc: SweetalertService
+    private _swalSvc: SweetalertService
   ) {}
 
   ngOnInit(): void {
@@ -52,7 +52,7 @@ export class EmpleadosFormComponent implements OnInit {
           const result = res.getAllCargos;
 
           if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
+            return this._swalSvc.error(result.error);
           }
 
           this.cargosValues = result.data.map(
@@ -66,32 +66,31 @@ export class EmpleadosFormComponent implements OnInit {
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
   private _getDivisiones(): void {
     try {
       this._empleadosSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-          const result = res.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
-          }
-
-          this.divisionesValues = result.data.map(
-            (data: { IdDivision: string; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
-                value: data.IdDivision,
-                label: data.IdDivision + '-' + data.Division,
+                value: d.IdDivision,
+                label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -125,7 +124,7 @@ export class EmpleadosFormComponent implements OnInit {
         }
 
         if (!result.success) {
-          return this._sweetAlertSvc.error(result.error);
+          return this._swalSvc.error(result.error);
         }
 
         this._closeModal(txtMessage);

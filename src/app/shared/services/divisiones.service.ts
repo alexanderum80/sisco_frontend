@@ -20,8 +20,13 @@ export class DivisionesService {
             query: divisionesQuery,
             fetchPolicy: 'network-only',
           })
-          .subscribe(res => {
-            subscriber.next(res.data);
+          .subscribe({
+            next: res => {
+              subscriber.next(res.data);
+            },
+            error: err => {
+              subscriber.error(err);
+            },
           });
       } catch (err: any) {
         subscriber.error(err.message || err);
@@ -37,8 +42,13 @@ export class DivisionesService {
             query: divisionesByUsuarioQuery,
             fetchPolicy: 'network-only',
           })
-          .subscribe(res => {
-            subscriber.next(res.data);
+          .subscribe({
+            next: res => {
+              subscriber.next(res.data);
+            },
+            error: err => {
+              subscriber.error(err);
+            },
           });
       } catch (err: any) {
         subscriber.error(err.message || err);

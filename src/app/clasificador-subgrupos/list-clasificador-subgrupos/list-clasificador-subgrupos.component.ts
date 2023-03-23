@@ -10,7 +10,7 @@ import {
 } from './../../shared/models/table-buttons';
 import { ClasificadorSubgruposService } from './../shared/services/clasificador-subgrupos.service';
 import { MessageService } from 'primeng/api';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
@@ -48,7 +48,7 @@ export class ListClasificadorSubgruposComponent
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
     private _authSvc: AuthenticationService,
-    private _sweetalertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private _clasificadorSubgruposSvc: ClasificadorSubgruposService,
     private _msgSvc: MessageService
   ) {
@@ -75,13 +75,13 @@ export class ListClasificadorSubgruposComponent
           },
           error: err => {
             this.loading = false;
-            this._sweetalertSvc.error(err);
+            this._swalSvc.error(err);
           },
         })
       );
     } catch (err: any) {
       this.loading = false;
-      this._sweetalertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -128,7 +128,7 @@ export class ListClasificadorSubgruposComponent
         );
       }
     } catch (err: any) {
-      this._sweetalertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -169,20 +169,20 @@ export class ListClasificadorSubgruposComponent
                 );
               },
               error: err => {
-                this._sweetalertSvc.error(err);
+                this._swalSvc.error(err);
               },
             })
         );
       }
     } catch (err: any) {
-      this._sweetalertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
   private _delete(clasificador: IActFijosClasificadorSubgrupos): void {
     try {
       if (this.hasAdvancedUserPermission()) {
-        this._sweetalertSvc
+        this._swalSvc
           .question('¿Desea Eliminar el Subgrupo seleccionado?')
           .then(res => {
             if (res === ActionClicked.Yes) {
@@ -198,7 +198,7 @@ export class ListClasificadorSubgruposComponent
                       });
                     },
                     error: err => {
-                      this._sweetalertSvc.error(err);
+                      this._swalSvc.error(err);
                     },
                   })
               );
@@ -206,7 +206,7 @@ export class ListClasificadorSubgruposComponent
           });
       }
     } catch (err: any) {
-      this._sweetalertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

@@ -8,7 +8,7 @@ import {
   IActionItemClickedArgs,
 } from './../../shared/models/list-items';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { MessageService } from 'primeng/api';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
@@ -46,7 +46,7 @@ export class ListCompararExpresionesComponent
     private _authSvc: AuthenticationService,
     private _compararExpresionesSvc: CompararExpresionesService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _sweetAlertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private _msgSvc: MessageService
   ) {}
 
@@ -68,14 +68,14 @@ export class ListCompararExpresionesComponent
           const result = res.getAllComprobarExpresiones;
 
           if (result.success === false) {
-            return this._sweetAlertSvc.error(result.error);
+            return this._swalSvc.error(result.error);
           }
 
           this.compararExpresiones = cloneDeep(result.data);
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -114,7 +114,7 @@ export class ListCompararExpresionesComponent
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -126,7 +126,7 @@ export class ListCompararExpresionesComponent
           ETipoUsuarios['Usuario Avanzado'] &&
         data.Centralizada
       ) {
-        return this._sweetAlertSvc.warning(
+        return this._swalSvc.warning(
           'No tiene permisos para modificar una Comparación Centralizada.'
         );
       }
@@ -173,13 +173,13 @@ export class ListCompararExpresionesComponent
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
   private _delete(data: any): void {
     try {
-      this._sweetAlertSvc
+      this._swalSvc
         .question('¿Desea Eliminar la(s) Comparación(es) seleccionada(s)?')
         .then(res => {
           if (res === ActionClicked.Yes) {
@@ -194,7 +194,7 @@ export class ListCompararExpresionesComponent
                 (f: { Centralizada: boolean }) => f.Centralizada === true
               );
               if (_centralizada.length) {
-                return this._sweetAlertSvc.warning(
+                return this._swalSvc.warning(
                   'No tiene permisos para eliminar Comparaciones Centralizadas. Seleccione sólo sus comparaciones.'
                 );
               }
@@ -225,7 +225,7 @@ export class ListCompararExpresionesComponent
           }
         });
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

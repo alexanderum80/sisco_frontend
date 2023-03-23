@@ -1,6 +1,6 @@
 import { InformeCuentasCobrarPagarService } from './shared/services/informe-cuentas-cobrar-pagar.service';
 import { InformeCuentasCobrarPagarFormComponent } from './informe-cuentas-cobrar-pagar-form/informe-cuentas-cobrar-pagar-form/informe-cuentas-cobrar-pagar-form.component';
-import { SweetalertService } from './../shared/services/sweetalert.service';
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
 import { NavigationService } from './../navigation/shared/services/navigation.service';
 import { DinamicDialogService } from 'src/app/shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnInit } from '@angular/core';

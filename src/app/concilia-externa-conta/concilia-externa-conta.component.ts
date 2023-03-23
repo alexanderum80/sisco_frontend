@@ -5,13 +5,13 @@ import { IEmpleadoInfo } from './../empleados/shared/models/empleados.model';
 import { EmpleadosService } from './../empleados/shared/services/empleados.service';
 import { AuthenticationService } from './../shared/services/authentication.service';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
-import { PdfmakeService } from './../shared/services/pdfmake.service';
+import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { orderBy } from 'lodash';
 import { ActionClicked } from './../shared/models/list-items';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
 import { DivisionesService } from './../shared/services/divisiones.service';
-import { SweetalertService } from './../shared/services/sweetalert.service';
-import { ExcelService } from './shared/service/excel.service';
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
+import { ExcelService } from '../shared/helpers/excel.service';
 import { ConciliaExternaContaService } from './shared/service/concilia-externa.service';
 import {
   ConciliaMenuOptions,
@@ -378,18 +378,14 @@ export class ConciliaExternaContaComponent
         this.loadingDivisiones = false;
         const result = responseD.getAllDivisiones;
 
-        if (!result.success) {
-          return this._swalSvc.error(result.error);
-        }
-
-        result.data.map((d: any) => {
+        result.map((d: any) => {
           this.divisionesValues.push({
             value: d,
             label: d.IdDivision.toString() + '-' + d.Division,
           });
         });
 
-        result.data.map((d: any) => {
+        result.map((d: any) => {
           this.divisionesODValues.push({
             value: d,
             label: d.IdDivision.toString() + '-' + d.Division,
@@ -397,7 +393,7 @@ export class ConciliaExternaContaComponent
         });
 
         // get division del usuario loggeado y se lo asigno a la división a analizar
-        const _userDivision = result.data.find(
+        const _userDivision = result.find(
           (d: { IdDivision: number; Division: string }) =>
             d.IdDivision === this._authSvc.usuario.IdDivision
         );

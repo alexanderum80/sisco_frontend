@@ -5,7 +5,7 @@ import {
 } from './../../../shared/models/date-range';
 import { SelectItem } from 'primeng/api';
 import { FormGroup, FormControl } from '@angular/forms';
-import { ApolloService } from './../../../shared/services/apollo.service';
+import { ApolloService } from '../../../shared/helpers/apollo.service';
 import {
   IEstadisticaContabilidad,
   IEstadisticaContabilidadReponse,

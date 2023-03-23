@@ -4,8 +4,8 @@ import {
   IDiferenciaClasificadorCNMB,
 } from './shared/models/concilia-aft.model';
 import { ConciliaAftService } from './shared/services/concilia-aft.service';
-import { SweetalertService } from './../shared/services/sweetalert.service';
-import { PdfmakeService } from './../shared/services/pdfmake.service';
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
+import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { ClasificadorEntidadesService } from './../clasificador-entidades/shared/services/clasificador-entidades.service';
 import { TipoEntidadesService } from './../tipo-entidades/shared/services/tipo-entidades.service';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
@@ -124,7 +124,8 @@ export class ConciliaAftComponent
 
   ngOnInit(): void {
     this.fg = this._conciliaAftSvc.fg;
-    this._conciliaAftSvc.inicializarFg();
+    this.fg.reset();
+
     this._subscribeToFgValueChanges();
   }
 

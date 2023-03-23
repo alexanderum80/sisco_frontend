@@ -1,7 +1,7 @@
-import { PdfmakeService } from './../shared/services/pdfmake.service';
+import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { IEstadisticaContabilidad } from './shared/models/estadistica-contabilidad.model';
 import { ITableColumns } from './../shared/ui/prime-ng/table/table.model';
-import { SweetalertService } from './../shared/services/sweetalert.service';
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
 import { DivisionesService } from './../shared/services/divisiones.service';
 import { SelectItem } from 'primeng/api';
 import { EstadisticaContabilidadService } from './shared/services/estadistica-contabilidad.service';
@@ -74,7 +74,7 @@ export class EstadisticaContabilidadComponent
   constructor(
     private _estadisticaContaSvc: EstadisticaContabilidadService,
     private _divisionesSvc: DivisionesService,
-    private _sweetAlertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private cd: ChangeDetectorRef,
     private _pdfMakeSvc: PdfmakeService
   ) {}
@@ -97,25 +97,24 @@ export class EstadisticaContabilidadComponent
   private _getDivisiones(): void {
     try {
       this._estadisticaContaSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-          const result = res.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
-          }
-
-          this.divisionesValues = result.data.map(
-            (d: { IdDivision: string; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -136,7 +135,7 @@ export class EstadisticaContabilidadComponent
       },
       error: err => {
         this.loading = false;
-        this._sweetAlertSvc.error(err);
+        this._swalSvc.error(err);
       },
     });
   }
@@ -180,7 +179,7 @@ export class EstadisticaContabilidadComponent
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

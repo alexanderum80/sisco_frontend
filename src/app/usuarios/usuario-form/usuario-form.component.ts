@@ -1,6 +1,6 @@
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DinamicDialogService } from 'src/app/shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { TipoUsuariosService } from './../../shared/services/tipo-usuarios.service';
 import { SelectItem } from 'primeng/api';
 import { ActionClicked } from './../../shared/models/list-items';
@@ -42,7 +42,7 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
     private _apollo: Apollo,
     private _tipoUsuariosSvc: TipoUsuariosService,
     private _divisionesSvc: DivisionesService,
-    private _sweetAlertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private _cd: ChangeDetectorRef
   ) {}
 
@@ -90,27 +90,20 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
   private _getDivisiones(): void {
     try {
       this._usuarioSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-          const result = res.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: result.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
-          }
-
-          this.divisionesValues = result.data.map(
-            (d: { IdDivision: number; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
@@ -224,7 +217,7 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
           }
 
           if (!result?.success) {
-            return this._sweetAlertSvc.error(result?.error || '');
+            return this._swalSvc.error(result?.error || '');
           }
 
           this._closeModal(txtMessage);

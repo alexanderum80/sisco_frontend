@@ -6,40 +6,30 @@ import {
   ConciliaUHQueryResponse,
 } from './../models/concilia-uh.model';
 import { SelectItem } from 'primeng/api';
-import { ApolloService } from './../../../shared/services/apollo.service';
+import { ApolloService } from '../../../shared/helpers/apollo.service';
 import { Subscription, Observable } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
+import { getPreviousMonth } from '../../../shared/models';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ConciliaUhService {
   fg: FormGroup = new FormGroup({
-    tipoCentro: new FormControl('0'),
-    idCentro: new FormControl(''),
-    tipoEntidad: new FormControl(''),
-    periodo: new FormControl(''),
-    nota: new FormControl(''),
+    tipoCentro: new FormControl('0', { initialValueIsDefault: true }),
+    idCentro: new FormControl(null, { initialValueIsDefault: true }),
+    tipoEntidad: new FormControl(null, { initialValueIsDefault: true }),
+    periodo: new FormControl(getPreviousMonth(new Date()), {
+      initialValueIsDefault: true,
+    }),
+    nota: new FormControl('', { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];
 
   constructor(private _apolloSvc: ApolloService) {}
-
-  inicializarFg() {
-    const today = new Date();
-    const fgValues = {
-      tipoCentro: '0',
-      idCentro: null,
-      tipoEntidad: null,
-      periodo: new Date(today.getFullYear(), today.getMonth(), 0),
-      nota: '',
-    };
-
-    this.fg.patchValue(fgValues);
-  }
 
   public async getCentro(
     idUnidad: number,

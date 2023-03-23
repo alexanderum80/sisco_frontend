@@ -1,4 +1,4 @@
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { ClasificadorSubgruposService } from './../shared/services/clasificador-subgrupos.service';
 import { ActionClicked } from './../../shared/models/list-items';
 import { Component, OnInit } from '@angular/core';

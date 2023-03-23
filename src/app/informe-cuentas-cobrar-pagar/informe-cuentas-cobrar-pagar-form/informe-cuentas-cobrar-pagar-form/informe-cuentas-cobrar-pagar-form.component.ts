@@ -1,6 +1,6 @@
-import { PdfmakeService } from './../../../shared/services/pdfmake.service';
+import { PdfmakeService } from './../../../shared/helpers/pdfmake.service';
 import { DynamicDialogRef } from 'primeng/dynamicdialog';
-import { SweetalertService } from './../../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../../shared/helpers/sweetalert.service';
 import { DivisionesService } from './../../../shared/services/divisiones.service';
 import { FormGroup } from '@angular/forms';
 import { InformeCuentasCobrarPagarService } from './../../shared/services/informe-cuentas-cobrar-pagar.service';
@@ -31,7 +31,7 @@ export class InformeCuentasCobrarPagarFormComponent
   constructor(
     private _informeCtasCobrarPagarSvc: InformeCuentasCobrarPagarService,
     private _divisionesSvc: DivisionesService,
-    private _sweetAlertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private _dynamicDialogRef: DynamicDialogRef,
     private _cd: ChangeDetectorRef,
     private _pdfMakeSvc: PdfmakeService
@@ -55,25 +55,24 @@ export class InformeCuentasCobrarPagarFormComponent
   private _getDivisiones(): void {
     try {
       this._informeCtasCobrarPagarSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-          const result = res.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
-          }
-
-          this.divisionesValues = result.data.map(
-            (d: { IdDivision: string; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -94,13 +93,13 @@ export class InformeCuentasCobrarPagarFormComponent
             },
             error: err => {
               this.loading = false;
-              this._sweetAlertSvc.error(err);
+              this._swalSvc.error(err);
             },
           })
       );
     } catch (err) {
       this.loading = false;
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -139,7 +138,7 @@ export class InformeCuentasCobrarPagarFormComponent
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 

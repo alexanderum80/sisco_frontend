@@ -1,6 +1,6 @@
-import { PdfmakeService } from './../shared/services/pdfmake.service';
+import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
-import { SweetalertService } from './../shared/services/sweetalert.service';
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
 import { DivisionesService } from './../shared/services/divisiones.service';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { ConciliaInternaContaService } from './shared/services/concilia-interna-conta.service';
@@ -68,7 +68,7 @@ export class ConciliaInternaContaComponent
     private _conciliaInternaContaSvc: ConciliaInternaContaService,
     private _divisionesSvc: DivisionesService,
     private _unidadesSvc: UnidadesService,
-    private _sweetAlertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private cd: ChangeDetectorRef,
     private _pdfMakeSvc: PdfmakeService
   ) {}
@@ -76,10 +76,6 @@ export class ConciliaInternaContaComponent
   ngOnInit(): void {
     this.fg = this._conciliaInternaContaSvc.fg;
     this.fg.reset();
-
-    this.fg.controls['periodo'].patchValue(
-      new Date(new Date().getFullYear(), new Date().getMonth(), 0)
-    );
 
     this._subscribeToFgChanges();
   }
@@ -99,25 +95,24 @@ export class ConciliaInternaContaComponent
   private _getDivisiones(): void {
     try {
       this._conciliaInternaContaSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-          const result = res.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
-          }
-
-          this.divisionesValues = result.data.map(
-            (d: { IdDivision: string; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -140,7 +135,7 @@ export class ConciliaInternaContaComponent
               );
             },
             error: err => {
-              this._sweetAlertSvc.error(err);
+              this._swalSvc.error(err);
             },
           });
         }
@@ -218,7 +213,7 @@ export class ConciliaInternaContaComponent
         },
         error: err => {
           this.loading = false;
-          this._sweetAlertSvc.error(err);
+          this._swalSvc.error(err);
         },
       })
     );
@@ -260,7 +255,7 @@ export class ConciliaInternaContaComponent
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

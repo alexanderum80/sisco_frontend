@@ -1,13 +1,13 @@
 import { IConciliaDWH } from './shared/models/concilia-dwh.model';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { ActionClicked } from './../shared/models/list-items';
-import { SweetalertService } from './../shared/services/sweetalert.service';
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
 import { SelectItem } from 'primeng/api';
 import { SupervisoresService } from './../supervisores/shared/services/supervisores.service';
 import { EmpleadosService } from './../empleados/shared/services/empleados.service';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
 import { DivisionesService } from './../shared/services/divisiones.service';
-import { PdfmakeService } from './../shared/services/pdfmake.service';
+import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { toNumber } from 'lodash';
 import { ConciliaGoldenDwhService } from './shared/services/concilia-golden-dwh.service';
 import { FormGroup } from '@angular/forms';
@@ -163,13 +163,14 @@ export class ConciliaGoldenDwhComponent
     private _supervisoresSvc: SupervisoresService,
     private _conciliaDWHSvc: ConciliaGoldenDwhService,
     private _pdfMakeSvc: PdfmakeService,
-    private _sweetAlertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private _changeDedectionRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.fg = this._conciliaDWHSvc.fg;
-    this._conciliaDWHSvc.inicializarFg();
+    this.fg.reset();
+
     this._subscribeToFgValueChanges();
   }
 
@@ -224,25 +225,24 @@ export class ConciliaGoldenDwhComponent
   private _getDivisiones(): void {
     try {
       this._conciliaDWHSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-          const result = res.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
-          }
-
-          this.divisionesValues = result.data.map(
-            (d: { IdDivision: string; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -260,7 +260,7 @@ export class ConciliaGoldenDwhComponent
           const result = res.getUnidadesByIdDivision;
 
           if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
+            return this._swalSvc.error(result.error);
           }
 
           this.unidadesList = result.data;
@@ -273,7 +273,7 @@ export class ConciliaGoldenDwhComponent
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -284,7 +284,7 @@ export class ConciliaGoldenDwhComponent
           const result = res.getAllEmpleados;
 
           if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
+            return this._swalSvc.error(result.error);
           }
 
           this.empleadosValues = result.data.map(d => {
@@ -296,7 +296,7 @@ export class ConciliaGoldenDwhComponent
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -307,7 +307,7 @@ export class ConciliaGoldenDwhComponent
           const result = res.getAllSupervisores;
 
           if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
+            return this._swalSvc.error(result.error);
           }
 
           this.supervisoresValues = result.data.map(d => {
@@ -319,7 +319,7 @@ export class ConciliaGoldenDwhComponent
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -327,14 +327,14 @@ export class ConciliaGoldenDwhComponent
     try {
       this.selectedTabViewIndex = event.index;
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
   async conciliar(): Promise<void> {
     try {
       if (toNumber(this.fg.controls['tipoCentro'].value) === 1) {
-        const dlg = await this._sweetAlertSvc.question(
+        const dlg = await this._swalSvc.question(
           'Para obtener la información Consolidada, se debe haber terminado la Contabilidad del Consolidado del período.',
           '¿Desea continuar con la Conciliación del Consolidado?'
         );
@@ -369,14 +369,14 @@ export class ConciliaGoldenDwhComponent
           error: err => {
             this.loading = false;
 
-            this._sweetAlertSvc.error(err);
+            this._swalSvc.error(err);
           },
         })
       );
     } catch (err: any) {
       this.loading = false;
 
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -428,7 +428,7 @@ export class ConciliaGoldenDwhComponent
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -464,7 +464,7 @@ export class ConciliaGoldenDwhComponent
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

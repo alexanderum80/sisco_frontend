@@ -1,9 +1,9 @@
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { SelectItem } from 'primeng/api';
 import { ActionClicked } from './../../shared/models/list-items';
 import { CargosService } from './../../shared/services/cargos.service';
 import { DivisionesService } from './../../shared/services/divisiones.service';
-import SweetAlert from 'sweetalert2';
 import { toNumber } from 'lodash';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SupervisoresService } from './../shared/services/supervisores.service';
@@ -29,7 +29,8 @@ export class SupervisoresFormComponent implements OnInit {
     private _divisionesSvc: DivisionesService,
     private _supervisoresSvc: SupervisoresService,
     private _cargosSvc: CargosService,
-    private _dinamicDialogSvc: DinamicDialogService
+    private _dinamicDialogSvc: DinamicDialogService,
+    private _swalSvc: SweetalertService
   ) {}
 
   ngOnInit(): void {
@@ -51,13 +52,7 @@ export class SupervisoresFormComponent implements OnInit {
           const result = res.getAllCargos;
 
           if (!result.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: result.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
+            this._swalSvc.error(result.error);
           }
 
           this.cargosValues = result.data.map(
@@ -71,50 +66,31 @@ export class SupervisoresFormComponent implements OnInit {
         })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: `Se produjo el siguiente error: ${err}`,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
   private _getDivisiones(): void {
     try {
       this._supervisoresSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-          const result = res.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: result.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
-          }
-
-          this.divisionesValues = result.data.map(
-            (data: { IdDivision: string; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
-                value: data.IdDivision,
-                label: data.IdDivision + '-' + data.Division,
+                value: d.IdDivision,
+                label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: `Se produjo el siguiente error: ${err}`,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -148,13 +124,7 @@ export class SupervisoresFormComponent implements OnInit {
         }
 
         if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar',
-          });
+          this._swalSvc.error(result.error);
         }
 
         this._closeModal(txtMessage);

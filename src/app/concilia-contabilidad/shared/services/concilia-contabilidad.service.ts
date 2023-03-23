@@ -9,6 +9,7 @@ import { uniq, toNumber } from 'lodash';
 import { ConciliaContabilidadQueryResponse } from '../models/concilia-contabilidad.model';
 import { conciliaContabilidadApi } from '../graphql/concilia-contabilidad-api';
 import * as moment from 'moment';
+import { getPreviousMonth } from '../../../shared/models/date-range';
 
 @Injectable()
 export class ConciliaContabilidadService {
@@ -16,7 +17,7 @@ export class ConciliaContabilidadService {
     tipoCentro: new FormControl('0', { initialValueIsDefault: true }),
     idCentro: new FormControl(null, { initialValueIsDefault: true }),
     tipoEntidad: new FormControl('', { initialValueIsDefault: true }),
-    periodo: new FormControl(new Date(moment().year(), moment().month(), 0), {
+    periodo: new FormControl(getPreviousMonth(new Date()), {
       initialValueIsDefault: true,
     }),
     apertura: new FormControl(false, { initialValueIsDefault: true }),

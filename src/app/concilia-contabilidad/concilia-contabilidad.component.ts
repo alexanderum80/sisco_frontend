@@ -1,8 +1,9 @@
+import { ToastrService } from 'ngx-toastr';
 import { ActionClicked } from './../shared/models/list-items';
-import { SweetalertService } from './../shared/services/sweetalert.service';
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
 import { ClasificadorEntidadesService } from './../clasificador-entidades/shared/services/clasificador-entidades.service';
 import { TipoEntidadesService } from './../tipo-entidades/shared/services/tipo-entidades.service';
-import { PdfmakeService } from './../shared/services/pdfmake.service';
+import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { ConciliaContabilidadService } from './shared/services/concilia-contabilidad.service';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
 import { FormGroup } from '@angular/forms';
@@ -16,7 +17,7 @@ import {
   ChangeDetectionStrategy,
   AfterContentChecked,
 } from '@angular/core';
-import { MenuItem, SelectItem, MessageService } from 'primeng/api';
+import { MenuItem, SelectItem } from 'primeng/api';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
 import { cloneDeep } from '@apollo/client/utilities';
 import { TabView } from 'primeng/tabview';
@@ -168,7 +169,8 @@ export class ConciliaContabilidadComponent
     private _conciliaContabSvc: ConciliaContabilidadService,
     private _pdfMakeSvc: PdfmakeService,
     private _swalSvc: SweetalertService,
-    private _msgSvc: MessageService,
+    // private _msgSvc: MessageService,
+    private _toastrSvc: ToastrService,
     private _cd: ChangeDetectorRef
   ) {}
 
@@ -313,35 +315,34 @@ export class ConciliaContabilidadComponent
       switch (subordinadoA) {
         case 100:
           this._conciliaContabSvc.subscription.push(
-            this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-              const result = res.getAllDivisionesByUsuario;
+            this._divisionesSvc.getDivisionesByUsuario().subscribe({
+              next: res => {
+                const result = res.getAllDivisionesByUsuario;
 
-              if (!result.success) {
-                this._swalSvc.error(result.error);
-              }
-
-              this.dataSourceCentrosSubordinados = result.data.map(
-                (u: { IdDivision: string; Division: string }) => {
+                this.dataSourceCentrosSubordinados = result.map(u => {
                   return {
                     IdCentro: u.IdDivision,
                     Nombre: u.IdDivision + '-' + u.Division,
                   };
-                }
-              );
+                });
 
-              this.dataSourceCentrosSubordinados.push({
-                IdCentro: '124',
-                Nombre: '124-DAOCC',
-              });
-              this.dataSourceCentrosSubordinados.push({
-                IdCentro: '655',
-                Nombre: '655-C.C COMPRAS DE LA CADENA',
-              });
+                this.dataSourceCentrosSubordinados.push({
+                  IdCentro: '124',
+                  Nombre: '124-DAOCC',
+                });
+                this.dataSourceCentrosSubordinados.push({
+                  IdCentro: '655',
+                  Nombre: '655-C.C COMPRAS DE LA CADENA',
+                });
 
-              this.dataSourceCentrosSubordinados =
-                this.dataSourceCentrosSubordinados.sort(
-                  (a, b) => a.IdCentro - b.IdCentro
-                );
+                this.dataSourceCentrosSubordinados =
+                  this.dataSourceCentrosSubordinados.sort(
+                    (a, b) => a.IdCentro - b.IdCentro
+                  );
+              },
+              error: err => {
+                this._swalSvc.error(err);
+              },
             })
           );
           break;
@@ -509,11 +510,10 @@ export class ConciliaContabilidadComponent
                 next: () => {
                   this.loading = false;
 
-                  this._msgSvc.add({
-                    severity: 'success',
-                    summary: 'Satisfactorio',
-                    detail: 'Saldos Iniciados Correctamente.',
-                  });
+                  this._toastrSvc.success(
+                    'Saldos Iniciados Correctamente.',
+                    'Satisfactorio'
+                  );
                 },
                 error: err => {
                   this.loading = false;

@@ -8,7 +8,7 @@ import {
   ActionClicked,
   IActionItemClickedArgs,
 } from './../../shared/models/list-items';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { cloneDeep } from '@apollo/client/utilities';
 import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
@@ -46,7 +46,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
     private _authSvc: AuthenticationService,
     private _expresionesSvc: ExpresionesService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _sweetAlertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private _msgSvc: MessageService
   ) {}
 
@@ -68,14 +68,14 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
           const result = res.getAllExpresionesResumen;
 
           if (result.success === false) {
-            return this._sweetAlertSvc.error(result.error);
+            return this._swalSvc.error(result.error);
           }
 
           this.expresiones = cloneDeep(result.data);
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -113,7 +113,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -125,7 +125,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
           ETipoUsuarios['Usuario Avanzado'] &&
         data.Centralizada
       ) {
-        return this._sweetAlertSvc.warning(
+        return this._swalSvc.warning(
           'No tiene permisos para modificar una Expresión Centralizada.'
         );
       }
@@ -137,7 +137,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
           const result = res.getExpresionResumenById;
 
           if (!result.success) {
-            return this._sweetAlertSvc.error(result.error);
+            return this._swalSvc.error(result.error);
           }
 
           const inputValue = {
@@ -169,13 +169,13 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
           );
         });
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
   private _delete(data: any): void {
     try {
-      this._sweetAlertSvc
+      this._swalSvc
         .question('¿Desea Eliminar la(s) Expresión(es) seleccionada(s)?')
         .then(res => {
           if (res === ActionClicked.Yes) {
@@ -190,7 +190,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
                 (f: { Centralizada: boolean }) => f.Centralizada === true
               );
               if (_centralizada.length) {
-                return this._sweetAlertSvc.warning(
+                return this._swalSvc.warning(
                   'No tiene permisos para eliminar Expresiones Centralizadas. Seleccione sólo sus Expresiones.'
                 );
               }
@@ -208,7 +208,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
                 const result = res.deleteExpresionResumen;
 
                 if (!result.success) {
-                  return this._sweetAlertSvc.error(result.error);
+                  return this._swalSvc.error(result.error);
                 }
 
                 this._msgSvc.add({
@@ -220,7 +220,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
           }
         });
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

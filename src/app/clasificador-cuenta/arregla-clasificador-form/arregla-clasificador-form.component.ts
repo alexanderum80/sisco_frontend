@@ -1,7 +1,7 @@
 import { ActionClicked } from './../../shared/models/list-items';
 import { ClasificadorCuentaService } from './../shared/service/clasificador-cuenta.service';
 import { DinamicDialogService } from '../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { SweetalertService } from '../../shared/services/sweetalert.service';
+import { SweetalertService } from '../../shared/helpers/sweetalert.service';
 import { UnidadesService } from '../../unidades/shared/services/unidades.service';
 import { SelectItem } from 'primeng/api';
 import { FormGroup } from '@angular/forms';
@@ -9,8 +9,6 @@ import {
   Component,
   OnInit,
   OnDestroy,
-  OnChanges,
-  SimpleChanges,
   ChangeDetectorRef,
   AfterContentChecked,
 } from '@angular/core';

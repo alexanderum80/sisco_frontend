@@ -1,3 +1,4 @@
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
 import { SelectItem } from 'primeng/api';
 import { DivisionesService } from './../shared/services/divisiones.service';
 import { FormGroup } from '@angular/forms';
@@ -9,8 +10,7 @@ import {
   AfterContentChecked,
   ChangeDetectorRef,
 } from '@angular/core';
-import { PdfmakeService } from './../shared/services/pdfmake.service';
-import SweetAlert from 'sweetalert2';
+import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
 
 @Component({
@@ -56,6 +56,7 @@ export class ParteAtrasoComponent
     private _divisionesSvc: DivisionesService,
     private _parteAtrasoSvc: ParteAtrasoService,
     private _pdfMakeSvc: PdfmakeService,
+    private _swalSvc: SweetalertService,
     private _cd: ChangeDetectorRef
   ) {}
 
@@ -77,37 +78,24 @@ export class ParteAtrasoComponent
   private _getDivisiones(): void {
     try {
       this._parteAtrasoSvc.subscription.push(
-        this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-          const result = res.getAllDivisionesByUsuario;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: result.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
-          }
-
-          this.divisionesValues = result.data.map(
-            (d: { IdDivision: string; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -134,13 +122,7 @@ export class ParteAtrasoComponent
           const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } = res;
 
           if (!_parteAtrasos.success || !_datosIdGAM.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'Error',
-              text: _parteAtrasos.error || _datosIdGAM.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
+            this._swalSvc.error(_parteAtrasos.error || _datosIdGAM.error);
           }
 
           this.dataSourceParteAtraso = JSON.parse(_parteAtrasos.data);
@@ -150,13 +132,7 @@ export class ParteAtrasoComponent
     } catch (err: any) {
       this.loading = false;
 
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -164,13 +140,7 @@ export class ParteAtrasoComponent
     try {
       this.selectedTabViewIndex = event.index;
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err as string,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -212,13 +182,7 @@ export class ParteAtrasoComponent
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -251,13 +215,7 @@ export class ParteAtrasoComponent
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 

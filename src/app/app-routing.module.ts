@@ -1,6 +1,6 @@
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { StartComponent } from './shared/ui/start/start.component';
-import { AuthGuard } from './shared/services/auth-guard.service';
+import { AuthGuard } from './shared/helpers/auth-guard.service';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from './usuarios/login/login.component';

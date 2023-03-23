@@ -1,5 +1,5 @@
 import { ClasificadorCuentaService } from './shared/service/clasificador-cuenta.service';
-import { SweetalertService } from '../shared/services/sweetalert.service';
+import { SweetalertService } from '../shared/helpers/sweetalert.service';
 import { NavigationService } from '../navigation/shared/services/navigation.service';
 import { DinamicDialogService } from '../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnInit } from '@angular/core';

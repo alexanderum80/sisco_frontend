@@ -7,40 +7,28 @@ import { Injectable } from '@angular/core';
 import { ConciliaDWHQueryResponse } from '../models/concilia-dwh.model';
 import { orderBy, toNumber, uniq } from 'lodash';
 import * as moment from 'moment';
+import { getPreviousMonth } from '../../../shared/models';
 
 const conciliaDWHQuery = require('graphql-tag/loader!../graphql/concilia-dwh.query.gql');
 
 @Injectable()
 export class ConciliaGoldenDwhService {
   fg: FormGroup = new FormGroup({
-    tipoCentro: new FormControl('0'),
-    idDivision: new FormControl(null),
-    idCentro: new FormControl(''),
-    periodo: new FormControl(''),
-    idEmpleado: new FormControl(''),
-    idSupervisor: new FormControl(''),
-    ventasAcumuladas: new FormControl(true),
-    nota: new FormControl(''),
+    tipoCentro: new FormControl('0', { initialValueIsDefault: true }),
+    idDivision: new FormControl(null, { initialValueIsDefault: true }),
+    idCentro: new FormControl(null, { initialValueIsDefault: true }),
+    periodo: new FormControl(getPreviousMonth(new Date()), {
+      initialValueIsDefault: true,
+    }),
+    idEmpleado: new FormControl(null, { initialValueIsDefault: true }),
+    idSupervisor: new FormControl(null, { initialValueIsDefault: true }),
+    ventasAcumuladas: new FormControl(true, { initialValueIsDefault: true }),
+    nota: new FormControl('', { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];
 
   constructor(private _apollo: Apollo) {}
-
-  inicializarFg(): void {
-    const today = new Date();
-    const fgValues = {
-      tipoCentro: '0',
-      idDivision: null,
-      idCentro: null,
-      periodo: new Date(today.getFullYear(), today.getMonth(), 0),
-      idEmpleado: null,
-      idSupervisor: null,
-      ventasAcumuladas: true,
-    };
-
-    this.fg.patchValue(fgValues);
-  }
 
   conciliar(): Observable<ConciliaDWHQueryResponse> {
     const conciliaDWHInput = {
@@ -205,229 +193,6 @@ export class ConciliaGoldenDwhService {
 
     return definition;
   }
-
-  // public async getFormattedConciliaDWH(
-  //   data: any[],
-  //   tipoCentro: string
-  // ): Promise<any> {
-  //   let _idDivision = 0;
-  //   let _idCentro = 0;
-  //   let _tipo = '';
-  //   let _totalUnidadGolden = 0;
-  //   let _totalUnidadGoldenRest = 0;
-  //   let _totalUnidadDifGoldenRest = 0;
-  //   let _totalUnidadGoldenDist = 0;
-  //   let _totalUnidadDifGoldenDist = 0;
-  //   let _totalUnidadRodas = 0;
-  //   let _totalUnidadDifGoldenRodas = 0;
-
-  //   const result = [];
-
-  //   if (data && data.length) {
-  //     const _orderArray =
-  //       tipoCentro === '0'
-  //         ? ['IdDivision', 'IdUnidad', 'Tipo']
-  //         : ['IdDivision', 'Tipo', 'IdUnidad'];
-  //     data = orderBy(data, _orderArray);
-  //     data.forEach(element => {
-  //       if (element.IdDivision !== _idDivision) {
-  //         result.push({
-  //           Tipo: element.Tipo,
-  //           field: 'División',
-  //           value: element.Division,
-  //           IdDivision: element.IdDivision,
-  //           isGroupBy: true,
-  //         });
-  //         _idDivision = element.IdDivision;
-
-  //         if (tipoCentro === '0') {
-  //           result.push({
-  //             Tipo: element.Tipo,
-  //             field: 'Centro',
-  //             value: element.Centro,
-  //             isGroupBy: true,
-  //           });
-  //         }
-  //       }
-  //       if (
-  //         tipoCentro === '0' &&
-  //         (element.IdUnidad !== _idCentro || element.Tipo !== _tipo)
-  //       ) {
-  //         if (_idCentro !== 0 || (element.Tipo !== _tipo && _tipo !== '')) {
-  //           result.push({
-  //             Tipo: _tipo,
-  //             IdDivision: _idDivision,
-  //             IdUnidad: _idCentro,
-  //             Almacen: 'TOTAL',
-  //             Cuenta: '',
-  //             SaldoGolden: _totalUnidadGolden,
-  //             SaldoRestaurador: _totalUnidadGoldenRest,
-  //             DifGoldenRest: _totalUnidadDifGoldenRest,
-  //             SaldoDistribuidor: _totalUnidadGoldenDist,
-  //             DifGoldenDist: _totalUnidadDifGoldenDist,
-  //             SaldoRodas: _totalUnidadRodas,
-  //             DifGoldenRodas: _totalUnidadDifGoldenRodas,
-  //           });
-
-  //           _totalUnidadGolden = 0;
-  //           _totalUnidadGoldenRest = 0;
-  //           _totalUnidadDifGoldenRest = 0;
-  //           _totalUnidadGoldenDist = 0;
-  //           _totalUnidadDifGoldenDist = 0;
-  //           _totalUnidadRodas = 0;
-  //           _totalUnidadDifGoldenRodas = 0;
-  //         }
-
-  //         if (element.IdUnidad !== _idCentro) {
-  //           result.push({
-  //             Tipo: element.Tipo,
-  //             field: 'Unidad',
-  //             value: element.Unidad,
-  //             IdUnidad: element.IdUnidad,
-  //             isGroupBy: true,
-  //           });
-
-  //           _idCentro = element.IdUnidad;
-  //         }
-
-  //         result.push({
-  //           Tipo: element.Tipo,
-  //           IdDivision: element.IdDivision,
-  //           IdUnidad: element.IdUnidad,
-  //           Unidad: element.Unidad,
-  //           Almacen: element.Almacen,
-  //           Cuenta: element.Cuenta,
-  //           SaldoGolden: element.SaldoGolden,
-  //           SaldoRestaurador: element.SaldoRestaurador,
-  //           DifGoldenRest: element.DifGoldenRest,
-  //           SaldoDistribuidor: element.SaldoDistribuidor,
-  //           DifGoldenDist: element.DifGoldenDist,
-  //           SaldoRodas: element.SaldoRodas,
-  //           DifGoldenRodas: element.DifGoldenRodas,
-  //         });
-
-  //         _totalUnidadGolden += element.SaldoGolden;
-  //         _totalUnidadGoldenRest += element.SaldoRestaurador;
-  //         _totalUnidadDifGoldenRest += element.DifGoldenRest;
-  //         _totalUnidadGoldenDist += element.SaldoDistribuidor;
-  //         _totalUnidadDifGoldenDist += element.DifGoldenDist;
-  //         _totalUnidadRodas += element.SaldoRodas;
-  //         _totalUnidadDifGoldenRodas += element.DifGoldenRodas;
-
-  //         _tipo = element.Tipo;
-  //       } else if (
-  //         tipoCentro === '1' &&
-  //         (element.IdDivision !== _idDivision || element.Tipo !== _tipo)
-  //       ) {
-  //         if (_idCentro !== 0 || (element.Tipo !== _tipo && _tipo !== '')) {
-  //           result.push({
-  //             Tipo: _tipo,
-  //             IdDivision: _idDivision,
-  //             IdUnidad: _idCentro,
-  //             Unidad: 'TOTAL',
-  //             Almacen: '',
-  //             Cuenta: '',
-  //             SaldoGolden: _totalUnidadGolden,
-  //             SaldoRestaurador: _totalUnidadGoldenRest,
-  //             DifGoldenRest: _totalUnidadDifGoldenRest,
-  //             SaldoDistribuidor: _totalUnidadGoldenDist,
-  //             DifGoldenDist: _totalUnidadDifGoldenDist,
-  //             SaldoRodas: _totalUnidadRodas,
-  //             DifGoldenRodas: _totalUnidadDifGoldenRodas,
-  //           });
-
-  //           _totalUnidadGolden = 0;
-  //           _totalUnidadGoldenRest = 0;
-  //           _totalUnidadDifGoldenRest = 0;
-  //           _totalUnidadGoldenDist = 0;
-  //           _totalUnidadDifGoldenDist = 0;
-  //           _totalUnidadRodas = 0;
-  //           _totalUnidadDifGoldenRodas = 0;
-  //         }
-
-  //         result.push({
-  //           Tipo: element.Tipo,
-  //           IdDivision: element.IdDivision,
-  //           IdUnidad: element.IdUnidad,
-  //           Unidad: element.Unidad,
-  //           Almacen: element.Almacen,
-  //           Cuenta: element.Cuenta,
-  //           SaldoGolden: element.SaldoGolden,
-  //           SaldoRestaurador: element.SaldoRestaurador,
-  //           DifGoldenRest: element.DifGoldenRest,
-  //           SaldoDistribuidor: element.SaldoDistribuidor,
-  //           DifGoldenDist: element.DifGoldenDist,
-  //           SaldoRodas: element.SaldoRodas,
-  //           DifGoldenRodas: element.DifGoldenRodas,
-  //         });
-
-  //         _totalUnidadGolden += element.SaldoGolden;
-  //         _totalUnidadGoldenRest += element.SaldoRestaurador;
-  //         _totalUnidadDifGoldenRest += element.DifGoldenRest;
-  //         _totalUnidadGoldenDist += element.SaldoDistribuidor;
-  //         _totalUnidadDifGoldenDist += element.DifGoldenDist;
-  //         _totalUnidadRodas += element.SaldoRodas;
-  //         _totalUnidadDifGoldenRodas += element.DifGoldenRodas;
-
-  //         _tipo = element.Tipo;
-
-  //         if (element.IdDivision !== _idDivision) {
-  //           result.push({
-  //             Tipo: element.Tipo,
-  //             field: 'División',
-  //             value: element.Division,
-  //             IdDivision: element.IdDivision,
-  //             isGroupBy: true,
-  //           });
-
-  //           _idDivision = element.IdDivision;
-  //         }
-  //       } else {
-  //         result.push({
-  //           Tipo: element.Tipo,
-  //           IdDivision: element.IdDivision,
-  //           IdUnidad: element.IdUnidad,
-  //           Unidad: element.Unidad,
-  //           Almacen: element.Almacen,
-  //           Cuenta: element.Cuenta,
-  //           SaldoGolden: element.SaldoGolden,
-  //           SaldoRestaurador: element.SaldoRestaurador,
-  //           DifGoldenRest: element.DifGoldenRest,
-  //           SaldoDistribuidor: element.SaldoDistribuidor,
-  //           DifGoldenDist: element.DifGoldenDist,
-  //           SaldoRodas: element.SaldoRodas,
-  //           DifGoldenRodas: element.DifGoldenRodas,
-  //         });
-
-  //         _totalUnidadGolden += element.SaldoGolden;
-  //         _totalUnidadGoldenRest += element.SaldoRestaurador;
-  //         _totalUnidadDifGoldenRest += element.DifGoldenRest;
-  //         _totalUnidadGoldenDist += element.SaldoDistribuidor;
-  //         _totalUnidadDifGoldenDist += element.DifGoldenDist;
-  //         _totalUnidadRodas += element.SaldoRodas;
-  //         _totalUnidadDifGoldenRodas += element.DifGoldenRodas;
-  //       }
-  //     });
-
-  //     result.push({
-  //       Tipo: _tipo,
-  //       IdDivision: _idDivision,
-  //       IdUnidad: _idCentro,
-  //       Unidad: 'TOTAL',
-  //       Almacen: 'TOTAL',
-  //       Cuenta: '',
-  //       SaldoGolden: _totalUnidadGolden,
-  //       SaldoRestaurador: _totalUnidadGoldenRest,
-  //       DifGoldenRest: _totalUnidadDifGoldenRest,
-  //       SaldoDistribuidor: _totalUnidadGoldenDist,
-  //       DifGoldenDist: _totalUnidadDifGoldenDist,
-  //       SaldoRodas: _totalUnidadRodas,
-  //       DifGoldenRodas: _totalUnidadDifGoldenRodas,
-  //     });
-  //   }
-
-  //   return result;
-  // }
 
   private _getConciliacionTable(data: any, tipoCentro: string): object {
     let returnValue = {};
@@ -718,36 +483,6 @@ export class ConciliaGoldenDwhService {
 
     return returnValue;
   }
-
-  // public async getFormattedAlmacenesDWH(data: any[]): Promise<any> {
-  //   let _idUnidad = 0;
-
-  //   const result: any[] = [];
-
-  //   if (data && data.length) {
-  //     data.forEach(element => {
-  //       if (element.IdUnidad !== _idUnidad) {
-  //         result.push({
-  //           field: 'Unidad',
-  //           value: element.Unidad,
-  //           IdUnidad: element.IdUnidad,
-  //           isGroupBy: true,
-  //         });
-
-  //         _idUnidad = element.IdUnidad;
-  //       }
-
-  //       result.push({
-  //         IdUnidad: element.IdUnidad,
-  //         Almacen: element.Almacen,
-  //         Cuenta: element.Cuenta,
-  //         CuentaR: element.CuentaR,
-  //       });
-  //     });
-  //   }
-
-  //   return result;
-  // }
 
   private _getAlmacenesTable(almacenes: any): object {
     let returnValue;

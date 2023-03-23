@@ -1,7 +1,7 @@
 import { ConcilaOperacionesDwhService } from './concilia-operaciones-dwh.service';
 import { ConciliaOperacionesDWHQueryResponse } from './concilia-operaciones-dwh.model';
-import { SweetalertService } from './../../services/sweetalert.service';
-import { PdfmakeService } from './../../services/pdfmake.service';
+import { SweetalertService } from './../../helpers/sweetalert.service';
+import { PdfmakeService } from './../../helpers/pdfmake.service';
 import { UnidadesService } from './../../../unidades/shared/services/unidades.service';
 import { SubdivisionesService } from './../../services/subdivisiones.service';
 import { DivisionesService } from './../../services/divisiones.service';
@@ -14,6 +14,7 @@ import {
   OnInit,
   Input,
   OnDestroy,
+  AfterContentChecked,
   ChangeDetectionStrategy,
   ChangeDetectorRef,
 } from '@angular/core';
@@ -28,7 +29,9 @@ const conciliaExternaDWHQuery = require('graphql-tag/loader!../../../concilia-ex
   styleUrls: ['./concilia-operaciones-dwh.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
 })
-export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
+export class ConciliaOperacionesDwhComponent
+  implements OnInit, AfterContentChecked, OnDestroy
+{
   @Input() interna = false;
 
   fg: FormGroup;
@@ -69,6 +72,7 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
   dataSource: any[] = [];
 
   loading = false;
+
   constructor(
     private _apollo: Apollo,
     private _divisionesSvc: DivisionesService,
@@ -76,7 +80,7 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
     private _unidadesSvc: UnidadesService,
     private _conciliarDWHSvc: ConcilaOperacionesDwhService,
     private _pdfMakeSvc: PdfmakeService,
-    private _sweetAlertSvc: SweetalertService,
+    private _swalSvc: SweetalertService,
     private cd: ChangeDetectorRef
   ) {}
 
@@ -86,7 +90,9 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
 
     this._getDivisiones();
     this._subscribeToFgValueChanges();
+  }
 
+  ngAfterContentChecked(): void {
     this.cd.detectChanges();
   }
 
@@ -98,45 +104,43 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
     try {
       if (this.interna) {
         this._conciliarDWHSvc.subscription.push(
-          this._divisionesSvc.getDivisionesByUsuario().subscribe(res => {
-            const result = res.getAllDivisionesByUsuario;
+          this._divisionesSvc.getDivisionesByUsuario().subscribe({
+            next: res => {
+              const result = res.getAllDivisionesByUsuario;
 
-            if (!result.success) {
-              return this._sweetAlertSvc.error(result.error);
-            }
-
-            this.divisionesValues = result.data.map(
-              (d: { IdDivision: string; Division: string }) => {
+              this.divisionesValues = result.map(d => {
                 return {
                   value: d.IdDivision,
                   label: d.IdDivision + '-' + d.Division,
                 };
-              }
-            );
+              });
+            },
+            error: err => {
+              this._swalSvc.error(err);
+            },
           })
         );
       } else {
         this._conciliarDWHSvc.subscription.push(
-          this._divisionesSvc.getDivisiones().subscribe(res => {
-            const result = res.getAllDivisiones;
+          this._divisionesSvc.getDivisiones().subscribe({
+            next: res => {
+              const result = res.getAllDivisionesByUsuario;
 
-            if (!result.success) {
-              return this._sweetAlertSvc.error(result.error);
-            }
-
-            this.divisionesValues = result.data.map(
-              (d: { IdDivision: string; Division: string }) => {
+              this.divisionesValues = result.map(d => {
                 return {
                   value: d.IdDivision,
                   label: d.IdDivision + '-' + d.Division,
                 };
-              }
-            );
+              });
+            },
+            error: err => {
+              this._swalSvc.error(err);
+            },
           })
         );
       }
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -157,7 +161,7 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
             const result = res.getSubdivisionesByIdDivision;
 
             if (!result.success) {
-              return this._sweetAlertSvc.error(result.error);
+              return this._swalSvc.error(result.error);
             }
 
             if (origenDestino) {
@@ -178,7 +182,7 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
           })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -198,7 +202,7 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
             const result = res.getUnidadesByIdSubdivision;
 
             if (!result.success) {
-              return this._sweetAlertSvc.error(result.error);
+              return this._swalSvc.error(result.error);
             }
 
             if (origenDestino) {
@@ -219,7 +223,7 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
           })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -361,7 +365,7 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
               : res.data.conciliaExternaDWH;
 
             if (!result.success) {
-              return this._sweetAlertSvc.error(result.error);
+              return this._swalSvc.error(result.error);
             }
 
             this.dataSourceOriginal = result.data;
@@ -369,7 +373,7 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
           })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -410,7 +414,7 @@ export class ConciliaOperacionesDwhComponent implements OnInit, OnDestroy {
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

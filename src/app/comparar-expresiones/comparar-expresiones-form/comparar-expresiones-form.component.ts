@@ -2,7 +2,7 @@ import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/
 import { ActionClicked } from './../../shared/models/list-items';
 import { OperadoresService } from './../../shared/services/operadores.service';
 import { ExpresionesService } from './../../expresiones/shared/services/expresiones.service';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { CompararExpresionesService } from '../shared/services/comparar-expresiones.service';
@@ -26,7 +26,7 @@ export class CompararExpresionesFormComponent implements OnInit {
     private _expresionesSvc: ExpresionesService,
     private _operadoresSvc: OperadoresService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _sweetAlertSvc: SweetalertService
+    private _swalSvc: SweetalertService
   ) {
     this.fg = _compararExpresionesSvc.fg;
   }
@@ -60,7 +60,7 @@ export class CompararExpresionesFormComponent implements OnInit {
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -85,7 +85,7 @@ export class CompararExpresionesFormComponent implements OnInit {
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -121,7 +121,7 @@ export class CompararExpresionesFormComponent implements OnInit {
         })
       );
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

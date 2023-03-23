@@ -1,4 +1,4 @@
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { NavigationService } from './../../navigation/shared/services/navigation.service';
 import { UsuarioService } from 'src/app/usuarios/shared/services/usuario.service';
 import { ChangePasswordComponent } from './../change-password/change-password.component';

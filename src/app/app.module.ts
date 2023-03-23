@@ -1,3 +1,4 @@
+import { ToastrModule } from 'ngx-toastr';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { PrimeCheckboxModule } from './shared/ui/prime-ng/checkbox/checkbox.module';
 import { Apollo } from 'apollo-angular';
@@ -14,8 +15,8 @@ import { LoginComponent } from './usuarios/login/login.component';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StartComponent } from './shared/ui/start/start.component';
 import { GraphQLModule } from './graphql.module';
-import { HttpErrorInterceptorService } from './shared/helpers/error.interceptor';
-import { JwtInterceptor } from './shared/helpers/jwt.interceptor';
+import { HttpErrorInterceptorService } from './shared/interceptors/error.interceptor';
+import { JwtInterceptor } from './shared/interceptors/jwt.interceptor';
 import { PrimeCardModule } from './shared/ui/prime-ng/card/card.module';
 import { PrimeInputTextModule } from './shared/ui/prime-ng/input-text/input-text.module';
 import { PrimePasswordModule } from './shared/ui/prime-ng/password/password.module';
@@ -46,6 +47,11 @@ import { DialogService } from 'primeng/dynamicdialog';
 
     // Apollo
     HttpClientModule, // provides HttpClient for HttpLink
+
+    // ToastrModule added
+    ToastrModule.forRoot({
+      closeButton: true,
+    }),
 
     // App modules
     NavigationModule,
