@@ -1,5 +1,5 @@
 import { ApolloService } from '../../../shared/helpers/apollo.service';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {
   ClasificadorCuentasQueryResponse,
   ClasificadorCuentasMutationResponse,
@@ -47,6 +47,7 @@ export class ClasificadorCuentaService {
     idCentro: new FormControl(null, { initialValueIsDefault: true }),
     annio: new FormControl(moment().year().toString(), {
       initialValueIsDefault: true,
+      validators: [Validators.minLength(4), Validators.maxLength(4)],
     }),
   });
 

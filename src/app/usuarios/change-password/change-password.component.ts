@@ -1,6 +1,5 @@
 import { UsuarioService } from './../shared/services/usuario.service';
 import { ActionClicked } from './../../shared/models/list-items';
-import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { NavigationService } from './../../navigation/shared/services/navigation.service';
 import { UsuariosMutationResponse } from './../shared/models/usuarios.model';
@@ -23,7 +22,6 @@ export class ChangePasswordComponent implements OnInit, OnDestroy {
   subscription: Subscription[] = [];
 
   constructor(
-    private _authSvc: AuthenticationService,
     private _apollo: Apollo,
     private _navigationSvc: NavigationService,
     private _dinamicDialogSvc: DinamicDialogService,
