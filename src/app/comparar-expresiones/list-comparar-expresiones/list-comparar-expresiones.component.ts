@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
@@ -9,7 +10,6 @@ import {
 } from './../../shared/models/list-items';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SweetalertService } from './../../shared/helpers/sweetalert.service';
-import { MessageService } from 'primeng/api';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { CompararExpresionesService } from '../shared/services/comparar-expresiones.service';
@@ -47,7 +47,7 @@ export class ListCompararExpresionesComponent
     private _compararExpresionesSvc: CompararExpresionesService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _swalSvc: SweetalertService,
-    private _msgSvc: MessageService
+    private _toastrSvc: ToastrService
   ) {}
 
   ngAfterViewInit(): void {
@@ -105,11 +105,7 @@ export class ListCompararExpresionesComponent
       this._compararExpresionesSvc.subscription.push(
         this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
-            this._msgSvc.add({
-              severity: 'success',
-              summary: 'Satisfactorio',
-              detail: message,
-            });
+            this._toastrSvc.success(message, 'Satisfactorio');
           }
         })
       );
@@ -162,11 +158,7 @@ export class ListCompararExpresionesComponent
           this._compararExpresionesSvc.subscription.push(
             this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
               if (message) {
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail: message,
-                });
+                this._toastrSvc.success(message, 'Satisfactorio');
               }
             })
           );
@@ -214,12 +206,10 @@ export class ListCompararExpresionesComponent
                     throw new Error(result.error);
                   }
 
-                  this._msgSvc.add({
-                    severity: 'success',
-                    summary: 'Satisfactorio',
-                    detail:
-                      'La Comparación se ha eliminado Satisfactoriamente.',
-                  });
+                  this._toastrSvc.success(
+                    'La Comparación se ha eliminado Satisfactoriamente.',
+                    'Satisfactorio'
+                  );
                 })
             );
           }

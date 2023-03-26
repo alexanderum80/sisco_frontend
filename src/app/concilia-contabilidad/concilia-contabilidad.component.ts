@@ -169,7 +169,6 @@ export class ConciliaContabilidadComponent
     private _conciliaContabSvc: ConciliaContabilidadService,
     private _pdfMakeSvc: PdfmakeService,
     private _swalSvc: SweetalertService,
-    // private _msgSvc: MessageService,
     private _toastrSvc: ToastrService,
     private _cd: ChangeDetectorRef
   ) {}
@@ -177,7 +176,7 @@ export class ConciliaContabilidadComponent
   ngOnInit(): void {
     this.fg = this._conciliaContabSvc.fg;
     this.fg.reset();
-    // this._conciliaContabSvc.inicializarFg();
+
     this._subscribeToFgValueChanges();
   }
 

@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
@@ -12,7 +13,6 @@ import SweetAlert from 'sweetalert2';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { isArray } from 'lodash';
 
 @Component({
@@ -40,7 +40,7 @@ export class ListClasificadorEntidadesComponent
   constructor(
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _msgSvc: MessageService,
+    private _toastrSvc: ToastrService,
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService
   ) {
     if (this.hasAdvancedUserPermission()) {
@@ -139,11 +139,7 @@ export class ListClasificadorEntidadesComponent
         this._clasificadorEntidadesSvc.subscription.push(
           this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
             if (message) {
-              this._msgSvc.add({
-                severity: 'success',
-                summary: 'Satisfactorio',
-                detail: message,
-              });
+              this._toastrSvc.success(message, 'Satisfactorio');
             }
           })
         );
@@ -193,11 +189,7 @@ export class ListClasificadorEntidadesComponent
               this._dinamicDialogSvc.ref.onClose.subscribe(
                 (message: string) => {
                   if (message) {
-                    this._msgSvc.add({
-                      severity: 'success',
-                      summary: 'Satisfactorio',
-                      detail: message,
-                    });
+                    this._toastrSvc.success(message, 'Satisfactorio');
                   }
                 }
               )
@@ -250,12 +242,10 @@ export class ListClasificadorEntidadesComponent
                     });
                   }
 
-                  this._msgSvc.add({
-                    severity: 'success',
-                    summary: 'Satisfactorio',
-                    detail:
-                      'El Clasificador de Entidad se ha eliminado correctamente.',
-                  });
+                  this._toastrSvc.success(
+                    'El Clasificador de Entidad se ha eliminado correctamente.',
+                    'Satisfactorio'
+                  );
                 })
             );
           }

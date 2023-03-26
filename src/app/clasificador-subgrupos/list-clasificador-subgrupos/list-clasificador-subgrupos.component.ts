@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { ClasificadorSubgruposFormComponent } from './../clasificador-subgrupos-form/clasificador-subgrupos-form.component';
 import {
@@ -9,7 +10,6 @@ import {
   DefaultTopLeftButtonsTable,
 } from './../../shared/models/table-buttons';
 import { ClasificadorSubgruposService } from './../shared/services/clasificador-subgrupos.service';
-import { MessageService } from 'primeng/api';
 import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
@@ -50,7 +50,7 @@ export class ListClasificadorSubgruposComponent
     private _authSvc: AuthenticationService,
     private _swalSvc: SweetalertService,
     private _clasificadorSubgruposSvc: ClasificadorSubgruposService,
-    private _msgSvc: MessageService
+    private _toastrSvc: ToastrService
   ) {
     if (this.hasAdvancedUserPermission()) {
       this.inlineButtons = DefaultInlineButtonsTable;
@@ -118,11 +118,7 @@ export class ListClasificadorSubgruposComponent
         this._clasificadorSubgruposSvc.subscription.push(
           this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
             if (message) {
-              this._msgSvc.add({
-                severity: 'success',
-                summary: 'Satisfactorio',
-                detail: message,
-              });
+              this._toastrSvc.success(message, 'Satisfactorio');
             }
           })
         );
@@ -158,11 +154,7 @@ export class ListClasificadorSubgruposComponent
                   this._dinamicDialogSvc.ref.onClose.subscribe(
                     (message: string) => {
                       if (message) {
-                        this._msgSvc.add({
-                          severity: 'success',
-                          summary: 'Satisfactorio',
-                          detail: message,
-                        });
+                        this._toastrSvc.success(message, 'Satisfactorio');
                       }
                     }
                   )
@@ -191,11 +183,10 @@ export class ListClasificadorSubgruposComponent
                   .delete(clasificador.Grupo, clasificador.Codigo)
                   .subscribe({
                     next: () => {
-                      this._msgSvc.add({
-                        severity: 'success',
-                        summary: 'Satisfactorio',
-                        detail: 'El Subgrupo se ha eliminado correctamente.',
-                      });
+                      this._toastrSvc.success(
+                        'El Subgrupo se ha eliminado correctamente.',
+                        'Satisfactorio'
+                      );
                     },
                     error: err => {
                       this._swalSvc.error(err);

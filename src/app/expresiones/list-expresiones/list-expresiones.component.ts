@@ -1,9 +1,9 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { ETipoUsuarios } from './../../usuarios/shared/models/usuarios.model';
-import { MessageService } from 'primeng/api';
 import {
   ActionClicked,
   IActionItemClickedArgs,
@@ -47,7 +47,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
     private _expresionesSvc: ExpresionesService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _swalSvc: SweetalertService,
-    private _msgSvc: MessageService
+    private _toastrSvc: ToastrService
   ) {}
 
   ngAfterViewInit(): void {
@@ -104,11 +104,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
       this._expresionesSvc.subscription.push(
         this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
-            this._msgSvc.add({
-              severity: 'success',
-              summary: 'Satisfactorio',
-              detail: message,
-            });
+            this._toastrSvc.success(message, 'Satisfactorio');
           }
         })
       );
@@ -159,11 +155,7 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
           this._expresionesSvc.subscription.push(
             this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
               if (message) {
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail: message,
-                });
+                this._toastrSvc.success(message, 'Satisfactorio');
               }
             })
           );
@@ -211,11 +203,10 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
                   return this._swalSvc.error(result.error);
                 }
 
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail: 'La Expresión se ha eliminado correctamente.',
-                });
+                this._toastrSvc.success(
+                  'La Expresión se ha eliminado correctamente.',
+                  'Satisfactorio'
+                );
               });
           }
         });

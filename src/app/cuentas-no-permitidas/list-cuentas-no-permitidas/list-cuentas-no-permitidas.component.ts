@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
@@ -11,7 +12,6 @@ import { cloneDeep } from '@apollo/client/utilities';
 import { CuentasNoPermitidasService } from './../shared/services/cuentas-no-permitidas.service';
 import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import { MessageService } from 'primeng/api';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { CuentasNoPermitidasFormComponent } from '../cuentas-no-permitidas-form/cuentas-no-permitidas-form.component';
@@ -48,7 +48,7 @@ export class ListCuentasNoPermitidasComponent
     private _cuentasNoPermitidasSvc: CuentasNoPermitidasService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _swalSvc: SweetalertService,
-    private _msgSvc: MessageService
+    private _toastrSvc: ToastrService
   ) {}
 
   ngAfterViewInit(): void {
@@ -108,11 +108,7 @@ export class ListCuentasNoPermitidasComponent
       this._cuentasNoPermitidasSvc.subscription.push(
         this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
-            this._msgSvc.add({
-              severity: 'success',
-              summary: 'Satisfactorio',
-              detail: message,
-            });
+            this._toastrSvc.success(message, 'Satisfactorio');
           }
         })
       );
@@ -165,11 +161,7 @@ export class ListCuentasNoPermitidasComponent
           this._cuentasNoPermitidasSvc.subscription.push(
             this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
               if (message) {
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail: message,
-                });
+                this._toastrSvc.success(message, 'Satisfactorio');
               }
             })
           );
@@ -216,12 +208,11 @@ export class ListCuentasNoPermitidasComponent
                 if (!result.success) {
                   return this._swalSvc.error(result.error);
                 }
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail:
-                    'La Cuenta no Permitida se ha eliminado Satisfactoriamente.',
-                });
+
+                this._toastrSvc.success(
+                  'La Cuenta no Permitida se ha eliminado Satisfactoriamente.',
+                  'Satisfactorio'
+                );
               });
           }
         });

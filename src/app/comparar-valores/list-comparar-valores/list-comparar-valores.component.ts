@@ -1,8 +1,8 @@
+import { ToastrService } from 'ngx-toastr';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
 import { SweetalertService } from './../../shared/helpers/sweetalert.service';
-import { MessageService } from 'primeng/api';
 import { CompararValoresFormComponent } from './../comparar-valores-form/comparar-valores-form.component';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { CompararValoresService } from './../shared/services/comparar-valores.service';
@@ -39,7 +39,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
   constructor(
     private _compararValoresSvc: CompararValoresService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _msgSvc: MessageService,
+    private _toastrSvc: ToastrService,
     private _swalSvc: SweetalertService
   ) {}
 
@@ -99,11 +99,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
       this._compararValoresSvc.subscription.push(
         this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
-            this._msgSvc.add({
-              severity: 'success',
-              summary: 'Satisfactorio',
-              detail: message,
-            });
+            this._toastrSvc.success(message, 'Satisfactorio');
           }
         })
       );
@@ -144,11 +140,7 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
           this._compararValoresSvc.subscription.push(
             this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
               if (message) {
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail: message,
-                });
+                this._toastrSvc.success(message, 'Satisfactorio');
               }
             })
           );
@@ -179,11 +171,10 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
                   return this._swalSvc.error(result.error);
                 }
 
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail: 'La Comparación se ha eliminado Satisfactoriamente.',
-                });
+                this._toastrSvc.success(
+                  'La Comparación se ha eliminado Satisfactoriamente.',
+                  'Satisfactorio'
+                );
               })
             );
           }

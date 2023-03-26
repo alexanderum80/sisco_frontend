@@ -31,7 +31,6 @@ import { PrimeDinamicDialogModule } from './dinamic-dialog/dinamic-dialog.module
 import { PrimeConfirmPopupModule } from './confirm-popup/confirm-popup.module';
 import { PrimeTabViewModule } from './tab-view/tab-view.module';
 import { PrimeCardModule } from './card/card.module';
-import { PrimeToastModule } from './toast/toast.module';
 import { PrimeInputTextareaModule } from './input-textarea/input-textarea.module';
 import { PrimeNGConfig } from 'primeng/api';
 import { PrimeInputEmailModule } from './input-email/input-email.module';
@@ -67,7 +66,6 @@ const modules = [
   PrimeSplitButtonModule,
   PrimeTabViewModule,
   PrimeTableModule,
-  PrimeToastModule,
   PrimeToolbarModule,
   PrimeTooltipModule,
 ];

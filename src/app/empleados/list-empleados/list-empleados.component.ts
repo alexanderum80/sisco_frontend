@@ -1,8 +1,8 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
-import { MessageService } from 'primeng/api';
 import {
   IActionItemClickedArgs,
   ActionClicked,
@@ -38,7 +38,7 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _empleadoSvc: EmpleadosService,
-    private _msgSvc: MessageService
+    private _toastrSvc: ToastrService
   ) {
     if (this.hasAdminPermission()) {
       this.inlineButtons = DefaultInlineButtonsTable;
@@ -121,11 +121,7 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
       this._empleadoSvc.subscription.push(
         this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
-            this._msgSvc.add({
-              severity: 'success',
-              summary: 'Satisfactorio',
-              detail: message,
-            });
+            this._toastrSvc.success(message, 'Satisfactorio');
           }
         })
       );
@@ -166,11 +162,7 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
           this._empleadoSvc.subscription.push(
             this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
               if (message) {
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail: message,
-                });
+                this._toastrSvc.success(message, 'Satisfactorio');
               }
             })
           );
@@ -210,11 +202,10 @@ export class ListEmpleadosComponent implements AfterViewInit, OnDestroy {
               });
             }
 
-            this._msgSvc.add({
-              severity: 'success',
-              summary: 'Satisfactorio',
-              detail: 'El Empleado se ha eliminado correctamente.',
-            });
+            this._toastrSvc.success(
+              'El Empleado se ha eliminado correctamente.',
+              'Satisfactorio'
+            );
           });
         }
       });

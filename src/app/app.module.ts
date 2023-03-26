@@ -1,3 +1,4 @@
+import { HTTPResponseInterceptor } from './shared/interceptors/response.interceptor';
 import { ToastrModule } from 'ngx-toastr';
 import { UnauthorizedComponent } from './unauthorized/unauthorized.component';
 import { PrimeCheckboxModule } from './shared/ui/prime-ng/checkbox/checkbox.module';
@@ -65,6 +66,11 @@ import { DialogService } from 'primeng/dynamicdialog';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptorService,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HTTPResponseInterceptor,
       multi: true,
     },
   ],

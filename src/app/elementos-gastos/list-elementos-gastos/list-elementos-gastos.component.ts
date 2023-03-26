@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
@@ -12,7 +13,6 @@ import { ElementosGastosFormComponent } from './../elementos-gastos-form/element
 import { ElementosGastosService } from './../shared/services/elementos-gastos.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, AfterViewInit, OnDestroy } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { isArray } from 'lodash';
 
 @Component({
@@ -37,7 +37,7 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
   constructor(
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _msgSvc: MessageService,
+    private _toastrSvc: ToastrService,
     private _elementosGastosSvc: ElementosGastosService
   ) {
     if (this.hasAdvancedUserPermission()) {
@@ -112,11 +112,7 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
         this._elementosGastosSvc.subscription.push(
           this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
             if (message) {
-              this._msgSvc.add({
-                severity: 'success',
-                summary: 'Satisfactorio',
-                detail: message,
-              });
+              this._toastrSvc.success(message, 'Satisfactorio');
             }
           })
         );
@@ -168,11 +164,7 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
           this._elementosGastosSvc.subscription.push(
             this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
               if (message) {
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail: message,
-                });
+                this._toastrSvc.success(message, 'Satisfactorio');
               }
             })
           );
@@ -213,11 +205,10 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
                   });
                 }
 
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail: 'El Elemento de Gasto se ha eliminado correctamente.',
-                });
+                this._toastrSvc.success(
+                  'El Elemento de Gasto se ha eliminado correctamente.',
+                  'Satisfactorio'
+                );
               })
             );
           }

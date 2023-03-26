@@ -1,8 +1,8 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
-import { MessageService } from 'primeng/api';
 import {
   IActionItemClickedArgs,
   ActionClicked,
@@ -40,7 +40,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _conexionRodasSvc: ConexionRodasService,
-    private _msgSvc: MessageService
+    private _toastrSvc: ToastrService
   ) {
     if (this.hasAdminPermission()) {
       this.inlineButtons = DefaultInlineButtonsTable;
@@ -136,11 +136,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
       this._conexionRodasSvc.subscription.push(
         this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
-            this._msgSvc.add({
-              severity: 'success',
-              summary: 'Satisfactorio',
-              detail: message,
-            });
+            this._toastrSvc.success(message, 'Satisfactorio');
           }
         })
       );
@@ -194,11 +190,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
               this._dinamicDialogSvc.ref.onClose.subscribe(
                 (message: string) => {
                   if (message) {
-                    this._msgSvc.add({
-                      severity: 'success',
-                      summary: 'Satisfactorio',
-                      detail: message,
-                    });
+                    this._toastrSvc.success(message, 'Satisfactorio');
                   }
                 }
               )
@@ -254,11 +246,10 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
                   this._dinamicDialogSvc.ref.onClose.subscribe(
                     (message: string) => {
                       if (message) {
-                        this._msgSvc.add({
-                          severity: 'success',
-                          summary: 'Satisfactorio',
-                          detail: 'La Conexión se ha eliminado correctamente.',
-                        });
+                        this._toastrSvc.success(
+                          'La Conexión se ha eliminado correctamente.',
+                          'Satisfactorio'
+                        );
                       }
                     }
                   )

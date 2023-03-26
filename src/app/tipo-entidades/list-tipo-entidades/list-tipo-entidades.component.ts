@@ -1,3 +1,4 @@
+import { ToastrService } from 'ngx-toastr';
 import { AuthenticationService } from './../../shared/services/authentication.service';
 import {
   DefaultInlineButtonsTable,
@@ -14,7 +15,6 @@ import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/
 import SweetAlert from 'sweetalert2';
 import { TipoEntidadesFormComponent } from './../tipo-entidades-form/tipo-entidades-form.component';
 import { Component, AfterViewInit, OnDestroy } from '@angular/core';
-import { MessageService } from 'primeng/api';
 import { isArray } from 'lodash';
 
 @Component({
@@ -38,7 +38,7 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
   constructor(
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _msgSvc: MessageService,
+    private _toastrSvc: ToastrService,
     private _tipoEntidadesSvc: TipoEntidadesService
   ) {
     if (this.hasAdvancedUserPermission()) {
@@ -122,11 +122,7 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
         this._tipoEntidadesSvc.subscription.push(
           this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
             if (message) {
-              this._msgSvc.add({
-                severity: 'success',
-                summary: 'Satisfactorio',
-                detail: message,
-              });
+              this._toastrSvc.success(message, 'Satisfactorio');
             }
           })
         );
@@ -178,11 +174,7 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
               this._dinamicDialogSvc.ref.onClose.subscribe(
                 (message: string) => {
                   if (message) {
-                    this._msgSvc.add({
-                      severity: 'success',
-                      summary: 'Satisfactorio',
-                      detail: message,
-                    });
+                    this._toastrSvc.success(message, 'Satisfactorio');
                   }
                 }
               )
@@ -233,11 +225,10 @@ export class ListTipoEntidadesComponent implements AfterViewInit, OnDestroy {
                   });
                 }
 
-                this._msgSvc.add({
-                  severity: 'success',
-                  summary: 'Satisfactorio',
-                  detail: 'El Tipo de Entidad se ha eliminado correctamente.',
-                });
+                this._toastrSvc.success(
+                  'El Tipo de Entidad se ha eliminado correctamente.',
+                  'Satisfactorio'
+                );
               })
             );
           }
