@@ -5,7 +5,7 @@ import { DivisionesService } from './../shared/services/divisiones.service';
 import { ITableColumns } from 'src/app/shared/ui/prime-ng/table/table.model';
 import { ConciliaInternaContaService } from './shared/services/concilia-interna-conta.service';
 import { FormGroup } from '@angular/forms';
-import { SelectItem } from 'primeng/api';
+import { SelectItem, MenuItem } from 'primeng/api';
 import {
   Component,
   OnInit,
@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 import { cloneDeep } from 'lodash';
 import * as moment from 'moment';
+import { ExcelService } from '../shared/helpers/excel.service';
 
 @Component({
   selector: 'app-concilia-interna-conta',
@@ -62,6 +63,17 @@ export class ConciliaInternaContaComponent
     { value: '3', label: 'Unidad/Unidad' },
   ];
 
+  buttonConciliarItems: MenuItem[] = [
+    {
+      id: 'exportarExcel',
+      label: 'Exportar a Excel',
+      icon: 'mdi mdi-microsoft-excel',
+      command: () => {
+        this._exportarAExcel();
+      },
+    },
+  ];
+
   loading = false;
 
   constructor(
@@ -70,7 +82,8 @@ export class ConciliaInternaContaComponent
     private _unidadesSvc: UnidadesService,
     private _swalSvc: SweetalertService,
     private cd: ChangeDetectorRef,
-    private _pdfMakeSvc: PdfmakeService
+    private _pdfMakeSvc: PdfmakeService,
+    private _excelSvc: ExcelService
   ) {}
 
   ngOnInit(): void {
@@ -255,6 +268,14 @@ export class ConciliaInternaContaComponent
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
+      this._swalSvc.error(err);
+    }
+  }
+
+  private _exportarAExcel(): void {
+    try {
+      this._excelSvc.exportAsExcelFile(this.dataSource, 'Operaciones Internas');
+    } catch (err) {
       this._swalSvc.error(err);
     }
   }

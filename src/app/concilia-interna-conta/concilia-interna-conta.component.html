@@ -87,13 +87,14 @@
             icon="mdi mdi-file-check-outline"
             [disabled]="!fg.valid"
             (clicked)="conciliar()"></png-button>
-          <png-button
+          <png-split-button
             class="mr-2"
             label="Reporte"
             [style]="'secondary'"
             icon="mdi mdi-printer"
+            [items]="buttonConciliarItems"
             [disabled]="!dataSource.length"
-            (clicked)="reporte()"></png-button>
+            (clicked)="reporte()"></png-split-button>
         </div>
       </div>
     </div>

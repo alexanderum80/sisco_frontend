@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 
 import { ConciliaInternaContaRoutingModule } from './concilia-interna-conta-routing.module';
 import { ConciliaInternaContaComponent } from './concilia-interna-conta.component';
+import { PrimeSplitButtonModule } from '../shared/ui/prime-ng/split-button/split-button.module';
 
 @NgModule({
   declarations: [ConciliaInternaContaComponent],
@@ -31,6 +32,7 @@ import { ConciliaInternaContaComponent } from './concilia-interna-conta.componen
     PrimeRadioButtonModule,
     PrimeDropdownModule,
     PrimeButtonModule,
+    PrimeSplitButtonModule,
     PrimeCalendarModule,
     PrimeCheckboxModule,
     PrimeTableModule,
