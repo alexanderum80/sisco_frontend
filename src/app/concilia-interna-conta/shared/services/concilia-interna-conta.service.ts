@@ -1,3 +1,4 @@
+import { IConciliaContaInternaQueryResponse } from './../models/concilia-interna-conta.model';
 import { getPreviousMonth } from '../../../shared/models/date-range';
 import { numberFormatter } from './../../../shared/models/number';
 import { SelectItem } from 'primeng/api';
@@ -26,8 +27,8 @@ export class ConciliaInternaContaService {
 
   constructor(private _apolloSvc: ApolloService) {}
 
-  conciliar(): Observable<any> {
-    return new Observable<any>(subscriber => {
+  conciliar(): Observable<IConciliaContaInternaQueryResponse> {
+    return new Observable<IConciliaContaInternaQueryResponse>(subscriber => {
       const conciliaInternaContaInput = {
         annio: toNumber(
           moment(this.fg.controls['periodo'].value).format('YYYY')
@@ -42,9 +43,12 @@ export class ConciliaInternaContaService {
 
       this.subscription.push(
         this._apolloSvc
-          .query(conciliaInternaContaApi.concilia, {
-            conciliaInternaContaInput: conciliaInternaContaInput,
-          })
+          .query<IConciliaContaInternaQueryResponse>(
+            conciliaInternaContaApi.concilia,
+            {
+              conciliaInternaContaInput: conciliaInternaContaInput,
+            }
+          )
           .subscribe({
             next: res => {
               subscriber.next(res);

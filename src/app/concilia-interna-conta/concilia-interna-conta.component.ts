@@ -1,3 +1,4 @@
+import { IConciliaContaInterna } from './shared/models/concilia-interna-conta.model';
 import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { UnidadesService } from './../unidades/shared/services/unidades.service';
 import { SweetalertService } from './../shared/helpers/sweetalert.service';
@@ -30,8 +31,8 @@ export class ConciliaInternaContaComponent
 {
   fg: FormGroup;
 
-  dataSourceOriginal: any[] = [];
-  dataSource: any[] = [];
+  dataSourceOriginal: IConciliaContaInterna[] = [];
+  dataSource: IConciliaContaInterna[] = [];
 
   displayedColumns: ITableColumns[] = [
     { header: 'Cuenta', field: 'CuentaE', type: 'string' },
