@@ -3,18 +3,15 @@ query ConciliaInternaConta($conciliaInternaContaInput: ConciliaInternaContaInput
    	Division
     Annio
     Periodo
+    Tipo
+    Emisor
+    Receptor
     CuentaE
     SubCuentaE
-    TipoE
-    EmisorE
-    ReceptorE
     ValorE
     Operador
     CuentaR
     SubCuentaR
-    TipoR
-    EmisorR
-    ReceptorR
     ValorR
     Diferencia
   }

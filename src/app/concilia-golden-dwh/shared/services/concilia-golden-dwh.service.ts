@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 import { ConciliaDWHQueryResponse } from '../models/concilia-dwh.model';
 import { orderBy, toNumber, uniq } from 'lodash';
 import * as moment from 'moment';
-import { getPreviousMonth } from '../../../shared/models';
+import { getConciliacionMonth } from '../../../shared/models';
 
 const conciliaDWHQuery = require('graphql-tag/loader!../graphql/concilia-dwh.query.gql');
 
@@ -17,7 +17,7 @@ export class ConciliaGoldenDwhService {
     tipoCentro: new FormControl('0', { initialValueIsDefault: true }),
     idDivision: new FormControl(null, { initialValueIsDefault: true }),
     idCentro: new FormControl(null, { initialValueIsDefault: true }),
-    periodo: new FormControl(getPreviousMonth(new Date()), {
+    periodo: new FormControl(getConciliacionMonth(new Date()), {
       initialValueIsDefault: true,
     }),
     idEmpleado: new FormControl(null, { initialValueIsDefault: true }),

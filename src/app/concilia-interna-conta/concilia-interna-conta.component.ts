@@ -35,18 +35,15 @@ export class ConciliaInternaContaComponent
   dataSource: IConciliaContaInterna[] = [];
 
   displayedColumns: ITableColumns[] = [
+    { header: 'Tipo', field: 'Tipo', type: 'string' },
+    { header: 'Emisor', field: 'Emisor', type: 'string' },
+    { header: 'Receptor', field: 'Receptor', type: 'string' },
     { header: 'Cuenta', field: 'CuentaE', type: 'string' },
     { header: 'SubCuenta', field: 'SubCuentaE', type: 'string' },
-    { header: 'Tipo', field: 'TipoE', type: 'string' },
-    { header: 'Emisor', field: 'EmisorE', type: 'string' },
-    { header: 'Receptor', field: 'ReceptorE', type: 'string' },
     { header: 'Valor', field: 'ValorE', type: 'decimal', totalize: true },
     { header: 'Operador', field: 'Operador', type: 'string' },
     { header: 'Cuenta', field: 'CuentaR', type: 'string' },
     { header: 'SubCuenta', field: 'SubCuentaR', type: 'string' },
-    { header: 'Tipo', field: 'TipoR', type: 'string' },
-    { header: 'Receptor', field: 'ReceptorR', type: 'string' },
-    { header: 'Emisor', field: 'EmisorR', type: 'string' },
     { header: 'Valor', field: 'ValorR', type: 'decimal', totalize: true },
     {
       header: 'Diferencia',
@@ -236,6 +233,9 @@ export class ConciliaInternaContaComponent
   async reporte(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title: 'Conciliación Interna Contabilidad | SISCO',
+        },
         pageSize: 'LETTER',
         pageOrientation: 'landscape',
         content: [

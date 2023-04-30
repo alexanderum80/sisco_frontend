@@ -11,7 +11,7 @@ import { Subscription, Observable } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { getPreviousMonth } from '../../../shared/models';
+import { getConciliacionMonth } from '../../../shared/models';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +21,7 @@ export class ConciliaUhService {
     tipoCentro: new FormControl('0', { initialValueIsDefault: true }),
     idCentro: new FormControl(null, { initialValueIsDefault: true }),
     tipoEntidad: new FormControl(null, { initialValueIsDefault: true }),
-    periodo: new FormControl(getPreviousMonth(new Date()), {
+    periodo: new FormControl(getConciliacionMonth(new Date()), {
       initialValueIsDefault: true,
     }),
     nota: new FormControl('', { initialValueIsDefault: true }),

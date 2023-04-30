@@ -36,6 +36,14 @@ export function getPreviousMonth(fecha: Date): Date {
     .toDate();
 }
 
+export function getConciliacionMonth(fecha: Date): Date {
+  return fecha.getDate() <= 5
+    ? moment(new Date(fecha.getFullYear(), fecha.getMonth(), 0))
+        .startOf('month')
+        .toDate()
+    : fecha;
+}
+
 export function getMonthName(month: number): string {
   let monthName: string = '';
 

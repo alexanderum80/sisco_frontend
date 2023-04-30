@@ -1,5 +1,8 @@
-import { IConciliaContaInternaQueryResponse } from './../models/concilia-interna-conta.model';
-import { getPreviousMonth } from '../../../shared/models/date-range';
+import {
+  IConciliaContaInterna,
+  IConciliaContaInternaQueryResponse,
+} from './../models/concilia-interna-conta.model';
+import { getConciliacionMonth } from '../../../shared/models/date-range';
 import { numberFormatter } from './../../../shared/models/number';
 import { SelectItem } from 'primeng/api';
 import { conciliaInternaContaApi } from './../graphql/concilia-interna-conta.api';
@@ -16,7 +19,7 @@ export class ConciliaInternaContaService {
     idDivision: new FormControl('', { initialValueIsDefault: true }),
     idUnidad: new FormControl(null, { initialValueIsDefault: true }),
     idUnidadOD: new FormControl(null, { initialValueIsDefault: true }),
-    periodo: new FormControl(getPreviousMonth(new Date()), {
+    periodo: new FormControl(getConciliacionMonth(new Date()), {
       initialValueIsDefault: true,
     }),
     tipoCentro: new FormControl('1', { initialValueIsDefault: true }),
@@ -79,7 +82,7 @@ export class ConciliaInternaContaService {
   }
 
   public async getConciliacionDefinition(
-    conciliacionData: any[]
+    conciliacionData: IConciliaContaInterna[]
   ): Promise<any[]> {
     const definition = [];
 
@@ -90,7 +93,9 @@ export class ConciliaInternaContaService {
     return definition;
   }
 
-  private _getConciliaInternaContaTable(conciliaInternaConta: any): any[] {
+  private _getConciliaInternaContaTable(
+    conciliaInternaConta: IConciliaContaInterna[]
+  ): any[] {
     let _totalValorE = 0;
     let _totalValorR = 0;
     let _totalDiferencia = 0;
@@ -99,18 +104,9 @@ export class ConciliaInternaContaService {
 
     returnValue.push({
       table: {
-        widths: [35, 35, 30, 40, 40, 70, 20, 35, 35, 30, 40, 40, 70, 70],
+        widths: [50, 50, 50, 50, 50, 80, 20, 50, 50, 80, 80],
         body: [
           [
-            {
-              text: 'Cuenta',
-              style: 'tableHeader',
-            },
-            {
-              text: 'SubCta',
-              style: 'tableHeader',
-              alignment: 'center',
-            },
             {
               text: 'Tipo',
               style: 'tableHeader',
@@ -121,6 +117,14 @@ export class ConciliaInternaContaService {
             },
             {
               text: 'Receptor',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Cuenta',
+              style: 'tableHeader',
+            },
+            {
+              text: 'SubCta',
               style: 'tableHeader',
             },
             {
@@ -141,18 +145,6 @@ export class ConciliaInternaContaService {
               style: 'tableHeader',
             },
             {
-              text: 'Tipo',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Receptor',
-              style: 'tableHeader',
-            },
-            {
-              text: 'Emisor',
-              style: 'tableHeader',
-            },
-            {
               text: 'Valor',
               style: 'tableHeader',
               alignment: 'right',
@@ -163,24 +155,21 @@ export class ConciliaInternaContaService {
               alignment: 'right',
             },
           ],
-          ...conciliaInternaConta.map((p: any) => {
+          ...conciliaInternaConta.map((p: IConciliaContaInterna) => {
             _totalValorE += p.ValorE;
             _totalValorR += p.ValorR;
             _totalDiferencia += p.Diferencia;
 
             return [
+              p.Tipo,
+              p.Emisor,
+              p.Receptor,
               p.CuentaE,
               p.SubCuentaE,
-              p.TipoE,
-              p.EmisorE,
-              p.ReceptorE,
               { text: numberFormatter.format(p.ValorE), alignment: 'right' },
               p.Operador,
               p.CuentaR,
               p.SubCuentaR,
-              p.TipoR,
-              p.ReceptorR,
-              p.EmisorR,
               { text: numberFormatter.format(p.ValorR), alignment: 'right' },
               {
                 text: numberFormatter.format(p.Diferencia),
@@ -214,18 +203,6 @@ export class ConciliaInternaContaService {
               text: numberFormatter.format(_totalValorE),
               style: 'tableHeader',
               alignment: 'right',
-            },
-            {
-              text: '',
-              style: 'tableHeader',
-            },
-            {
-              text: '',
-              style: 'tableHeader',
-            },
-            {
-              text: '',
-              style: 'tableHeader',
             },
             {
               text: '',
