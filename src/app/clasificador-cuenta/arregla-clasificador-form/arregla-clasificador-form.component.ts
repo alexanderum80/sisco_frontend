@@ -12,6 +12,7 @@ import {
   ChangeDetectorRef,
   AfterContentChecked,
 } from '@angular/core';
+import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
 
 @Component({
   selector: 'app-arregla-clasificador-form',
@@ -58,22 +59,20 @@ export class ArreglaClasificadorFormComponent
   private _getUnidades(): void {
     try {
       this._clasificadorCuentasSvc.subscription.push(
-        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
-          const result = res.getAllUnidadesByUsuario;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe({
+          next: res => {
+            const data = res.getAllUnidadesByUsuario;
 
-          if (!result.success) {
-            this._swalSvc.error(result.error);
-            return;
-          }
-
-          this.centrosValues = result.data.map(
-            (u: { IdUnidad: string; Nombre: string }) => {
+            this.centrosValues = data.map((unidad: IUnidades) => {
               return {
-                value: u.IdUnidad,
-                label: u.Nombre,
+                value: unidad.IdUnidad,
+                label: unidad.Nombre,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {

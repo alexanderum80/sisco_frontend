@@ -68,20 +68,8 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
             this.loading = false;
 
             const result = res.getAllContaConexiones;
-            if (!result.success) {
-              return SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: result.error,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-              });
-            }
 
-            this.conexionesRodas = sortBy(result.data, [
-              'IdDivision',
-              'IdUnidad',
-            ]);
+            this.conexionesRodas = sortBy(result, ['IdDivision', 'IdUnidad']);
           },
           error: err => {
             this.loading = false;
@@ -155,46 +143,43 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
     try {
       if (this.hasAdminPermission()) {
         this._conexionRodasSvc.subscription.push(
-          this._conexionRodasSvc.loadConexionById(data.Id).subscribe(res => {
-            const result = res.getContaConexionById;
+          this._conexionRodasSvc.loadConexionById(data.Id).subscribe({
+            next: res => {
+              const data = res.getContaConexionById;
 
-            if (!result.success) {
+              const dataInput = {
+                id: data.Id,
+                idUnidad: data.IdUnidad,
+                consolidado: data.Consolidado,
+                ip: data.IpRodas,
+                baseDatos: data.BaseDatos,
+                idDivision: data.IdDivision,
+              };
+              this._conexionRodasSvc.fg.patchValue(dataInput);
+
+              this._dinamicDialogSvc.open(
+                'Modificar Conexión al Rodas',
+                ConexionRodasFormComponent
+              );
+              this._conexionRodasSvc.subscription.push(
+                this._dinamicDialogSvc.ref.onClose.subscribe(
+                  (message: string) => {
+                    if (message) {
+                      this._toastrSvc.success(message, 'Satisfactorio');
+                    }
+                  }
+                )
+              );
+            },
+            error: err => {
               return SweetAlert.fire({
                 icon: 'error',
                 title: 'ERROR',
-                text: result.error,
+                html: err,
                 showConfirmButton: true,
                 confirmButtonText: 'Aceptar',
               });
-            }
-
-            const data = result.data;
-
-            const dataInput = {
-              id: data.Id,
-              idUnidad: data.IdUnidad,
-              consolidado: data.Consolidado,
-              ip: data.IpRodas,
-              usuario: data.Usuario,
-              contrasena: data.Contrasena,
-              baseDatos: data.BaseDatos,
-              idDivision: data.IdDivision,
-            };
-            this._conexionRodasSvc.fg.patchValue(dataInput);
-
-            this._dinamicDialogSvc.open(
-              'Modificar Conexión al Rodas',
-              ConexionRodasFormComponent
-            );
-            this._conexionRodasSvc.subscription.push(
-              this._dinamicDialogSvc.ref.onClose.subscribe(
-                (message: string) => {
-                  if (message) {
-                    this._toastrSvc.success(message, 'Satisfactorio');
-                  }
-                }
-              )
-            );
+            },
           })
         );
       }

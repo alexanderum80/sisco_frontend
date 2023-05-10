@@ -20,6 +20,7 @@ export class DropdownComponent {
   @Input() disabled = false;
   @Input() filter = true;
   @Input() showClear = true;
+  @Input() isLoading = false;
   @Input() optionsValues: SelectItem[] = [];
   @Input() tooltip: string = '';
   @Input() tooltipPosition: 'right' | 'left' | 'top' | 'bottom' = 'right';

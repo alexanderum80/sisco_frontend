@@ -1,12 +1,8 @@
 query GetUnidadesByIdDivision($idDivision: Int!) {
     getUnidadesByIdDivision(idDivision: $idDivision) {
-        success
-        data {
-            IdUnidad
-            Nombre
-            IdSubdivision
-            IdDivision
-        }
-        error
+        IdUnidad
+        Nombre
+        IdSubdivision
+        IdDivision
     }
 }

@@ -6,6 +6,7 @@ import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/
 import { SelectItem } from 'primeng/api';
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
 
 @Component({
   selector: 'app-cuentas-no-permitidas-form',
@@ -38,21 +39,20 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
 
   private _loadCentros(): void {
     try {
-      this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
-        const result = res.getAllUnidadesByUsuario;
+      this._unidadesSvc.getAllUnidadesByUsuario().subscribe({
+        next: res => {
+          const data = res.getAllUnidadesByUsuario;
 
-        if (!result.success) {
-          throw new Error(result.error);
-        }
-
-        this.centrosValues = result.data.map(
-          (u: { IdUnidad: string; Nombre: string }) => {
+          this.centrosValues = data.map((u: IUnidades) => {
             return {
               value: String(u.IdUnidad),
               label: u.Nombre,
             };
-          }
-        );
+          });
+        },
+        error: err => {
+          this._swalSvc.error(err);
+        },
       });
     } catch (err: any) {
       this._swalSvc.error(err);

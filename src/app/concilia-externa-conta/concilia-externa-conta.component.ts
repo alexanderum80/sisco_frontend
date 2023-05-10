@@ -433,21 +433,17 @@ export class ConciliaExternaContaComponent
     this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe({
       next: responseD => {
         this.loadingUnidades = false;
-        const result = responseD.getUnidadesByIdDivision;
-
-        if (!result.success) {
-          return this._swalSvc.error(result.error);
-        }
+        const data = responseD.getUnidadesByIdDivision;
 
         if (origenDestino) {
-          result.data.map((u: any) => {
+          data.map((u: any) => {
             this.unidadesODValues.push({
               value: u,
               label: u.Nombre,
             });
           });
         } else {
-          result.data.map((u: any) => {
+          data.map((u: any) => {
             this.unidadesValues.push({
               value: u,
               label: u.Nombre,

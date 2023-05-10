@@ -117,16 +117,24 @@ export class ParteAtrasoComponent
       this.loading = true;
 
       this._parteAtrasoSvc.subscription.push(
-        this._parteAtrasoSvc.calcular().subscribe(res => {
-          this.loading = false;
-          const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } = res;
+        this._parteAtrasoSvc.calcular().subscribe({
+          next: res => {
+            this.loading = false;
 
-          if (!_parteAtrasos.success || !_datosIdGAM.success) {
-            this._swalSvc.error(_parteAtrasos.error || _datosIdGAM.error);
-          }
+            const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } =
+              res;
 
-          this.dataSourceParteAtraso = JSON.parse(_parteAtrasos.data);
-          this.dataSourceDatosIdGam = JSON.parse(_datosIdGAM.data);
+            if (!_parteAtrasos.success || !_datosIdGAM.success) {
+              this._swalSvc.error(_parteAtrasos.error || _datosIdGAM.error);
+            }
+
+            this.dataSourceParteAtraso = JSON.parse(_parteAtrasos.data);
+            this.dataSourceDatosIdGam = JSON.parse(_datosIdGAM.data);
+          },
+          error: err => {
+            this.loading = false;
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {

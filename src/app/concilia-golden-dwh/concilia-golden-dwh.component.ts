@@ -256,20 +256,20 @@ export class ConciliaGoldenDwhComponent
       }
 
       this._conciliaDWHSvc.subscription.push(
-        this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe(res => {
-          const result = res.getUnidadesByIdDivision;
+        this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe({
+          next: res => {
+            this.unidadesList = [...res.getUnidadesByIdDivision];
 
-          if (!result.success) {
-            return this._swalSvc.error(result.error);
-          }
-
-          this.unidadesList = result.data;
-          this.centrosValues = this.unidadesList.map(d => {
-            return {
-              value: d.IdUnidad,
-              label: d.Nombre,
-            };
-          });
+            this.centrosValues = this.unidadesList.map(d => {
+              return {
+                value: d.IdUnidad,
+                label: d.Nombre,
+              };
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {

@@ -157,28 +157,29 @@ export class ConciliaOperacionesDwhComponent
       this._conciliarDWHSvc.subscription.push(
         this._subdivisionesSvc
           .getSubdivisionesByIdDivision(idDivision)
-          .subscribe(res => {
-            const result = res.getSubdivisionesByIdDivision;
+          .subscribe({
+            next: res => {
+              const data = res.getSubdivisionesByIdDivision;
 
-            if (!result.success) {
-              return this._swalSvc.error(result.error);
-            }
-
-            if (origenDestino) {
-              this.subdivisionesODValues = result.data.map((d: any) => {
-                return {
-                  value: d.IdSubdivision,
-                  label: d.IdSubdivision + '-' + d.Subdivision,
-                };
-              });
-            } else {
-              this.subdivisionesValues = result.data.map((d: any) => {
-                return {
-                  value: d.IdSubdivision,
-                  label: d.IdSubdivision + '-' + d.Subdivision,
-                };
-              });
-            }
+              if (origenDestino) {
+                this.subdivisionesODValues = data.map((d: any) => {
+                  return {
+                    value: d.IdSubdivision,
+                    label: d.IdSubdivision + '-' + d.Subdivision,
+                  };
+                });
+              } else {
+                this.subdivisionesValues = data.map((d: any) => {
+                  return {
+                    value: d.IdSubdivision,
+                    label: d.IdSubdivision + '-' + d.Subdivision,
+                  };
+                });
+              }
+            },
+            error: err => {
+              this._swalSvc.error(err);
+            },
           })
       );
     } catch (err: any) {
@@ -196,31 +197,30 @@ export class ConciliaOperacionesDwhComponent
       }
 
       this._conciliarDWHSvc.subscription.push(
-        this._unidadesSvc
-          .getUnidadesByIdSubdivision(idSubdivision)
-          .subscribe(res => {
-            const result = res.getUnidadesByIdSubdivision;
-
-            if (!result.success) {
-              return this._swalSvc.error(result.error);
-            }
+        this._unidadesSvc.getUnidadesByIdSubdivision(idSubdivision).subscribe({
+          next: res => {
+            const data = res.getUnidadesByIdSubdivision;
 
             if (origenDestino) {
-              this.unidadesODValues = result.data.map((u: any) => {
+              this.unidadesODValues = data.map((u: any) => {
                 return {
                   value: u.IdUnidad,
                   label: u.Nombre,
                 };
               });
             } else {
-              this.unidadesValues = result.data.map((u: any) => {
+              this.unidadesValues = data.map((u: any) => {
                 return {
                   value: u.IdUnidad,
                   label: u.Nombre,
                 };
               });
             }
-          })
+          },
+          error: err => {
+            return this._swalSvc.error(err);
+          },
+        })
       );
     } catch (err: any) {
       this._swalSvc.error(err);

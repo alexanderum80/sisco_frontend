@@ -2,6 +2,7 @@ import { formatDate } from '@angular/common';
 import {
   DateFormatEnum,
   LocaleFormatEnum,
+  getConciliacionMonth,
 } from './../../../shared/models/date-range';
 import { SelectItem } from 'primeng/api';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -20,10 +21,9 @@ const estadisticaQuery = require('graphql-tag/loader!../graphql/estadistica-cont
 export class EstadisticaContabilidadService {
   fg: FormGroup = new FormGroup({
     idDivision: new FormControl('', { initialValueIsDefault: true }),
-    periodo: new FormControl(
-      new Date(Number(moment().year()), Number(moment().month()), 0),
-      { initialValueIsDefault: true }
-    ),
+    periodo: new FormControl(getConciliacionMonth(new Date()), {
+      initialValueIsDefault: true,
+    }),
   });
 
   subscription: Subscription[] = [];

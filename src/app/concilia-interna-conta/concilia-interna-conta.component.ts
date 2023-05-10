@@ -19,6 +19,7 @@ import {
 import { cloneDeep } from 'lodash';
 import * as moment from 'moment';
 import { ExcelService } from '../shared/helpers/excel.service';
+import { IUnidades } from '../unidades/shared/models/unidades.model';
 
 @Component({
   selector: 'app-concilia-interna-conta',
@@ -136,8 +137,8 @@ export class ConciliaInternaContaComponent
         if (value) {
           this._unidadesSvc.getUnidadesByIdDivision(value).subscribe({
             next: res => {
-              this.unidadesValues = res.getUnidadesByIdDivision.data.map(
-                (u: { IdUnidad: string; Nombre: string }) => {
+              this.unidadesValues = res.getUnidadesByIdDivision.map(
+                (u: IUnidades) => {
                   return {
                     value: u.IdUnidad,
                     label: u.Nombre,

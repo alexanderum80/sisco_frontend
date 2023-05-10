@@ -8,6 +8,7 @@ import { FormGroup } from '@angular/forms';
 import { ActionClicked } from './../../shared/models/list-items';
 import { Component, OnInit } from '@angular/core';
 import { CompararValoresService } from '../shared/services/comparar-valores.service';
+import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
 
 @Component({
   selector: 'app-comparar-valores-form',
@@ -48,21 +49,20 @@ export class CompararValoresFormComponent implements OnInit {
   private _loadCentros(): void {
     try {
       this._compararValoresSvc.subscription.push(
-        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
-          const result = res.getAllUnidadesByUsuario;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe({
+          next: res => {
+            const data = res.getAllUnidadesByUsuario;
 
-          if (!result.success) {
-            throw new Error(result.error);
-          }
-
-          this.centrosValues = result.data.map(
-            (u: { IdUnidad: number; Nombre: string }) => {
+            this.centrosValues = data.map((u: IUnidades) => {
               return {
                 value: u.IdUnidad,
                 label: u.Nombre,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {

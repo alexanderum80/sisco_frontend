@@ -1,14 +1,10 @@
 query GetAllUnidades {
     getAllUnidades {
-        success
-        data {
-            IdUnidad
-            Nombre
-            IdSubdivision
-            Subdivision
-            IdDivision
-            Division
-        }
-        error
+        IdUnidad
+        Nombre
+        IdSubdivision
+        Subdivision
+        IdDivision
+        Division
     }
 }

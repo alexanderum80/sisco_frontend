@@ -1,19 +1,15 @@
 query GetAllContaConexiones {
     getAllContaConexiones {
-        success
-        data {
-            Id
+        Id
+        IdUnidad
+        Unidad {
             IdUnidad
-            Unidad {
-              IdUnidad
-              Nombre
-              Division
-            }
-            IdDivision
-            Consolidado
-            IpRodas
-            BaseDatos
+            Nombre
+            Division
         }
-        error
+        IdDivision
+        Consolidado
+        IpRodas
+        BaseDatos
     }
 }

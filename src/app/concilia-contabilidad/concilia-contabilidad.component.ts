@@ -25,6 +25,8 @@ import { toNumber } from 'lodash';
 import { SubdivisionesService } from '../shared/services/subdivisiones.service';
 import { DivisionesService } from '../shared/services/divisiones.service';
 import * as moment from 'moment';
+import { IUnidades } from '../unidades/shared/models/unidades.model';
+import { ISubdivisiones } from '../shared/models';
 
 const DISPLAYED_COLUMNS_CONSULTAS: ITableColumns[] = [
   { header: 'Cuenta', field: 'Cuenta', type: 'string' },
@@ -282,27 +284,27 @@ export class ConciliaContabilidadComponent
   private _getUnidades(): void {
     try {
       this._conciliaContabSvc.subscription.push(
-        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
-          this.loadingCentros = false;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe({
+          next: res => {
+            this.loadingCentros = false;
 
-          const result = res.getAllUnidadesByUsuario;
+            const data = res.getAllUnidadesByUsuario;
 
-          if (!result.success) {
-            this._swalSvc.error(result.error);
-            return;
-          }
-
-          this.centrosValues = result.data.map(
-            (u: { IdUnidad: string; Nombre: string }) => {
+            this.centrosValues = data.map((u: IUnidades) => {
               return {
                 value: u.IdUnidad,
                 label: u.Nombre,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this.loadingCentros = false;
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
+      this.loadingCentros = false;
       this._swalSvc.error(err);
     }
   }
@@ -349,21 +351,22 @@ export class ConciliaContabilidadComponent
           this._conciliaContabSvc.subscription.push(
             this._unidadesSvc
               .getUnidadesByIdSubdivision(subordinadoA)
-              .subscribe(res => {
-                const result = res.getUnidadesByIdSubdivision;
+              .subscribe({
+                next: res => {
+                  const data = res.getUnidadesByIdSubdivision;
 
-                if (!result.success) {
-                  this._swalSvc.error(result.error);
-                }
-
-                this.dataSourceCentrosSubordinados = result.data.map(
-                  (u: { IdUnidad: string; Nombre: string }) => {
-                    return {
-                      IdCentro: u.IdUnidad,
-                      Nombre: u.Nombre,
-                    };
-                  }
-                );
+                  this.dataSourceCentrosSubordinados = data.map(
+                    (u: IUnidades) => {
+                      return {
+                        IdCentro: u.IdUnidad,
+                        Nombre: u.Nombre,
+                      };
+                    }
+                  );
+                },
+                error: err => {
+                  this._swalSvc.error(err);
+                },
               })
           );
           break;
@@ -371,21 +374,22 @@ export class ConciliaContabilidadComponent
           this._conciliaContabSvc.subscription.push(
             this._subdivisionesSvc
               .getSubdivisionesByIdDivision(subordinadoA)
-              .subscribe(res => {
-                const result = res.getSubdivisionesByIdDivision;
+              .subscribe({
+                next: res => {
+                  const data = res.getSubdivisionesByIdDivision;
 
-                if (!result.success) {
-                  this._swalSvc.error(result.error);
-                }
-
-                this.dataSourceCentrosSubordinados = result.data.map(
-                  (u: { IdSubdivision: string; Subdivision: string }) => {
-                    return {
-                      IdCentro: u.IdSubdivision,
-                      Nombre: u.IdSubdivision + '-' + u.Subdivision,
-                    };
-                  }
-                );
+                  this.dataSourceCentrosSubordinados = data.map(
+                    (u: ISubdivisiones) => {
+                      return {
+                        IdCentro: u.IdSubdivision,
+                        Nombre: u.Subdivision,
+                      };
+                    }
+                  );
+                },
+                error: err => {
+                  this._swalSvc.error(err);
+                },
               })
           );
           break;

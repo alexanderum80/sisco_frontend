@@ -18,6 +18,7 @@ import {
   AfterContentChecked,
 } from '@angular/core';
 import * as moment from 'moment';
+import { IUnidades } from '../unidades/shared/models/unidades.model';
 
 @Component({
   selector: 'app-concilia-uh',
@@ -168,22 +169,20 @@ export class ConciliaUhComponent
   private _getUnidades(): void {
     try {
       this._conciliaUhSvc.subscription.push(
-        this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
-          const result = res.getAllUnidadesByUsuario;
+        this._unidadesSvc.getAllUnidadesByUsuario().subscribe({
+          next: res => {
+            const data = res.getAllUnidadesByUsuario;
 
-          if (!result.success) {
-            this._swalSvc.error(result.error);
-            return;
-          }
-
-          this.centrosValues = result.data.map(
-            (u: { IdUnidad: string; Nombre: string }) => {
+            this.centrosValues = data.map((u: IUnidades) => {
               return {
                 value: u.IdUnidad,
                 label: u.Nombre,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {

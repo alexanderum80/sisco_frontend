@@ -35,8 +35,13 @@ export class ConexionRodasService {
               query: conexionRodasApi.all,
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(res => {
-              subscriber.next(res.data);
+            .valueChanges.subscribe({
+              next: res => {
+                subscriber.next(res.data);
+              },
+              error: err => {
+                subscriber.error(err);
+              },
             })
         );
       } catch (err: any) {
@@ -54,9 +59,14 @@ export class ConexionRodasService {
             variables: { id },
             fetchPolicy: 'network-only',
           })
-          .subscribe(res => {
-            subscriber.next(res.data);
-            subscriber.complete();
+          .subscribe({
+            next: res => {
+              subscriber.next(res.data);
+              subscriber.complete();
+            },
+            error: err => {
+              subscriber.error(err);
+            },
           })
       );
     });

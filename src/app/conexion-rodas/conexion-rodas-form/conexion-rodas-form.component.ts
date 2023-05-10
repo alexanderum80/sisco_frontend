@@ -136,21 +136,22 @@ export class ConexionRodasFormComponent
       if (!idDivision) return;
 
       this.subscription.push(
-        this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe(res => {
-          const result = res.getUnidadesByIdDivision;
+        this._unidadesSvc.getUnidadesByIdDivision(idDivision).subscribe({
+          next: res => {
+            const data = res.getUnidadesByIdDivision;
 
-          if (!result.success) {
-            return this._swalSvc.error(result.error);
-          }
-
-          this.unidadesValues = result.data.map(
-            (u: { IdUnidad: number; Nombre: string }) => {
-              return {
-                value: u.IdUnidad,
-                label: u.Nombre,
-              };
-            }
-          );
+            this.unidadesValues = data.map(
+              (u: { IdUnidad: number; Nombre: string }) => {
+                return {
+                  value: u.IdUnidad,
+                  label: u.Nombre,
+                };
+              }
+            );
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {

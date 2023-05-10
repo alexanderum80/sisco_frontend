@@ -8,6 +8,8 @@ import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/
 import { FormGroup } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { SelectItem } from 'primeng/api';
+import { SweetalertService } from 'src/app/shared/helpers/sweetalert.service';
+import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
 
 @Component({
   selector: 'app-clasificador-entidades-form',
@@ -26,6 +28,7 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
     private _dinamicDialogSvc: DinamicDialogService,
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService,
     private _unidadesSvc: UnidadesService,
+    private _swalSvc: SweetalertService,
     private _tipoEntidadesSvc: TipoEntidadesService
   ) {}
 
@@ -42,26 +45,20 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
 
   private _loadUnidades(): void {
     this._clasificadorEntidadesSvc.subscription.push(
-      this._unidadesSvc.getAllUnidadesByUsuario().subscribe(res => {
-        const result = res.getAllUnidadesByUsuario;
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar',
-          });
-        }
+      this._unidadesSvc.getAllUnidadesByUsuario().subscribe({
+        next: res => {
+          const data = res.getAllUnidadesByUsuario;
 
-        this.unidadesValues = result.data.map(
-          (unidad: { IdUnidad: string; Nombre: string }) => {
+          this.unidadesValues = data.map((unidad: IUnidades) => {
             return {
               value: unidad.IdUnidad,
               label: unidad.Nombre,
             };
-          }
-        );
+          });
+        },
+        error: err => {
+          this._swalSvc.error(err);
+        },
       })
     );
   }
