@@ -102,8 +102,13 @@ export class ConciliaContabilidadService {
           variables: { conciliaContaInput },
           fetchPolicy: 'network-only',
         })
-        .subscribe(res => {
-          subscriber.next(res.data);
+        .subscribe({
+          next: res => {
+            subscriber.next(res.data);
+          },
+          error: err => {
+            subscriber.error(err);
+          },
         });
     });
   }

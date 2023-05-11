@@ -223,18 +223,16 @@ export class ConciliaAftComponent
 
   private _updateTipoEntidad(idUnidad: number): void {
     this._conciliaAftSvc.subscription.push(
-      this._clasifEntidadesSvc
-        .loadClasificadorEntidad(idUnidad)
-        .subscribe(res => {
+      this._clasifEntidadesSvc.loadClasificadorEntidad(idUnidad).subscribe({
+        next: res => {
           const result = res.getClasificadorEntidad;
 
-          if (!result.success) {
-            this._swalSvc.error(result.error);
-            return;
-          }
-
-          this.fg.controls['tipoEntidad'].setValue(result.data.IdTipoEntidad);
-        })
+          this.fg.controls['tipoEntidad'].setValue(result.IdTipoEntidad);
+        },
+        error: err => {
+          this._swalSvc.error(err);
+        },
+      })
     );
   }
 

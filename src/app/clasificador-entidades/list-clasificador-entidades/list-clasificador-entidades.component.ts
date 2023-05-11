@@ -9,11 +9,11 @@ import {
   ActionClicked,
 } from './../../shared/models/list-items';
 import { ClasificadorEntidadesFormComponent } from './../clasificador-entidades-form/clasificador-entidades-form.component';
-import SweetAlert from 'sweetalert2';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
 import { isArray } from 'lodash';
+import { SweetalertService } from 'src/app/shared/helpers/sweetalert.service';
 
 @Component({
   selector: 'app-list-clasificador-entidades',
@@ -41,7 +41,8 @@ export class ListClasificadorEntidadesComponent
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _toastrSvc: ToastrService,
-    private _clasificadorEntidadesSvc: ClasificadorEntidadesService
+    private _clasificadorEntidadesSvc: ClasificadorEntidadesService,
+    private _swalSvc: SweetalertService
   ) {
     if (this.hasAdvancedUserPermission()) {
       this.inlineButtons = DefaultInlineButtonsTable;
@@ -62,42 +63,18 @@ export class ListClasificadorEntidadesComponent
             next: res => {
               this.loading = false;
 
-              const result = res.getAllClasificadorEntidades;
-
-              if (!result.success) {
-                return SweetAlert.fire({
-                  icon: 'error',
-                  title: 'ERROR',
-                  text: result.error,
-                  showConfirmButton: true,
-                  confirmButtonText: 'Aceptar',
-                });
-              }
-
-              this.dataSource = result.data;
+              this.dataSource = res.getAllClasificadorEntidades;
             },
             error: err => {
               this.loading = false;
-              SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: err,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-              });
+              this._swalSvc.error(err);
             },
           })
       );
     } catch (err: any) {
       this.loading = false;
 
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -145,13 +122,7 @@ export class ListClasificadorEntidadesComponent
         );
       }
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -160,105 +131,80 @@ export class ListClasificadorEntidadesComponent
       this._clasificadorEntidadesSvc.subscription.push(
         this._clasificadorEntidadesSvc
           .loadClasificadorEntidad(clasificadorEntidad.IdUnidad)
-          .subscribe(res => {
-            const result = res.getClasificadorEntidad;
+          .subscribe({
+            next: res => {
+              const data = res.getClasificadorEntidad;
 
-            if (!result.success) {
-              return SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: result.error,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-              });
-            }
+              const inputData = {
+                idUnidad: data.IdUnidad,
+                idTipoEntidad: data.IdTipoEntidad,
+              };
+              this._clasificadorEntidadesSvc.fg.patchValue(inputData);
 
-            const data = result.data;
-
-            const inputData = {
-              idUnidad: data.IdUnidad,
-              idTipoEntidad: data.IdTipoEntidad,
-            };
-            this._clasificadorEntidadesSvc.fg.patchValue(inputData);
-
-            this._dinamicDialogSvc.open(
-              'Modificar Clasificador de Entidad',
-              ClasificadorEntidadesFormComponent
-            );
-            this._clasificadorEntidadesSvc.subscription.push(
-              this._dinamicDialogSvc.ref.onClose.subscribe(
-                (message: string) => {
-                  if (message) {
-                    this._toastrSvc.success(message, 'Satisfactorio');
+              this._dinamicDialogSvc.open(
+                'Modificar Clasificador de Entidad',
+                ClasificadorEntidadesFormComponent
+              );
+              this._clasificadorEntidadesSvc.subscription.push(
+                this._dinamicDialogSvc.ref.onClose.subscribe(
+                  (message: string) => {
+                    if (message) {
+                      this._toastrSvc.success(message, 'Satisfactorio');
+                    }
                   }
-                }
-              )
-            );
+                )
+              );
+            },
+            error: err => {
+              this._swalSvc.error(err);
+            },
           })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
   private _delete(data: any): void {
     try {
       if (this.hasAdvancedUserPermission()) {
-        SweetAlert.fire({
-          icon: 'question',
-          title: '¿Desea Eliminar el Clasificador de Entidad seleccionada?',
-          text: 'No se podrán deshacer los cambios.',
-          showConfirmButton: true,
-          confirmButtonText: 'Sí',
-          showCancelButton: true,
-          cancelButtonText: 'No',
-        }).then(res => {
-          if (res.value) {
-            const IDsToRemove: number[] = !isArray(data)
-              ? [data.Id]
-              : data.map(d => {
-                  return d.Id;
-                });
+        this._swalSvc
+          .question(
+            'No se podrán deshacer los cambios.',
+            '¿Desea Eliminar el Clasificador de Entidad seleccionada?'
+          )
+          .then(res => {
+            if (res === ActionClicked.Yes) {
+              const IDsToRemove: number[] = !isArray(data)
+                ? [data.Id]
+                : data.map(d => {
+                    return d.Id;
+                  });
 
-            this._clasificadorEntidadesSvc.subscription.push(
-              this._clasificadorEntidadesSvc
-                .delete(IDsToRemove)
-                .subscribe(res => {
-                  const result = res.deleteClasificadorEntidad;
+              this._clasificadorEntidadesSvc.subscription.push(
+                this._clasificadorEntidadesSvc.delete(IDsToRemove).subscribe({
+                  next: res => {
+                    const result = res.deleteClasificadorEntidad;
 
-                  if (!result.success) {
-                    return SweetAlert.fire({
-                      icon: 'error',
-                      title: 'ERROR',
-                      text: result.error,
-                      showConfirmButton: true,
-                      confirmButtonText: 'Aceptar',
-                    });
-                  }
+                    if (!result.success) {
+                      this._swalSvc.error(result.error);
+                    }
 
-                  this._toastrSvc.success(
-                    'El Clasificador de Entidad se ha eliminado correctamente.',
-                    'Satisfactorio'
-                  );
+                    this._toastrSvc.success(
+                      'El Clasificador de Entidad se ha eliminado correctamente.',
+                      'Satisfactorio'
+                    );
+                  },
+                  error: err => {
+                    this._swalSvc.error(err);
+                  },
                 })
-            );
-          }
-        });
+              );
+            }
+          });
       }
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 }

@@ -19,7 +19,6 @@ import {
 } from '@angular/core';
 import { MenuItem, SelectItem } from 'primeng/api';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
-import { cloneDeep } from '@apollo/client/utilities';
 import { TabView } from 'primeng/tabview';
 import { toNumber } from 'lodash';
 import { SubdivisionesService } from '../shared/services/subdivisiones.service';
@@ -27,6 +26,14 @@ import { DivisionesService } from '../shared/services/divisiones.service';
 import * as moment from 'moment';
 import { IUnidades } from '../unidades/shared/models/unidades.model';
 import { ISubdivisiones } from '../shared/models';
+import {
+  IConciliaCuadreSistemas,
+  IConciliaInformacionContabilidad,
+  IConciliaReporteClasificador,
+  IConciliaReporteConsulta,
+  IConciliaReporteExpresiones,
+  IConciliaReporteValores,
+} from './shared/models/concilia-contabilidad.model';
 
 const DISPLAYED_COLUMNS_CONSULTAS: ITableColumns[] = [
   { header: 'Cuenta', field: 'Cuenta', type: 'string' },
@@ -123,12 +130,12 @@ export class ConciliaContabilidadComponent
     { header: 'Total', field: 'Total', type: 'decimal' },
   ];
 
-  dataSourceAsientos = [];
-  dataSourceExpresiones = [];
-  dataSourceValores = [];
-  dataSourceCuadreSistemas = [];
-  dataSourceInformacion = [];
-  dataSourceClasificador = [];
+  dataSourceAsientos: IConciliaReporteConsulta[] = [];
+  dataSourceExpresiones: IConciliaReporteExpresiones[] = [];
+  dataSourceValores: IConciliaReporteValores[] = [];
+  dataSourceCuadreSistemas: IConciliaCuadreSistemas[] = [];
+  dataSourceInformacion: IConciliaInformacionContabilidad[] = [];
+  dataSourceClasificador: IConciliaReporteClasificador[] = [];
   dataSourceCentrosSubordinados: any[] = [];
   dataSourceChequeo = [];
 
@@ -427,18 +434,16 @@ export class ConciliaContabilidadComponent
 
   private _updateTipoEntidad(idUnidad: number): void {
     this._conciliaContabSvc.subscription.push(
-      this._clasifEntidadesSvc
-        .loadClasificadorEntidad(idUnidad)
-        .subscribe(res => {
+      this._clasifEntidadesSvc.loadClasificadorEntidad(idUnidad).subscribe({
+        next: res => {
           const result = res.getClasificadorEntidad;
 
-          if (!result.success) {
-            this._swalSvc.error(result.error);
-            return;
-          }
-
-          this.fg.controls['tipoEntidad'].setValue(result.data.IdTipoEntidad);
-        })
+          this.fg.controls['tipoEntidad'].setValue(result.IdTipoEntidad);
+        },
+        error: err => {
+          this._swalSvc.error(err);
+        },
+      })
     );
   }
 
@@ -459,22 +464,18 @@ export class ConciliaContabilidadComponent
 
             const result = res.conciliaContabilidad;
 
-            if (!result.success) {
-              this._swalSvc.error(result.error);
-            }
+            this.dataSourceClasificador = [...result.ReporteClasificador];
 
-            this.dataSourceClasificador =
-              JSON.parse(result.data.ReporteClasificador.data) || [];
-            this.dataSourceAsientos =
-              cloneDeep(JSON.parse(result.data.ReporteConsultas.data)) || [];
-            this.dataSourceExpresiones =
-              cloneDeep(JSON.parse(result.data.ReporteExpresiones.data)) || [];
-            this.dataSourceValores =
-              cloneDeep(JSON.parse(result.data.ReporteValores.data)) || [];
-            this.dataSourceCuadreSistemas =
-              cloneDeep(JSON.parse(result.data.CuadreSistemas.data)) || [];
-            this.dataSourceInformacion =
-              cloneDeep(JSON.parse(result.data.Informacion.data)) || [];
+            if (this.dataSourceClasificador.length)
+              return this._swalSvc.error(
+                'Usted tiene errores en el Clasificador, lo que conlleva a que no pueda terminar el análisis, ni entregar el balance a nivel superior. <br>Vaya a la pestaña Análisis del Clasificador y Corrija estos errores.'
+              );
+
+            this.dataSourceAsientos = [...result.ReporteConsultas];
+            this.dataSourceExpresiones = [...result.ReporteExpresiones];
+            this.dataSourceValores = [...result.ReporteValores];
+            this.dataSourceCuadreSistemas = [...result.CuadreSistemas];
+            this.dataSourceInformacion = [...result.Informacion];
 
             if (
               this.dataSourceCuadreSistemas.filter(
