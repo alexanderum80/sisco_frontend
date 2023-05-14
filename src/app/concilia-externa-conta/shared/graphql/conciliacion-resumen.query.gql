@@ -1,6 +1,6 @@
 query GetConciliacionExternaContabResumen($annio: Int!, $mes: Int!) {
   getConciliacionExternaContabResumen(annio: $annio, mes: $mes) {
-    Annio
+    Anno
     Mes
     DivisionEmisor
     ValorEmisor

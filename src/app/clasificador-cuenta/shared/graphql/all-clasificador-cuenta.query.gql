@@ -1,32 +1,28 @@
 query GetAllClasificadorCuentas($tipo: Int) {
-  getAllClasificadorCuentas(tipo: $tipo) {
-    success
-    data {
-      TipoClasificador
-      Cuenta
-      SubCuenta
-      Nombre
-      Naturaleza
-      Tipo_Analisis_1
-      Tipo_Analisis_2
-      Tipo_Analisis_3
-      Tipo_Analisis_4
-      Tipo_Analisis_5
-      Obligacion
-      Tipo_Moneda
-      Grupo
-      Clase
-      Categoria
-      Clasificacion
-      Tipo
-      Estado
-      Tipo_Analisis_1_Cons
-      Tipo_Analisis_2_Cons
-      Tipo_Analisis_3_Cons
-      Tipo_Analisis_4_Cons
-      Tipo_Analisis_5_Cons
-      SeUtiliza
+    getAllClasificadorCuentas(tipo: $tipo) {
+        TipoClasificador
+        Cuenta
+        SubCuenta
+        Nombre
+        Naturaleza
+        Tipo_Analisis_1
+        Tipo_Analisis_2
+        Tipo_Analisis_3
+        Tipo_Analisis_4
+        Tipo_Analisis_5
+        Obligacion
+        Tipo_Moneda
+        Grupo
+        Clase
+        Categoria
+        Clasificacion
+        Tipo
+        Estado
+        Tipo_Analisis_1_Cons
+        Tipo_Analisis_2_Cons
+        Tipo_Analisis_3_Cons
+        Tipo_Analisis_4_Cons
+        Tipo_Analisis_5_Cons
+        SeUtiliza
     }
-    error
-  }
 }

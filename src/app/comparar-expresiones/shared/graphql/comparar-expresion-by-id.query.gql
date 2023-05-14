@@ -1,17 +1,13 @@
 query GetComprobarExpresionById($id: Int!) {
     getComprobarExpresionById(id: $id) {
-        success
-        data {
-            Id
-            IdExpresion
-            IdOperador
-            IdExpresionC
-            Centro
-            Complejo
-            Con
-            Centralizada
-            IdDivision
-        }
-        error
+        Id
+        IdExpresion
+        IdOperador
+        IdExpresionC
+        Centro
+        Complejo
+        Con
+        Centralizada
+        IdDivision
     }
 }

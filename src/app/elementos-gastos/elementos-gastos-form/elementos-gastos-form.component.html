@@ -38,7 +38,8 @@
         [optionsValues]="cuentasValues"
         placeholder="&lt;Cuentas Asociadas&gt;"
         [required]="true"
-        [filter]="true"></png-multi-select>
+        [filter]="true"
+        [isLoading]="loadingCuentas"></png-multi-select>
     </div>
     <div>
       <png-multi-select
@@ -48,9 +49,10 @@
         label="Tipos de Entidad"
         labelWidth="90"
         [optionsValues]="tipoEntidadValues"
-        placeholder="&lt;Cuentas Asociadas&gt;"
+        placeholder="&lt;Tipos de Entidad&gt;"
         [required]="true"
-        [filter]="true"></png-multi-select>
+        [filter]="true"
+        [isLoading]="loadingTipoEntidad"></png-multi-select>
     </div>
     <div>
       <png-dropdown
@@ -63,7 +65,8 @@
         placeholder="&lt;Epígrafe&gt;"
         [required]="true"
         [filter]="true"
-        [showClear]="true"></png-dropdown>
+        [showClear]="true"
+        [isLoading]="loadingEpigrafes"></png-dropdown>
     </div>
   </form>
 </app-add-edit-item>

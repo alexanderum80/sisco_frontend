@@ -54,21 +54,20 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
   private _getCompararValores(): void {
     try {
       this._compararValoresSvc.subscription.push(
-        this._compararValoresSvc.loadAll().subscribe(res => {
-          this.loading = false;
+        this._compararValoresSvc.loadAll().subscribe({
+          next: res => {
+            this.loading = false;
 
-          const result = res.getAllComprobarValores;
-
-          if (result.success === false) {
-            return this._swalSvc.error(
-              `Ocurrió el siguiente error: ${result.error}`
-            );
-          }
-
-          this.compararValores = cloneDeep(result.data);
+            this.compararValores = cloneDeep(res.getAllComprobarValores);
+          },
+          error: err => {
+            this.loading = false;
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
+      this.loading = false;
       this._swalSvc.error(err);
     }
   }
@@ -112,38 +111,41 @@ export class ListCompararValoresComponent implements OnInit, OnDestroy {
     try {
       this._compararValoresSvc.fg.reset();
       this._compararValoresSvc.subscription.push(
-        this._compararValoresSvc.loadOne(data.Id).subscribe(res => {
-          const result = res.getComprobarValorById;
+        this._compararValoresSvc.loadOne(data.Id).subscribe({
+          next: res => {
+            const result = res.getComprobarValorById;
 
-          if (!result.success) {
-            return this._swalSvc.error(result.error);
-          }
+            const inputValue = {
+              id: result.Id,
+              centro: result.IdCentro,
+              expresion: result.IdExpresion,
+              operador: result.IdOperador,
+              valor: result.Valor,
+              division: result.IdDivision,
+              consolidado: result.Consolidado,
+              activo: result.Activo,
+            };
 
-          const inputValue = {
-            id: result.data.Id,
-            centro: result.data.IdCentro,
-            expresion: result.data.IdExpresion,
-            operador: result.data.IdOperador,
-            valor: result.data.Valor,
-            division: result.data.IdDivision,
-            consolidado: result.data.Consolidado,
-            activo: result.data.Activo,
-          };
+            this._compararValoresSvc.fg.patchValue(inputValue);
 
-          this._compararValoresSvc.fg.patchValue(inputValue);
-
-          this._dinamicDialogSvc.open(
-            'Editar Comparación de Valores',
-            CompararValoresFormComponent,
-            '400px'
-          );
-          this._compararValoresSvc.subscription.push(
-            this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-              if (message) {
-                this._toastrSvc.success(message, 'Satisfactorio');
-              }
-            })
-          );
+            this._dinamicDialogSvc.open(
+              'Editar Comparación de Valores',
+              CompararValoresFormComponent,
+              '400px'
+            );
+            this._compararValoresSvc.subscription.push(
+              this._dinamicDialogSvc.ref.onClose.subscribe(
+                (message: string) => {
+                  if (message) {
+                    this._toastrSvc.success(message, 'Satisfactorio');
+                  }
+                }
+              )
+            );
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {

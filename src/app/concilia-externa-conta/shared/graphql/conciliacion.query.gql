@@ -2,7 +2,7 @@ query GetConciliacionExternaContab($conciliaExternaInput: ConciliaExternaContabi
   getConciliacionExternaContab(conciliaExternaInput: $conciliaExternaInput) {
     getConciliaContab {
       Id
-      Annio
+      Anno
       Mes
       Tipo
       CuentaEmisor

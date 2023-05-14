@@ -14,21 +14,9 @@ interface IComprobarValores {
   Activo: boolean;
 }
 
-interface IComprobarValorQueryResponse {
-  success: boolean;
-  data: IComprobarValores;
-  error: string;
-}
-
-interface IComprobarValoresQueryResponse {
-  success: boolean;
-  data: IComprobarValores[];
-  error: string;
-}
-
 export interface ComprobarValoresQueryResponse {
-  getAllComprobarValores: IComprobarValoresQueryResponse;
-  getComprobarValorById: IComprobarValorQueryResponse;
+  getAllComprobarValores: IComprobarValores[];
+  getComprobarValorById: IComprobarValores;
 }
 
 export interface ComprobarValoresMutation {

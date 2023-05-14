@@ -5,12 +5,6 @@ interface ITipoValorExpresiones {
   Valor: string;
 }
 
-interface ITipoValorExpresionesQueryResponse {
-  success: boolean;
-  data: ITipoValorExpresiones[];
-  error: string;
-}
-
 interface IExpresionResumen {
   IdExpresion: number;
   Expresion: string;
@@ -19,18 +13,6 @@ interface IExpresionResumen {
   OperacionesInternas: boolean;
   Centralizada: boolean;
   IdDivision: number;
-}
-
-interface IExpresionResumenQueryResponse {
-  success: boolean;
-  data: IExpresionResumen;
-  error: string;
-}
-
-interface IExpresionesResumenQueryResponse {
-  success: boolean;
-  data: IExpresionResumen[];
-  error: string;
 }
 
 interface IExpresionDetalle {
@@ -47,23 +29,11 @@ interface IExpresionDetalle {
   TipoValorDesc?: string;
 }
 
-interface IExpresionDetalleQueryResponse {
-  success: boolean;
-  data: IExpresionDetalle;
-  error: string;
-}
-
-interface IExpresionesDetalleQueryResponse {
-  success: boolean;
-  data: IExpresionDetalle[];
-  error: string;
-}
-
 export interface ExpresionesQueryResponse {
-  getAllExpresionesResumen: IExpresionesResumenQueryResponse;
-  getAllContaTipoValorExpresiones: ITipoValorExpresionesQueryResponse;
-  getExpresionResumenById: IExpresionResumenQueryResponse;
-  getExpresionesDetalleByIdResumen: IExpresionesDetalleQueryResponse;
+  getAllExpresionesResumen: IExpresionResumen[];
+  getAllContaTipoValorExpresiones: ITipoValorExpresiones[];
+  getExpresionResumenById: IExpresionResumen;
+  getExpresionesDetalleByIdResumen: IExpresionDetalle[];
 }
 
 export interface ExpresionesMutationResponse {

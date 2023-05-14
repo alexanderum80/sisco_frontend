@@ -44,19 +44,20 @@ export class CompararExpresionesFormComponent implements OnInit {
   private _loadExpresiones(): void {
     try {
       this._compararExpresionesSvc.subscription.push(
-        this._expresionesSvc.loadAllExpresionesResumen().subscribe(res => {
-          const result = res.getAllExpresionesResumen;
+        this._expresionesSvc.loadAllExpresionesResumen().subscribe({
+          next: res => {
+            const result = res.getAllExpresionesResumen;
 
-          if (!result.success) {
-            throw new Error(result.error);
-          }
-
-          this.expresionesValues = result.data.map(e => {
-            return {
-              value: e.IdExpresion,
-              label: e.Expresion,
-            };
-          });
+            this.expresionesValues = result.map(e => {
+              return {
+                value: e.IdExpresion,
+                label: e.Expresion,
+              };
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {

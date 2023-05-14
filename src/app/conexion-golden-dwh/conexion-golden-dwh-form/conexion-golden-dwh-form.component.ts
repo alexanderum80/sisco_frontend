@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-conexion-golden-dwh-form',
@@ -45,7 +46,8 @@ export class ConexionGoldenDwhFormComponent
     private _dinamicDialogSvc: DinamicDialogService,
     private _swalSvc: SweetalertService,
     public router: Router,
-    private _cd: ChangeDetectorRef
+    private _cd: ChangeDetectorRef,
+    private _toastrSvc: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -274,6 +276,10 @@ export class ConexionGoldenDwhFormComponent
           }
 
           this._dinamicDialogSvc.close();
+
+          this._toastrSvc.success(
+            'La Conexión se ha establecido correctamente.'
+          );
         })
       );
     } catch (err: any) {

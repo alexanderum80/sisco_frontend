@@ -4,8 +4,8 @@ import { ActionClicked } from '../../shared/models';
 import { ExpresionesService } from '../shared/services/expresiones.service';
 import { DinamicDialogService } from 'src/app/shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SelectItem } from 'primeng/api';
-import Swal from 'sweetalert2';
-import { cloneDeep } from '@apollo/client/utilities';
+import { SweetalertService } from 'src/app/shared/helpers/sweetalert.service';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-expresiones-form',
@@ -30,7 +30,8 @@ export class ExpresionesFormComponent implements OnInit {
 
   constructor(
     private _dinamicDialogSvc: DinamicDialogService,
-    private _expresionesSvc: ExpresionesService
+    private _expresionesSvc: ExpresionesService,
+    private _swalSvc: SweetalertService
   ) {
     this.fg = _expresionesSvc.fg;
   }
@@ -45,11 +46,7 @@ export class ExpresionesFormComponent implements OnInit {
       this._expresionesSvc.loadAllTipoValorExpresiones().subscribe(res => {
         const result = res.getAllContaTipoValorExpresiones;
 
-        if (!result.success) {
-          throw new Error(result.error);
-        }
-
-        this.tipoValorValues = result.data.map(r => {
+        this.tipoValorValues = result.map(r => {
           return {
             value: r.IdTipoValor,
             label: r.Valor,
@@ -57,13 +54,7 @@ export class ExpresionesFormComponent implements OnInit {
         });
       });
     } catch (err: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -72,31 +63,24 @@ export class ExpresionesFormComponent implements OnInit {
       const idExpresionResumen = this.fg.controls['idExpresion'].value;
       this._expresionesSvc
         .loadExpresionDetalleByIdResumen(idExpresionResumen)
-        .subscribe(res => {
-          const result = res.getExpresionesDetalleByIdResumen;
+        .subscribe({
+          next: res => {
+            const result = cloneDeep(res.getExpresionesDetalleByIdResumen);
 
-          if (!result.success) {
-            throw new Error(result.error);
-          }
+            result.map(d => {
+              d.TipoValorDesc = this.tipoValorValues.find(
+                t => t.value === d.TipoValor
+              )?.label;
+            });
 
-          const data = cloneDeep(result.data);
-
-          data.map(d => {
-            d.TipoValorDesc = this.tipoValorValues.find(
-              t => t.value === d.TipoValor
-            )?.label;
-          });
-
-          this.expresionesDetalle = data;
+            this.expresionesDetalle = [...result];
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         });
     } catch (err: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -121,18 +105,11 @@ export class ExpresionesFormComponent implements OnInit {
   }
 
   onRowDelete(index: any): void {
-    Swal.fire({
-      title: 'Confirmación',
-      text: '¿Desea Eliminar la Cuenta seleccionada?',
-      icon: 'question',
-      confirmButtonText: 'Sí',
-      showCancelButton: true,
-      cancelButtonText: 'No',
-    }).then(result => {
-      if (result.value) {
-        this.expresionesDetalle.splice(index, 1);
-      }
-    });
+    this._swalSvc
+      .question('¿Desea Eliminar la Cuenta seleccionada?')
+      .then(res => {
+        if (res === ActionClicked.Yes) this.expresionesDetalle.splice(index, 1);
+      });
   }
 
   onRowEditSave(expresion: any): void {
@@ -191,28 +168,27 @@ export class ExpresionesFormComponent implements OnInit {
         ExpresionesDetalle,
       };
 
-      this._expresionesSvc.saveExpresion(payload).subscribe(res => {
-        const result =
-          ExpresionResumen.IdExpresion === 0
-            ? res.createExpresion
-            : res.updateExpresion;
-        const txtMessage = `La Expresión se ha ${
-          ExpresionResumen.IdExpresion === 0 ? 'creado' : 'actualizado'
-        } correctamente.`;
-        if (!result.success) {
-          throw new Error(result.error);
-        }
+      this._expresionesSvc.saveExpresion(payload).subscribe({
+        next: res => {
+          const result =
+            ExpresionResumen.IdExpresion === 0
+              ? res.createExpresion
+              : res.updateExpresion;
+          const txtMessage = `La Expresión se ha ${
+            ExpresionResumen.IdExpresion === 0 ? 'creado' : 'actualizado'
+          } correctamente.`;
+          if (!result.success) {
+            throw new Error(result.error);
+          }
 
-        this._dinamicDialogSvc.close(txtMessage);
+          this._dinamicDialogSvc.close(txtMessage);
+        },
+        error: err => {
+          this._swalSvc.error(err);
+        },
       });
     } catch (err: any) {
-      Swal.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 

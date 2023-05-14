@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
+import { IDatosIdGAM, IParteAtrasos } from './shared/models/parte-atraso.model';
 
 @Component({
   selector: 'app-parte-atraso',
@@ -44,8 +45,8 @@ export class ParteAtrasoComponent
     },
   ];
 
-  dataSourceParteAtraso = [];
-  dataSourceDatosIdGam = [];
+  dataSourceParteAtraso: IParteAtrasos[] = [];
+  dataSourceDatosIdGam: IDatosIdGAM[] = [];
 
   divisionesValues: SelectItem[] = [];
   loading = false;
@@ -124,12 +125,8 @@ export class ParteAtrasoComponent
             const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } =
               res;
 
-            if (!_parteAtrasos.success || !_datosIdGAM.success) {
-              this._swalSvc.error(_parteAtrasos.error || _datosIdGAM.error);
-            }
-
-            this.dataSourceParteAtraso = JSON.parse(_parteAtrasos.data);
-            this.dataSourceDatosIdGam = JSON.parse(_datosIdGAM.data);
+            this.dataSourceParteAtraso = [..._parteAtrasos];
+            this.dataSourceDatosIdGam = [..._datosIdGAM];
           },
           error: err => {
             this.loading = false;
@@ -166,10 +163,15 @@ export class ParteAtrasoComponent
   private async _reporteParteAtraso(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title: 'Parte de Atrasos Golden DWH | SISCO',
+        },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [
-          await this._pdfMakeSvc.getHeaderDefinition('Parte de Atrasos DWH'),
+          await this._pdfMakeSvc.getHeaderDefinition(
+            'Parte de Atrasos Golden DWH'
+          ),
           await this._getDivisionDefinition(),
           await this._parteAtrasoSvc.getParteAtrasosDefinition(
             this.dataSourceParteAtraso
@@ -197,6 +199,9 @@ export class ParteAtrasoComponent
   private async _reporteDetalleParteAtraso(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title: 'Detalles del Parte de Atrasos Golden DWH | SISCO',
+        },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [

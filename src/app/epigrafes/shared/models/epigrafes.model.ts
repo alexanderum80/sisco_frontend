@@ -1,9 +1,13 @@
 import { IMutationResponse } from './../../../shared/models/mutation-response';
-import { IQueryResponse } from './../../../shared/models/query-response';
+
+export interface IEpigrafes {
+  IdEpigrafe: number;
+  Epigrafe: string;
+}
 
 export interface EpigrafesQueryResponse {
-  getAllEpigrafes: IQueryResponse;
-  getEpigrafeById: IQueryResponse;
+  getAllEpigrafes: IEpigrafes[];
+  getEpigrafeById: IEpigrafes;
 }
 
 export interface EpigrafesMutationResponse {

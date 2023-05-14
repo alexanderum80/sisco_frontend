@@ -8,12 +8,12 @@ import {
   ActionClicked,
 } from './../../shared/models/list-items';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
-import SweetAlert from 'sweetalert2';
 import { ElementosGastosFormComponent } from './../elementos-gastos-form/elementos-gastos-form.component';
 import { ElementosGastosService } from './../shared/services/elementos-gastos.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, AfterViewInit, OnDestroy } from '@angular/core';
-import { isArray } from 'lodash';
+import { cloneDeep, isArray } from 'lodash';
+import { SweetalertService } from 'src/app/shared/helpers/sweetalert.service';
 
 @Component({
   selector: 'app-list-elementos-gastos',
@@ -38,7 +38,8 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
     private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _toastrSvc: ToastrService,
-    private _elementosGastosSvc: ElementosGastosService
+    private _elementosGastosSvc: ElementosGastosService,
+    private _swalSvc: SweetalertService
   ) {
     if (this.hasAdvancedUserPermission()) {
       this.inlineButtons = DefaultInlineButtonsTable;
@@ -55,22 +56,16 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
   }
 
   private _loadElementosGastos(): void {
-    this._elementosGastosSvc.loadAllElementosGastos().subscribe(res => {
-      this.loading = false;
+    this._elementosGastosSvc.loadAllElementosGastos().subscribe({
+      next: res => {
+        this.loading = false;
 
-      const result = res.getAllElementosGastos;
-
-      if (!result.success) {
-        return SweetAlert.fire({
-          icon: 'error',
-          title: 'ERROR',
-          text: result.error,
-          showConfirmButton: true,
-          confirmButtonText: 'Aceptar',
-        });
-      }
-
-      this.elementosGastos = result.data;
+        this.elementosGastos = cloneDeep(res.getAllElementosGastos);
+      },
+      error: err => {
+        this.loading = false;
+        this._swalSvc.error(err);
+      },
     });
   }
 
@@ -118,41 +113,23 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
         );
       }
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
   private _edit(data: any): void {
     this._elementosGastosSvc.subscription.push(
-      this._elementosGastosSvc
-        .loadElementoGastoById(data.Egasto)
-        .subscribe(res => {
+      this._elementosGastosSvc.loadElementoGastoById(data.Egasto).subscribe({
+        next: res => {
           const result = res.getElementoGastoById;
-          if (!result.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: result.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
-          }
-
-          const data = result.data;
 
           const inputData = {
-            elemento: data.Egasto,
-            descripcion: data.Descripcion,
-            usoContenido: data.UsoContenido,
-            tipoEntidad: data.TipoEntidad.split(', ').map(Number),
-            cuentaAsociada: data.CuentaAsociada.trimEnd().split(', '),
-            epigrafe: data.IdEpigrafe,
+            elemento: result.Egasto,
+            descripcion: result.Descripcion,
+            usoContenido: result.UsoContenido,
+            tipoEntidad: result.TipoEntidad.split(', ').map(Number),
+            cuentaAsociada: result.CuentaAsociada.trimEnd().split(', '),
+            epigrafe: result.IdEpigrafe,
           };
 
           this._elementosGastosSvc.fg.patchValue(inputData);
@@ -168,60 +145,49 @@ export class ListElementosGastosComponent implements AfterViewInit, OnDestroy {
               }
             })
           );
-        })
+        },
+        error: err => {
+          this._swalSvc.error(err);
+        },
+      })
     );
   }
 
   private _delete(data: any): void {
     try {
       if (this.hasAdvancedUserPermission()) {
-        SweetAlert.fire({
-          icon: 'question',
-          title: '¿Desea Eliminar el Elemento de Gasto seleccionado?',
-          text: 'No se podrán deshacer los cambios.',
-          showConfirmButton: true,
-          confirmButtonText: 'Sí',
-          showCancelButton: true,
-          cancelButtonText: 'No',
-        }).then(res => {
-          if (res.value) {
-            const IDsToRemove: number[] = !isArray(data)
-              ? [data.Egasto]
-              : data.map(d => {
-                  return d.Egasto;
-                });
-
-            this._elementosGastosSvc.subscription.push(
-              this._elementosGastosSvc.delete(IDsToRemove).subscribe(res => {
-                const result = res.deleteElementoGasto;
-
-                if (result.success === false) {
-                  return SweetAlert.fire({
-                    icon: 'error',
-                    title: 'ERROR',
-                    text: result.error,
-                    showConfirmButton: true,
-                    confirmButtonText: 'Aceptar',
+        this._swalSvc
+          .question(
+            'No se podrán deshacer los cambios.',
+            '¿Desea Eliminar el Elemento de Gasto seleccionado?'
+          )
+          .then(res => {
+            if (res === ActionClicked.Yes) {
+              const IDsToRemove: number[] = !isArray(data)
+                ? [data.Egasto]
+                : data.map(d => {
+                    return d.Egasto;
                   });
-                }
 
-                this._toastrSvc.success(
-                  'El Elemento de Gasto se ha eliminado correctamente.',
-                  'Satisfactorio'
-                );
-              })
-            );
-          }
-        });
+              this._elementosGastosSvc.subscription.push(
+                this._elementosGastosSvc.delete(IDsToRemove).subscribe(res => {
+                  const result = res.deleteElementoGasto;
+
+                  if (result.success === false) {
+                    return this._swalSvc.error(result.error);
+                  }
+
+                  this._toastrSvc.success(
+                    'El Elemento de Gasto se ha eliminado correctamente.',
+                    'Satisfactorio'
+                  );
+                })
+              );
+            }
+          });
       }
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 }

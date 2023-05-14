@@ -1,14 +1,10 @@
 query GetAllExpresionesResumen {
     getAllExpresionesResumen {
-        success
-        data {
-            IdExpresion
-            Expresion
-            Descripcion
-            Acumulado
-            OperacionesInternas
-            Centralizada
-        }
-        error
+        IdExpresion
+        Expresion
+        Descripcion
+        Acumulado
+        OperacionesInternas
+        Centralizada
     }
 }

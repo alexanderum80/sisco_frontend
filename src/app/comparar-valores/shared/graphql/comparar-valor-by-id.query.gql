@@ -1,7 +1,5 @@
 query GetComprobarValorById($id: Int!) {
     getComprobarValorById(id: $id) {
-      success
-      data {
         Id
         IdCentro
         IdExpresion
@@ -10,7 +8,5 @@ query GetComprobarValorById($id: Int!) {
         IdDivision
         Consolidado
         Activo
-      }
-      error
     }
 }

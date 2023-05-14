@@ -11,11 +11,12 @@ import {
 } from './../../shared/models/list-items';
 import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
-import SweetAlert from 'sweetalert2';
 import { ClasificadorCuentaFormComponent } from './../clasificador-cuenta-form/clasificador-cuenta-form.component';
 import { ClasificadorCuentaService } from './../shared/service/clasificador-cuenta.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { cloneDeep } from 'lodash';
+import { IClasificadorCuentas } from '../shared/models/clasificador-cuenta.model';
 
 @Component({
   selector: 'app-list-clasificador-cuenta',
@@ -33,7 +34,7 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
     { value: 3, label: 'Complejo' },
   ];
 
-  clasificadorCuentas: any[];
+  clasificadorCuentas: IClasificadorCuentas[];
 
   displayedColumns: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cuenta', type: 'string', width: '100px' },
@@ -89,17 +90,9 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
             next: res => {
               this.loading = false;
 
-              const result = res.getAllClasificadorCuentas;
-              if (!result.success) {
-                return SweetAlert.fire({
-                  icon: 'error',
-                  title: 'ERROR',
-                  text: result.error,
-                  confirmButtonText: 'Aceptar',
-                });
-              }
-
-              this.clasificadorCuentas = result.data;
+              this.clasificadorCuentas = cloneDeep(
+                res.getAllClasificadorCuentas
+              );
             },
             error: err => {
               this.loading = false;
@@ -109,13 +102,7 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
       );
     } catch (err: any) {
       this.loading = false;
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -169,13 +156,7 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
         );
       }
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -193,125 +174,99 @@ export class ListClasificadorCuentaComponent implements OnInit, OnDestroy {
               clasificador.SubCuenta,
               clasificador.TipoClasificador
             )
-            .subscribe(res => {
-              const result = res.getClasificadorCuenta;
-              if (!result.success) {
-                return SweetAlert.fire({
-                  icon: 'error',
-                  title: 'ERROR',
-                  text: result.error,
-                  confirmButtonText: 'Aceptar',
-                });
-              }
+            .subscribe({
+              next: res => {
+                const result = res.getClasificadorCuenta;
 
-              const data = result.data;
+                const inputData = {
+                  tipoClasificador: result.TipoClasificador,
+                  cuenta: result.Cuenta,
+                  subcuenta: result.SubCuenta,
+                  nombre: result.Nombre,
+                  naturaleza: result.Naturaleza,
+                  crit1: result.Tipo_Analisis_1,
+                  crit2: result.Tipo_Analisis_2,
+                  crit3: result.Tipo_Analisis_3,
+                  crit4: result.Tipo_Analisis_4,
+                  crit5: result.Tipo_Analisis_5,
+                  obligacion: result.Obligacion,
+                  grupo: result.Grupo?.trim(),
+                  clase: result.Clase?.trim(),
+                  categoria: result.Categoria?.trim(),
+                  clasificacion: result.Clasificacion,
+                  tipo: result.Tipo,
+                  estado: result.Estado,
+                  seUtiliza: result.SeUtiliza
+                    ? result.SeUtiliza.split(', ').map(Number)
+                    : [],
+                  crit1Consolidacion: result.Tipo_Analisis_1_Cons,
+                  crit2Consolidacion: result.Tipo_Analisis_2_Cons,
+                  crit3Consolidacion: result.Tipo_Analisis_3_Cons,
+                  crit4Consolidacion: result.Tipo_Analisis_4_Cons,
+                  crit5Consolidacion: result.Tipo_Analisis_5_Cons,
+                };
 
-              const inputData = {
-                tipoClasificador: data.TipoClasificador,
-                cuenta: data.Cuenta,
-                subcuenta: data.SubCuenta,
-                nombre: data.Nombre,
-                naturaleza: data.Naturaleza,
-                crit1: data.Tipo_Analisis_1,
-                crit2: data.Tipo_Analisis_2,
-                crit3: data.Tipo_Analisis_3,
-                crit4: data.Tipo_Analisis_4,
-                crit5: data.Tipo_Analisis_5,
-                obligacion: data.Obligacion,
-                grupo: data.Grupo.trim(),
-                clase: data.Clase.trim(),
-                categoria: data.Categoria.trim(),
-                clasificacion: data.Clasificacion,
-                tipo: data.Tipo,
-                estado: data.Estado,
-                seUtiliza: data.SeUtiliza
-                  ? data.SeUtiliza.split(', ').map(Number)
-                  : [],
-                crit1Consolidacion: data.Tipo_Analisis_1_Cons,
-                crit2Consolidacion: data.Tipo_Analisis_2_Cons,
-                crit3Consolidacion: data.Tipo_Analisis_3_Cons,
-                crit4Consolidacion: data.Tipo_Analisis_4_Cons,
-                crit5Consolidacion: data.Tipo_Analisis_5_Cons,
-              };
-
-              this._clasificadorCuentaSvc.fg.patchValue(inputData);
-              this._dinamicDialogSvc.open(
-                'Modificar Cuenta',
-                ClasificadorCuentaFormComponent,
-                '1000px'
-              );
-              this._clasificadorCuentaSvc.subscription.push(
-                this._dinamicDialogSvc.ref.onClose.subscribe(
-                  (message: string) => {
-                    if (message) {
-                      this._toastrSvc.success(message, 'Satisfactorio');
+                this._clasificadorCuentaSvc.fg.patchValue(inputData);
+                this._dinamicDialogSvc.open(
+                  'Modificar Cuenta',
+                  ClasificadorCuentaFormComponent,
+                  '1000px'
+                );
+                this._clasificadorCuentaSvc.subscription.push(
+                  this._dinamicDialogSvc.ref.onClose.subscribe(
+                    (message: string) => {
+                      if (message) {
+                        this._toastrSvc.success(message, 'Satisfactorio');
+                      }
                     }
-                  }
-                )
-              );
+                  )
+                );
+              },
+              error: err => {
+                this._swalSvc.error(err);
+              },
             })
         );
       }
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
   private _delete(clasificador: any): void {
     try {
       if (this.hasAdvancedUserPermission()) {
-        SweetAlert.fire({
-          icon: 'question',
-          title: '¿Desea Eliminar la Cuenta seleccionada?',
-          text: 'No se podrán deshacer los cambios.',
-          showConfirmButton: true,
-          confirmButtonText: 'Sí',
-          showCancelButton: true,
-          cancelButtonText: 'No',
-        }).then(res => {
-          if (res.value) {
-            this._clasificadorCuentaSvc.subscription.push(
-              this._clasificadorCuentaSvc.delete(clasificador).subscribe({
-                next: res => {
-                  const result = res.deleteClasificadorCuenta;
+        this._swalSvc
+          .question(
+            'No se podrán deshacer los cambios.',
+            '¿Desea Eliminar la Cuenta seleccionada?'
+          )
+          .then(res => {
+            if (res === ActionClicked.Yes) {
+              this._clasificadorCuentaSvc.subscription.push(
+                this._clasificadorCuentaSvc.delete(clasificador).subscribe({
+                  next: res => {
+                    const result = res.deleteClasificadorCuenta;
 
-                  if (!result.success) {
-                    return SweetAlert.fire({
-                      icon: 'error',
-                      title: 'ERROR',
-                      text: result.error,
-                      showConfirmButton: true,
-                      confirmButtonText: 'Aceptar',
-                    });
-                  }
+                    if (!result.success) {
+                      this._swalSvc.error(result.error);
+                    }
 
-                  this._toastrSvc.success(
-                    'La Cuenta se ha eliminado correctamente.',
-                    'Satisfactorio'
-                  );
-                },
-                error: err => {
-                  this._swalSvc.error(err);
-                },
-              })
-            );
-          }
-        });
+                    this._toastrSvc.success(
+                      'La Cuenta se ha eliminado correctamente.',
+                      'Satisfactorio'
+                    );
+                  },
+                  error: err => {
+                    this._swalSvc.error(err);
+                  },
+                })
+              );
+            }
+          });
       }
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 }

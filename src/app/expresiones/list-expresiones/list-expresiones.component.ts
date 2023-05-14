@@ -10,7 +10,6 @@ import {
 } from './../../shared/models/list-items';
 import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { Component, OnDestroy, AfterViewInit } from '@angular/core';
-import { cloneDeep } from '@apollo/client/utilities';
 import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 import { ExpresionesFormComponent } from '../expresiones-form/expresiones-form.component';
 import { ExpresionesService } from '../shared/services/expresiones.service';
@@ -62,16 +61,15 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
   private _getExpresionesResumen(): void {
     try {
       this._expresionesSvc.subscription.push(
-        this._expresionesSvc.loadAllExpresionesResumen().subscribe(res => {
-          this.loading = false;
+        this._expresionesSvc.loadAllExpresionesResumen().subscribe({
+          next: res => {
+            this.loading = false;
 
-          const result = res.getAllExpresionesResumen;
-
-          if (result.success === false) {
-            return this._swalSvc.error(result.error);
-          }
-
-          this.expresiones = cloneDeep(result.data);
+            this.expresiones = [...res.getAllExpresionesResumen];
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
@@ -129,36 +127,39 @@ export class ListExpresionesComponent implements AfterViewInit, OnDestroy {
       this._expresionesSvc.inicializarFg();
       this._expresionesSvc
         .loadExpresionResumenById(data.IdExpresion)
-        .subscribe(res => {
-          const result = res.getExpresionResumenById;
+        .subscribe({
+          next: res => {
+            const result = res.getExpresionResumenById;
 
-          if (!result.success) {
-            return this._swalSvc.error(result.error);
-          }
+            const inputValue = {
+              idExpresion: result.IdExpresion,
+              expresion: result.Expresion,
+              descripcion: result.Descripcion,
+              acumulado: result.Acumulado,
+              operacionesInternas: result.OperacionesInternas,
+              centralizada: result.Centralizada,
+              idDivision: result.IdDivision,
+            };
 
-          const inputValue = {
-            idExpresion: result.data.IdExpresion,
-            expresion: result.data.Expresion,
-            descripcion: result.data.Descripcion,
-            acumulado: result.data.Acumulado,
-            operacionesInternas: result.data.OperacionesInternas,
-            centralizada: result.data.Centralizada,
-            idDivision: result.data.IdDivision,
-          };
+            this._expresionesSvc.fg.patchValue(inputValue);
 
-          this._expresionesSvc.fg.patchValue(inputValue);
-
-          this._dinamicDialogSvc.open(
-            'Editar Expresión',
-            ExpresionesFormComponent
-          );
-          this._expresionesSvc.subscription.push(
-            this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-              if (message) {
-                this._toastrSvc.success(message, 'Satisfactorio');
-              }
-            })
-          );
+            this._dinamicDialogSvc.open(
+              'Editar Expresión',
+              ExpresionesFormComponent
+            );
+            this._expresionesSvc.subscription.push(
+              this._dinamicDialogSvc.ref.onClose.subscribe(
+                (message: string) => {
+                  if (message) {
+                    this._toastrSvc.success(message, 'Satisfactorio');
+                  }
+                }
+              )
+            );
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         });
     } catch (err: any) {
       this._swalSvc.error(err);

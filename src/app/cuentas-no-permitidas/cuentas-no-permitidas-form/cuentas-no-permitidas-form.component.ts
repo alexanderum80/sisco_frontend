@@ -5,7 +5,12 @@ import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SelectItem } from 'primeng/api';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterContentChecked,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
 
 @Component({
@@ -13,7 +18,9 @@ import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
   templateUrl: './cuentas-no-permitidas-form.component.html',
   styleUrls: ['./cuentas-no-permitidas-form.component.scss'],
 })
-export class CuentasNoPermitidasFormComponent implements OnInit {
+export class CuentasNoPermitidasFormComponent
+  implements OnInit, AfterContentChecked
+{
   action: ActionClicked;
 
   fg: FormGroup;
@@ -24,7 +31,8 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
     private _cuentasNoPermitidasSvc: CuentasNoPermitidasService,
     private _unidadesSvc: UnidadesService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _swalSvc: SweetalertService
+    private _swalSvc: SweetalertService,
+    private _cd: ChangeDetectorRef
   ) {
     this.fg = _cuentasNoPermitidasSvc.fg;
   }
@@ -35,6 +43,10 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
         ? ActionClicked.Add
         : ActionClicked.Edit;
     this._loadCentros();
+  }
+
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
   }
 
   private _loadCentros(): void {

@@ -11,7 +11,7 @@ import {
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { ITableColumns } from './../../shared/ui/prime-ng/table/table.model';
-import { Component, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnDestroy, AfterViewInit, OnInit } from '@angular/core';
 import { CompararExpresionesService } from '../shared/services/comparar-expresiones.service';
 import { cloneDeep } from '@apollo/client/utilities';
 import { CompararExpresionesFormComponent } from '../comparar-expresiones-form/comparar-expresiones-form.component';
@@ -22,9 +22,7 @@ import { isArray } from 'lodash';
   templateUrl: './list-comparar-expresiones.component.html',
   styleUrls: ['./list-comparar-expresiones.component.scss'],
 })
-export class ListCompararExpresionesComponent
-  implements AfterViewInit, OnDestroy
-{
+export class ListCompararExpresionesComponent implements OnInit, OnDestroy {
   columns: ITableColumns[] = [
     { header: 'Expresión', field: 'Expresion.Expresion', type: 'string' },
     { header: 'Operador', field: 'Operador.Operador', type: 'string' },
@@ -50,7 +48,7 @@ export class ListCompararExpresionesComponent
     private _toastrSvc: ToastrService
   ) {}
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this._getCompararExpresiones();
   }
 
@@ -62,19 +60,22 @@ export class ListCompararExpresionesComponent
   private _getCompararExpresiones(): void {
     try {
       this._compararExpresionesSvc.subscription.push(
-        this._compararExpresionesSvc.loadAll().subscribe(res => {
-          this.loading = false;
+        this._compararExpresionesSvc.loadAll().subscribe({
+          next: res => {
+            this.loading = false;
 
-          const result = res.getAllComprobarExpresiones;
+            const result = res.getAllComprobarExpresiones;
 
-          if (result.success === false) {
-            return this._swalSvc.error(result.error);
-          }
-
-          this.compararExpresiones = cloneDeep(result.data);
+            this.compararExpresiones = cloneDeep(result);
+          },
+          error: err => {
+            this.loading = false;
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
+      this.loading = false;
       this._swalSvc.error(err);
     }
   }
@@ -129,39 +130,42 @@ export class ListCompararExpresionesComponent
 
       this._compararExpresionesSvc.inicializarFg();
       this._compararExpresionesSvc.subscription.push(
-        this._compararExpresionesSvc.loadOne(data.Id).subscribe(res => {
-          const result = res.getComprobarExpresionById;
+        this._compararExpresionesSvc.loadOne(data.Id).subscribe({
+          next: res => {
+            const result = res.getComprobarExpresionById;
 
-          if (!result.success) {
-            throw new Error(result.error);
-          }
+            const inputValue = {
+              id: result.Id,
+              expresion: result.IdExpresion,
+              operador: result.IdOperador,
+              expresionC: result.IdExpresionC,
+              centro: result.Centro,
+              complejo: result.Complejo,
+              consolidado: result.Con,
+              centralizada: result.Centralizada,
+              idDivision: result.IdDivision,
+            };
 
-          const inputValue = {
-            id: result.data.Id,
-            expresion: result.data.IdExpresion,
-            operador: result.data.IdOperador,
-            expresionC: result.data.IdExpresionC,
-            centro: result.data.Centro,
-            complejo: result.data.Complejo,
-            consolidado: result.data.Con,
-            centralizada: result.data.Centralizada,
-            idDivision: result.data.IdDivision,
-          };
+            this._compararExpresionesSvc.fg.patchValue(inputValue);
 
-          this._compararExpresionesSvc.fg.patchValue(inputValue);
-
-          this._dinamicDialogSvc.open(
-            'Editar Comparación de Expresión',
-            CompararExpresionesFormComponent,
-            '800px'
-          );
-          this._compararExpresionesSvc.subscription.push(
-            this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
-              if (message) {
-                this._toastrSvc.success(message, 'Satisfactorio');
-              }
-            })
-          );
+            this._dinamicDialogSvc.open(
+              'Editar Comparación de Expresión',
+              CompararExpresionesFormComponent,
+              '800px'
+            );
+            this._compararExpresionesSvc.subscription.push(
+              this._dinamicDialogSvc.ref.onClose.subscribe(
+                (message: string) => {
+                  if (message) {
+                    this._toastrSvc.success(message, 'Satisfactorio');
+                  }
+                }
+              )
+            );
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {

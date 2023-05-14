@@ -1,14 +1,10 @@
 query GetAllElementosGastos {
     getAllElementosGastos {
-        success
-        data {
-            Egasto
-            Descripcion
-            UsoContenido
-            TipoEntidad
-            CuentaAsociada
-            IdEpigrafe
-        }
-        error
+        Egasto
+        Descripcion
+        UsoContenido
+        TipoEntidad
+        CuentaAsociada
+        IdEpigrafe
     }
 }

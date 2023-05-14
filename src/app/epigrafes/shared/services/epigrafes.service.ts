@@ -71,12 +71,12 @@ export class EpigrafesService {
     return new Observable<EpigrafesMutationResponse>(subscriber => {
       try {
         const epigrafeInfo = {
-          IdEpigafre: this.fg.controls['idEpigrafe'].value,
+          IdEpigrafe: +this.fg.controls['idEpigrafe'].value,
           Epigrafe: this.fg.controls['epigrafe'].value,
         };
 
         const mutation =
-          epigrafeInfo.IdEpigafre === 0
+          epigrafeInfo.IdEpigrafe === 0
             ? epigrafesApi.create
             : epigrafesApi.update;
 

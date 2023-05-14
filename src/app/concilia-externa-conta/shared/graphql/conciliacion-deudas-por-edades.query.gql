@@ -1,7 +1,7 @@
 query GetConciliacionExternaContabDeudasPorEdades($annio: Int!, $mes: Int!) {
   getConciliacionExternaContabDeudasPorEdades(annio: $annio, mes: $mes) {
     TipoOperacion
-    Annio
+    Anno
     Mes
     IdDivision
     Division
