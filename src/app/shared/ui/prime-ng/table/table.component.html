@@ -46,7 +46,8 @@
   [scrollable]="scrollable"
   [scrollHeight]="scrollHeight"
   (onRowSelect)="switchRowSelection()"
-  (onRowUnselect)="switchRowSelection()">
+  (onRowUnselect)="switchRowSelection()"
+  (onFilter)="onFilterData($event)">
   <!-- caption -->
   <ng-template *ngIf="caption" pTemplate="caption">
     {{ caption }}

@@ -1,0 +1,18 @@
+  query ContaEstadisticaParte {
+    contaEstadisticaParte {
+      Division
+      Centro
+      Consolidado
+      Anno
+      Periodo
+      FechaActualizacion
+      FechaInicio
+      FechaFin
+      Comprobantes
+      Traspasados
+      SinTraspasar
+      Inconclusos
+      Anulados
+      Conexion
+    }
+  }

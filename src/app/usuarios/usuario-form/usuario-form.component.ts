@@ -6,10 +6,6 @@ import { SelectItem } from 'primeng/api';
 import { ActionClicked } from './../../shared/models/list-items';
 import { DivisionesService } from './../../shared/services/divisiones.service';
 import { ETipoUsuarios } from './../shared/models/usuarios.model';
-import { UsuariosMutationResponse } from '../shared/models/usuarios.model';
-import SweetAlert from 'sweetalert2';
-import { usuariosApi } from '../shared/graphql/usuarioActions.gql';
-import { Apollo } from 'apollo-angular';
 import { UsuarioService } from '../shared/services/usuario.service';
 import { FormGroup } from '@angular/forms';
 import {
@@ -18,8 +14,6 @@ import {
   ChangeDetectorRef,
   AfterContentChecked,
 } from '@angular/core';
-import { IUsuario } from 'src/app/shared/models';
-import { toNumber } from 'lodash';
 
 @Component({
   selector: 'app-usuario-form',
@@ -39,7 +33,6 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
     private _authSvc: AuthenticationService,
     private _usuarioSvc: UsuarioService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _apollo: Apollo,
     private _tipoUsuariosSvc: TipoUsuariosService,
     private _divisionesSvc: DivisionesService,
     private _swalSvc: SweetalertService,
@@ -54,6 +47,11 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
     this._getDivisiones();
 
     this._subscribeToFgChanges();
+
+    this.action =
+      this.fg.controls['idUsuario'].value === 0
+        ? ActionClicked.Add
+        : ActionClicked.Edit;
   }
 
   ngAfterContentChecked(): void {
@@ -77,13 +75,7 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
         })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: `Se produjo el siguiente error: ${err}`,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -107,13 +99,7 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
         })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: `Se produjo el siguiente error: ${err}`,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -173,46 +159,23 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
       this.fg.controls['contrasena'].value !==
       this.fg.controls['contrasenaConfirm'].value
     ) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'Error al Validar',
-        text: 'Las contraseñas introducidas no coinciden. Rectifique.',
-        showConfirmButton: true,
-        confirmButtonText: 'OK',
-      });
-
+      this._swalSvc.warning(
+        'Las contraseñas introducidas no coinciden. Rectifique.'
+      );
       return;
     }
 
-    const usuarioInfo: IUsuario = {
-      IdUsuario: toNumber(this.fg.controls['idUsuario'].value),
-      Usuario: this.fg.controls['usuario'].value,
-      Contrasena: this.fg.controls['contrasena'].value,
-      IdTipoUsuario: this.fg.controls['tipoUsuario'].value,
-      CambiarContrasena: this.fg.controls['cambiarContrasena'].value,
-      ContrasenaAvanzada: this.fg.controls['contrasenaAvanzada'].value,
-      IdDivision: toNumber(this.fg.controls['idDivision'].value),
-    };
-
-    const usuarioMutation =
-      usuarioInfo.IdUsuario === 0 ? usuariosApi.create : usuariosApi.update;
-
     this._usuarioSvc.subscription.push(
-      this._apollo
-        .mutate<UsuariosMutationResponse>({
-          mutation: usuarioMutation,
-          variables: { usuarioInfo },
-          refetchQueries: ['GetAllUsuarios'],
-        })
-        .subscribe(res => {
+      this._usuarioSvc.save().subscribe({
+        next: res => {
           let result;
           let txtMessage;
 
-          if (usuarioInfo.IdUsuario === 0) {
-            result = res.data?.createUsuario;
+          if (this.action === ActionClicked.Add) {
+            result = res.createUsuario;
             txtMessage = 'El Usuario se ha creado correctamente.';
           } else {
-            result = res.data?.updateUsuario;
+            result = res.updateUsuario;
             txtMessage = 'El Usuario se ha actualizado correctamente.';
           }
 
@@ -221,7 +184,11 @@ export class UsuarioFormComponent implements OnInit, AfterContentChecked {
           }
 
           this._closeModal(txtMessage);
-        })
+        },
+        error: err => {
+          this._swalSvc.error(err);
+        },
+      })
     );
   }
 

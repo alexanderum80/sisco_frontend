@@ -1,0 +1,123 @@
+import { PdfmakeService } from './../shared/helpers/pdfmake.service';
+import { ITableColumns } from './../shared/ui/prime-ng/table/table.model';
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
+import { SelectItem } from 'primeng/api';
+import { Component, OnInit } from '@angular/core';
+import { cloneDeep, orderBy } from 'lodash';
+import { ParteEstadisticaContabilidadService } from './shared/services/parte-estadistica-contabilidad.service';
+import { IParteEstadisticaContabilidad } from './shared/models/parte-estadistica-contabilidad.model';
+
+@Component({
+  selector: 'app-parte-estadistica-contabilidad',
+  templateUrl: './parte-estadistica-contabilidad.component.html',
+  styleUrls: ['./parte-estadistica-contabilidad.component.scss'],
+})
+export class ParteEstadisticaContabilidadComponent implements OnInit {
+  dataSource: IParteEstadisticaContabilidad[] = [];
+  filteredDataSource: IParteEstadisticaContabilidad[] = [];
+
+  displayedColumns: ITableColumns[] = [
+    { header: 'Centro', field: 'Centro', type: 'string' },
+    { header: 'Consolidado', field: 'Consolidado', type: 'boolean' },
+    {
+      header: 'Fecha Actualización',
+      field: 'FechaActualizacion',
+      type: 'date',
+      dateFormat: 'dd/MM/yyyy hh:mm:ss a',
+    },
+    { header: 'Fecha Inicio', field: 'FechaInicio', type: 'date' },
+    { header: 'Fecha Fin', field: 'FechaFin', type: 'date' },
+    {
+      header: 'Comprobantes',
+      field: 'Comprobantes',
+      type: 'number',
+      totalize: true,
+    },
+    {
+      header: 'Traspasados',
+      field: 'Traspasados',
+      type: 'number',
+      totalize: true,
+    },
+    {
+      header: 'Sin Traspasar',
+      field: 'SinTraspasar',
+      type: 'number',
+      totalize: true,
+    },
+    {
+      header: 'Inconclusos',
+      field: 'Inconclusos',
+      type: 'number',
+      totalize: true,
+    },
+    { header: 'Anulados', field: 'Anulados', type: 'number', totalize: true },
+    { header: 'Conexión', field: 'Conexion', type: 'string' },
+  ];
+
+  divisionesValues: SelectItem[] = [];
+
+  loading = true;
+
+  constructor(
+    private _parteEstadisticaContaSvc: ParteEstadisticaContabilidadService,
+    private _swalSvc: SweetalertService,
+    private _pdfMakeSvc: PdfmakeService
+  ) {}
+
+  ngOnInit(): void {
+    this._conciliar();
+  }
+
+  private _conciliar(): void {
+    this._parteEstadisticaContaSvc.getEstadistica().subscribe({
+      next: res => {
+        this.loading = false;
+        this.dataSource = cloneDeep(orderBy(res, ['IdDivision', 'IdCentro']));
+      },
+      error: err => {
+        this.loading = false;
+        this._swalSvc.error(err);
+      },
+    });
+  }
+
+  updateFilteredDatasource(data: IParteEstadisticaContabilidad[]): void {
+    this.filteredDataSource = data;
+  }
+
+  async reporte(): Promise<any> {
+    try {
+      const documentDefinitions = {
+        info: {
+          title: 'Parte de la Información Estadística | SISCO',
+        },
+        pageSize: 'LETTER',
+        pageOrientation: 'landscape',
+        content: [
+          await this._pdfMakeSvc.getHeaderDefinition(
+            'Parte de la Información Estadística de la Contabilidad'
+          ),
+          await this._parteEstadisticaContaSvc.getConciliacionDefinition(
+            this.filteredDataSource
+          ),
+        ],
+        footer: (page: string, pages: string) => {
+          return this._pdfMakeSvc.getFooterDefinition(page, pages);
+        },
+        defaultStyle: {
+          fontSize: 9,
+        },
+        styles: {
+          tableHeader: {
+            bold: true,
+          },
+        },
+      };
+
+      this._pdfMakeSvc.generatePdf(documentDefinitions);
+    } catch (err: any) {
+      this._swalSvc.error(err);
+    }
+  }
+}

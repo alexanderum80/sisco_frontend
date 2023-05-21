@@ -1,0 +1,30 @@
+<png-progress-spinner *ngIf="loading"></png-progress-spinner>
+
+<div class="content">
+  <png-panel
+    class="h-full w-full"
+    header="Parte de la Información Estadística de la Contabilidad"
+    [closeButton]="false">
+    <div class="conciliacion-detalle shadow-1 mt-1">
+      <png-table
+        [columns]="displayedColumns"
+        [data]="dataSource"
+        groupField="Division"
+        [filterData]="true"
+        [scrollable]="true"
+        [totalizeTable]="true"
+        [totalizeGroup]="true"
+        (filteredData)="updateFilteredDatasource($event)"
+        scrollHeight="calc(100vh - 160px)"></png-table>
+    </div>
+    <div class="flex justify-content-end mt-2">
+      <png-button
+        class="mr-2"
+        label="Reporte"
+        [style]="'secondary'"
+        icon="mdi mdi-printer"
+        [disabled]="!dataSource.length"
+        (clicked)="reporte()"></png-button>
+    </div>
+  </png-panel>
+</div>

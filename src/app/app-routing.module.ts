@@ -198,6 +198,13 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'parte-estadistica',
+    loadChildren: () =>
+      import(
+        './parte-estadistica-contabilidad/parte-estadistica-contabilidad.module'
+      ).then(m => m.ParteEstadisticaContabilidadModule),
+  },
+  {
     path: 'concilia-externa-dwh',
     loadChildren: () =>
       import('./concilia-externa-dwh/concilia-externa-dwh.module').then(

@@ -43,6 +43,7 @@ export class TableComponent implements OnChanges {
   @Output() actionClicked = new EventEmitter<any>();
   @Output() selectedRows = new EventEmitter<any>();
   @Output() selectedRowIndex = new EventEmitter<number>();
+  @Output() filteredData = new EventEmitter<any[]>();
 
   viewportHeight = 120;
   get = get;
@@ -124,5 +125,9 @@ export class TableComponent implements OnChanges {
         item: data,
       });
     }
+  }
+
+  onFilterData(event: any): void {
+    this.filteredData.emit(event.filteredValue);
   }
 }

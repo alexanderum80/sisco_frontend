@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
       this.autenticando = true;
 
       const authVariables = {
-        Usuario: this.fg.controls['usuario'].value,
+        Usuario: this.fg.controls['usuario'].value.toLowerCase(),
         Contrasena: this.fg.controls['password'].value,
       };
 

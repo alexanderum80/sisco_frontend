@@ -136,16 +136,10 @@ export class ListUsuariosComponent implements AfterViewInit, OnDestroy {
 
   private _add(): void {
     if (this.hasAdminPermission()) {
-      const inputData = {
-        idUsuario: null,
-        usuario: '',
-        contrasena: '',
-        tipoUsuario: null,
-        cambiarContrasena: false,
-        contrasenaAvanzada: '',
+      this._usuarioSvc.fg.reset();
+      this._usuarioSvc.fg.patchValue({
         idDivision: this._authSvc.usuario.IdDivision,
-      };
-      this._usuarioSvc.fg.patchValue(inputData);
+      });
 
       this._dinamicDialogSvc.open('Agregar Usuario', UsuarioFormComponent);
       this._usuarioSvc.subscription.push(
