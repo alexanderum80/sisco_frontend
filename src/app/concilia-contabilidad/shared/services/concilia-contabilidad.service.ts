@@ -1,4 +1,7 @@
-import { ConciliaContabilidadMutationReponse } from './../models/concilia-contabilidad.model';
+import {
+  ConciliaContabilidadMutationReponse,
+  IChequeoCentroVsConsolidado,
+} from './../models/concilia-contabilidad.model';
 import { Apollo } from 'apollo-angular';
 import { Subscription, Observable } from 'rxjs';
 import { SelectItem } from 'primeng/api';
@@ -139,7 +142,7 @@ export class ConciliaContabilidadService {
 
   public chequearCentros(
     centrosAChequear: number[]
-  ): Observable<ConciliaContabilidadMutationReponse> {
+  ): Observable<ConciliaContabilidadQueryResponse> {
     let periodo = toNumber(
       moment(this.fg.controls['periodo'].value).format('MM')
     );
@@ -153,14 +156,19 @@ export class ConciliaContabilidadService {
       centrosAChequear: centrosAChequear,
     };
 
-    return new Observable<ConciliaContabilidadMutationReponse>(subscriber => {
+    return new Observable<ConciliaContabilidadQueryResponse>(subscriber => {
       this._apollo
-        .mutate<ConciliaContabilidadMutationReponse>({
-          mutation: conciliaContabilidadApi.chequearCentros,
+        .query<ConciliaContabilidadQueryResponse>({
+          query: conciliaContabilidadApi.chequearCentros,
           variables: { chequearCentrosInput },
         })
-        .subscribe(res => {
-          subscriber.next(res.data || undefined);
+        .subscribe({
+          next: res => {
+            subscriber.next(res.data || undefined);
+          },
+          error: err => {
+            subscriber.error(err);
+          },
         });
     });
   }
@@ -649,7 +657,7 @@ export class ConciliaContabilidadService {
     return definition;
   }
 
-  private _getReporteChequeoTable(data: any): object {
+  private _getReporteChequeoTable(data: IChequeoCentroVsConsolidado[]): object {
     let total = 0;
 
     const returnValue = {
@@ -691,16 +699,16 @@ export class ConciliaContabilidadService {
               alignment: 'right',
             },
           ],
-          ...data.map((al: any) => {
+          ...data.map((al: IChequeoCentroVsConsolidado) => {
             total += al.Total;
             return [
               al.Cuenta,
               al.SubCuenta,
-              al.Analisis_1,
-              al.Analisis_2,
-              al.Analisis_3,
-              al.Analisis_4,
-              al.Analisis_5,
+              al.Analisis1,
+              al.Analisis2,
+              al.Analisis3,
+              al.Analisis4,
+              al.Analisis5,
               {
                 text: numberFormatter.format(al.Total),
                 alignment: 'right',

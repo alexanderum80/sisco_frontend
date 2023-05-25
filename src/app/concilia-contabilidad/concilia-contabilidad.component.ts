@@ -20,13 +20,14 @@ import {
 import { MenuItem, SelectItem } from 'primeng/api';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
 import { TabView } from 'primeng/tabview';
-import { toNumber } from 'lodash';
+import { cloneDeep, toNumber } from 'lodash';
 import { SubdivisionesService } from '../shared/services/subdivisiones.service';
 import { DivisionesService } from '../shared/services/divisiones.service';
 import * as moment from 'moment';
 import { IUnidades } from '../unidades/shared/models/unidades.model';
 import { ISubdivisiones } from '../shared/models';
 import {
+  IChequeoCentroVsConsolidado,
   IConciliaCuadreSistemas,
   IConciliaInformacionContabilidad,
   IConciliaReporteClasificador,
@@ -122,11 +123,11 @@ export class ConciliaContabilidadComponent
   displayedColumnsChequeo: ITableColumns[] = [
     { header: 'Cuenta', field: 'Cuenta', type: 'string' },
     { header: 'SubCuenta', field: 'SubCuenta', type: 'string' },
-    { header: 'Análisis 1', field: 'Analisis_1', type: 'string' },
-    { header: 'Análisis 2', field: 'Analisis_2', type: 'string' },
-    { header: 'Análisis 3', field: 'Analisis_3', type: 'string' },
-    { header: 'Análisis 4', field: 'Analisis_4', type: 'string' },
-    { header: 'Análisis 5', field: 'Analisis_5', type: 'string' },
+    { header: 'Análisis 1', field: 'Analisis1', type: 'string' },
+    { header: 'Análisis 2', field: 'Analisis2', type: 'string' },
+    { header: 'Análisis 3', field: 'Analisis3', type: 'string' },
+    { header: 'Análisis 4', field: 'Analisis4', type: 'string' },
+    { header: 'Análisis 5', field: 'Analisis5', type: 'string' },
     { header: 'Total', field: 'Total', type: 'decimal' },
   ];
 
@@ -137,7 +138,7 @@ export class ConciliaContabilidadComponent
   dataSourceInformacion: IConciliaInformacionContabilidad[] = [];
   dataSourceClasificador: IConciliaReporteClasificador[] = [];
   dataSourceCentrosSubordinados: any[] = [];
-  dataSourceChequeo = [];
+  dataSourceChequeo: IChequeoCentroVsConsolidado[] = [];
 
   isConsolidado = false;
   loading = false;
@@ -389,7 +390,7 @@ export class ConciliaContabilidadComponent
                     (u: ISubdivisiones) => {
                       return {
                         IdCentro: u.IdSubdivision,
-                        Nombre: u.Subdivision,
+                        Nombre: u.IdSubdivision + '-' + u.Subdivision,
                       };
                     }
                   );
@@ -549,19 +550,17 @@ export class ConciliaContabilidadComponent
       });
 
       this._conciliaContabSvc.subscription.push(
-        this._conciliaContabSvc
-          .chequearCentros(idCentrosAChequear)
-          .subscribe(res => {
+        this._conciliaContabSvc.chequearCentros(idCentrosAChequear).subscribe({
+          next: res => {
             this.loading = false;
-            const result = res.chequearCentros;
 
-            if (!result?.success) {
-              this._swalSvc.error(result.error);
-              return;
-            }
-
-            this.dataSourceChequeo = JSON.parse(result.data || '');
-          })
+            this.dataSourceChequeo = cloneDeep(res.chequearCentros);
+          },
+          error: err => {
+            this.loading = false;
+            this._swalSvc.error(err);
+          },
+        })
       );
     } catch (err: any) {
       this.loading = false;
@@ -651,6 +650,9 @@ export class ConciliaContabilidadComponent
   private async _reporteChequeo(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title: 'Reporte de Chequeo de Centros vs Consolidado | SISCO',
+        },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [

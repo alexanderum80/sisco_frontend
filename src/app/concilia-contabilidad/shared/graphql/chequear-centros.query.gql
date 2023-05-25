@@ -1,0 +1,18 @@
+query ChequearCentros($chequearCentrosInput: ChequearCentrosInput!) {
+    chequearCentros(chequearCentrosInput: $chequearCentrosInput) {
+        Centro
+        Unidad
+        Consolidado
+        Periodo
+        IdConsulta
+        Consulta
+        Cuenta
+        SubCuenta
+        Analisis1
+        Analisis2
+        Analisis3
+        Analisis4
+        Analisis5
+        Total
+    }
+}

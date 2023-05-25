@@ -1,5 +1,3 @@
-import { IMutationResponse } from 'src/app/shared/models';
-
 export class IConciliaReporteClasificador {
   cuenta: string;
   subcuenta: string;
@@ -92,11 +90,28 @@ export class IConciliaContabilidad {
   Informacion: IConciliaInformacionContabilidad[];
 }
 
+export class IChequeoCentroVsConsolidado {
+  Centro: string;
+  Unidad: string;
+  Consolidado: boolean;
+  Periodo: number;
+  IdConsulta: string;
+  Consulta: string;
+  Cuenta?: string;
+  SubCuenta?: string;
+  Analisis1?: string;
+  Analisis2?: string;
+  Analisis3?: string;
+  Analisis4?: string;
+  Analisis5?: string;
+  Total: number;
+}
+
 export interface ConciliaContabilidadQueryResponse {
   conciliaContabilidad: IConciliaContabilidad;
+  chequearCentros: IChequeoCentroVsConsolidado[];
 }
 
 export interface ConciliaContabilidadMutationReponse {
   iniciarSaldos: boolean;
-  chequearCentros: IMutationResponse;
 }
