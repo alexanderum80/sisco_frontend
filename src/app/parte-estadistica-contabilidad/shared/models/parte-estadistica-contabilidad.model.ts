@@ -1,5 +1,7 @@
 export interface IParteEstadisticaContabilidad {
+  IdDivision: number;
   Division: string;
+  IdCentro: number;
   Centro: string;
   Consolidado: boolean;
   Annio: number;

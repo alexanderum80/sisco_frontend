@@ -1,6 +1,8 @@
   query ContaEstadisticaParte {
     contaEstadisticaParte {
+      IdDivision
       Division
+      IdCentro
       Centro
       Consolidado
       Anno

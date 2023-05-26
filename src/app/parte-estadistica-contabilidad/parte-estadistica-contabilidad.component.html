@@ -5,6 +5,19 @@
     class="h-full w-full"
     header="Parte de la Información Estadística de la Contabilidad"
     [closeButton]="false">
+    <form [formGroup]="fg">
+      <div class="flex m-2">
+        <png-dropdown
+          class="w-25rem mr-3"
+          [fg]="fg"
+          control="idDivision"
+          label="División"
+          [optionsValues]="divisionesValues"
+          [filter]="true"
+          [required]="false"
+          [showClear]="false"></png-dropdown>
+      </div>
+    </form>
     <div class="conciliacion-detalle shadow-1 mt-1">
       <png-table
         [columns]="displayedColumns"
@@ -15,7 +28,7 @@
         [totalizeTable]="true"
         [totalizeGroup]="true"
         (filteredData)="updateFilteredDatasource($event)"
-        scrollHeight="calc(100vh - 160px)"></png-table>
+        scrollHeight="calc(100vh - 205px)"></png-table>
     </div>
     <div class="flex justify-content-end mt-2">
       <png-button

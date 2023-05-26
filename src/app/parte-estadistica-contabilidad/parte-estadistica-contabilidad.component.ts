@@ -2,17 +2,30 @@ import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { ITableColumns } from './../shared/ui/prime-ng/table/table.model';
 import { SweetalertService } from './../shared/helpers/sweetalert.service';
 import { SelectItem } from 'primeng/api';
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  AfterContentChecked,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { cloneDeep, orderBy } from 'lodash';
 import { ParteEstadisticaContabilidadService } from './shared/services/parte-estadistica-contabilidad.service';
 import { IParteEstadisticaContabilidad } from './shared/models/parte-estadistica-contabilidad.model';
+import { FormGroup } from '@angular/forms';
+import { DivisionesService } from '../shared/services/divisiones.service';
 
 @Component({
   selector: 'app-parte-estadistica-contabilidad',
   templateUrl: './parte-estadistica-contabilidad.component.html',
   styleUrls: ['./parte-estadistica-contabilidad.component.scss'],
 })
-export class ParteEstadisticaContabilidadComponent implements OnInit {
+export class ParteEstadisticaContabilidadComponent
+  implements OnInit, AfterViewInit, AfterContentChecked
+{
+  fg: FormGroup;
+
+  originalDataSource: IParteEstadisticaContabilidad[] = [];
   dataSource: IParteEstadisticaContabilidad[] = [];
   filteredDataSource: IParteEstadisticaContabilidad[] = [];
 
@@ -61,25 +74,83 @@ export class ParteEstadisticaContabilidadComponent implements OnInit {
 
   constructor(
     private _parteEstadisticaContaSvc: ParteEstadisticaContabilidadService,
+    private _divisionesSvc: DivisionesService,
     private _swalSvc: SweetalertService,
-    private _pdfMakeSvc: PdfmakeService
+    private _pdfMakeSvc: PdfmakeService,
+    private cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
+    this.fg = this._parteEstadisticaContaSvc.fg;
+    this.fg.reset();
+
+    this._getDivisiones();
     this._conciliar();
+  }
+
+  ngAfterViewInit(): void {
+    this._subscribeToFgChange();
+  }
+
+  ngAfterContentChecked(): void {
+    this.cd.detectChanges();
+  }
+
+  private _getDivisiones(): void {
+    try {
+      this._parteEstadisticaContaSvc.subscription.push(
+        this._divisionesSvc.getDivisiones().subscribe({
+          next: res => {
+            const result = res.getAllDivisiones;
+
+            this.divisionesValues = result.map(d => {
+              return {
+                value: +d.IdDivision,
+                label: d.IdDivision + '-' + d.Division,
+              };
+            });
+
+            this.divisionesValues.unshift({
+              value: 0,
+              label: '-- TODAS LAS DIVISIONES --',
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
+        })
+      );
+    } catch (err: any) {
+      this._swalSvc.error(err);
+    }
   }
 
   private _conciliar(): void {
     this._parteEstadisticaContaSvc.getEstadistica().subscribe({
       next: res => {
         this.loading = false;
-        this.dataSource = cloneDeep(orderBy(res, ['IdDivision', 'IdCentro']));
+        this.originalDataSource = cloneDeep(
+          orderBy(res, ['IdDivision', 'IdCentro'])
+        );
+        this.dataSource = cloneDeep(this.originalDataSource);
       },
       error: err => {
         this.loading = false;
         this._swalSvc.error(err);
       },
     });
+  }
+
+  private _subscribeToFgChange(): void {
+    this._parteEstadisticaContaSvc.subscription.push(
+      this.fg.controls['idDivision'].valueChanges.subscribe(idDivision => {
+        this.dataSource = !idDivision
+          ? cloneDeep(this.originalDataSource)
+          : cloneDeep(
+              this.originalDataSource.filter(f => f.IdDivision === idDivision)
+            );
+      })
+    );
   }
 
   updateFilteredDatasource(data: IParteEstadisticaContabilidad[]): void {

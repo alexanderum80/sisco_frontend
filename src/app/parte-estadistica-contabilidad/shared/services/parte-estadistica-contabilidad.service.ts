@@ -12,11 +12,16 @@ import {
 import { Observable, Subscription } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { uniqBy } from 'lodash';
+import { FormControl, FormGroup } from '@angular/forms';
 
 const parteEstadisticaQuery = require('graphql-tag/loader!../graphql/parte-estadistica-contabilidad.query.gql');
 
 @Injectable()
 export class ParteEstadisticaContabilidadService {
+  fg: FormGroup = new FormGroup({
+    idDivision: new FormControl(0, { initialValueIsDefault: true }),
+  });
+
   subscription: Subscription[] = [];
 
   constructor(private _apolloSvc: ApolloService) {}
@@ -142,10 +147,14 @@ export class ParteEstadisticaContabilidadService {
               _totalAnulados += p.Anulados;
 
               return [
-                p.Centro,
+                {
+                  text: p.Centro,
+                  color: p.Conexion !== 'Conectado' ? 'red' : 'black',
+                },
                 {
                   text: p.Consolidado ? 'X' : '',
                   alignment: 'center',
+                  color: p.Conexion !== 'Conectado' ? 'red' : 'black',
                 },
                 {
                   text: p.FechaActualizacion
@@ -156,6 +165,7 @@ export class ParteEstadisticaContabilidadService {
                       )
                     : '',
                   alignment: 'center',
+                  color: p.Conexion !== 'Conectado' ? 'red' : 'black',
                 },
                 {
                   text: p.FechaInicio
@@ -166,6 +176,7 @@ export class ParteEstadisticaContabilidadService {
                       )
                     : '',
                   alignment: 'center',
+                  color: p.Conexion !== 'Conectado' ? 'red' : 'black',
                 },
                 {
                   text: p.FechaFin
@@ -176,26 +187,32 @@ export class ParteEstadisticaContabilidadService {
                       )
                     : '',
                   alignment: 'center',
+                  color: p.Conexion !== 'Conectado' ? 'red' : 'black',
                 },
                 {
                   text: p.Comprobantes,
                   alignment: 'right',
+                  color: p.Conexion !== 'Conectado' ? 'red' : 'black',
                 },
                 {
                   text: p.Traspasados,
                   alignment: 'right',
+                  color: p.Conexion !== 'Conectado' ? 'red' : 'black',
                 },
                 {
                   text: p.SinTraspasar,
                   alignment: 'right',
+                  color: p.Conexion !== 'Conectado' ? 'red' : 'black',
                 },
                 {
                   text: p.Inconclusos,
                   alignment: 'right',
+                  color: p.Conexion !== 'Conectado' ? 'red' : 'black',
                 },
                 {
                   text: p.Anulados,
                   alignment: 'right',
+                  color: p.Conexion !== 'Conectado' ? 'red' : 'black',
                 },
               ];
             }),
