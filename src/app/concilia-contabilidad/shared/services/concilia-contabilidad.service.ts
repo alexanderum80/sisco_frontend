@@ -662,7 +662,7 @@ export class ConciliaContabilidadService {
 
     const returnValue = {
       table: {
-        widths: ['*', '*', '*', '*', '*', '*', '*', '*'],
+        widths: [50, 50, 50, 50, 50, 50, 50, '*'],
         body: [
           [
             {

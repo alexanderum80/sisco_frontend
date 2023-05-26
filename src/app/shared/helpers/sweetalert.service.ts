@@ -26,7 +26,9 @@ export class SweetalertService {
       html:
         typeof error === 'string'
           ? error.replace('Error: ', '')
-          : error.graphQLErrors[0]?.message || error,
+          : error.graphQLErrors && error.graphQLErrors.length
+          ? error.graphQLErrors[0]?.message.replace('Error: ', '')
+          : error.message?.replace('Error: ', '') || error,
       confirmButtonText: 'Aceptar',
       allowOutsideClick: false,
     });
