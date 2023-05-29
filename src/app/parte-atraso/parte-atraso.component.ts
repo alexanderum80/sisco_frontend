@@ -63,6 +63,8 @@ export class ParteAtrasoComponent
 
   ngOnInit(): void {
     this.fg = this._parteAtrasoSvc.fg;
+    this.fg.reset();
+
     this._subscribeToFgChanges();
 
     this._getDivisiones();

@@ -44,4 +44,5 @@ export enum ETipoUsuarios {
   'Usuario' = 2,
   'Usuario Avanzado' = 3,
   'Financista' = 4,
+  'Supervisión' = 5,
 }

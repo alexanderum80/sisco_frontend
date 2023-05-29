@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
-import { AuthenticationService } from './authentication.service';
+import { AuthenticationService } from '../services/authentication.service';
 
 export class RoleGuard {
   static forRoles(...roles: number[]) {
