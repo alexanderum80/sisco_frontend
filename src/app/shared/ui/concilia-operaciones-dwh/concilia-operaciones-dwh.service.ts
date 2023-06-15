@@ -7,7 +7,6 @@ import { numberFormatter } from './../../../shared/models/number';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { SelectItem } from 'primeng/api';
 import { Subscription } from 'rxjs';
 
 @Injectable({
@@ -15,12 +14,12 @@ import { Subscription } from 'rxjs';
 })
 export class ConcilaOperacionesDwhService {
   fg: FormGroup = new FormGroup({
-    idDivision: new FormControl('', { initialValueIsDefault: true }),
-    idSubdivision: new FormControl('', { initialValueIsDefault: true }),
-    idUnidad: new FormControl('', { initialValueIsDefault: true }),
-    idDivisionOD: new FormControl('', { initialValueIsDefault: true }),
-    idSubdivisionOD: new FormControl('', { initialValueIsDefault: true }),
-    idUnidadOD: new FormControl('', { initialValueIsDefault: true }),
+    idDivision: new FormControl(null, { initialValueIsDefault: true }),
+    idSubdivision: new FormControl('0', { initialValueIsDefault: true }),
+    idUnidad: new FormControl('0', { initialValueIsDefault: true }),
+    idDivisionOD: new FormControl(null, { initialValueIsDefault: true }),
+    idSubdivisionOD: new FormControl('0', { initialValueIsDefault: true }),
+    idUnidadOD: new FormControl('0', { initialValueIsDefault: true }),
     fechaInicial: new FormControl(getFirtsDateOfMonth(new Date()), {
       initialValueIsDefault: true,
     }),
@@ -32,21 +31,78 @@ export class ConcilaOperacionesDwhService {
 
   constructor() {}
 
-  public async getDivision(
-    idDivision: number,
-    divisionesList: SelectItem[]
-  ): Promise<any> {
-    const definition = [];
-
-    const _division = divisionesList.find(u => u.value === idDivision);
-
-    definition.push({
-      text: `División:  ${_division?.label} `,
-      bold: true,
-      margin: [0, 5, 0, 0],
-    });
-
-    return definition;
+  async getEmisorReceptorReporte() {
+    return {
+      margin: [0, 10, 0, 0],
+      columns: [
+        [
+          {
+            text: 'Centro a Analizar',
+            bold: true,
+            margin: [0, 0, 0, 5],
+          },
+          {
+            text: `División: ${
+              this.fg.get('idDivision')?.value?.IdDivision
+                ? this.fg.get('idDivision')?.value?.IdDivision +
+                  '-' +
+                  this.fg.get('idDivision')?.value?.Division
+                : '--TODAS--'
+            }`,
+            margin: [0, 0, 0, 5],
+          },
+          {
+            text: `Subdivisión: ${
+              this.fg.get('idSubdivision')?.value?.IdSubdivision
+                ? this.fg.get('idSubdivision')?.value?.IdSubdivision +
+                  '-' +
+                  this.fg.get('idSubdivision')?.value?.Subdivision
+                : '--TODAS--'
+            }`,
+            margin: [0, 0, 0, 5],
+          },
+          {
+            text: `Unidad:   ${
+              this.fg.get('idUnidad')?.value?.Nombre || '--TODAS--'
+            }`,
+            margin: [0, 0, 0, 5],
+          },
+        ],
+        [
+          {
+            text: 'Centro Emisor / Receptor',
+            bold: true,
+            margin: [0, 0, 0, 5],
+          },
+          {
+            text: `División: ${
+              this.fg.get('idDivisionOD')?.value?.IdDivision
+                ? this.fg.get('idDivisionOD')?.value?.IdDivision +
+                  '-' +
+                  this.fg.get('idDivisionOD')?.value?.Division
+                : '--TODAS--'
+            }`,
+            margin: [0, 0, 0, 5],
+          },
+          {
+            text: `Subdivisión: ${
+              this.fg.get('idSubdivisionOD')?.value?.IdSubdivision
+                ? this.fg.get('idSubdivisionOD')?.value?.IdSubdivision +
+                  '-' +
+                  this.fg.get('idSubdivisionOD')?.value?.Subdivision
+                : '--TODAS--'
+            }`,
+            margin: [0, 0, 0, 5],
+          },
+          {
+            text: `Unidad:   ${
+              this.fg.get('idUnidadOD')?.value?.Nombre || '--TODAS--'
+            }`,
+            margin: [0, 0, 0, 5],
+          },
+        ],
+      ],
+    };
   }
 
   public async getConciliacionDefinition(

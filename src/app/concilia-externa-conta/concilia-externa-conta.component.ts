@@ -459,8 +459,8 @@ export class ConciliaExternaContaComponent
 
   private _loadEmpleados(origenDestino: boolean) {
     const idDivision = origenDestino
-      ? +this.fg.controls['divisionOD'].value
-      : +this.fg.controls['division'].value;
+      ? +this.fg.controls['divisionOD'].value.IdDivision || null
+      : +this.fg.controls['division'].value.IdDivision || null;
 
     if (!idDivision) {
       return;

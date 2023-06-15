@@ -1,9 +1,12 @@
 import { ApolloService } from '../../../shared/helpers/apollo.service';
 import { conciliaAftApi } from './../graphql/concilia-aft.actions';
-import { ConciliaAFTQueryResponse } from './../models/concilia-aft.model';
+import {
+  ConciliaAFTQueryResponse,
+  IDiferenciaClasificadorCNMB,
+} from './../models/concilia-aft.model';
 import { SelectItem } from 'primeng/api';
 import { numberFormatter } from './../../../shared/models/number';
-import { toNumber } from 'lodash';
+import { toNumber, uniq } from 'lodash';
 import { Subscription, Observable } from 'rxjs';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
@@ -174,25 +177,21 @@ export class ConciliaAftService {
     return definition;
   }
 
-  public async getClasificadorDefinition(clasifData: any): Promise<any> {
-    const _clasifData = await this.getFormattedClasificador(clasifData);
-
+  public async getClasificadorDefinition(
+    clasifData: IDiferenciaClasificadorCNMB[]
+  ): Promise<any> {
     const definition: any[] = [];
 
-    const groupData = _clasifData.filter((d: any) => d.isGroupBy);
+    const _unidades = uniq(clasifData.map(d => d.Unidad));
 
-    groupData.forEach((element: any) => {
-      if (element.field) {
-        definition.push({
-          text: element.field + ': ' + element.value,
-          bold: true,
-          margin: [0, 5, 0, 0],
-        });
-      }
+    _unidades.forEach(_unidad => {
+      definition.push({
+        text: 'Unidad: ' + _unidad,
+        bold: true,
+        margin: [0, 5, 0, 0],
+      });
 
-      const data = _clasifData.filter(
-        (f: any) => f.IdUnidad === element.IdUnidad && !f.isGroupBy
-      );
+      const data = clasifData.filter(f => f.Unidad === _unidad);
 
       if (data.length) {
         definition.push(this._getClasificadorTable(data));
@@ -515,55 +514,20 @@ export class ConciliaAftService {
     return returnValue;
   }
 
-  public async getFormattedClasificador(data: any[]): Promise<any> {
-    let _idUnidad = 0;
-
-    const result: any[] = [];
-
-    if (data && data.length) {
-      data.forEach(element => {
-        if (element.IdUnidad !== _idUnidad) {
-          result.push({
-            field: 'Unidad',
-            value: element.Unidad,
-            IdUnidad: element.IdUnidad,
-            isGroupBy: true,
-          });
-
-          _idUnidad = element.IdUnidad;
-
-          result.push({
-            IdUnidad: element.IdUnidad,
-            CNMB: element.CNMB,
-            DCNMB: element.DCNMB,
-            TREPO: element.TREPO,
-            TREPO_UC: element.TREPO_UC,
-          });
-        } else {
-          result.push({
-            IdUnidad: element.IdUnidad,
-            CNMB: element.CNMB,
-            DCNMB: element.DCNMB,
-            TREPO: element.TREPO,
-            TREPO_UC: element.TREPO_UC,
-          });
-        }
-      });
-    }
-
-    return result;
-  }
-
-  private _getClasificadorTable(clasif: any): object {
+  private _getClasificadorTable(clasif: IDiferenciaClasificadorCNMB[]): object {
     let returnValue;
 
     returnValue = {
       table: {
-        widths: [60, 250, 80, 80],
+        widths: [30, 40, 200, 40, 80, 80],
         body: [
           [
             {
-              text: 'CNMB',
+              text: 'Grupo',
+              style: 'tableHeader',
+            },
+            {
+              text: 'Código',
               style: 'tableHeader',
             },
             {
@@ -571,19 +535,40 @@ export class ConciliaAftService {
               style: 'tableHeader',
             },
             {
+              text: 'Deprecia',
+              style: 'tableHeader',
+              alignment: 'center',
+            },
+            {
               text: 'TASA Clasificador',
               style: 'tableHeader',
+              alignment: 'right',
             },
             {
               text: 'TASA Unidad',
               style: 'tableHeader',
+              alignment: 'right',
             },
           ],
-          ...clasif.map(
-            (clas: { CNMB: any; DCNMB: any; TREPO: any; TREPO_UC: any }) => {
-              return [clas.CNMB, clas.DCNMB, clas.TREPO, clas.TREPO_UC];
-            }
-          ),
+          ...clasif.map((clas: IDiferenciaClasificadorCNMB) => {
+            return [
+              clas.Grupo,
+              clas.Codigo,
+              clas.Descripcion,
+              {
+                text: clas.Deprecia ? 'X' : '',
+                alignment: 'center',
+              },
+              {
+                text: clas.Tasa,
+                alignment: 'right',
+              },
+              {
+                text: clas.TasaUC,
+                alignment: 'right',
+              },
+            ];
+          }),
         ],
         margin: [0, 10, 0, 0],
       },

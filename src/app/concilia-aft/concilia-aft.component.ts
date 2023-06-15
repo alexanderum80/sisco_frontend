@@ -87,10 +87,12 @@ export class ConciliaAftComponent
 
   displayedColumnsClasificador: ITableColumns[] = [
     { header: 'Unidad', field: 'Unidad', type: 'string' },
-    { header: 'CNMB', field: 'CNMB', type: 'string' },
-    { header: 'Descripción', field: 'DCNMB', type: 'string' },
-    { header: 'Tasa Clasificador', field: 'TREPO', type: 'decimal' },
-    { header: 'Tasa Unidad', field: 'TREPO_UC', type: 'decimal' },
+    { header: 'Grupo', field: 'Grupo', type: 'string' },
+    { header: 'Código', field: 'Codigo', type: 'string' },
+    { header: 'Descripción', field: 'Descripcion', type: 'string' },
+    { header: 'Deprecia', field: 'Deprecia', type: 'boolean' },
+    { header: 'Tasa Clasificador', field: 'Tasa', type: 'decimal' },
+    { header: 'Tasa Unidad', field: 'TasaUC', type: 'decimal' },
   ];
 
   centrosValues: SelectItem[] = [];
@@ -343,11 +345,14 @@ export class ConciliaAftComponent
   private async _reporteDiferenciaClasificador(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title: 'Diferencias en Clasificador de Subgrupos AFT | SISCO',
+        },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [
           await this._pdfMakeSvc.getHeaderDefinition(
-            'Diferencias en el Clasificador CNMB'
+            'Diferencias en el Clasificador de Subgrupos'
           ),
           await this._pdfMakeSvc.getPeriodoDefinition(
             +moment(this.fg.controls['periodo'].value).format('MM'),

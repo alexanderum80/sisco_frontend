@@ -20,10 +20,12 @@ query ConciliaAFT($conciliaAftInput: ConciliaAftInput!) {
     }
     DiferenciaClasificadorCNMB{
       Unidad
-      CNMB
-      DCNMB
-      TREPO 
-      TREPO_UC
+      Grupo
+      Codigo
+      Descripcion
+      Deprecia
+      Tasa
+      TasaUC
     }
   }
 }

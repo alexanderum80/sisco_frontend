@@ -13,7 +13,7 @@
           placeholder="Seleccione la División"
           [filter]="true"
           [required]="true"
-          [showClear]="true"></png-dropdown>
+          [showClear]="false"></png-dropdown>
       </div>
       <div>
         <png-dropdown
@@ -22,9 +22,8 @@
           control="idSubdivision"
           label="Subdivisión"
           [optionsValues]="subdivisionesValues"
-          placeholder="<TODAS>"
           [filter]="true"
-          [showClear]="true"></png-dropdown>
+          [showClear]="false"></png-dropdown>
       </div>
       <div>
         <png-dropdown
@@ -33,9 +32,8 @@
           control="idUnidad"
           label="Unidad"
           [optionsValues]="unidadesValues"
-          placeholder="<TODAS>"
           [filter]="true"
-          [showClear]="true"></png-dropdown>
+          [showClear]="false"></png-dropdown>
       </div>
     </p-fieldset>
     <p-fieldset class="col-4 ml-3" legend="Centro Origen / Destino">
@@ -50,7 +48,7 @@
           [filter]="true"
           [required]="true"
           [disabled]="interna"
-          [showClear]="true"></png-dropdown>
+          [showClear]="false"></png-dropdown>
       </div>
       <div>
         <png-dropdown
@@ -59,9 +57,8 @@
           control="idSubdivisionOD"
           label="Subdivisión"
           [optionsValues]="subdivisionesODValues"
-          placeholder="<TODAS>"
           [filter]="true"
-          [showClear]="true"></png-dropdown>
+          [showClear]="false"></png-dropdown>
       </div>
       <div>
         <png-dropdown
@@ -70,9 +67,8 @@
           control="idUnidadOD"
           label="Unidad"
           [optionsValues]="unidadesODValues"
-          placeholder="<TODAS>"
           [filter]="true"
-          [showClear]="true"></png-dropdown>
+          [showClear]="false"></png-dropdown>
       </div>
     </p-fieldset>
     <div class="ml-3 mt-2 flex flex-column">

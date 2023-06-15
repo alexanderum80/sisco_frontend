@@ -19,6 +19,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { cloneDeep } from 'lodash';
+import { AuthenticationService } from '../../services/authentication.service';
 
 const conciliaInternaDWHQuery = require('graphql-tag/loader!../../../concilia-interna-dwh/shared/graphql/concilia-interna-dwh.query.gql');
 const conciliaExternaDWHQuery = require('graphql-tag/loader!../../../concilia-externa-dwh/shared/graphql/concilia-externa-dwh.query.gql');
@@ -81,7 +82,8 @@ export class ConciliaOperacionesDwhComponent
     private _conciliarDWHSvc: ConcilaOperacionesDwhService,
     private _pdfMakeSvc: PdfmakeService,
     private _swalSvc: SweetalertService,
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private _authenticationSvc: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -90,6 +92,32 @@ export class ConciliaOperacionesDwhComponent
 
     this._getDivisiones();
     this._subscribeToFgValueChanges();
+
+    this.subdivisionesValues = [
+      {
+        value: '0',
+        label: '--TODAS--',
+      },
+    ];
+    this.subdivisionesODValues = [
+      {
+        value: '0',
+        label: '--TODAS--',
+      },
+    ];
+
+    this.unidadesValues = [
+      {
+        value: '0',
+        label: '--TODAS--',
+      },
+    ];
+    this.unidadesODValues = [
+      {
+        value: '0',
+        label: '--TODAS--',
+      },
+    ];
   }
 
   ngAfterContentChecked(): void {
@@ -108,12 +136,14 @@ export class ConciliaOperacionesDwhComponent
             next: res => {
               const result = res.getAllDivisionesByUsuario;
 
-              this.divisionesValues = result.map(d => {
-                return {
-                  value: d.IdDivision,
+              result.map(d => {
+                this.divisionesValues.push({
+                  value: d,
                   label: d.IdDivision + '-' + d.Division,
-                };
+                });
               });
+
+              this.fg.controls['idDivision'].setValue(null);
             },
             error: err => {
               this._swalSvc.error(err);
@@ -121,16 +151,27 @@ export class ConciliaOperacionesDwhComponent
           })
         );
       } else {
+        if (
+          this._authenticationSvc.hasSuperAdminPermission() ||
+          this._authenticationSvc.hasFinancistaPermission()
+        )
+          this.divisionesValues = [
+            {
+              value: '0',
+              label: '--TODAS--',
+            },
+          ];
+
         this._conciliarDWHSvc.subscription.push(
           this._divisionesSvc.getDivisiones().subscribe({
             next: res => {
               const result = res.getAllDivisiones;
 
-              this.divisionesValues = result.map(d => {
-                return {
-                  value: d.IdDivision,
+              result.map(d => {
+                this.divisionesValues.push({
+                  value: d,
                   label: d.IdDivision + '-' + d.Division,
-                };
+                });
               });
             },
             error: err => {
@@ -147,8 +188,8 @@ export class ConciliaOperacionesDwhComponent
   private _getSubdivisiones(origenDestino: boolean): void {
     try {
       const idDivision = origenDestino
-        ? this.fg.controls['idDivisionOD'].value
-        : this.fg.controls['idDivision'].value;
+        ? this.fg.get('idDivisionOD')?.value?.IdDivision || null
+        : this.fg.get('idDivision')?.value?.IdDivision || null;
 
       if (!idDivision) {
         return;
@@ -162,18 +203,31 @@ export class ConciliaOperacionesDwhComponent
               const data = res.getSubdivisionesByIdDivision;
 
               if (origenDestino) {
-                this.subdivisionesODValues = data.map((d: any) => {
-                  return {
-                    value: d.IdSubdivision,
+                this.subdivisionesODValues = [
+                  {
+                    value: '0',
+                    label: '--TODAS--',
+                  },
+                ];
+                data.map((d: any) => {
+                  this.subdivisionesODValues.push({
+                    value: d,
                     label: d.IdSubdivision + '-' + d.Subdivision,
-                  };
+                  });
                 });
               } else {
-                this.subdivisionesValues = data.map((d: any) => {
-                  return {
-                    value: d.IdSubdivision,
+                this.subdivisionesValues = [
+                  {
+                    value: '0',
+                    label: '--TODAS--',
+                  },
+                ];
+
+                data.map((d: any) => {
+                  this.subdivisionesValues.push({
+                    value: d,
                     label: d.IdSubdivision + '-' + d.Subdivision,
-                  };
+                  });
                 });
               }
             },
@@ -190,8 +244,8 @@ export class ConciliaOperacionesDwhComponent
   private _getUnidades(origenDestino: boolean): void {
     try {
       const idSubdivision = origenDestino
-        ? this.fg.controls['idSubdivisionOD'].value
-        : this.fg.controls['idSubdivision'].value;
+        ? this.fg.get('idSubdivisionOD')?.value?.IdSubdivision || null
+        : this.fg.get('idSubdivision')?.value?.IdSubdivision || null;
       if (!idSubdivision) {
         return;
       }
@@ -202,18 +256,32 @@ export class ConciliaOperacionesDwhComponent
             const data = res.getUnidadesByIdSubdivision;
 
             if (origenDestino) {
-              this.unidadesODValues = data.map((u: any) => {
-                return {
-                  value: u.IdUnidad,
+              this.unidadesODValues = [
+                {
+                  value: '0',
+                  label: '--TODAS--',
+                },
+              ];
+
+              data.map((u: any) => {
+                this.unidadesODValues.push({
+                  value: u,
                   label: u.Nombre,
-                };
+                });
               });
             } else {
-              this.unidadesValues = data.map((u: any) => {
-                return {
-                  value: u.IdUnidad,
+              this.unidadesValues = [
+                {
+                  value: '0',
+                  label: '--TODAS--',
+                },
+              ];
+
+              data.map((u: any) => {
+                this.unidadesValues.push({
+                  value: u,
                   label: u.Nombre,
-                };
+                });
               });
             }
           },
@@ -232,9 +300,8 @@ export class ConciliaOperacionesDwhComponent
     this._conciliarDWHSvc.subscription.push(
       this.fg.controls['idDivision'].valueChanges.subscribe(value => {
         if (this.interna) this.fg.controls['idDivisionOD'].setValue(value);
-        this.fg.controls['idSubdivision'].setValue(null);
+        this.fg.controls['idSubdivision'].setValue('0');
 
-        this.subdivisionesValues = [];
         this._getSubdivisiones(false);
 
         this.dataSourceOriginal = [];
@@ -244,9 +311,8 @@ export class ConciliaOperacionesDwhComponent
 
     this._conciliarDWHSvc.subscription.push(
       this.fg.controls['idSubdivision'].valueChanges.subscribe(() => {
-        this.fg.controls['idUnidad'].setValue(null);
+        this.fg.controls['idUnidad'].setValue('0');
 
-        this.unidadesValues = [];
         this._getUnidades(false);
 
         this.dataSourceOriginal = [];
@@ -264,9 +330,8 @@ export class ConciliaOperacionesDwhComponent
     // Centro Origen/Destino
     this._conciliarDWHSvc.subscription.push(
       this.fg.controls['idDivisionOD'].valueChanges.subscribe(() => {
-        this.fg.controls['idSubdivisionOD'].setValue(null);
+        this.fg.controls['idSubdivisionOD'].setValue('0');
 
-        this.subdivisionesODValues = [];
         this._getSubdivisiones(true);
 
         this.dataSourceOriginal = [];
@@ -276,9 +341,8 @@ export class ConciliaOperacionesDwhComponent
 
     this._conciliarDWHSvc.subscription.push(
       this.fg.controls['idSubdivisionOD'].valueChanges.subscribe(() => {
-        this.fg.controls['idUnidadOD'].setValue(null);
+        this.fg.controls['idUnidadOD'].setValue('0');
 
-        this.unidadesODValues = [];
         this._getUnidades(true);
 
         this.dataSourceOriginal = [];
@@ -331,12 +395,14 @@ export class ConciliaOperacionesDwhComponent
       const payload = {
         FechaInicial: this.fg.controls['fechaInicial'].value,
         FechaFinal: this.fg.controls['fechaFinal'].value,
-        IdDivision: this.fg.controls['idDivision'].value || 0,
-        IdSubdivision: this.fg.controls['idSubdivision'].value || 0,
-        IdUnidad: this.fg.controls['idUnidad'].value || 0,
-        IdDivisionOD: this.fg.controls['idDivisionOD'].value || 0,
-        IdSubdivisionOD: this.fg.controls['idSubdivisionOD'].value || 0,
-        IdUnidadOD: this.fg.controls['idUnidadOD'].value || 0,
+        IdDivision: this.fg.controls['idDivision'].value.IdDivision || 0,
+        IdSubdivision:
+          this.fg.controls['idSubdivision'].value.IdSubdivision || 0,
+        IdUnidad: this.fg.controls['idUnidad'].value.IdUnidad || 0,
+        IdDivisionOD: this.fg.controls['idDivisionOD'].value.IdDivision || 0,
+        IdSubdivisionOD:
+          this.fg.controls['idSubdivisionOD'].value.IdSubdivision || 0,
+        IdUnidadOD: this.fg.controls['idUnidadOD'].value.IdUnidad || 0,
       };
 
       const _query = this.interna
@@ -383,16 +449,18 @@ export class ConciliaOperacionesDwhComponent
       const fechaFinal = this.fg.controls['fechaFinal'].value;
 
       const documentDefinitions = {
+        info: {
+          title: `Conciliación ${
+            this.interna ? 'Interna' : 'Externa'
+          } Golden DWH | SISCO`,
+        },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [
           await this._pdfMakeSvc.getHeaderDefinition(
-            'Conciliación Interna Golden DWH'
+            `Conciliación ${this.interna ? 'Interna' : 'Externa'} Golden DWH`
           ),
-          await this._conciliarDWHSvc.getDivision(
-            this.fg.controls['idDivision'].value,
-            this.divisionesValues
-          ),
+          await this._conciliarDWHSvc.getEmisorReceptorReporte(),
           await this._conciliarDWHSvc.getConciliacionDefinition(
             this.dataSource,
             fechaInicial,

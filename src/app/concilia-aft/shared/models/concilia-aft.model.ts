@@ -19,10 +19,12 @@ export interface IConciliaAFT {
 
 export interface IDiferenciaClasificadorCNMB {
   Unidad: string;
-  CNMB: string;
-  DCNMB: string;
-  TREPO: number;
-  TREPO_UC: number;
+  Grupo: string;
+  Codigo: string;
+  Descripcion: string;
+  Deprecia: boolean;
+  Tasa: number;
+  TasaUC: number;
 }
 
 interface IConciliaAftData {
