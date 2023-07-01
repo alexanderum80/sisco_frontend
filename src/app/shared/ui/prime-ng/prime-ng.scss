@@ -139,8 +139,12 @@ p-inputnumber, .p-inputnumber {
     // margin-top: -0.6rem !important;
 }
 
-.p-dropdown-panel .p-dropdown-items .p-dropdown-item, .p-multiselect-item {
-    padding: 0.5rem 1rem !important;
+.p-dropdown-panel {
+    border: 1px solid var(--primary-500) !important;
+
+    .p-dropdown-items .p-dropdown-item, .p-multiselect-item {
+        padding: 0.5rem 1rem !important;
+    }
 }
 
 .p-dropdown .p-dropdown-label {
@@ -230,9 +234,31 @@ p-inputnumber, .p-inputnumber {
     height: 1.5rem !important;
 }
 
-.p-menubar {
+.p-tieredmenu, .p-menubar, .p-menu-list {
     padding: 0 !important;
+    background: var(--primary-700) !important;
+
+    .p-menubar-root-list > .p-menuitem > .p-menuitem-link,
+    .p-menuitem-link,
+    .p-menuitem.p-menuitem-active > .p-menuitem-link {
+        .p-menuitem-text, .p-submenu-icon, .p-menuitem-icon {
+            color: white !important;
+        }
+
+        &:not(.p-disabled):hover {
+            background: var(--primary-500) !important;
+        }
+    }
+    
+    .p-menuitem.p-menuitem-active > .p-menuitem-link {
+        background: var(--primary-500) !important;
+    }
+
+    .p-submenu-list {
+        background: var(--primary-700) !important;
+    }
 }
+
 
 .p-submenu-list {
     z-index: 10 !important;
@@ -259,6 +285,12 @@ p-slidemenu {
         padding: .5rem !important;
         height: 2rem !important;
         font-weight: 500;
+        background: var(--primary-700) !important;
+        color: white !important;
+
+        .p-panel-header-icon:enabled:hover {
+            background: var(--primary-500) !important;
+        }
     }
 
     .p-panel-title {
@@ -267,6 +299,7 @@ p-slidemenu {
 
     .p-panel-content {
         padding: .5rem !important;
+        background: var(--cyan-300) !important;
     }
 }
 
@@ -297,6 +330,8 @@ p-slidemenu {
 .p-dialog {
     .p-dialog-header {
         padding: .5rem !important;
+        background: var(--primary-700) !important;
+        color: white !important;
 
         .p-dialog-title {
             font-size: inherit !important;
@@ -361,14 +396,15 @@ small.p-error {
 
 .p-tieredmenu.p-tieredmenu-overlay,
 .p-menubar .p-submenu-list {
-    border: 1px solid lightblue !important;
+    border: 1px solid var(--primary-500) !important;
 }
 
 a.p-ripple.p-element.p-menuitem-link.ng-star-inserted.p-menuitem-link-active {
-    background-color: skyblue;
+    background-color: var(--primary-500) !important;
     cursor: default !important;
 
     & span {
         color: white;
     }
 }
+

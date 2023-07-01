@@ -8,7 +8,7 @@
       <div class="h-full w-full">
         <form [formGroup]="fg">
           <div class="flex p-1">
-            <div class="flex flex-column w-25rem ml-3">
+            <png-card class="w-25rem ml-3">
               <div>
                 <png-dropdown
                   class="w-full"
@@ -31,14 +31,14 @@
                   dateFormat="MM/yy"
                   [required]="true"></png-calendar>
               </div>
-            </div>
+            </png-card>
             <p-fieldset class="ml-3" legend="Entre">
               <png-radio-button
                 [fg]="fg"
                 control="tipoCentro"
                 [items]="tipoCentrosValues"></png-radio-button>
             </p-fieldset>
-            <div class="ml-3 w-25rem">
+            <png-card class="ml-3 w-25rem">
               <png-dropdown
                 class="w-full"
                 [fg]="fg"
@@ -67,7 +67,7 @@
                   [fg]="fg"
                   control="soloDiferencias"></png-checkbox>
               </div>
-            </div>
+            </png-card>
           </div>
         </form>
         <div class="conciliacion-detalle shadow-1 mt-2">

@@ -13,7 +13,7 @@
                 [items]="tipoCentrosValues"
                 [disabled]="true"></png-radio-button>
             </png-card>
-            <div class="flex flex-column w-25rem ml-3">
+            <png-card class="w-25rem ml-3">
               <div>
                 <png-dropdown
                   class="w-full"
@@ -43,7 +43,7 @@
                   dateFormat="MM/yy"
                   [required]="true"></png-calendar>
               </div>
-            </div>
+            </png-card>
           </div>
         </form>
         <div class="conciliacion-detalle shadow-1 mt-2">
@@ -58,7 +58,7 @@
                 [paginator]="false"
                 [filterData]="false"
                 [scrollable]="true"
-                scrollHeight="calc(100vh - 330px)"></png-table>
+                scrollHeight="calc(100vh - 350px)"></png-table>
             </p-tabPanel>
             <p-tabPanel header="Desgaste">
               <png-table
@@ -70,7 +70,7 @@
                 [paginator]="false"
                 [filterData]="false"
                 [scrollable]="true"
-                scrollHeight="calc(100vh - 330px)"></png-table>
+                scrollHeight="calc(100vh - 350px)"></png-table>
             </p-tabPanel>
             <p-tabPanel header="Nota">
               <png-input-textarea

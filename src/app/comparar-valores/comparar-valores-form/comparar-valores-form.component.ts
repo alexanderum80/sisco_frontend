@@ -6,7 +6,12 @@ import { OperadoresService } from './../../shared/services/operadores.service';
 import { SelectItem } from 'primeng/api';
 import { FormGroup } from '@angular/forms';
 import { ActionClicked } from './../../shared/models/list-items';
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterContentChecked,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { CompararValoresService } from '../shared/services/comparar-valores.service';
 import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
 
@@ -15,7 +20,9 @@ import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
   templateUrl: './comparar-valores-form.component.html',
   styleUrls: ['./comparar-valores-form.component.scss'],
 })
-export class CompararValoresFormComponent implements OnInit {
+export class CompararValoresFormComponent
+  implements OnInit, AfterContentChecked
+{
   action: ActionClicked;
 
   fg: FormGroup;
@@ -30,7 +37,8 @@ export class CompararValoresFormComponent implements OnInit {
     private _unidadesSvc: UnidadesService,
     private _operadoresSvc: OperadoresService,
     private _swalSvc: SweetalertService,
-    private _dinamicDialogSvc: DinamicDialogService
+    private _dinamicDialogSvc: DinamicDialogService,
+    private _cd: ChangeDetectorRef
   ) {
     this.fg = _compararValoresSvc.fg;
   }
@@ -44,6 +52,10 @@ export class CompararValoresFormComponent implements OnInit {
     this._loadCentros();
     this._loadExpresiones();
     this._loadOperadores();
+  }
+
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
   }
 
   private _loadCentros(): void {

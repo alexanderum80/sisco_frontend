@@ -3,16 +3,18 @@
 <div class="content">
   <png-panel class="h-full w-full" header="Parte de Atrasos Golden DWH">
     <form class="form-division mb-3" [formGroup]="fg">
-      <png-dropdown
-        class="w-20rem"
-        [fg]="fg"
-        control="idDivision"
-        label="División"
-        [optionsValues]="divisionesValues"
-        placeholder="Seleccione la División"
-        [filter]="true"
-        [required]="true"
-        [showClear]="true"></png-dropdown>
+      <png-card>
+        <png-dropdown
+          class="w-20rem"
+          [fg]="fg"
+          control="idDivision"
+          label="División"
+          [optionsValues]="divisionesValues"
+          placeholder="Seleccione la División"
+          [filter]="true"
+          [required]="true"
+          [showClear]="true"></png-dropdown>
+      </png-card>
     </form>
     <div class="parte-atraso-detalle shadow-1">
       <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
@@ -22,7 +24,7 @@
             [data]="dataSourceParteAtraso"
             [paginator]="false"
             [scrollable]="true"
-            scrollHeight="calc(100vh - 270px)"></png-table>
+            scrollHeight="calc(100vh - 295px)"></png-table>
         </p-tabPanel>
         <p-tabPanel header="Detalle de las Salvas">
           <png-table
@@ -31,7 +33,7 @@
             groupField="Unidad"
             [paginator]="false"
             [scrollable]="true"
-            scrollHeight="calc(100vh - 270px)"></png-table>
+            scrollHeight="calc(100vh - 295px)"></png-table>
         </p-tabPanel>
       </p-tabView>
     </div>

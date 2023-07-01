@@ -6,7 +6,13 @@ import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tip
 import SweetAlert from 'sweetalert2';
 import { ClasificadorCuentaService } from './../shared/service/clasificador-cuenta.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterContentChecked,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { SelectItem } from 'primeng/api';
 
 @Component({
@@ -14,7 +20,9 @@ import { SelectItem } from 'primeng/api';
   templateUrl: './clasificador-cuenta-form.component.html',
   styleUrls: ['./clasificador-cuenta-form.component.scss'],
 })
-export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
+export class ClasificadorCuentaFormComponent
+  implements OnInit, OnDestroy, AfterContentChecked
+{
   action: ActionClicked;
   fg: FormGroup;
 
@@ -62,7 +70,8 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
     private _dinamicDialogSvc: DinamicDialogService,
     private _tipoEntidadesSvc: TipoEntidadesService,
     private _clasificadorSvc: ClasificadorCuentaService,
-    private _swalSvc: SweetalertService
+    private _swalSvc: SweetalertService,
+    private _cd: ChangeDetectorRef
   ) {
     this._subscribeToObservables();
   }
@@ -80,6 +89,10 @@ export class ClasificadorCuentaFormComponent implements OnInit, OnDestroy {
     this._loadClaseCuenta().then(() => this._loadCategoriaCuenta());
 
     this._subscribeToFgChanges();
+  }
+
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
   }
 
   ngOnDestroy(): void {

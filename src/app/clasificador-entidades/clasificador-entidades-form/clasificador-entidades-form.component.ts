@@ -6,7 +6,12 @@ import { toNumber } from 'lodash';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterContentChecked,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { SweetalertService } from 'src/app/shared/helpers/sweetalert.service';
 import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
@@ -16,7 +21,9 @@ import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
   templateUrl: './clasificador-entidades-form.component.html',
   styleUrls: ['./clasificador-entidades-form.component.scss'],
 })
-export class ClasificadorEntidadesFormComponent implements OnInit {
+export class ClasificadorEntidadesFormComponent
+  implements OnInit, AfterContentChecked
+{
   unidadesValues: SelectItem[] = [];
   tipoEntidadesValues: SelectItem[] = [];
 
@@ -29,7 +36,8 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService,
     private _unidadesSvc: UnidadesService,
     private _swalSvc: SweetalertService,
-    private _tipoEntidadesSvc: TipoEntidadesService
+    private _tipoEntidadesSvc: TipoEntidadesService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -41,6 +49,10 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
 
     this._loadUnidades();
     this._loadTipoEntidades();
+  }
+
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
   }
 
   private _loadUnidades(): void {

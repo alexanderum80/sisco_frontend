@@ -24,6 +24,7 @@ import { ConciliaExternaContaRoutingModule } from './concilia-externa-conta-rout
 import { ConciliaExternaContaComponent } from './concilia-externa-conta.component';
 import { ChatComponent } from './shared/components/chat/chat.component';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
+import { PrimeCardModule } from '../shared/ui/prime-ng/card/card.module';
 
 const config: SocketIoConfig = {
   url: environment.apiServer,
@@ -43,6 +44,7 @@ const config: SocketIoConfig = {
     PrimeProgressSpinnerModule,
     PrimeDropdownModule,
     PrimeCalendarModule,
+    PrimeCardModule,
     PrimeFieldsetModule,
     PrimeTabViewModule,
     PrimeInputTextModule,

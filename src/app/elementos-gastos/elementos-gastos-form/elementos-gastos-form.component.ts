@@ -5,7 +5,13 @@ import { ClasificadorCuentaService } from './../../clasificador-cuenta/shared/se
 import { EpigrafesService } from './../../epigrafes/shared/services/epigrafes.service';
 import { ElementosGastosService } from './../shared/services/elementos-gastos.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  AfterContentChecked,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import { SweetalertService } from 'src/app/shared/helpers/sweetalert.service';
 import { IEpigrafes } from 'src/app/epigrafes/shared/models/epigrafes.model';
@@ -16,7 +22,9 @@ import { IEpigrafes } from 'src/app/epigrafes/shared/models/epigrafes.model';
   styleUrls: ['./elementos-gastos-form.component.scss'],
   providers: [EpigrafesService, ClasificadorCuentaService],
 })
-export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
+export class ElementosGastosFormComponent
+  implements OnInit, AfterViewInit, AfterContentChecked
+{
   action: ActionClicked;
 
   fg: FormGroup;
@@ -35,7 +43,8 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
     private _epigrafesSvc: EpigrafesService,
     private _clasificadorCuentaSvc: ClasificadorCuentaService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _swalSvc: SweetalertService
+    private _swalSvc: SweetalertService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +60,10 @@ export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
     this._loadTipoEntidades();
     this._loadEpigrafes();
     this._loadCuentas();
+  }
+
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
   }
 
   private _loadTipoEntidades(): void {
