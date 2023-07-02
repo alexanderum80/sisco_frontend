@@ -161,6 +161,7 @@ export class ConciliaContabilidadService {
         .query<ConciliaContabilidadQueryResponse>({
           query: conciliaContabilidadApi.chequearCentros,
           variables: { chequearCentrosInput },
+          fetchPolicy: 'network-only',
         })
         .subscribe({
           next: res => {
