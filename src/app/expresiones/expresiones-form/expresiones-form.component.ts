@@ -117,8 +117,8 @@ export class ExpresionesFormComponent implements OnInit {
   }
 
   onRowEditCancel(expresion: any, index: number): void {
-    this.expresionesDetalle[index] = this.clonedExpresion[expresion.id];
-    delete this.clonedExpresion[expresion.id];
+    this.expresionesDetalle[index] = this.clonedExpresion[expresion.Id];
+    delete this.clonedExpresion[expresion.Id];
   }
 
   onChangeTipoValor(event: any, index: any): void {
@@ -150,7 +150,7 @@ export class ExpresionesFormComponent implements OnInit {
       };
       const ExpresionesDetalle = this.expresionesDetalle.map(exp => {
         return {
-          id: exp.id,
+          Id: exp.Id,
           IdExpresion: exp.IdExpresion,
           Cta: exp.Cta,
           SubCta: exp.SubCta,

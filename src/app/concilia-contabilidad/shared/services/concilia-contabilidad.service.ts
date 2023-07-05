@@ -2,7 +2,6 @@ import {
   ConciliaContabilidadMutationReponse,
   IChequeoCentroVsConsolidado,
 } from './../models/concilia-contabilidad.model';
-import { Apollo } from 'apollo-angular';
 import { Subscription, Observable } from 'rxjs';
 import { SelectItem } from 'primeng/api';
 import { FormGroup, FormControl } from '@angular/forms';
@@ -13,6 +12,7 @@ import { ConciliaContabilidadQueryResponse } from '../models/concilia-contabilid
 import { conciliaContabilidadApi } from '../graphql/concilia-contabilidad-api';
 import * as moment from 'moment';
 import { getConciliacionMonth } from '../../../shared/models/date-range';
+import { ApolloService } from 'src/app/shared/helpers/apollo.service';
 
 @Injectable()
 export class ConciliaContabilidadService {
@@ -30,7 +30,7 @@ export class ConciliaContabilidadService {
 
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo) {}
+  constructor(private _apolloSvc: ApolloService) {}
 
   public async getCentro(
     idUnidad: number,
@@ -99,15 +99,14 @@ export class ConciliaContabilidadService {
     };
 
     return new Observable<ConciliaContabilidadQueryResponse>(subscriber => {
-      this._apollo
-        .query<ConciliaContabilidadQueryResponse>({
-          query: conciliaContabilidadApi.concilia,
-          variables: { conciliaContaInput },
-          fetchPolicy: 'network-only',
-        })
+      this._apolloSvc
+        .query<ConciliaContabilidadQueryResponse>(
+          conciliaContabilidadApi.concilia,
+          { conciliaContaInput }
+        )
         .subscribe({
           next: res => {
-            subscriber.next(res.data);
+            subscriber.next(res);
           },
           error: err => {
             subscriber.error(err);
@@ -124,14 +123,14 @@ export class ConciliaContabilidadService {
     };
 
     return new Observable<ConciliaContabilidadMutationReponse>(subscriber => {
-      this._apollo
-        .mutate<ConciliaContabilidadMutationReponse>({
-          mutation: conciliaContabilidadApi.inciarSaldo,
-          variables: { iniciarSaldosInput },
-        })
+      this._apolloSvc
+        .mutation<ConciliaContabilidadMutationReponse>(
+          conciliaContabilidadApi.inciarSaldo,
+          { iniciarSaldosInput }
+        )
         .subscribe({
           next: res => {
-            subscriber.next(res.data || undefined);
+            subscriber.next(res || undefined);
           },
           error: err => {
             subscriber.error(err.message || err);
@@ -157,15 +156,14 @@ export class ConciliaContabilidadService {
     };
 
     return new Observable<ConciliaContabilidadQueryResponse>(subscriber => {
-      this._apollo
-        .query<ConciliaContabilidadQueryResponse>({
-          query: conciliaContabilidadApi.chequearCentros,
-          variables: { chequearCentrosInput },
-          fetchPolicy: 'network-only',
-        })
+      this._apolloSvc
+        .query<ConciliaContabilidadQueryResponse>(
+          conciliaContabilidadApi.chequearCentros,
+          { chequearCentrosInput }
+        )
         .subscribe({
           next: res => {
-            subscriber.next(res.data || undefined);
+            subscriber.next(res || undefined);
           },
           error: err => {
             subscriber.error(err);
