@@ -40,6 +40,7 @@ export class ConciliaExternaContaService {
     periodo: new FormControl(getPreviousMonth(new Date()), {
       initialValueIsDefault: true,
     }),
+    periodoActual: new FormControl(false, { initialValueIsDefault: true }),
     usuarioEmisor: new FormControl(null, { initialValueIsDefault: true }),
     cargoEmisor: new FormControl('', { initialValueIsDefault: true }),
     usuarioReceptor: new FormControl(null, { initialValueIsDefault: true }),
@@ -185,6 +186,7 @@ export class ConciliaExternaContaService {
     const payload = {
       Annio: +moment(controls['periodo'].value).format('YYYY'),
       Mes: +moment(controls['periodo'].value).format('MM'),
+      MesActual: controls['periodoActual'].value,
       Division: +controls['division'].value.IdDivision || 0,
       Unidad: +controls['unidad'].value.IdUnidad || 0,
       DivisionOD: +controls['divisionOD'].value.IdDivision || 0,
@@ -214,18 +216,16 @@ export class ConciliaExternaContaService {
     const controls = this.fg.controls;
 
     const payload = {
-      Annio: +moment(controls['periodo'].value).format('YYYY'),
-      Mes: +moment(controls['periodo'].value).format('MM'),
+      annio: +moment(controls['periodo'].value).format('YYYY'),
+      mes: +moment(controls['periodo'].value).format('MM'),
+      mesActual: controls['periodoActual'].value,
     };
 
     return new Observable<IConciliaExternaContabQueryReponse>(subscriber => {
       this._apollo
         .watchQuery<IConciliaExternaContabQueryReponse>(
           conciliaExternaContaAPI.conciliacionResumen,
-          {
-            annio: payload.Annio,
-            mes: payload.Mes,
-          }
+          payload
         )
         .subscribe({
           next: res => {
@@ -242,18 +242,16 @@ export class ConciliaExternaContaService {
     const controls = this.fg.controls;
 
     const payload = {
-      Annio: +moment(controls['periodo'].value).format('YYYY'),
-      Mes: +moment(controls['periodo'].value).format('MM'),
+      annio: +moment(controls['periodo'].value).format('YYYY'),
+      mes: +moment(controls['periodo'].value).format('MM'),
+      mesActual: controls['periodoActual'].value,
     };
 
     return new Observable<IConciliaExternaContabQueryReponse>(subscriber => {
       this._apollo
         .watchQuery<IConciliaExternaContabQueryReponse>(
           conciliaExternaContaAPI.conciliacionPorEdades,
-          {
-            annio: payload.Annio,
-            mes: payload.Mes,
-          }
+          payload
         )
         .subscribe({
           next: res => {
@@ -803,7 +801,8 @@ export class ConciliaExternaContaService {
     return (
       getMonthName(+moment(this.fg.get('periodo')?.value).format('MM')) +
       '/' +
-      moment(this.fg.get('periodo')?.value).format('YYYY')
+      moment(this.fg.get('periodo')?.value).format('YYYY') +
+      (this.fg.get('periodoActual')?.value ? ' (Mes)' : '')
     );
   }
 

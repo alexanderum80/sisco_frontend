@@ -1,5 +1,5 @@
-query GetConciliacionExternaContabResumen($annio: Int!, $mes: Int!) {
-  getConciliacionExternaContabResumen(annio: $annio, mes: $mes) {
+query GetConciliacionExternaContabResumen($annio: Int!, $mes: Int!, $mesActual: Boolean!) {
+  getConciliacionExternaContabResumen(annio: $annio, mes: $mes, mesActual: $mesActual) {
     Anno
     Mes
     DivisionEmisor

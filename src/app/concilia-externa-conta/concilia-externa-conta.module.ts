@@ -25,6 +25,7 @@ import { ConciliaExternaContaComponent } from './concilia-externa-conta.componen
 import { ChatComponent } from './shared/components/chat/chat.component';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { PrimeCardModule } from '../shared/ui/prime-ng/card/card.module';
+import { PrimeCheckboxModule } from '../shared/ui/prime-ng/checkbox/checkbox.module';
 
 const config: SocketIoConfig = {
   url: environment.apiServer,
@@ -45,6 +46,7 @@ const config: SocketIoConfig = {
     PrimeDropdownModule,
     PrimeCalendarModule,
     PrimeCardModule,
+    PrimeCheckboxModule,
     PrimeFieldsetModule,
     PrimeTabViewModule,
     PrimeInputTextModule,

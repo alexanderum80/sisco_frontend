@@ -547,6 +547,10 @@ export class ConciliaExternaContaComponent
       this._loadDatosConciliacion();
     });
 
+    this.fg.controls['periodoActual'].valueChanges.subscribe(() => {
+      this._inicializarDatos();
+    });
+
     this.fg.controls['unidad'].valueChanges.subscribe(() => {
       this._inicializarDatos();
     });
