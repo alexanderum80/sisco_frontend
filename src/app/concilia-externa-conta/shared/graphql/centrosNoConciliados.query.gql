@@ -1,0 +1,10 @@
+query GetCentrosNoConciliados($annio: Int!, $mes: Int!) {
+   getCentrosNoConciliados(annio: $annio, mes: $mes) {
+    success
+    data {
+      Emisor
+      Receptor
+    }
+    error
+  }
+}

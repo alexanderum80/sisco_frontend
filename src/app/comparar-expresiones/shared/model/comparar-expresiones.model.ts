@@ -15,21 +15,9 @@ interface IComprobarExpresiones {
   Operador?: any;
 }
 
-interface IComprobarExpresionQueryResponse {
-  success: boolean;
-  data: IComprobarExpresiones;
-  error: string;
-}
-
-interface IComprobarExpresionesQueryResponse {
-  success: boolean;
-  data: IComprobarExpresiones[];
-  error: string;
-}
-
 export interface ComprobarExpresionesQueryResponse {
-  getAllComprobarExpresiones: IComprobarExpresionesQueryResponse;
-  getComprobarExpresionById: IComprobarExpresionQueryResponse;
+  getAllComprobarExpresiones: IComprobarExpresiones[];
+  getComprobarExpresionById: IComprobarExpresiones;
 }
 
 export interface ComprobarExpresionesMutation {

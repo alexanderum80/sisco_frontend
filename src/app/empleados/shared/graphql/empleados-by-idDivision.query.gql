@@ -1,0 +1,18 @@
+query GetEmpleadosByIdDivision($idDivision: Int!) {
+    getEmpleadosByIdDivision(idDivision: $idDivision) {
+        success
+        data {
+            IdEmpleado
+            Empleado
+            Cargo {
+                IdCargo
+                Cargo
+            }
+            Division {
+                IdDivision
+                Division
+            }
+        }
+        error
+    }
+}

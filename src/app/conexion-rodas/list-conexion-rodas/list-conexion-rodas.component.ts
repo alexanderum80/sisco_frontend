@@ -1,7 +1,8 @@
+import { ToastrService } from 'ngx-toastr';
+import { AuthenticationService } from './../../shared/services/authentication.service';
 import { DefaultTopLeftButtonsTable } from './../../shared/models/table-buttons';
 import { DefaultInlineButtonsTable } from '../../shared/models/table-buttons';
 import { IButtons } from './../../shared/ui/prime-ng/button/button.model';
-import { MessageService } from 'primeng/api';
 import {
   IActionItemClickedArgs,
   ActionClicked,
@@ -11,7 +12,6 @@ import { ConexionRodasService } from './../shared/services/conexion-rodas.servic
 import { ConexionRodasFormComponent } from './../conexion-rodas-form/conexion-rodas-form.component';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import SweetAlert from 'sweetalert2';
-import { UsuarioService } from '../../shared/services/usuario.service';
 import { isArray, sortBy } from 'lodash';
 import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 
@@ -22,12 +22,11 @@ import { ITableColumns } from '../../shared/ui/prime-ng/table/table.model';
 })
 export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
   columns: ITableColumns[] = [
-    { header: 'División', field: 'Division', type: 'string' },
-    { header: 'Unidad', field: 'Unidad', type: 'string' },
+    { header: 'División', field: 'Unidad.Division', type: 'string' },
+    { header: 'Unidad', field: 'Unidad.Nombre', type: 'string' },
     { header: 'Consolidado', field: 'Consolidado', type: 'boolean' },
     { header: 'IP', field: 'IpRodas', type: 'string' },
-    { header: 'Usuario', field: 'Usuario', type: 'string' },
-    { header: 'Base de Datos', field: 'BaseDatos', type: 'string' },
+    { header: 'Siglas', field: 'BaseDatos', type: 'string' },
   ];
 
   conexionesRodas: any[] = [];
@@ -38,10 +37,10 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
   loading = true;
 
   constructor(
-    private _usuarioSvc: UsuarioService,
+    private _authSvc: AuthenticationService,
     private _dinamicDialogSvc: DinamicDialogService,
     private _conexionRodasSvc: ConexionRodasService,
-    private _msgSvc: MessageService
+    private _toastrSvc: ToastrService
   ) {
     if (this.hasAdminPermission()) {
       this.inlineButtons = DefaultInlineButtonsTable;
@@ -58,30 +57,30 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
   }
 
   hasAdminPermission(): boolean {
-    return this._usuarioSvc.hasAdminPermission();
+    return this._authSvc.hasAdminPermission();
   }
 
   private _loadConexionesRodas(): void {
     try {
       this._conexionRodasSvc.subscription.push(
-        this._conexionRodasSvc.loadAllConexionesRodas().subscribe(response => {
-          this.loading = false;
+        this._conexionRodasSvc.loadAllConexionesRodas().subscribe({
+          next: res => {
+            this.loading = false;
 
-          const result = response.getAllContaConexiones;
-          if (!result.success) {
+            const result = res.getAllContaConexiones;
+
+            this.conexionesRodas = sortBy(result, ['IdDivision', 'IdUnidad']);
+          },
+          error: err => {
+            this.loading = false;
             return SweetAlert.fire({
               icon: 'error',
               title: 'ERROR',
-              text: result.error,
+              text: err,
               showConfirmButton: true,
               confirmButtonText: 'Aceptar',
             });
-          }
-
-          this.conexionesRodas = sortBy(result.data, [
-            'IdDivision',
-            'IdUnidad',
-          ]);
+          },
         })
       );
     } catch (err: any) {
@@ -113,18 +112,10 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
 
   private _add(): void {
     try {
-      const dataInput = {
-        id: '',
-        idUnidad: null,
-        consolidado: '',
-        ip: '',
-        usuario: '',
-        contrasena: '',
-        baseDatos: null,
-        idDivision: this._usuarioSvc.usuario.IdDivision,
-      };
-
-      this._conexionRodasSvc.fg.patchValue(dataInput);
+      this._conexionRodasSvc.fg.reset();
+      this._conexionRodasSvc.fg.patchValue({
+        idDivision: this._authSvc.usuario.IdDivision,
+      });
 
       this._dinamicDialogSvc.open(
         'Agregar Conexión al Rodas',
@@ -133,11 +124,7 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
       this._conexionRodasSvc.subscription.push(
         this._dinamicDialogSvc.ref.onClose.subscribe((message: string) => {
           if (message) {
-            this._msgSvc.add({
-              severity: 'success',
-              summary: 'Satisfactorio',
-              detail: message,
-            });
+            this._toastrSvc.success(message, 'Satisfactorio');
           }
         })
       );
@@ -156,30 +143,15 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
     try {
       if (this.hasAdminPermission()) {
         this._conexionRodasSvc.subscription.push(
-          this._conexionRodasSvc
-            .loadConexionById(data.Id)
-            .subscribe(response => {
-              const result = response.getContaConexionById;
-
-              if (!result.success) {
-                return SweetAlert.fire({
-                  icon: 'error',
-                  title: 'ERROR',
-                  text: result.error,
-                  showConfirmButton: true,
-                  confirmButtonText: 'Aceptar',
-                });
-              }
-
-              const data = result.data;
+          this._conexionRodasSvc.loadConexionById(data.Id).subscribe({
+            next: res => {
+              const data = res.getContaConexionById;
 
               const dataInput = {
                 id: data.Id,
                 idUnidad: data.IdUnidad,
                 consolidado: data.Consolidado,
                 ip: data.IpRodas,
-                usuario: data.Usuario,
-                contrasena: data.Contrasena,
                 baseDatos: data.BaseDatos,
                 idDivision: data.IdDivision,
               };
@@ -193,16 +165,22 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
                 this._dinamicDialogSvc.ref.onClose.subscribe(
                   (message: string) => {
                     if (message) {
-                      this._msgSvc.add({
-                        severity: 'success',
-                        summary: 'Satisfactorio',
-                        detail: message,
-                      });
+                      this._toastrSvc.success(message, 'Satisfactorio');
                     }
                   }
                 )
               );
-            })
+            },
+            error: err => {
+              return SweetAlert.fire({
+                icon: 'error',
+                title: 'ERROR',
+                html: err,
+                showConfirmButton: true,
+                confirmButtonText: 'Aceptar',
+              });
+            },
+          })
         );
       }
     } catch (err: any) {
@@ -236,8 +214,8 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
                 });
 
             this._conexionRodasSvc.subscription.push(
-              this._conexionRodasSvc.delete(IDsToRemove).subscribe(response => {
-                const result = response.deleteContaConexion;
+              this._conexionRodasSvc.delete(IDsToRemove).subscribe(res => {
+                const result = res.deleteContaConexion;
 
                 if (!result.success) {
                   return SweetAlert.fire({
@@ -253,11 +231,10 @@ export class ListConexionRodasComponent implements AfterViewInit, OnDestroy {
                   this._dinamicDialogSvc.ref.onClose.subscribe(
                     (message: string) => {
                       if (message) {
-                        this._msgSvc.add({
-                          severity: 'success',
-                          summary: 'Satisfactorio',
-                          detail: 'La Conexión se ha eliminado correctamente.',
-                        });
+                        this._toastrSvc.success(
+                          'La Conexión se ha eliminado correctamente.',
+                          'Satisfactorio'
+                        );
                       }
                     }
                   )

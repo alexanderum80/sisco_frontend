@@ -1,4 +1,4 @@
-import { UsuarioService } from './../../../shared/services/usuario.service';
+import { AuthenticationService } from './../../../shared/services/authentication.service';
 import { CuentasNoPermitidasMutation } from '../models/cuentas-no-permitidas.model';
 import { cuentasNoPermitidasApi } from '../graphql/cuentas-no-permitidas-api';
 import { Apollo } from 'apollo-angular';
@@ -17,13 +17,18 @@ export class CuentasNoPermitidasService {
     crit1: new FormControl(''),
     crit2: new FormControl(''),
     crit3: new FormControl(''),
+    crit4: new FormControl(''),
+    crit5: new FormControl(''),
     centralizada: new FormControl(false),
     idDivision: new FormControl(0),
   });
 
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
+  constructor(
+    private _apollo: Apollo,
+    private _authSvc: AuthenticationService
+  ) {}
 
   inicializarFg(): void {
     const payload = {
@@ -34,8 +39,10 @@ export class CuentasNoPermitidasService {
       crit1: '',
       crit2: '',
       crit3: '',
+      crit4: '',
+      crit5: '',
       centralizada: false,
-      idDivision: this._usuarioSvc.usuario.IdDivision,
+      idDivision: this._authSvc.usuario.IdDivision,
     };
 
     this.fg.patchValue(payload);
@@ -50,12 +57,12 @@ export class CuentasNoPermitidasService {
               query: cuentasNoPermitidasApi.all,
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(response => {
-              subscriber.next(response.data);
+            .valueChanges.subscribe(res => {
+              subscriber.next(res.data);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -72,13 +79,13 @@ export class CuentasNoPermitidasService {
               variables: { id },
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(response => {
-              subscriber.next(response.data);
+            .valueChanges.subscribe(res => {
+              subscriber.next(res.data);
               subscriber.complete();
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -94,6 +101,8 @@ export class CuentasNoPermitidasService {
           Crit1: this.fg.controls['crit1'].value,
           Crit2: this.fg.controls['crit2'].value,
           Crit3: this.fg.controls['crit3'].value,
+          Crit4: this.fg.controls['crit4'].value,
+          Crit5: this.fg.controls['crit5'].value,
           Centralizada: this.fg.controls['centralizada'].value,
           IdDivision: this.fg.controls['idDivision'].value,
         };
@@ -110,12 +119,12 @@ export class CuentasNoPermitidasService {
               variables: { noUsarEnCuentaInput: payload },
               refetchQueries: ['GetAllNoUsarEnCuenta'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -132,12 +141,12 @@ export class CuentasNoPermitidasService {
               variables: { IDs },
               refetchQueries: ['GetAllNoUsarEnCuenta'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

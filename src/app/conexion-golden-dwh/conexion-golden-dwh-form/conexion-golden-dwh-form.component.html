@@ -1,137 +1,138 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
-    <form [formGroup]="fg" style="width: 350px">
-        <div class="field mt-1">
+  <form [formGroup]="fg" style="width: 350px">
+    <div class="field mt-1">
+      <png-dropdown
+        class="w-full"
+        [fg]="fg"
+        control="idUnidad"
+        label="División"
+        labelWidth="100"
+        [optionsValues]="divisionesValues"
+        placeholder="Seleccione la División"
+        [filter]="true"
+        [required]="true"
+        [showClear]="true"></png-dropdown>
+    </div>
+    <p-tabView>
+      <p-tabPanel header="Golden Restaura">
+        <ng-template pTemplate="content" style="overflow: unset">
+          <div class="field mt-1">
+            <png-input-text
+              class="w-full mt-1"
+              label="Servidor"
+              labelWidth="90"
+              [fg]="fg"
+              control="rest_ip"
+              [required]="true"
+              autocomplete="off"></png-input-text>
+          </div>
+          <div class="field mt-1">
+            <png-input-text
+              class="w-full mt-1"
+              label="Usuario"
+              labelWidth="90"
+              [fg]="fg"
+              control="rest_usuario"
+              [required]="true"
+              autocomplete="off"></png-input-text>
+          </div>
+          <div class="field mt-1">
+            <png-password
+              class="w-full mt-1"
+              label="Contraseña"
+              labelWidth="90"
+              [fg]="fg"
+              control="rest_contrasena"
+              [required]="true"
+              [toggleMask]="true"
+              autocomplete="off"></png-password>
+          </div>
+          <div class="field mt-1">
             <png-dropdown
-                class="w-full"
-                [fg]="fg"
-                control="idUnidad"
-                label="División"
-                labelWidth="100"
-                [optionsValues]="divisionesValues"
-                placeholder="Seleccione la División"
-                [filter]="true"
-                [required]="true"
-                [showClear]="true"></png-dropdown>
+              class="w-full mt-1"
+              [fg]="fg"
+              control="rest_baseDatos"
+              label="Base de Datos"
+              labelWidth="90"
+              [optionsValues]="baseDatosRestValues"
+              placeholder="&lt;Base de Datos&gt;"
+              [required]="true"
+              [disabled]="loadingRestDataBase"
+              [filter]="true"
+              [showClear]="true"></png-dropdown>
+            <png-button
+              class="ml-2"
+              icon="mdi mdi-refresh"
+              [raised]="true"
+              [rounded]="true"
+              [text]="true"
+              [disabled]="loadingRestDataBase"
+              [raised]="true"
+              [fullWidth]="true"
+              [loading]="loadingRestDataBase"
+              tooltip="Refrescar lista de Bases de Datos"
+              (clicked)="refreshDataBases('Rest')"></png-button>
+          </div>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="Golden DWH">
+        <div class="field mt-1">
+          <png-input-text
+            class="w-full mt-1"
+            label="Servidor"
+            labelWidth="90"
+            [fg]="fg"
+            control="dwh_ip"
+            [required]="true"
+            autocomplete="off"></png-input-text>
         </div>
-        <p-tabView>
-            <p-tabPanel header="Golden Restaura">
-                <ng-template pTemplate="content" style="overflow: unset">
-                    <div class="field mt-1">
-                        <png-input-text
-                            class="w-full mt-1"
-                            label="Servidor"
-                            labelWidth="90"
-                            [fg]="fg"
-                            control="rest_ip"
-                            [required]="true"
-                            autocomplete="off"></png-input-text>
-                    </div>
-                    <div class="field mt-1">
-                        <png-input-text
-                            class="w-full mt-1"
-                            label="Usuario"
-                            labelWidth="90"
-                            [fg]="fg"
-                            control="rest_usuario"
-                            [required]="true"
-                            autocomplete="off"></png-input-text>
-                    </div>
-                    <div class="field mt-1">
-                        <png-password
-                            class="w-full mt-1"
-                            label="Contraseña"
-                            labelWidth="90"
-                            [fg]="fg"
-                            control="rest_contrasena"
-                            [required]="true"
-                            [toggleMask]="true"
-                            autocomplete="off"></png-password>
-                    </div>
-                    <div class="field mt-1">
-                        <png-dropdown
-                            class="w-full mt-1"
-                            [fg]="fg"
-                            control="rest_baseDatos"
-                            label="Base de Datos"
-                            labelWidth="90"
-                            [optionsValues]="baseDatosRestValues"
-                            placeholder="&lt;Base de Datos&gt;"
-                            [required]="true"
-                            [disabled]="loadingRestDataBase"
-                            [filter]="true"
-                            [showClear]="true"></png-dropdown>
-                        <png-button
-                            class="ml-2"
-                            icon="mdi mdi-refresh"
-                            [raised]="true"
-                            [rounded]="true"
-                            [text]="true"
-                            [disabled]="loadingRestDataBase"
-                            [raised]="true"
-                            [fullWidth]="true"
-                            [loading]="loadingRestDataBase"
-                            tooltip="Refrescar lista de Bases de Datos"
-                            (clicked)="refreshDataBases('Rest')"></png-button>
-                    </div>
-                </ng-template>
-            </p-tabPanel>
-            <p-tabPanel header="Golden DWH">
-                <div class="field mt-1">
-                    <png-input-text
-                        class="w-full mt-1"
-                        label="Servidor"
-                        labelWidth="90"
-                        [fg]="fg"
-                        control="dwh_ip"
-                        [required]="true"
-                        autocomplete="off"></png-input-text>
-                </div>
-                <div class="field mt-1">
-                    <png-input-text
-                        class="w-full mt-1"
-                        label="Usuario"
-                        labelWidth="90"
-                        [fg]="fg"
-                        control="dwh_usuario"
-                        [required]="true"
-                        autocomplete="off"></png-input-text>
-                </div>
-                <div class="field mt-1">
-                    <png-password
-                        class="w-full mt-1"
-                        label="Contraseña"
-                        labelWidth="90"
-                        [fg]="fg"
-                        control="dwh_contrasena"
-                        [required]="true"
-                        autocomplete="off"></png-password>
-                </div>
-                <div class="field mt-1">
-                    <png-dropdown
-                        class="w-full mt-1"
-                        [fg]="fg"
-                        control="dwh_baseDatos"
-                        label="Base de Datos"
-                        labelWidth="90"
-                        [optionsValues]="baseDatosDWHValues"
-                        placeholder="&lt;Base de Datos&gt;"
-                        [required]="true"
-                        [disabled]="loadingDWHDataBase"
-                        [filter]="true"
-                        [showClear]="true"></png-dropdown>
-                    <png-button
-                        class="ml-2"
-                        icon="mdi mdi-refresh"
-                        [raised]="true"
-                        [rounded]="true"
-                        [text]="true"
-                        [disabled]="loadingDWHDataBase"
-                        [raised]="true"
-                        [fullWidth]="true"
-                        [loading]="loadingDWHDataBase"
-                        (clicked)="refreshDataBases('DWH')"></png-button>
-                </div>
-            </p-tabPanel>
-        </p-tabView>
-    </form>
+        <div class="field mt-1">
+          <png-input-text
+            class="w-full mt-1"
+            label="Usuario"
+            labelWidth="90"
+            [fg]="fg"
+            control="dwh_usuario"
+            [required]="true"
+            autocomplete="off"></png-input-text>
+        </div>
+        <div class="field mt-1">
+          <png-password
+            class="w-full mt-1"
+            label="Contraseña"
+            labelWidth="90"
+            [fg]="fg"
+            control="dwh_contrasena"
+            [required]="true"
+            [toggleMask]="true"
+            autocomplete="off"></png-password>
+        </div>
+        <div class="field mt-1">
+          <png-dropdown
+            class="w-full mt-1"
+            [fg]="fg"
+            control="dwh_baseDatos"
+            label="Base de Datos"
+            labelWidth="90"
+            [optionsValues]="baseDatosDWHValues"
+            placeholder="&lt;Base de Datos&gt;"
+            [required]="true"
+            [disabled]="loadingDWHDataBase"
+            [filter]="true"
+            [showClear]="true"></png-dropdown>
+          <png-button
+            class="ml-2"
+            icon="mdi mdi-refresh"
+            [raised]="true"
+            [rounded]="true"
+            [text]="true"
+            [disabled]="loadingDWHDataBase"
+            [raised]="true"
+            [fullWidth]="true"
+            [loading]="loadingDWHDataBase"
+            (clicked)="refreshDataBases('DWH')"></png-button>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
+  </form>
 </app-add-edit-item>

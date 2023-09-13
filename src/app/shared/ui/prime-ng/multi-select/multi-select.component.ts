@@ -29,6 +29,7 @@ export class MultiSelectComponent implements OnInit, OnChanges {
   @Input() optionsValues: SelectItem[] = [];
   @Input() tooltip: string = '';
   @Input() tooltipPosition: 'right' | 'left' | 'top' | 'bottom' = 'right';
+  @Input() isLoading = false;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -40,9 +41,8 @@ export class MultiSelectComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.disabled) {
-      this.fg.controls[this.control].disable();
-    }
+    if (this.disabled) this.fg.controls[this.control].disable();
+    else this.fg.controls[this.control].enable();
   }
 
   getToolTip(): string {

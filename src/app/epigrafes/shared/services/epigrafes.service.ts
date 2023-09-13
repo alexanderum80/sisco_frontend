@@ -1,4 +1,4 @@
-import { UsuarioService } from 'src/app/shared/services/usuario.service';
+import { AuthenticationService } from './../../../shared/services/authentication.service';
 import { EpigrafesApi as epigrafesApi } from './../graphql/epigrafes.actions';
 import {
   EpigrafesQueryResponse,
@@ -18,10 +18,13 @@ export class EpigrafesService {
 
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
+  constructor(
+    private _apollo: Apollo,
+    private _authSvc: AuthenticationService
+  ) {}
 
   hasAdvancedUserPermission(): boolean {
-    return this._usuarioSvc.hasAdvancedUserPermission();
+    return this._authSvc.hasAdvancedUserPermission();
   }
 
   loadAllEpigrafes(): Observable<EpigrafesQueryResponse> {
@@ -38,7 +41,7 @@ export class EpigrafesService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -53,13 +56,13 @@ export class EpigrafesService {
               variables: { id },
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(response => {
-              subscriber.next(response.data);
+            .valueChanges.subscribe(res => {
+              subscriber.next(res.data);
               subscriber.complete();
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -68,12 +71,12 @@ export class EpigrafesService {
     return new Observable<EpigrafesMutationResponse>(subscriber => {
       try {
         const epigrafeInfo = {
-          IdEpigafre: this.fg.controls['idEpigrafe'].value,
+          IdEpigrafe: +this.fg.controls['idEpigrafe'].value,
           Epigrafe: this.fg.controls['epigrafe'].value,
         };
 
         const mutation =
-          epigrafeInfo.IdEpigafre === 0
+          epigrafeInfo.IdEpigrafe === 0
             ? epigrafesApi.create
             : epigrafesApi.update;
 
@@ -84,12 +87,12 @@ export class EpigrafesService {
               variables: { epigrafeInfo },
               refetchQueries: ['GetAllEpigrafes'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -104,12 +107,12 @@ export class EpigrafesService {
               variables: { IDs },
               refetchQueries: ['GetAllEpigrafes'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

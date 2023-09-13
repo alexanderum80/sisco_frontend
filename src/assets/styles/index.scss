@@ -6,5 +6,7 @@
 @import './app/sweetalert.scss';
 
 // external styles
-@import './material-design-icons.scss';
 @import '../../app/shared/ui/prime-ng/prime-ng.scss';
+
+// regular style toast
+@import 'ngx-toastr/toastr';

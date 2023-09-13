@@ -1,0 +1,11 @@
+<app-list-item title="Clasificador de Subgrupos de los Activos Fijos">
+  <png-table
+    [columns]="displayedColumns"
+    [data]="clasificadorSubgrupo"
+    [loading]="loading"
+    [inlineButtons]="inlineButtons"
+    [topLeftButtons]="topLeftButtons"
+    [scrollable]="true"
+    scrollHeight="calc(100vh - 220px)"
+    (actionClicked)="actionClicked($event)"></png-table>
+</app-list-item>

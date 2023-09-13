@@ -18,11 +18,38 @@ export class UnidadesService {
             query: unidadesApi.all,
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
+          .subscribe({
+            next: res => {
+              subscriber.next(res.data);
+            },
+            error: err => {
+              subscriber.error(err.message || err);
+            },
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
+      }
+    });
+  }
+
+  getAllUnidadesByUsuario(): Observable<UnidadesQueryResponse> {
+    return new Observable<UnidadesQueryResponse>(subscriber => {
+      try {
+        this._apollo
+          .query<UnidadesQueryResponse>({
+            query: unidadesApi.allByUsuario,
+            fetchPolicy: 'network-only',
+          })
+          .subscribe({
+            next: res => {
+              subscriber.next(res.data);
+            },
+            error: err => {
+              subscriber.error(err.message || err);
+            },
+          });
+      } catch (err: any) {
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -38,12 +65,17 @@ export class UnidadesService {
             variables: { idSubdivision },
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
-            subscriber.complete();
+          .subscribe({
+            next: res => {
+              subscriber.next(res.data);
+              subscriber.complete();
+            },
+            error: err => {
+              subscriber.error(err.message || err);
+            },
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -59,12 +91,17 @@ export class UnidadesService {
             variables: { idDivision },
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
-            subscriber.complete();
+          .subscribe({
+            next: res => {
+              subscriber.next(res.data);
+              subscriber.complete();
+            },
+            error: err => {
+              subscriber.error(err.message || err);
+            },
           });
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

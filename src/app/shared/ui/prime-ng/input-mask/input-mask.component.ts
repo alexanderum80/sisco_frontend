@@ -38,9 +38,8 @@ export class InputMaskComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.disabled) {
-      this.fg.controls[this.control].disable();
-    }
+    if (this.disabled) this.fg.controls[this.control].disable();
+    else this.fg.controls[this.control].enable();
   }
 
   getToolTip(): string {

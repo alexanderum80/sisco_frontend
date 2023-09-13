@@ -1,436 +1,159 @@
 <png-progress-spinner *ngIf="loading"></png-progress-spinner>
 
 <div class="content">
-    <png-panel class="h-full w-full" header="Golden DWH vs Rodas">
-        <form [formGroup]="fg">
-            <div class="flex p-1">
-                <p-card class="tipo-centro-container">
-                    <png-radio-button
-                        [fg]="fg"
-                        control="tipoCentro"
-                        [items]="tipoCentrosValues"></png-radio-button>
-                </p-card>
-                <div class="flex flex-column w-25rem ml-3">
-                    <div>
-                        <png-dropdown
-                            class="w-full"
-                            [fg]="fg"
-                            control="idDivision"
-                            label="División"
-                            [optionsValues]="divisionesValues"
-                            placeholder="Seleccione la División"
-                            [filter]="true"
-                            [required]="true"
-                            [showClear]="true"></png-dropdown>
-                    </div>
-                    <div>
-                        <png-dropdown
-                            class="w-full"
-                            [fg]="fg"
-                            control="idCentro"
-                            label="Centro"
-                            [optionsValues]="centrosValues"
-                            placeholder="Seleccione el Centro"
-                            [filter]="true"
-                            [required]="true"
-                            [showClear]="true"></png-dropdown>
-                    </div>
-                    <div>
-                        <div class="flex">
-                            <png-calendar
-                                class="w-full"
-                                [fg]="fg"
-                                label="Período"
-                                control="periodo"
-                                view="month"
-                                dateFormat="MM/yy"
-                                [required]="true"></png-calendar>
-                            <!-- <div class="ml-3 mt-1">
+  <png-panel class="h-full w-full" header="Golden DWH vs Rodas">
+    <form [formGroup]="fg">
+      <div class="flex p-1">
+        <p-card class="tipo-centro-container">
+          <png-radio-button
+            [fg]="fg"
+            control="tipoCentro"
+            [items]="tipoCentrosValues"></png-radio-button>
+        </p-card>
+        <png-card class="flex flex-column w-25rem ml-3">
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="idDivision"
+              label="División"
+              [optionsValues]="divisionesValues"
+              placeholder="Seleccione la División"
+              [filter]="true"
+              [required]="true"
+              [showClear]="true"></png-dropdown>
+          </div>
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="idCentro"
+              label="Centro"
+              [optionsValues]="centrosValues"
+              placeholder="Seleccione el Centro"
+              [filter]="true"
+              [required]="true"
+              [showClear]="true"></png-dropdown>
+          </div>
+          <div>
+            <div class="flex">
+              <png-calendar
+                class="w-full"
+                [fg]="fg"
+                label="Período"
+                control="periodo"
+                view="month"
+                dateFormat="MM/yy"
+                [required]="true"></png-calendar>
+              <!-- <div class="ml-3 mt-1">
                 <png-checkbox [fg]="fg" control="isComplejo" label="Complejo" [disabled]="true"></png-checkbox>
               </div> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="flex flex-column w-20rem ml-3">
-                    <div>
-                        <png-dropdown
-                            class="w-full"
-                            [fg]="fg"
-                            control="idEmpleado"
-                            label="Empleado"
-                            [optionsValues]="empleadosValues"
-                            placeholder="(Opcional)"
-                            [filter]="true"
-                            [showClear]="true"></png-dropdown>
-                    </div>
-                    <div>
-                        <png-dropdown
-                            class="w-full"
-                            [fg]="fg"
-                            control="idSupervisor"
-                            label="Supervisor"
-                            [optionsValues]="supervisoresValues"
-                            placeholder="(Opcional)"
-                            [filter]="true"
-                            [showClear]="true"></png-dropdown>
-                    </div>
-                    <div class="mt-1">
-                        <png-checkbox
-                            [fg]="fg"
-                            control="ventasAcumuladas"
-                            label="Ventas Acumuladas"
-                            [defaultValue]="true">
-                        </png-checkbox>
-                    </div>
-                </div>
             </div>
-        </form>
-        <div class="conciliacion-detalle shadow-1 mt-2">
-            <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
-                <p-tabPanel header="Conciliación">
-                    <p-card class="m-1" header="Análisis de Inventario">
-                        <p-table
-                            [value]="dataSourceInventario"
-                            sortField="IdUnidad"
-                            sortMode="single"
-                            [rowGroupMode]="!isConsolidado ? 'subheader' : ''"
-                            [groupRowsBy]="!isConsolidado ? 'IdUnidad' : ''">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th *ngIf="isConsolidado">Unidad</th>
-                                    <th *ngIf="!isConsolidado">Piso</th>
-                                    <th *ngIf="!isConsolidado">Cuenta</th>
-                                    <th class="text-right">
-                                        Saldo Restaurador
-                                    </th>
-                                    <th class="text-right">Saldo Golden</th>
-                                    <th class="text-right">
-                                        Dif. Rest. - Golden
-                                    </th>
-                                    <th class="text-right">
-                                        Saldo Distribuidor
-                                    </th>
-                                    <th class="text-right">
-                                        Dif. Rest. - Dist.
-                                    </th>
-                                    <th class="text-right">Saldo Rodas</th>
-                                    <th class="text-right">
-                                        Dif. Rest. - Rodas
-                                    </th>
-                                </tr>
-                            </ng-template>
-                            <ng-template
-                                pTemplate="groupheader"
-                                let-inventario
-                                *ngIf="!isConsolidado">
-                                <tr pRowGroupHeader>
-                                    <td colspan="12">
-                                        <span class="font-bold ml-2">{{
-                                            inventario.Unidad
-                                        }}</span>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-inventario>
-                                <tr>
-                                    <td *ngIf="isConsolidado">
-                                        {{ inventario.Unidad }}
-                                    </td>
-                                    <td *ngIf="!isConsolidado">
-                                        {{ inventario.Almacen }}
-                                    </td>
-                                    <td *ngIf="!isConsolidado">
-                                        {{ inventario.Cuenta }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            inventario.SaldoRestaurador
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            inventario.SaldoGolden
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            inventario.DifGoldenRest
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            inventario.SaldoDistribuidor
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            inventario.DifGoldenDist
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            inventario.SaldoRodas
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            inventario.DifGoldenRodas
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="footer">
-                                <tr>
-                                    <td
-                                        [attr.colspan]="
-                                            isConsolidado ? '1' : '2'
-                                        ">
-                                        TOTAL
-                                    </td>
-                                    <td class="text-right">
-                                        {{ totalInvRest | currency: 'USD' }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{ totalInvGolden | currency: 'USD' }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            totalInvDifGoldenRest
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{ totalInvDist | currency: 'USD' }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            totalInvDifGoldenDist
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{ totalInvRodas | currency: 'USD' }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            totalInvDifGoldenRodas
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </p-card>
-                    <p-card class="m-1" header="Análisis de Ventas">
-                        <p-table
-                            [value]="dataSourceVenta"
-                            sortField="IdUnidad"
-                            [rowGroupMode]="!isConsolidado ? 'subheader' : ''"
-                            [groupRowsBy]="!isConsolidado ? 'IdUnidad' : ''"
-                            responsiveLayout="scroll">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th *ngIf="isConsolidado">Unidad</th>
-                                    <th *ngIf="!isConsolidado">Piso</th>
-                                    <th *ngIf="!isConsolidado">Cuenta</th>
-                                    <th class="text-right">
-                                        Saldo Restaurador
-                                    </th>
-                                    <th class="text-right">Saldo Golden</th>
-                                    <th class="text-right">
-                                        Dif. Rest. - Golden
-                                    </th>
-                                    <th class="text-right">
-                                        Saldo Distribuidor
-                                    </th>
-                                    <th class="text-right">
-                                        Dif. Rest. - Dist.
-                                    </th>
-                                    <th class="text-right">Saldo Rodas</th>
-                                    <th class="text-right">
-                                        Dif. Rest. - Rodas
-                                    </th>
-                                </tr>
-                            </ng-template>
-                            <ng-template
-                                pTemplate="groupheader"
-                                let-venta
-                                *ngIf="!isConsolidado">
-                                <tr pRowGroupHeader>
-                                    <td colspan="12">
-                                        <span class="font-bold ml-2">{{
-                                            venta.Unidad
-                                        }}</span>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-venta>
-                                <tr>
-                                    <td *ngIf="isConsolidado">
-                                        {{ venta.Unidad }}
-                                    </td>
-                                    <td *ngIf="!isConsolidado">
-                                        {{ venta.Almacen }}
-                                    </td>
-                                    <td *ngIf="!isConsolidado">
-                                        {{ venta.Cuenta }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            venta.SaldoRestaurador
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            venta.SaldoGolden | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            venta.DifGoldenRest
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            venta.SaldoDistribuidor
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            venta.DifGoldenDist
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{ venta.SaldoRodas | currency: 'USD' }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            venta.DifGoldenRodas
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="footer">
-                                <tr>
-                                    <td
-                                        [attr.colspan]="
-                                            isConsolidado ? '1' : '2'
-                                        ">
-                                        TOTAL
-                                    </td>
-                                    <td class="text-right">
-                                        {{ totalVtaRest | currency: 'USD' }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{ totalVtaGolden | currency: 'USD' }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            totalVtaDifGoldenRest
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{ totalVtaDist | currency: 'USD' }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            totalVtaDifGoldenDist
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{ totalVtaRodas | currency: 'USD' }}
-                                    </td>
-                                    <td class="text-right">
-                                        {{
-                                            totalVtaDifGoldenRodas
-                                                | currency: 'USD'
-                                        }}
-                                    </td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </p-card>
-                </p-tabPanel>
-                <p-tabPanel header="Nota">
-                    <png-input-textarea
-                        class="w-full mt-1"
-                        label="Nota"
-                        [fg]="fg"
-                        control="nota"
-                        autocomplete="off"></png-input-textarea>
-                </p-tabPanel>
-                <p-tabPanel
-                    header="Almacenes del Golden vs Rodas"
-                    [disabled]="isConsolidado">
-                    <p-card class="m-1" header="Análisis de Almacenes">
-                        <p-table
-                            [value]="dataSourceAlmacenes"
-                            sortField="IdUnidad"
-                            rowGroupMode="subheader"
-                            groupRowsBy="IdUnidad"
-                            responsiveLayout="scroll">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th>Almacén</th>
-                                    <th>Cuenta Golden</th>
-                                    <th>Cuenta Rodas</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template
-                                pTemplate="groupheader"
-                                let-alm
-                                *ngIf="!isConsolidado">
-                                <tr pRowGroupHeader>
-                                    <td colspan="12">
-                                        <span class="font-bold ml-2">{{
-                                            alm.Unidad
-                                        }}</span>
-                                    </td>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-alm>
-                                <tr>
-                                    <td>{{ alm.Almacen }}</td>
-                                    <td>{{ alm.Cuenta }}</td>
-                                    <td>{{ alm.CuentaR }}</td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                    </p-card>
-                </p-tabPanel>
-            </p-tabView>
-        </div>
-        <div class="flex justify-content-end mt-2">
-            <png-button
-                class="mr-1"
-                label="Conciliar"
-                icon="pi-check"
-                tooltip="Calcular la Conciliación."
-                [raised]="true"
-                [disabled]="!fg.valid"
-                (clicked)="conciliar()"></png-button>
-            <png-button
-                class="mr-2"
-                label="Reporte"
-                [style]="'secondary'"
-                [raised]="true"
-                icon="pi-print"
-                [disabled]="dataSourceInventario.length === 0"
-                (clicked)="reporte()"></png-button>
-        </div>
-    </png-panel>
+          </div>
+        </png-card>
+        <png-card class="w-20rem ml-3">
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="idEmpleado"
+              label="Empleado"
+              [optionsValues]="empleadosValues"
+              placeholder="(Opcional)"
+              [filter]="true"
+              [showClear]="true"></png-dropdown>
+          </div>
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="idSupervisor"
+              label="Supervisor"
+              [optionsValues]="supervisoresValues"
+              placeholder="(Opcional)"
+              [filter]="true"
+              [showClear]="true"></png-dropdown>
+          </div>
+          <div class="mt-1">
+            <png-checkbox
+              [fg]="fg"
+              control="ventasAcumuladas"
+              label="Ventas Acumuladas"
+              [defaultValue]="true">
+            </png-checkbox>
+          </div>
+        </png-card>
+      </div>
+    </form>
+    <div class="conciliacion-detalle shadow-1 mt-2">
+      <p-tabView class="h-full" (onChange)="handleTabViewChange($event)">
+        <p-tabPanel header="Inventario">
+          <png-table
+            [columns]="
+              !isConsolidado ? displayedColumns : displayedColumnsConsolidado
+            "
+            [data]="dataSourceInventario"
+            [groupField]="!isConsolidado ? 'Unidad' : ''"
+            [totalizeGroup]="true"
+            [totalizeTable]="true"
+            [paginator]="false"
+            [filterData]="false"
+            [scrollable]="true"
+            scrollHeight="calc(100vh - 350px)"></png-table>
+        </p-tabPanel>
+        <p-tabPanel header="Venta">
+          <png-table
+            [columns]="
+              !isConsolidado ? displayedColumns : displayedColumnsConsolidado
+            "
+            [data]="dataSourceVenta"
+            [groupField]="!isConsolidado ? 'Unidad' : ''"
+            [totalizeGroup]="true"
+            [totalizeTable]="true"
+            [paginator]="false"
+            [filterData]="false"
+            [scrollable]="true"
+            scrollHeight="calc(100vh - 350px)"></png-table>
+        </p-tabPanel>
+        <p-tabPanel header="Nota">
+          <png-input-textarea
+            class="w-full mt-1"
+            label="Nota"
+            [fg]="fg"
+            control="nota"
+            autocomplete="off"></png-input-textarea>
+        </p-tabPanel>
+        <p-tabPanel
+          header="Almacenes del Golden vs Rodas"
+          [disabled]="isConsolidado">
+          <png-table
+            [columns]="displayedColumnsAlmacenes"
+            [data]="dataSourceAlmacenes"
+            [groupField]="!isConsolidado ? 'Unidad' : ''"
+            [paginator]="false"
+            [filterData]="false"
+            [scrollable]="true"
+            scrollHeight="calc(100vh - 350px)"></png-table>
+        </p-tabPanel>
+      </p-tabView>
+    </div>
+    <div class="flex justify-content-end mt-2">
+      <png-button
+        class="mr-1"
+        label="Conciliar"
+        icon="pi-check"
+        tooltip="Calcular la Conciliación."
+        [raised]="true"
+        [disabled]="!fg.valid"
+        (clicked)="conciliar()"></png-button>
+      <png-button
+        class="mr-2"
+        label="Reporte"
+        [style]="'secondary'"
+        [raised]="true"
+        icon="pi-print"
+        [disabled]="dataSourceInventario.length === 0"
+        (clicked)="reporte()"></png-button>
+    </div>
+  </png-panel>
 </div>

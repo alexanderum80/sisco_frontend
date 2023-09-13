@@ -1,4 +1,4 @@
-mutation DeleteComprobarValor($IDs: Int!) {
+mutation DeleteComprobarValor($IDs: [Int!]!) {
    deleteComprobarValor(IDs: $IDs) {
     success
     error

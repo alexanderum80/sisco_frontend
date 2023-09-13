@@ -1,31 +1,38 @@
 <p-card class="login">
-    <form [formGroup]="fg" class="form__login" (ngSubmit)="iniciar()">
-        <div>
-            <png-input-text
-                class="w-full"
-                [fg]="fg"
-                control="usuario"
-                label="Usuario"
-                [floatLabel]="true"></png-input-text>
-        </div>
-        <div>
-            <png-password
-                class="w-full"
-                [fg]="fg"
-                control="password"
-                label="Contraseña"
-                [toggleMask]="true"
-                [floatLabel]="true"></png-password>
-        </div>
-        <div class="pt-3">
-            <button
-                pButton
-                type="submit"
-                label="Entrar"
-                [disabled]="!isFormValid() || autenticando"
-                [loading]="autenticando"
-                class="w-full"></button>
-            <!-- <png-button class="w-full" label="Entrar" [disabled]="!isFormValid() || autenticando" [raised]="true" [fullWidth]="true" [loading]="autenticando" (clicked)="iniciar()"></png-button> -->
-        </div>
-    </form>
+  <form [formGroup]="fg" class="form__login" (ngSubmit)="iniciar()">
+    <div>
+      <png-input-text
+        class="w-full"
+        [fg]="fg"
+        control="usuario"
+        label="Usuario"
+        [floatLabel]="true"></png-input-text>
+    </div>
+    <div>
+      <png-password
+        class="w-full"
+        [fg]="fg"
+        control="password"
+        label="Contraseña"
+        [toggleMask]="true"
+        [floatLabel]="true"></png-password>
+    </div>
+    <div class="pt-3">
+      <button
+        pButton
+        type="submit"
+        label="Entrar"
+        [disabled]="!isFormValid() || autenticando"
+        [loading]="autenticando"
+        class="w-full"></button>
+      <!-- <png-button class="w-full" label="Entrar" [disabled]="!isFormValid() || autenticando" [raised]="true" [fullWidth]="true" [loading]="autenticando" (clicked)="iniciar()"></png-button> -->
+    </div>
+    <!-- <div class="mt-3 flex justify-content-center">
+      <png-checkbox
+        [fg]="fg"
+        control="sesionAbierta"
+        label="Mantener sesión abierta"
+        pTooltip="Seleccione esta opción para recordar sus datos la próxima vez que inicie sesión."></png-checkbox>
+    </div> -->
+  </form>
 </p-card>

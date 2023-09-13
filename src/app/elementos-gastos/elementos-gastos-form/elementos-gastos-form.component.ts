@@ -1,197 +1,194 @@
 import { ActionClicked } from './../../shared/models/list-items';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
-import SweetAlert from 'sweetalert2';
 import { TipoEntidadesService } from './../../tipo-entidades/shared/services/tipo-entidades.service';
 import { ClasificadorCuentaService } from './../../clasificador-cuenta/shared/service/clasificador-cuenta.service';
 import { EpigrafesService } from './../../epigrafes/shared/services/epigrafes.service';
 import { ElementosGastosService } from './../shared/services/elementos-gastos.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  AfterViewInit,
+  AfterContentChecked,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { SelectItem } from 'primeng/api';
+import { SweetalertService } from 'src/app/shared/helpers/sweetalert.service';
+import { IEpigrafes } from 'src/app/epigrafes/shared/models/epigrafes.model';
 
 @Component({
-    selector: 'app-elementos-gastos-form',
-    templateUrl: './elementos-gastos-form.component.html',
-    styleUrls: ['./elementos-gastos-form.component.scss'],
-    providers: [EpigrafesService, ClasificadorCuentaService],
+  selector: 'app-elementos-gastos-form',
+  templateUrl: './elementos-gastos-form.component.html',
+  styleUrls: ['./elementos-gastos-form.component.scss'],
+  providers: [EpigrafesService, ClasificadorCuentaService],
 })
-export class ElementosGastosFormComponent implements OnInit, AfterViewInit {
-    action: ActionClicked;
+export class ElementosGastosFormComponent
+  implements OnInit, AfterViewInit, AfterContentChecked
+{
+  action: ActionClicked;
 
-    fg: FormGroup;
+  fg: FormGroup;
 
-    tipoEntidadValues: SelectItem[] = [];
-    cuentasValues: SelectItem[] = [];
-    epigrafesValues: SelectItem[] = [];
+  tipoEntidadValues: SelectItem[] = [];
+  cuentasValues: SelectItem[] = [];
+  epigrafesValues: SelectItem[] = [];
 
-    constructor(
-        private _elementoGastoSvc: ElementosGastosService,
-        private _tipoEntidadesSvc: TipoEntidadesService,
-        private _epigrafesSvc: EpigrafesService,
-        private _clasificadorCuentaSvc: ClasificadorCuentaService,
-        private _dinamicDialogSvc: DinamicDialogService
-    ) {}
+  loadingTipoEntidad = true;
+  loadingCuentas = true;
+  loadingEpigrafes = true;
 
-    ngOnInit(): void {
-        this.fg = this._elementoGastoSvc.fg;
+  constructor(
+    private _elementoGastoSvc: ElementosGastosService,
+    private _tipoEntidadesSvc: TipoEntidadesService,
+    private _epigrafesSvc: EpigrafesService,
+    private _clasificadorCuentaSvc: ClasificadorCuentaService,
+    private _dinamicDialogSvc: DinamicDialogService,
+    private _swalSvc: SweetalertService,
+    private _cd: ChangeDetectorRef
+  ) {}
 
-        this.action =
-            this.fg.controls['elemento'].value === ''
-                ? ActionClicked.Add
-                : ActionClicked.Edit;
-    }
+  ngOnInit(): void {
+    this.fg = this._elementoGastoSvc.fg;
 
-    ngAfterViewInit(): void {
-        this._loadTipoEntidades();
-        this._loadEpigrafes();
-        this._loadCuentas();
-    }
+    this.action =
+      this.fg.controls['elemento'].value === ''
+        ? ActionClicked.Add
+        : ActionClicked.Edit;
+  }
 
-    private _loadTipoEntidades(): void {
-        try {
-            this._elementoGastoSvc.subscription.push(
-                this._tipoEntidadesSvc
-                    .loadAllTipoEntidades()
-                    .subscribe(response => {
-                        const result = response.getAllTipoEntidades;
-                        if (result.success) {
-                            this.tipoEntidadValues = result.data.map(
-                                (tipo: { Id: any; Entidades: any }) => {
-                                    return {
-                                        value: tipo.Id,
-                                        label: tipo.Entidades,
-                                    };
-                                }
-                            );
-                        }
-                    })
-            );
-        } catch (err: any) {
-            SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: err,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-            });
-        }
-    }
+  ngAfterViewInit(): void {
+    this._loadTipoEntidades();
+    this._loadEpigrafes();
+    this._loadCuentas();
+  }
 
-    private _loadEpigrafes(): void {
-        try {
-            this._elementoGastoSvc.subscription.push(
-                this._epigrafesSvc.loadAllEpigrafes().subscribe(response => {
-                    const result = response.getAllEpigrafes;
-                    if (result.success) {
-                        this.epigrafesValues = result.data.map(
-                            (epigrafe: { IdEpigafre: any; Epigrafe: any }) => {
-                                return {
-                                    value: epigrafe.IdEpigafre,
-                                    label: epigrafe.Epigrafe,
-                                };
-                            }
-                        );
-                    }
-                })
-            );
-        } catch (err: any) {
-            SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: err,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-            });
-        }
-    }
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
+  }
 
-    private _loadCuentas(): void {
-        try {
-            this._elementoGastoSvc.subscription.push(
-                this._clasificadorCuentaSvc
-                    .loadCuentasAgrupadas()
-                    .subscribe(res => {
-                        const result = res.getCuentasAgrupadas;
-                        if (!result.success) {
-                            return SweetAlert.fire({
-                                icon: 'error',
-                                title: 'ERROR',
-                                text: result.error,
-                                confirmButtonText: 'Aceptar',
-                            });
-                        }
+  private _loadTipoEntidades(): void {
+    try {
+      this._elementoGastoSvc.subscription.push(
+        this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe({
+          next: res => {
+            this.loadingTipoEntidad = false;
 
-                        this.cuentasValues = res.getCuentasAgrupadas.data.map(
-                            (cuenta: { Cuenta: any }) => {
-                                return {
-                                    value: cuenta.Cuenta,
-                                    label: cuenta.Cuenta,
-                                };
-                            }
-                        );
-                    })
-            );
-        } catch (err: any) {
-            SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: err,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-            });
-        }
-    }
-
-    onActionClicked(action: ActionClicked) {
-        switch (action) {
-            case ActionClicked.Save:
-                this._save();
-                break;
-            case ActionClicked.Cancel:
-                this._closeModal();
-                break;
-        }
-    }
-
-    private _save(): void {
-        try {
-            this._elementoGastoSvc.save().subscribe(response => {
-                let result;
-
-                result = response.saveElementoGasto;
-                if (!result.success) {
-                    return SweetAlert.fire({
-                        icon: 'error',
-                        title: 'ERROR',
-                        text: result.error,
-                        showConfirmButton: true,
-                        confirmButtonText: 'Aceptar',
-                    });
+            const result = res.getAllTipoEntidades;
+            if (result.success) {
+              this.tipoEntidadValues = result.data.map(
+                (tipo: { Id: any; Entidades: any }) => {
+                  return {
+                    value: tipo.Id,
+                    label: tipo.Entidades,
+                  };
                 }
-
-                let txtMessage;
-                if (this.action === ActionClicked.Add) {
-                    txtMessage =
-                        'El Elemento de Gasto se ha creado correctamente.';
-                } else {
-                    txtMessage =
-                        'El Elemento de Gasto se ha actualizado correctamente.';
-                }
-
-                this._closeModal(txtMessage);
-            });
-        } catch (err: any) {
-            SweetAlert.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: err,
-                showConfirmButton: true,
-                confirmButtonText: 'Aceptar',
-            });
-        }
+              );
+            }
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
+        })
+      );
+    } catch (err: any) {
+      this._swalSvc.error(err);
     }
+  }
 
-    private _closeModal(message?: string): void {
-        this._dinamicDialogSvc.close(message);
+  private _loadEpigrafes(): void {
+    try {
+      this._elementoGastoSvc.subscription.push(
+        this._epigrafesSvc.loadAllEpigrafes().subscribe({
+          next: res => {
+            this.loadingEpigrafes = false;
+
+            this.epigrafesValues = res.getAllEpigrafes.map(
+              (epigrafe: IEpigrafes) => {
+                return {
+                  value: epigrafe.IdEpigrafe,
+                  label: epigrafe.Epigrafe,
+                };
+              }
+            );
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
+        })
+      );
+    } catch (err: any) {
+      this._swalSvc.error(err);
     }
+  }
+
+  private _loadCuentas(): void {
+    try {
+      this._elementoGastoSvc.subscription.push(
+        this._clasificadorCuentaSvc.loadCuentasAgrupadas().subscribe({
+          next: res => {
+            this.loadingCuentas = false;
+
+            this.cuentasValues = res.getCuentasAgrupadas.map(
+              (cuenta: { Cuenta: any }) => {
+                return {
+                  value: cuenta.Cuenta,
+                  label: cuenta.Cuenta,
+                };
+              }
+            );
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
+        })
+      );
+    } catch (err: any) {
+      this._swalSvc.error(err);
+    }
+  }
+
+  onActionClicked(action: ActionClicked) {
+    switch (action) {
+      case ActionClicked.Save:
+        this._save();
+        break;
+      case ActionClicked.Cancel:
+        this._closeModal();
+        break;
+    }
+  }
+
+  private _save(): void {
+    try {
+      this._elementoGastoSvc.save().subscribe({
+        next: res => {
+          let result;
+
+          result = res.saveElementoGasto;
+          if (!result.success) {
+            this._swalSvc.error(result.error);
+          }
+
+          let txtMessage;
+          if (this.action === ActionClicked.Add) {
+            txtMessage = 'El Elemento de Gasto se ha creado correctamente.';
+          } else {
+            txtMessage =
+              'El Elemento de Gasto se ha actualizado correctamente.';
+          }
+
+          this._closeModal(txtMessage);
+        },
+        error: err => {
+          this._swalSvc.error(err);
+        },
+      });
+    } catch (err: any) {
+      this._swalSvc.error(err);
+    }
+  }
+
+  private _closeModal(message?: string): void {
+    this._dinamicDialogSvc.close(message);
+  }
 }

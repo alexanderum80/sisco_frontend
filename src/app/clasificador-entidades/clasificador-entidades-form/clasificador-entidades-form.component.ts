@@ -6,15 +6,24 @@ import { toNumber } from 'lodash';
 import { ClasificadorEntidadesService } from './../shared/services/clasificador-entidades.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterContentChecked,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { SelectItem } from 'primeng/api';
+import { SweetalertService } from 'src/app/shared/helpers/sweetalert.service';
+import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
 
 @Component({
   selector: 'app-clasificador-entidades-form',
   templateUrl: './clasificador-entidades-form.component.html',
   styleUrls: ['./clasificador-entidades-form.component.scss'],
 })
-export class ClasificadorEntidadesFormComponent implements OnInit {
+export class ClasificadorEntidadesFormComponent
+  implements OnInit, AfterContentChecked
+{
   unidadesValues: SelectItem[] = [];
   tipoEntidadesValues: SelectItem[] = [];
 
@@ -26,7 +35,9 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
     private _dinamicDialogSvc: DinamicDialogService,
     private _clasificadorEntidadesSvc: ClasificadorEntidadesService,
     private _unidadesSvc: UnidadesService,
-    private _tipoEntidadesSvc: TipoEntidadesService
+    private _swalSvc: SweetalertService,
+    private _tipoEntidadesSvc: TipoEntidadesService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -40,36 +51,34 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
     this._loadTipoEntidades();
   }
 
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
+  }
+
   private _loadUnidades(): void {
     this._clasificadorEntidadesSvc.subscription.push(
-      this._unidadesSvc.getAllUnidades().subscribe(response => {
-        const result = response.getAllUnidades;
-        if (!result.success) {
-          return SweetAlert.fire({
-            icon: 'error',
-            title: 'ERROR',
-            text: result.error,
-            showConfirmButton: true,
-            confirmButtonText: 'Aceptar',
-          });
-        }
+      this._unidadesSvc.getAllUnidadesByUsuario().subscribe({
+        next: res => {
+          const data = res.getAllUnidadesByUsuario;
 
-        this.unidadesValues = result.data.map(
-          (unidad: { IdUnidad: string; Nombre: string }) => {
+          this.unidadesValues = data.map((unidad: IUnidades) => {
             return {
               value: unidad.IdUnidad,
-              label: unidad.IdUnidad + '-' + unidad.Nombre,
+              label: unidad.Nombre,
             };
-          }
-        );
+          });
+        },
+        error: err => {
+          this._swalSvc.error(err);
+        },
       })
     );
   }
 
   private _loadTipoEntidades(): void {
     this._clasificadorEntidadesSvc.subscription.push(
-      this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(response => {
-        const result = response.getAllTipoEntidades;
+      this._tipoEntidadesSvc.loadAllTipoEntidades().subscribe(res => {
+        const result = res.getAllTipoEntidades;
         if (!result.success) {
           return SweetAlert.fire({
             icon: 'error',
@@ -105,11 +114,11 @@ export class ClasificadorEntidadesFormComponent implements OnInit {
 
   private _save(): void {
     this._clasificadorEntidadesSvc.subscription.push(
-      this._clasificadorEntidadesSvc.save(this.action).subscribe(response => {
+      this._clasificadorEntidadesSvc.save(this.action).subscribe(res => {
         const result =
           this.action === ActionClicked.Add
-            ? response.createClasificadorEntidad
-            : response.updateClasificadorEntidad;
+            ? res.createClasificadorEntidad
+            : res.updateClasificadorEntidad;
 
         if (!result.success) {
           return SweetAlert.fire({

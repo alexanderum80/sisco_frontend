@@ -19,7 +19,7 @@
     p-selectbutton,
     p-inputswitch {
         width: 100% !important;
-        height: 22px;
+        height: 25px;
     }
 
     .p-selectbutton {
@@ -66,7 +66,7 @@
     } 
     
     .p-fieldset-content {
-       padding: .5rem !important;
+       padding: .5rem .2rem 0 .2rem !important;
     }
 }
 
@@ -75,15 +75,16 @@ p-inputnumber, .p-inputnumber {
 }
 
 .p-float-label label {
-    margin-top: -.3rem !important;
+    margin-top: -.35rem !important;
+    margin-left: -.35rem !important;
 }
 
 .p-float-label input:focus ~ label,
 .p-float-label input.p-filled ~ label, 
 .p-float-label .p-inputwrapper-focus ~ label,
 .p-float-label .p-inputwrapper-filled ~ label {
-    font-size: .6rem !important;
-    top: -0.5rem !important;
+    font-size: inherit !important;
+    top: -0.6rem !important;
 }
 
 .p-component, .p-link {
@@ -94,7 +95,7 @@ p-inputnumber, .p-inputnumber {
     padding: 0.5rem 1rem !important;
 }
 
-.p-disabled, .p-button:disabled {
+.p-disabled, .p-disabled *, .p-button:disabled {
     cursor: not-allowed !important;
 }
 
@@ -135,10 +136,21 @@ p-inputnumber, .p-inputnumber {
 
 .p-dropdown-clear-icon {
     right: 1.5rem !important;
+    // margin-top: -0.6rem !important;
 }
 
-.p-dropdown-panel .p-dropdown-items .p-dropdown-item, .p-multiselect-item {
-    padding: 0.5rem 1rem !important;
+.p-dropdown-panel {
+    border: 1px solid var(--primary-500) !important;
+
+    .p-dropdown-items .p-dropdown-item, .p-multiselect-item {
+        padding: 0.5rem 1rem !important;
+    }
+}
+
+.p-dropdown .p-dropdown-label {
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
 }
 
 .p-tooltip {
@@ -222,9 +234,31 @@ p-inputnumber, .p-inputnumber {
     height: 1.5rem !important;
 }
 
-.p-menubar {
+.p-tieredmenu, .p-menubar, .p-menu-list {
     padding: 0 !important;
+    background: var(--primary-700) !important;
+
+    .p-menubar-root-list > .p-menuitem > .p-menuitem-link,
+    .p-menuitem-link,
+    .p-menuitem.p-menuitem-active > .p-menuitem-link {
+        .p-menuitem-text, .p-submenu-icon, .p-menuitem-icon {
+            color: white !important;
+        }
+
+        &:not(.p-disabled):hover {
+            background: var(--primary-500) !important;
+        }
+    }
+    
+    .p-menuitem.p-menuitem-active > .p-menuitem-link {
+        background: var(--primary-500) !important;
+    }
+
+    .p-submenu-list {
+        background: var(--primary-700) !important;
+    }
 }
+
 
 .p-submenu-list {
     z-index: 10 !important;
@@ -251,6 +285,12 @@ p-slidemenu {
         padding: .5rem !important;
         height: 2rem !important;
         font-weight: 500;
+        background: var(--primary-700) !important;
+        color: white !important;
+
+        .p-panel-header-icon:enabled:hover {
+            background: var(--primary-500) !important;
+        }
     }
 
     .p-panel-title {
@@ -259,6 +299,7 @@ p-slidemenu {
 
     .p-panel-content {
         padding: .5rem !important;
+        background: var(--cyan-300) !important;
     }
 }
 
@@ -289,9 +330,11 @@ p-slidemenu {
 .p-dialog {
     .p-dialog-header {
         padding: .5rem !important;
+        background: var(--primary-700) !important;
+        color: white !important;
 
         .p-dialog-title {
-            font-size: 1rem !important;
+            font-size: inherit !important;
             font-weight: bold;
         }
     }
@@ -309,6 +352,8 @@ p-slidemenu {
 .p-column-filter-row .p-column-filter-menu-button, 
 .p-column-filter-row .p-column-filter-clear-button {
     margin-left: 0 !important;
+    width: 1.5rem !important;
+    height: 1.5rem !important;
 }
 
 .p-sidebar {
@@ -348,3 +393,18 @@ small.p-error {
 .p-fileupload .p-fileupload-content {
     padding: 0 !important;
 }
+
+.p-tieredmenu.p-tieredmenu-overlay,
+.p-menubar .p-submenu-list {
+    border: 1px solid var(--primary-500) !important;
+}
+
+a.p-ripple.p-element.p-menuitem-link.ng-star-inserted.p-menuitem-link-active {
+    background-color: var(--primary-500) !important;
+    cursor: default !important;
+
+    & span {
+        color: white;
+    }
+}
+

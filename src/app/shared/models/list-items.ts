@@ -8,6 +8,7 @@ export enum ActionClicked {
   Edit = 'edit',
   Delete = 'delete',
   Save = 'save',
+  Accept = 'accept',
   Cancel = 'cancel',
   Yes = 'yes',
   No = 'no',

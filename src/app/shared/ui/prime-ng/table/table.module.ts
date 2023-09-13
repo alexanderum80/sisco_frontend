@@ -9,16 +9,16 @@ import { PrimeSlideMenuModule } from '../slide-menu/slide-menu.module';
 import { MenuModule } from 'primeng/menu';
 
 @NgModule({
-    declarations: [TableComponent],
-    imports: [
-        CommonModule,
-        TableModule,
-        InputTextModule,
-        CalendarModule,
-        PrimeSlideMenuModule,
-        MenuModule,
-        PrimeToolbarModule,
-    ],
-    exports: [TableModule, TableComponent],
+  declarations: [TableComponent],
+  imports: [
+    CommonModule,
+    TableModule,
+    InputTextModule,
+    CalendarModule,
+    PrimeSlideMenuModule,
+    MenuModule,
+    PrimeToolbarModule,
+  ],
+  exports: [TableModule, TableComponent],
 })
 export class PrimeTableModule {}

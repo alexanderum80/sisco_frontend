@@ -1,12 +1,10 @@
 query GetAllClasificadorEntidades {
     getAllClasificadorEntidades {
-        success
-        data {
-            IdUnidad
-            Unidad 
-            IdTipoEntidad
-            TipoEntidad
-        }
-        error
+        IdUnidad
+        Unidad 
+        Division 
+        SubDivision 
+        IdTipoEntidad
+        TipoEntidad
     }
 }

@@ -1,0 +1,23 @@
+.status {
+  margin-top: .5rem;
+  margin-bottom: .5rem;
+  display: flex;
+  justify-content: center;
+
+  & label {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  & .abierta {
+    color: green;
+  }
+  
+  & .noIniciada {
+    color: rgb(255, 208, 0);
+  }
+  
+  & .cerrada {
+    color: red;
+  }
+}

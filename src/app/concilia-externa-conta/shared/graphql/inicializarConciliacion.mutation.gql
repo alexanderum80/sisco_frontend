@@ -1,0 +1,8 @@
+mutation InicializarConciliacion($annio: Int!, $mes: Int!) {
+   inicializarConciliacion(anno: $annio, mes: $mes) {
+    IdConciliacion
+    Annio
+    Mes
+    Abierta
+  }
+}

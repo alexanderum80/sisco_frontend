@@ -1,0 +1,49 @@
+<png-progress-spinner *ngIf="loading"></png-progress-spinner>
+
+<div class="h-full w-full">
+  <form [formGroup]="fg">
+    <div class="flex p-1">
+      <div class="p-1">
+        <png-card>
+          <png-radio-button
+            [fg]="fg"
+            control="tipoCentro"
+            [items]="tipoCentrosValues"></png-radio-button>
+        </png-card>
+      </div>
+      <div class="w-full flex flex-column p-1">
+        <png-dropdown
+          class="w-full flex-auto"
+          [fg]="fg"
+          control="idCentro"
+          label="Centro"
+          [optionsValues]="centrosValues"
+          [filter]="true"
+          [required]="true"
+          [showClear]="true"></png-dropdown>
+        <png-input-mask
+          class="w-5rem"
+          [fg]="fg"
+          control="annio"
+          label="Año"
+          [required]="true"
+          mask="9999"></png-input-mask>
+        <div class="flex justify-content-end">
+          <png-button
+            class="mr-2 mb-2"
+            label="Aplicar"
+            [style]="'primary'"
+            [raised]="true"
+            [disabled]="fg && !fg.valid"
+            (clicked)="aplicar()"></png-button>
+          <png-button
+            class="mr-2 mb-2"
+            label="Cancelar"
+            [style]="'secondary'"
+            [raised]="true"
+            (clicked)="cancelar()"></png-button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

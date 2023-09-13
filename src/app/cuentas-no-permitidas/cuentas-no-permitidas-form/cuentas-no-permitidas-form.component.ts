@@ -1,18 +1,26 @@
 import { ActionClicked } from './../../shared/models/list-items';
 import { UnidadesService } from './../../unidades/shared/services/unidades.service';
 import { CuentasNoPermitidasService } from './../shared/services/cuentas-no-permitidas.service';
-import { SweetalertService } from './../../shared/services/sweetalert.service';
+import { SweetalertService } from './../../shared/helpers/sweetalert.service';
 import { DinamicDialogService } from './../../shared/ui/prime-ng/dinamic-dialog/dinamic-dialog.service';
 import { SelectItem } from 'primeng/api';
 import { FormGroup } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterContentChecked,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
+import { IUnidades } from 'src/app/unidades/shared/models/unidades.model';
 
 @Component({
   selector: 'app-cuentas-no-permitidas-form',
   templateUrl: './cuentas-no-permitidas-form.component.html',
   styleUrls: ['./cuentas-no-permitidas-form.component.scss'],
 })
-export class CuentasNoPermitidasFormComponent implements OnInit {
+export class CuentasNoPermitidasFormComponent
+  implements OnInit, AfterContentChecked
+{
   action: ActionClicked;
 
   fg: FormGroup;
@@ -23,7 +31,8 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
     private _cuentasNoPermitidasSvc: CuentasNoPermitidasService,
     private _unidadesSvc: UnidadesService,
     private _dinamicDialogSvc: DinamicDialogService,
-    private _sweetAlertSvc: SweetalertService
+    private _swalSvc: SweetalertService,
+    private _cd: ChangeDetectorRef
   ) {
     this.fg = _cuentasNoPermitidasSvc.fg;
   }
@@ -36,26 +45,29 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
     this._loadCentros();
   }
 
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
+  }
+
   private _loadCentros(): void {
     try {
-      this._unidadesSvc.getAllUnidades().subscribe(response => {
-        const result = response.getAllUnidades;
+      this._unidadesSvc.getAllUnidadesByUsuario().subscribe({
+        next: res => {
+          const data = res.getAllUnidadesByUsuario;
 
-        if (!result.success) {
-          throw new Error(result.error);
-        }
-
-        this.centrosValues = result.data.map(
-          (u: { IdUnidad: string; Nombre: string }) => {
+          this.centrosValues = data.map((u: IUnidades) => {
             return {
               value: String(u.IdUnidad),
-              label: u.IdUnidad + '-' + u.Nombre,
+              label: u.Nombre,
             };
-          }
-        );
+          });
+        },
+        error: err => {
+          this._swalSvc.error(err);
+        },
       });
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 
@@ -72,25 +84,23 @@ export class CuentasNoPermitidasFormComponent implements OnInit {
 
   private _save(): void {
     try {
-      this._cuentasNoPermitidasSvc
-        .saveCuentaNoPermitida()
-        .subscribe(response => {
-          const result =
-            this.action === ActionClicked.Add
-              ? response.createNoUsarEnCuenta
-              : response.updateNoUsarEnCuenta;
+      this._cuentasNoPermitidasSvc.saveCuentaNoPermitida().subscribe(res => {
+        const result =
+          this.action === ActionClicked.Add
+            ? res.createNoUsarEnCuenta
+            : res.updateNoUsarEnCuenta;
 
-          if (!result.success) {
-            throw new Error(result.error);
-          }
+        if (!result.success) {
+          throw new Error(result.error);
+        }
 
-          let txtMessage = `La Cuenta no Permitida se ha ${
-            this.action === ActionClicked.Add ? 'creado' : 'actualizado'
-          } correctamente.`;
-          this._dinamicDialogSvc.close(txtMessage);
-        });
+        let txtMessage = `La Cuenta no Permitida se ha ${
+          this.action === ActionClicked.Add ? 'creado' : 'actualizado'
+        } correctamente.`;
+        this._dinamicDialogSvc.close(txtMessage);
+      });
     } catch (err: any) {
-      this._sweetAlertSvc.error(err);
+      this._swalSvc.error(err);
     }
   }
 }

@@ -10,23 +10,13 @@ interface IComprobarValores {
   Operador: string;
   Valor: number;
   IdDivision?: number;
-}
-
-interface IComprobarValorQueryResponse {
-  success: boolean;
-  data: IComprobarValores;
-  error: string;
-}
-
-interface IComprobarValoresQueryResponse {
-  success: boolean;
-  data: IComprobarValores[];
-  error: string;
+  Consolidado: boolean;
+  Activo: boolean;
 }
 
 export interface ComprobarValoresQueryResponse {
-  getAllComprobarValores: IComprobarValoresQueryResponse;
-  getComprobarValorById: IComprobarValorQueryResponse;
+  getAllComprobarValores: IComprobarValores[];
+  getComprobarValorById: IComprobarValores;
 }
 
 export interface ComprobarValoresMutation {

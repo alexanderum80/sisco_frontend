@@ -1,0 +1,8 @@
+query GetClaseCuentaByIdGrupo($idGrupo: String!) {
+    getClaseCuentaByIdGrupo(idGrupo: $idGrupo) {
+      	ID
+      	IdClase
+        IdGrupo
+      	Clase
+    }
+}

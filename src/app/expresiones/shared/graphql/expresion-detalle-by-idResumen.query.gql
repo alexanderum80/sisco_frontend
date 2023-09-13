@@ -1,18 +1,15 @@
 query GetExpresionesDetalleByIdResumen($idResumen: Int!) {
     getExpresionesDetalleByIdResumen(idResumen: $idResumen) {
-        success
-        data {
-            id
-            IdExpresion
-            Cta
-            SubCta
-            Crit1
-            Crit2
-            Crit3
-            Signo
-            PorCiento
-            TipoValor            
-        }
-        error
+        Id
+        IdExpresion
+        Cta
+        SubCta
+        Crit1
+        Crit2
+        Crit3
+        Signo
+        PorCiento
+        TipoValor       
+        TipoValorDesc     
     }
 }

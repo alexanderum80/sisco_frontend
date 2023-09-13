@@ -1,0 +1,102 @@
+<png-progress-spinner *ngIf="loading"></png-progress-spinner>
+
+<div class="content">
+  <png-panel
+    class="h-full w-full"
+    header="Conciliación Interna por la Contabildad">
+    <div class="flex h-full">
+      <div class="h-full w-full">
+        <form [formGroup]="fg">
+          <div class="flex p-1">
+            <png-card class="w-25rem ml-3">
+              <div>
+                <png-dropdown
+                  class="w-full"
+                  [fg]="fg"
+                  control="idDivision"
+                  label="División"
+                  [optionsValues]="divisionesValues"
+                  placeholder="Seleccione la División"
+                  [filter]="true"
+                  [required]="true"
+                  [showClear]="true"></png-dropdown>
+              </div>
+              <div>
+                <png-calendar
+                  class="w-full"
+                  [fg]="fg"
+                  label="Período"
+                  control="periodo"
+                  view="month"
+                  dateFormat="MM/yy"
+                  [required]="true"></png-calendar>
+              </div>
+            </png-card>
+            <p-fieldset class="ml-3" legend="Entre">
+              <png-radio-button
+                [fg]="fg"
+                control="tipoCentro"
+                [items]="tipoCentrosValues"></png-radio-button>
+            </p-fieldset>
+            <png-card class="ml-3 w-25rem">
+              <png-dropdown
+                class="w-full"
+                [fg]="fg"
+                control="idUnidad"
+                label="Centro a analizar"
+                [optionsValues]="unidadesValues"
+                labelWidth="190"
+                [filter]="true"
+                [disabled]="!showUnidadControl"
+                [required]="showUnidadControl"
+                [showClear]="true"></png-dropdown>
+              <png-dropdown
+                class="w-full"
+                [fg]="fg"
+                control="idUnidadOD"
+                label="Centro emisor/receptor"
+                [optionsValues]="unidadesValues"
+                labelWidth="190"
+                [filter]="true"
+                [disabled]="!showEmisorReceptorControl"
+                [required]="showEmisorReceptorControl"
+                [showClear]="true"></png-dropdown>
+              <div class="mt-3">
+                <png-checkbox
+                  label="Mostrar solo diferencias"
+                  [fg]="fg"
+                  control="soloDiferencias"></png-checkbox>
+              </div>
+            </png-card>
+          </div>
+        </form>
+        <div class="conciliacion-detalle shadow-1 mt-2">
+          <png-table
+            [columns]="displayedColumns"
+            [data]="dataSource"
+            [filterData]="false"
+            [scrollable]="true"
+            [totalizeTable]="true"
+            scrollHeight="calc(100vh - 355px)"></png-table>
+        </div>
+        <div class="flex justify-content-end mt-2">
+          <png-button
+            class="mr-1"
+            label="Conciliar"
+            [style]="'primary'"
+            icon="mdi mdi-file-check-outline"
+            [disabled]="!fg.valid"
+            (clicked)="conciliar()"></png-button>
+          <png-split-button
+            class="mr-2"
+            label="Reporte"
+            [style]="'secondary'"
+            icon="mdi mdi-printer"
+            [items]="buttonConciliarItems"
+            [disabled]="!dataSource.length"
+            (clicked)="reporte()"></png-split-button>
+        </div>
+      </div>
+    </div>
+  </png-panel>
+</div>

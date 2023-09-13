@@ -12,14 +12,14 @@ import { Observable, Subscription } from 'rxjs';
 @Injectable()
 export class ConexionRodasService {
   fg = new FormGroup({
-    id: new FormControl(''),
-    idUnidad: new FormControl(''),
-    consolidado: new FormControl(''),
-    ip: new FormControl(''),
-    usuario: new FormControl(''),
-    contrasena: new FormControl(''),
-    baseDatos: new FormControl(''),
-    idDivision: new FormControl(''),
+    id: new FormControl('', { initialValueIsDefault: true }),
+    idDivision: new FormControl('', { initialValueIsDefault: true }),
+    idUnidad: new FormControl(null, { initialValueIsDefault: true }),
+    consolidado: new FormControl('', { initialValueIsDefault: true }),
+    ip: new FormControl('', { initialValueIsDefault: true }),
+    usuario: new FormControl('', { initialValueIsDefault: true }),
+    contrasena: new FormControl('', { initialValueIsDefault: true }),
+    baseDatos: new FormControl(null, { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];
@@ -35,12 +35,17 @@ export class ConexionRodasService {
               query: conexionRodasApi.all,
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(response => {
-              subscriber.next(response.data);
+            .valueChanges.subscribe({
+              next: res => {
+                subscriber.next(res.data);
+              },
+              error: err => {
+                subscriber.error(err);
+              },
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -54,9 +59,14 @@ export class ConexionRodasService {
             variables: { id },
             fetchPolicy: 'network-only',
           })
-          .subscribe(response => {
-            subscriber.next(response.data);
-            subscriber.complete();
+          .subscribe({
+            next: res => {
+              subscriber.next(res.data);
+              subscriber.complete();
+            },
+            error: err => {
+              subscriber.error(err);
+            },
           })
       );
     });
@@ -71,8 +81,8 @@ export class ConexionRodasService {
           Consolidado: this.fg.controls['consolidado'].value || false,
           IdDivision: toNumber(this.fg.controls['idDivision'].value),
           IpRodas: this.fg.controls['ip'].value,
-          Usuario: this.fg.controls['usuario'].value,
-          Contrasena: this.fg.controls['contrasena'].value,
+          // Usuario: this.fg.controls['usuario'].value,
+          // Contrasena: this.fg.controls['contrasena'].value,
           BaseDatos: this.fg.controls['baseDatos'].value,
         };
 
@@ -89,12 +99,12 @@ export class ConexionRodasService {
               refetchQueries: ['GetAllContaConexiones'],
             })
             .subscribe({
-              next: response => subscriber.next(response.data || undefined),
-              error: error => subscriber.error(error),
+              next: res => subscriber.next(res.data || undefined),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -108,22 +118,31 @@ export class ConexionRodasService {
             variables: { IDs },
             refetchQueries: ['GetAllContaConexiones'],
           })
-          .subscribe(response => {
-            subscriber.next(response.data || undefined);
+          .subscribe(res => {
+            subscriber.next(res.data || undefined);
           })
       );
     });
   }
 
-  estadoConexion(idDivision: number): Observable<ConexionRodasQueryResponse> {
-    return new Observable<ConexionRodasQueryResponse>(() => {
+  getEntidadesRodas(): Observable<ConexionRodasQueryResponse> {
+    const ip = this.fg.get('ip')?.value;
+
+    return new Observable<ConexionRodasQueryResponse>(subscribe => {
       this._apollo
         .query<ConexionRodasQueryResponse>({
-          query: conexionRodasApi.estado,
-          variables: { idDivision },
+          query: conexionRodasApi.entidades,
+          variables: { ip },
           fetchPolicy: 'network-only',
         })
-        .subscribe(() => {});
+        .subscribe({
+          next: res => {
+            subscribe.next(res.data);
+          },
+          error: err => {
+            subscribe.error(err);
+          },
+        });
     });
   }
 

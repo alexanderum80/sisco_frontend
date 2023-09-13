@@ -1,27 +1,48 @@
+# query ConciliaDWH($conciliaDWHInput: ConciliaDWHInput!) {
+#     conciliaDWH(conciliaDWHInput: $conciliaDWHInput) {
+#         tipo
+#         id_centro
+#         centro
+#         id_unidad
+#         unidad
+#         id_piso
+#         almacen
+#         cuenta
+#         periodo
+#         saldo_golden
+#         saldo_restaurador
+#         dif_golden_rest
+#         saldo_distribuidor
+#         dif_golden_dist
+#         saldo_rodas
+#         dif_golden_rodas
+#         id_division
+#         division
+#         cuenta_r
+#         nota
+#     }
+# }
 query ConciliaDWH($conciliaDWHInput: ConciliaDWHInput!) {
     conciliaDWH(conciliaDWHInput: $conciliaDWHInput) {
-        success
-        data {
-            Tipo
-            IdCentro
-            IdUnidad
-            Unidad
-            IdPiso
-            Almacen
-            Cuenta
-            Periodo
-            SaldoGolden
-            SaldoRestaurador
-            DifGoldenRest
-            SaldoDistribuidor
-            DifGoldenDist
-            SaldoRodas
-            DifGoldenRodas
-            IdDivision
-            Division
-            CuentaR
-            Nota
-        }
-        error
+        Tipo
+        IdCentro
+        Centro
+        IdUnidad
+        Unidad
+        IdPiso
+        Almacen
+        Cuenta
+        Periodo
+        SaldoGolden
+        SaldoRestaurador
+        DifGoldenRest
+        SaldoDistribuidor
+        DifGoldenDist
+        SaldoRodas
+        DifGoldenRodas
+        IdDivision
+        Division
+        CuentaR
+        Nota
     }
 }

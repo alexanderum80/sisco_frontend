@@ -1,29 +1,25 @@
 query GetAllComprobarExpresiones {
     getAllComprobarExpresiones {
-        success
-        data {
-            Id
-            IdExpresion
-          	Expresion {
-              IdExpresion
-              Expresion
-            }
-            IdOperador
-          	Operador {
-              Id
-              Operador
-            }
-            IdExpresionC
-            ExpresionC {
-              IdExpresion
-              Expresion
-            }
-            Centro
-            Complejo
-            Con
-            Centralizada
-            IdDivision
+        Id
+        IdExpresion
+        Expresion {
+          IdExpresion
+          Expresion
         }
-        error
+        IdOperador
+        Operador {
+          Id
+          Operador
+        }
+        IdExpresionC
+        ExpresionC {
+          IdExpresion
+          Expresion
+        }
+        Centro
+        Complejo
+        Con
+        Centralizada
+        IdDivision
     }
 }

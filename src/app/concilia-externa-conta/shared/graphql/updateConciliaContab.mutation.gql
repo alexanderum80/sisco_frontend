@@ -1,0 +1,6 @@
+mutation UpdateConciliaContab($data: [ConciliacionContabilidadInput!]!) {
+   updateConciliaContab(data: $data) {
+    success
+    error
+  }
+}

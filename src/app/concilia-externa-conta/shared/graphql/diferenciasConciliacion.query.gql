@@ -1,0 +1,29 @@
+query GetDiferenciasEnConciliacion($annio: Int!, $mes: Int!) {
+   getDiferenciasEnConciliacion(annio: $annio, mes: $mes) {
+    success
+    data {
+      Id
+      Annio
+      Mes
+      Tipo
+      CuentaE
+      SubCuentaE
+      Emisor
+      EmitidoA
+      DocumentoE
+      FechaE
+      ValorE
+      CuentaR
+      SubCuentaR
+      Receptor
+      RecibidoDe
+      DocumentoR
+      FechaR
+      ValorR
+      DiferenciaDias
+      DiferenciaImporte
+      Recibido
+    }
+    error
+  }
+}

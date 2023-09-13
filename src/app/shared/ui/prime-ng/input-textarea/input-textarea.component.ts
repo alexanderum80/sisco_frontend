@@ -1,60 +1,59 @@
 import { TooltipService } from './../tooltip/tooltip.service';
 import {
-    Component,
-    Input,
-    OnInit,
-    ChangeDetectorRef,
-    OnChanges,
-    SimpleChanges,
+  Component,
+  Input,
+  OnInit,
+  ChangeDetectorRef,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
-    // eslint-disable-next-line @angular-eslint/component-selector
-    selector: 'png-input-textarea',
-    templateUrl: './input-textarea.component.html',
-    styleUrls: ['./input-textarea.component.scss'],
+  // eslint-disable-next-line @angular-eslint/component-selector
+  selector: 'png-input-textarea',
+  templateUrl: './input-textarea.component.html',
+  styleUrls: ['./input-textarea.component.scss'],
 })
 export class InputTextareaComponent implements OnInit, OnChanges {
-    @Input() public fg: FormGroup;
-    @Input() public control: string;
-    @Input() public label: string;
-    @Input() public floatLabel = false;
-    @Input() public labelWidth: string;
-    @Input() public placeholder = '';
-    @Input() public required = false;
-    @Input() public disabled = false;
-    @Input() public rows = 5;
-    @Input() public columns = 30;
-    @Input() public autocomplete: 'off' | 'on' = 'on';
-    @Input() tooltip: string = '';
-    @Input() tooltipPosition: 'right' | 'left' | 'top' | 'bottom' = 'right';
+  @Input() public fg: FormGroup;
+  @Input() public control: string;
+  @Input() public label: string;
+  @Input() public floatLabel = false;
+  @Input() public labelWidth: string;
+  @Input() public placeholder = '';
+  @Input() public required = false;
+  @Input() public disabled = false;
+  @Input() public rows = 5;
+  @Input() public columns = 30;
+  @Input() public autocomplete: 'off' | 'on' = 'on';
+  @Input() tooltip: string = '';
+  @Input() tooltipPosition: 'right' | 'left' | 'top' | 'bottom' = 'right';
 
-    constructor(
-        private cd: ChangeDetectorRef,
-        private _toolTipSvc: TooltipService
-    ) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private _toolTipSvc: TooltipService
+  ) {}
 
-    ngOnInit(): void {
-        this.cd.detectChanges();
-    }
+  ngOnInit(): void {
+    this.cd.detectChanges();
+  }
 
-    ngOnChanges(changes: SimpleChanges): void {
-        if (this.disabled) {
-            this.fg.controls[this.control].disable();
-        }
-    }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.disabled) this.fg.controls[this.control].disable();
+    else this.fg.controls[this.control].enable();
+  }
 
-    getToolTip(): string {
-        return this._toolTipSvc.getFormControlTooltip(
-            this.fg.controls[this.control],
-            this.tooltip
-        );
-    }
+  getToolTip(): string {
+    return this._toolTipSvc.getFormControlTooltip(
+      this.fg.controls[this.control],
+      this.tooltip
+    );
+  }
 
-    getToolTipStyleClass(): string {
-        return this._toolTipSvc.getToolTipStyleClass(
-            this.fg.controls[this.control]
-        );
-    }
+  getToolTipStyleClass(): string {
+    return this._toolTipSvc.getToolTipStyleClass(
+      this.fg.controls[this.control]
+    );
+  }
 }

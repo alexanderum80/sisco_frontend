@@ -1,0 +1,6 @@
+query EntidadesRodas($ip: String!) {
+  entidadesRodas(ip: $ip) {
+    sigla
+    entidad
+  }
+}

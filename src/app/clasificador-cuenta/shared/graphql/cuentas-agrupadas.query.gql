@@ -1,9 +1,5 @@
 query GetCuentasAgrupadas {
-  getCuentasAgrupadas {
-    success
-    data {
-      Cuenta
+    getCuentasAgrupadas {
+        Cuenta
     }
-    error
-  }
 }

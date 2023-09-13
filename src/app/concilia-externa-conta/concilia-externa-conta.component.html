@@ -1,0 +1,321 @@
+<png-progress-spinner *ngIf="loading || saving"></png-progress-spinner>
+
+<div class="content">
+  <png-panel
+    class="h-full w-full"
+    header="Conciliación Externa por la Contabilidad">
+    <form [formGroup]="fg">
+      <div class="flex">
+        <p-fieldset class="col-4" legend="Centro a Analizar">
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="division"
+              label="División"
+              [optionsValues]="divisionesValues"
+              [filter]="true"
+              [required]="true"
+              [showClear]="false"></png-dropdown>
+          </div>
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="unidad"
+              label="Unidad"
+              [optionsValues]="unidadesValues"
+              [filter]="true"
+              [required]="true"
+              [showClear]="false"></png-dropdown>
+          </div>
+        </p-fieldset>
+        <p-fieldset class="col-4" legend="Emisor / Receptor">
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="divisionOD"
+              label="División"
+              [optionsValues]="divisionesODValues"
+              [filter]="true"
+              [required]="true"
+              [showClear]="false"></png-dropdown>
+          </div>
+          <div>
+            <png-dropdown
+              class="w-full"
+              [fg]="fg"
+              control="unidadOD"
+              label="Unidad"
+              [optionsValues]="unidadesODValues"
+              [filter]="true"
+              [required]="true"
+              [showClear]="false"></png-dropdown>
+          </div>
+        </p-fieldset>
+        <png-card class="ml-2 mt-2">
+          <div>
+            <png-calendar
+              class="w-full"
+              [fg]="fg"
+              label="Período"
+              control="periodo"
+              view="month"
+              dateFormat="MM/yy"
+              [required]="true"></png-calendar>
+          </div>
+          <div class="status">
+            <label
+              [class.abierta]="conciliacionStatus === 'ABIERTA'"
+              [class.noIniciada]="conciliacionStatus === 'NO INICIADA'"
+              [class.cerrada]="conciliacionStatus === 'CERRADA'"
+              >{{ conciliacionStatus }}</label
+            >
+          </div>
+          <div class="ml-3 mt-1">
+            <png-checkbox
+              label="Solo período actual"
+              [fg]="fg"
+              control="periodoActual"></png-checkbox>
+          </div>
+        </png-card>
+      </div>
+      <div>
+        <p-tabView class="h-full" [(activeIndex)]="selectedTab">
+          <p-tabPanel header="Contabilidad">
+            <png-table
+              [columns]="displayedColumns"
+              [data]="conciliaContabData"
+              groupField="DivisionEmisor"
+              [filterData]="false"
+              [scrollable]="true"
+              [totalizeTable]="true"
+              [totalizeGroup]="true"
+              scrollHeight="calc(100vh - 395px)"></png-table>
+          </p-tabPanel>
+          <p-tabPanel header="Acta (Emisor)">
+            <div class="flex">
+              <div class="w-full mt-2">
+                <png-table
+                  [columns]="actaDisplayedColumns"
+                  [data]="actaConciliaEmisorData"
+                  [filterData]="false"
+                  [scrollable]="true"
+                  [paginator]="false"
+                  scrollHeight="calc(100vh - 355px)"></png-table>
+              </div>
+              <div
+                style="height: calc(100vh - 345px); overflow: auto"
+                class="w-full ml-3">
+                <div class="flex">
+                  <p-fieldset class="w-full m-2" legend="Empleado Emisor">
+                    <png-dropdown
+                      class="w-full"
+                      [fg]="fg"
+                      control="usuarioEmisor"
+                      label="Empleado"
+                      [floatLabel]="true"
+                      [optionsValues]="empleadosValues"
+                      [filter]="true"
+                      [showClear]="false"
+                      (fgChange)="onDropdownChange($event)"></png-dropdown>
+                    <png-input-text
+                      class="w-full"
+                      [fg]="fg"
+                      control="cargoEmisor"
+                      label="Cargo"
+                      [floatLabel]="true"
+                      [readonly]="true"></png-input-text>
+                  </p-fieldset>
+                  <p-fieldset class="w-full m-2" legend="Empleado Receptor">
+                    <png-dropdown
+                      class="w-full"
+                      [fg]="fg"
+                      control="usuarioReceptor"
+                      label="Empleado"
+                      [floatLabel]="true"
+                      [optionsValues]="empleadosODValues"
+                      [filter]="true"
+                      [showClear]="false"
+                      (fgChange)="onDropdownChange($event)"></png-dropdown>
+                    <png-input-text
+                      class="w-full"
+                      [fg]="fg"
+                      control="cargoReceptor"
+                      label="Cargo"
+                      [floatLabel]="true"
+                      [readonly]="true"></png-input-text>
+                  </p-fieldset>
+                </div>
+                <p-fieldset class="w-full m-2" legend="Empleado Supervisor">
+                  <png-dropdown
+                    class="w-full"
+                    [fg]="fg"
+                    control="usuarioSupervisor"
+                    label="Empleado"
+                    [floatLabel]="true"
+                    [optionsValues]="empleadosSupervisorValues"
+                    [filter]="true"
+                    [showClear]="false"
+                    (fgChange)="onDropdownChange($event)"></png-dropdown>
+                  <png-input-text
+                    class="w-full"
+                    [fg]="fg"
+                    control="cargoSupervisor"
+                    label="Cargo"
+                    [floatLabel]="true"
+                    [readonly]="true"></png-input-text>
+                </p-fieldset>
+                <png-input-textarea
+                  class="w-full m-2"
+                  [fg]="fg"
+                  control="nota"
+                  label="Observaciones"></png-input-textarea>
+              </div>
+            </div>
+          </p-tabPanel>
+          <p-tabPanel header="Acta (Receptor)">
+            <div class="flex">
+              <div class="w-full mt-2">
+                <png-table
+                  [columns]="actaDisplayedColumns"
+                  [data]="actaConciliaReceptorData"
+                  [filterData]="false"
+                  [scrollable]="true"
+                  [paginator]="false"
+                  scrollHeight="calc(100vh - 355px)"></png-table>
+              </div>
+              <div
+                style="height: calc(100vh - 345px); overflow: auto"
+                class="w-full ml-3">
+                <div class="flex">
+                  <p-fieldset class="w-full m-2" legend="Empleado Emisor">
+                    <png-dropdown
+                      class="w-full"
+                      [fg]="fg"
+                      control="usuarioReceptor"
+                      label="Empleado"
+                      [floatLabel]="true"
+                      [optionsValues]="empleadosODValues"
+                      [filter]="true"
+                      [showClear]="false"
+                      (fgChange)="onDropdownChange($event)"></png-dropdown>
+                    <png-input-text
+                      class="w-full"
+                      [fg]="fg"
+                      control="cargoReceptor"
+                      label="Cargo"
+                      [floatLabel]="true"
+                      [readonly]="true"></png-input-text>
+                  </p-fieldset>
+                  <p-fieldset class="w-full m-2" legend="Empleado Receptor">
+                    <png-dropdown
+                      class="w-full"
+                      [fg]="fg"
+                      control="usuarioEmisor"
+                      label="Empleado"
+                      [floatLabel]="true"
+                      [optionsValues]="empleadosValues"
+                      [filter]="true"
+                      [showClear]="false"
+                      (fgChange)="onDropdownChange($event)"></png-dropdown>
+                    <png-input-text
+                      class="w-full"
+                      [fg]="fg"
+                      control="cargoEmisor"
+                      label="Cargo"
+                      [floatLabel]="true"
+                      [readonly]="true"></png-input-text>
+                  </p-fieldset>
+                </div>
+                <p-fieldset class="w-full m-2" legend="Empleado Supervisor">
+                  <png-dropdown
+                    class="w-full"
+                    [fg]="fg"
+                    control="usuarioSupervisor"
+                    label="Empleado"
+                    [floatLabel]="true"
+                    [optionsValues]="empleadosSupervisorValues"
+                    [filter]="true"
+                    [showClear]="false"
+                    (fgChange)="onDropdownChange($event)"></png-dropdown>
+                  <png-input-text
+                    class="w-full"
+                    [fg]="fg"
+                    control="cargoSupervisor"
+                    label="Cargo"
+                    [floatLabel]="true"
+                    [readonly]="true"></png-input-text>
+                </p-fieldset>
+                <png-input-textarea
+                  class="w-full m-2"
+                  [fg]="fg"
+                  control="nota"
+                  label="Observaciones"></png-input-textarea>
+              </div>
+            </div>
+          </p-tabPanel>
+        </p-tabView>
+      </div>
+      <div [class.toggle]="!chatToggle">
+        <div class="flex justify-content-end mt-2">
+          <png-button
+            class="mr-2"
+            label="Exportar a Excel"
+            [style]="'success'"
+            icon="mdi mdi-file-excel"
+            [disabled]="!conciliacionStatusAbierta"
+            (clicked)="exportar()"></png-button>
+          <png-button
+            *ngIf="!hasFinancistaPermission()"
+            class="mr-1"
+            label="Conciliar"
+            icon="mdi mdi-file-check-outline"
+            [disabled]="!isFormValid || !conciliacionStatusAbierta"
+            (clicked)="conciliar()"></png-button>
+          <png-split-button
+            *ngIf="hasFinancistaPermission()"
+            class="mr-1"
+            label="Conciliar"
+            icon="mdi mdi-file-check-outline"
+            [items]="conciliarButtonItems"
+            [disabled]="!isFormValid"
+            (clicked)="conciliar()"></png-split-button>
+          <png-button
+            *ngIf="!hasFinancistaPermission()"
+            class="mr-1"
+            label="Reportes"
+            [style]="'secondary'"
+            icon="mdi mdi-printer"
+            [disabled]="!isFormValid || !conciliacionStatusAbierta"
+            (clicked)="reporte()"></png-button>
+          <png-split-button
+            *ngIf="hasFinancistaPermission()"
+            class="mr-1"
+            label="Reportes"
+            [style]="'secondary'"
+            icon="mdi mdi-printer"
+            [items]="reportesButtonItems"
+            [disabled]="!isFormValid || !conciliacionStatusAbierta"
+            (clicked)="reporte()"></png-split-button>
+        </div>
+      </div>
+    </form>
+  </png-panel>
+
+  <app-chat (OnToggle)="switchChatToggle($event)"></app-chat>
+  <!-- <app-reporte
+  class="reporte-container"
+  *ngIf="
+    showReport &&
+    !loadingConciliacionEntreUnidadesEmisor &&
+    !loadingConciliacionEntreUnidadesReceptor
+  "
+  [selectedActaConcTab]="selectedActaConcTab"
+  [reporteName]="reporteName"
+  [periodo]="fg.controls['periodo'].value"
+  [emisor]="getEmisor()"
+  [receptor]="getReceptor()"
+  (OnClose)="closeReporte()"></app-reporte> -->
+</div>

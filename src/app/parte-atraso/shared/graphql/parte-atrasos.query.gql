@@ -1,12 +1,23 @@
 query ParteAtrasos($idDivision: Int!) {
   parteAtrasos(idDivision: $idDivision) {
-    success
-    data
-    error
+    IdUnidad
+    Unidad
+    IdDivision
+    Division
+    AtrasoRest
+    AtrasoDWH
+    AtrasoDist
+    AtrasoEmp
   }
   datosIdGAM(idDivision: $idDivision) {
-    success
-    data
-    error
+    IdUnidad
+    Unidad
+    Ano
+    Mes
+    Fecha
+    Version
+    UltimaCircular
+    PeriodoRestaurado
+    vUtilnet
   }
 }

@@ -1,0 +1,127 @@
+<png-progress-spinner *ngIf="loading"></png-progress-spinner>
+
+<form [formGroup]="fg">
+  <div class="flex">
+    <p-fieldset class="col-4" legend="Centro a Analizar">
+      <div>
+        <png-dropdown
+          class="w-20rem"
+          [fg]="fg"
+          control="idDivision"
+          label="División"
+          [optionsValues]="divisionesValues"
+          placeholder="Seleccione la División"
+          [filter]="true"
+          [required]="true"
+          [showClear]="false"></png-dropdown>
+      </div>
+      <div>
+        <png-dropdown
+          class="w-20rem"
+          [fg]="fg"
+          control="idSubdivision"
+          label="Subdivisión"
+          [optionsValues]="subdivisionesValues"
+          [filter]="true"
+          [showClear]="false"></png-dropdown>
+      </div>
+      <div>
+        <png-dropdown
+          class="w-20rem"
+          [fg]="fg"
+          control="idUnidad"
+          label="Unidad"
+          [optionsValues]="unidadesValues"
+          [filter]="true"
+          [showClear]="false"></png-dropdown>
+      </div>
+    </p-fieldset>
+    <p-fieldset class="col-4 ml-3" legend="Centro Origen / Destino">
+      <div>
+        <png-dropdown
+          class="w-20rem"
+          [fg]="fg"
+          control="idDivisionOD"
+          label="División"
+          [optionsValues]="divisionesValues"
+          placeholder="Seleccione la División"
+          [filter]="true"
+          [required]="true"
+          [disabled]="interna"
+          [showClear]="false"></png-dropdown>
+      </div>
+      <div>
+        <png-dropdown
+          class="w-20rem"
+          [fg]="fg"
+          control="idSubdivisionOD"
+          label="Subdivisión"
+          [optionsValues]="subdivisionesODValues"
+          [filter]="true"
+          [showClear]="false"></png-dropdown>
+      </div>
+      <div>
+        <png-dropdown
+          class="w-20rem"
+          [fg]="fg"
+          control="idUnidadOD"
+          label="Unidad"
+          [optionsValues]="unidadesODValues"
+          [filter]="true"
+          [showClear]="false"></png-dropdown>
+      </div>
+    </p-fieldset>
+    <png-card class="ml-3 mt-2 flex flex-column">
+      <div>
+        <png-calendar
+          class="w-full"
+          [fg]="fg"
+          label="Fecha Inicial"
+          labelWidth="100"
+          control="fechaInicial"
+          [required]="true"></png-calendar>
+      </div>
+      <div>
+        <png-calendar
+          class="w-full"
+          [fg]="fg"
+          label="Fecha Final"
+          labelWidth="100"
+          control="fechaFinal"
+          [required]="true"></png-calendar>
+      </div>
+      <div class="ml-2 mt-2">
+        <png-checkbox
+          class="mt-1 ml-3"
+          [fg]="fg"
+          control="soloDiferencias"
+          label="Mostrar solo Diferencias"></png-checkbox>
+      </div>
+    </png-card>
+  </div>
+</form>
+<div class="shadow-1 mt-2">
+  <png-table
+    [columns]="displayedColumns"
+    [data]="dataSource"
+    [filterData]="false"
+    [scrollable]="true"
+    [totalizeTable]="true"
+    scrollHeight="calc(100vh - 365px)"></png-table>
+</div>
+<div class="flex justify-content-end mt-2">
+  <png-button
+    class="mr-1"
+    label="Conciliar"
+    [style]="'primary'"
+    icon="mdi mdi-file-check-outline"
+    [disabled]="!fg.valid"
+    (clicked)="conciliar()"></png-button>
+  <png-button
+    class="mr-2"
+    label="Reporte"
+    [style]="'secondary'"
+    icon="mdi mdi-printer"
+    [disabled]="!dataSource.length"
+    (clicked)="reporte()"></png-button>
+</div>

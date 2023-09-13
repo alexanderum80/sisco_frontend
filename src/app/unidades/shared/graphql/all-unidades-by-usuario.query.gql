@@ -1,0 +1,10 @@
+query GetAllUnidadesByUsuario {
+    getAllUnidadesByUsuario {
+        IdUnidad
+        Nombre
+        IdSubdivision
+        Subdivision
+        IdDivision
+        Division
+    }
+}

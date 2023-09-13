@@ -1,113 +1,194 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
-    <form class="flex flex-column" [formGroup]="fg">
-        <div class="field mt-1">
-            <png-dropdown
-                class="w-full mt-1"
-                [fg]="fg"
-                control="tipoClasificador"
-                label="Tipo de Clasificador"
-                [optionsValues]="tipoClasificadorValues"
-                placeholder="&lt;Tipo de Clasificador&gt;"
-                [required]="true"
-                [filter]="true"
-                [showClear]="true"></png-dropdown>
-        </div>
-        <div class="field">
-            <png-input-text
-                class="w-full mt-1"
-                label="Cuenta"
-                [fg]="fg"
-                control="cuenta"
-                [required]="true"
-                autocomplete="off"></png-input-text>
-            <png-input-text
-                class="w-full mt-1 ml-3"
-                label="CubCuenta"
-                [fg]="fg"
-                control="subcuenta"
-                [required]="true"
-                autocomplete="off"></png-input-text>
-        </div>
-        <div class="field">
-            <png-input-text
-                class="w-full mt-1"
-                label="Descripción"
-                [fg]="fg"
-                control="descripcion"
-                [required]="true"
-                autocomplete="off"></png-input-text>
-        </div>
-        <div class="field">
-            <png-dropdown
-                class="w-full mt-1"
-                [fg]="fg"
-                control="naturaleza"
-                label="Naturaleza"
-                [optionsValues]="naturalezaValues"
-                placeholder="&lt;Naturaleza&gt;"
-                [required]="true"
-                [filter]="true"
-                [showClear]="true"></png-dropdown>
-            <png-checkbox
-                class="mt-1 ml-3"
-                [fg]="fg"
-                control="terminal"
-                label="Terminal"></png-checkbox>
-            <png-checkbox
-                class="mt-1 ml-3"
-                [fg]="fg"
-                control="obligacion"
-                label="Obligación"></png-checkbox>
-        </div>
-        <div class="field">
-            <png-input-text
-                class="w-full mt-1"
-                label="Crit1"
-                [fg]="fg"
-                control="crit1"
-                autocomplete="off"></png-input-text>
-            <png-input-text
-                class="w-full mt-1 ml-3"
-                label="Crit2"
-                [fg]="fg"
-                control="crit2"
-                autocomplete="off"></png-input-text>
-            <png-input-text
-                class="w-full mt-1 ml-3"
-                label="Crit3"
-                [fg]="fg"
-                control="crit3"
-                autocomplete="off"></png-input-text>
-        </div>
-        <div class="field">
-            <png-multi-select
-                class="w-full mt-1"
-                [fg]="fg"
-                control="seUtiliza"
-                label="Se utiliza en"
-                [optionsValues]="tipoUnidadesValues"
-                placeholder="&lt;Se utiliza en&gt;"
-                [filter]="true"></png-multi-select>
-        </div>
-        <div class="field">
-            <png-input-text
-                class="w-full mt-1"
-                label="Crit1 Consolidación"
-                [fg]="fg"
-                control="crit1Consolidacion"
-                autocomplete="off"></png-input-text>
-            <png-input-text
-                class="w-full mt-1 ml-3"
-                label="Crit2 Consolidación"
-                [fg]="fg"
-                control="crit2Consolidacion"
-                autocomplete="off"></png-input-text>
-            <png-input-text
-                class="w-full mt-1 ml-3"
-                label="Crit3 Consolidación"
-                [fg]="fg"
-                control="crit3Consolidacion"
-                autocomplete="off"></png-input-text>
-        </div>
-    </form>
+  <form class="flex flex-column" [formGroup]="fg">
+    <div class="field mt-1">
+      <png-dropdown
+        class="w-full mt-1"
+        [fg]="fg"
+        control="tipoClasificador"
+        label="Tipo de Clasificador"
+        [optionsValues]="tipoClasificadorValues"
+        placeholder="&lt;Tipo de Clasificador&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <!-- </div>
+    <div class="field"> -->
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Cuenta"
+        [fg]="fg"
+        control="cuenta"
+        [required]="true"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="CubCuenta"
+        [fg]="fg"
+        control="subcuenta"
+        [required]="true"
+        autocomplete="off"></png-input-text>
+    </div>
+    <div class="field">
+      <png-input-text
+        class="w-full mt-1"
+        label="Nombre"
+        [fg]="fg"
+        control="nombre"
+        [required]="true"
+        autocomplete="off"></png-input-text>
+    </div>
+    <div class="field">
+      <png-dropdown
+        class="w-full mt-1"
+        [fg]="fg"
+        control="clasificacion"
+        label="Clasificación"
+        [optionsValues]="clasificacionCuentaValues"
+        placeholder="&lt;Clasificación&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-full mt-1 ml-3"
+        [fg]="fg"
+        control="naturaleza"
+        label="Naturaleza"
+        [optionsValues]="naturalezaValues"
+        placeholder="&lt;Naturaleza&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-full mt-1 ml-3"
+        [fg]="fg"
+        control="estado"
+        label="Estado"
+        [optionsValues]="estadoValues"
+        placeholder="&lt;Estado&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-checkbox
+        class="mt-1 ml-3"
+        [fg]="fg"
+        control="obligacion"
+        label="Obligación"></png-checkbox>
+    </div>
+    <div class="field">
+      <png-input-text
+        class="w-full mt-1"
+        label="Crit1"
+        [fg]="fg"
+        control="crit1"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit2"
+        [fg]="fg"
+        control="crit2"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit3"
+        [fg]="fg"
+        control="crit3"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit4"
+        [fg]="fg"
+        control="crit4"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit5"
+        [fg]="fg"
+        control="crit5"
+        autocomplete="off"></png-input-text>
+    </div>
+    <div class="field">
+      <png-dropdown
+        class="w-9rem mt-1"
+        [fg]="fg"
+        control="tipo"
+        label="Tipo"
+        [optionsValues]="tipoCuentaValues"
+        placeholder="&lt;Tipo&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-13rem mt-1 ml-3"
+        [fg]="fg"
+        control="grupo"
+        label="Grupo"
+        [optionsValues]="grupoCuentaValues"
+        placeholder="&lt;Grupo&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-16rem mt-1 ml-3"
+        [fg]="fg"
+        control="clase"
+        label="Clase"
+        [optionsValues]="claseCuentaValues"
+        placeholder="&lt;Clase&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+      <png-dropdown
+        class="w-21rem mt-1 ml-3"
+        [fg]="fg"
+        control="categoria"
+        label="Categoria"
+        [optionsValues]="categoriaCuentaValues"
+        placeholder="&lt;Categoria&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"></png-dropdown>
+    </div>
+    <div class="field">
+      <png-multi-select
+        class="w-full mt-1"
+        [fg]="fg"
+        control="seUtiliza"
+        label="Se utiliza en"
+        [optionsValues]="tipoUnidadesValues"
+        placeholder="&lt;Se utiliza en&gt;"
+        [filter]="true"></png-multi-select>
+    </div>
+    <div class="field">
+      <png-input-text
+        class="w-full mt-1"
+        label="Crit1 Consolidación"
+        [fg]="fg"
+        control="crit1Consolidacion"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit2 Consolidación"
+        [fg]="fg"
+        control="crit2Consolidacion"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit3 Consolidación"
+        [fg]="fg"
+        control="crit3Consolidacion"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit4 Consolidación"
+        [fg]="fg"
+        control="crit4Consolidacion"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-full mt-1 ml-3"
+        label="Crit5 Consolidación"
+        [fg]="fg"
+        control="crit5Consolidacion"
+        autocomplete="off"></png-input-text>
+    </div>
+  </form>
 </app-add-edit-item>

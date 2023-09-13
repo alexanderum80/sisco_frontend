@@ -1,0 +1,152 @@
+
+.chat-container {
+  display: flex;
+  position: fixed;
+  top: 45px;
+  right: 0;
+  height: 100%;
+  width: 375px;
+  background-color: white;
+  transition: all .5s;
+  z-index: 1000;
+
+  &.toggle {
+      right: -375px;
+  }
+}
+
+.chat-text {
+  position: absolute;
+  top: 10px;
+  left: -2rem;
+  border-radius: 0 0 10px 10px;
+  padding: 6px;
+  transform: rotate(90deg);
+  -webkit-transform: rotate(90deg);
+  background-color: var(--orange-500);
+  color: white;
+  font-weight: 500;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.mensajes {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 45px);
+  width: 100%;
+  border: 1px solid var(--gray-300);
+
+  &__usuarios {
+    overflow: auto;
+    height: 100%;
+    width: 10rem;
+    background-color: var(--yellow-400);
+    
+    &-row {
+      display: flex;
+      padding: 5px;
+
+      & b {
+        margin-top: 2px;
+      }
+    }
+
+    &-circle {
+      position: relative;
+      height: 1.5rem;
+      width: 1.5rem;
+      border-radius: 50%;
+      margin-right: .5rem;
+      background-color: var(--orange-500);
+
+      &.connected {
+        background-color: limegreen !important;    
+      }
+    }
+  }
+
+  &__container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow: auto;
+  }
+
+  &__text {
+    flex: 1;
+    overflow: auto;
+    padding: 5px;
+    
+    &-row {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--gray-300);
+      padding: 5px;
+      margin-bottom: 5px;
+      border-radius: 10px;
+    }
+  }
+
+  &__emit {
+    display: flex;
+    border-top: 2px solid var(--gray-300);
+    height: 2rem;
+  }
+
+  &__input {
+    flex: 1;
+    border: none;
+    background-color: transparent;
+    padding: 0 .5rem;
+  }
+
+  &__btn-enviar {
+    border: none;
+    background-color: transparent;
+    width: 3rem;
+    font-size: 1.5rem;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}
+
+.color-red {
+  color: red;
+}
+
+.chat-emergente {
+  position: fixed;
+  right: -240px;
+  bottom: 1rem;
+  width: 15rem;
+  background-color: var(--gray-300);
+  border-radius: 10px;
+  transition: all .5s;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &.emergente-message {
+    right: 0;
+  }
+
+  &__title {
+    background-color: var(--primary-color);
+    padding: 5px;
+    border-radius: 10px 10px 0 0;
+    color: var(--surface-0);
+    font-weight: bold;
+  }
+
+  &__message {
+    padding: 5px;
+    height: 2rem;
+  }
+
+}

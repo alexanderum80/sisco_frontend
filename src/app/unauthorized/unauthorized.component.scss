@@ -1,0 +1,24 @@
+#unauthorized-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: aliceblue;
+    
+    img {
+        height: 200px;
+    }
+
+    h2 {
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 1.5rem;
+        color: red;
+    }
+
+    p {
+        font-size: large;
+        font-weight: bold;
+    }
+}

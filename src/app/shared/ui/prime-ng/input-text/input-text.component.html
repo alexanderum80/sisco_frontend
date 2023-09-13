@@ -1,35 +1,33 @@
 <span
-    [ngClass]="{ 'p-float-label mt-5': floatLabel }"
-    class="field"
-    [formGroup]="fg">
-    <label
-        *ngIf="!floatLabel"
-        [for]="control"
-        class="inline-label"
-        [ngStyle]="{ 'width.px': labelWidth }"
-        [ngClass]="{ 'label-required': required }"
-        [class.p-error]="
-            !fg.controls[control].valid && fg.controls[control].dirty
-        "
-        >{{ label }}:
-    </label>
-    <input
-        [id]="control"
-        type="text"
-        pInputText
-        [formControlName]="control"
-        [placeholder]="placeholder"
-        [autocomplete]="autocomplete"
-        [required]="required"
-        [disabled]="disabled"
-        [readonly]="readonly"
-        [pTooltip]="getToolTip()"
-        [tooltipPosition]="tooltipPosition"
-        [tooltipStyleClass]="getToolTipStyleClass()" />
-    <label
-        *ngIf="floatLabel"
-        [for]="control"
-        [ngClass]="{ 'label-required': required }"
-        >{{ label }}</label
-    >
+  [ngClass]="{ 'p-float-label mt-4': floatLabel }"
+  class="field"
+  [formGroup]="fg">
+  <label
+    *ngIf="!floatLabel"
+    [for]="control"
+    class="inline-label"
+    [ngStyle]="{ 'width.px': labelWidth }"
+    [ngClass]="{ 'label-required': required }"
+    [class.p-error]="!fg.controls[control].valid && fg.controls[control].dirty"
+    >{{ label }}:
+  </label>
+  <input
+    [id]="control"
+    type="text"
+    pInputText
+    [formControlName]="control"
+    [placeholder]="placeholder"
+    [autocomplete]="autocomplete"
+    [required]="required"
+    [disabled]="disabled"
+    [readonly]="readonly"
+    [pTooltip]="getToolTip()"
+    [tooltipPosition]="tooltipPosition"
+    [tooltipStyleClass]="getToolTipStyleClass()" />
+  <label
+    *ngIf="floatLabel"
+    [for]="control"
+    [ngClass]="{ 'label-required': required }"
+    >{{ label }}</label
+  >
 </span>

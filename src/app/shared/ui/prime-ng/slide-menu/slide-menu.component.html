@@ -4,11 +4,9 @@
   pButton
   icon="mdi mdi-dots-vertical"
   class="p-button-rounded p-button-text"
-  (click)="menu.toggle($event)"
-></button>
+  (click)="menu.toggle($event)"></button>
 <p-slideMenu
   #menu
   [model]="items"
   [popup]="popup"
-  [viewportHeight]="height"
-></p-slideMenu>
+  [viewportHeight]="height"></p-slideMenu>

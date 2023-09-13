@@ -1,0 +1,49 @@
+<app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
+  <form [formGroup]="fg" style="width: 400px">
+    <div class="field mt-1">
+      <png-input-number
+        class="w-full mt-1"
+        label="Grupo"
+        labelWidth="100"
+        [fg]="fg"
+        control="grupo"
+        [required]="true"
+        mode="decimal"
+        [minFractionDigits]="0"
+        autocomplete="off"></png-input-number>
+    </div>
+    <div class="field mt-1">
+      <png-input-number
+        class="w-full mt-1"
+        label="Código"
+        labelWidth="100"
+        [fg]="fg"
+        control="codigo"
+        [required]="true"
+        mode="decimal"
+        [minFractionDigits]="0"
+        autocomplete="off"></png-input-number>
+    </div>
+    <div class="field mt-1">
+      <png-input-text
+        class="w-full mt-1"
+        label="Descripción"
+        labelWidth="100"
+        [fg]="fg"
+        control="descripcion"
+        [required]="true"
+        autocomplete="off"></png-input-text>
+    </div>
+    <div class="field mt-1">
+      <png-input-number
+        class="w-full mt-1"
+        label="Tasa"
+        labelWidth="100"
+        [fg]="fg"
+        control="tasa"
+        [required]="true"
+        mode="decimal"
+        autocomplete="off"></png-input-number>
+    </div>
+  </form>
+</app-add-edit-item>

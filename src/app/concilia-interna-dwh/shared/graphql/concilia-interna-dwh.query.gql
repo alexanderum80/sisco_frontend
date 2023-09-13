@@ -1,4 +1,4 @@
-query ConciliaInternaDWH($conciliaInternaDWHInput: ConciliaInternaDWHInput!) {
+query ConciliaInternaDWH($conciliaInternaDWHInput: ConciliaOperacionesDWHInput!) {
   conciliaInternaDWH(conciliaInternaDWHInput: $conciliaInternaDWHInput) {
     success
     data {

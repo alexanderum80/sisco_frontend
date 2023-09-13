@@ -1,69 +1,72 @@
 <app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
-    <form class="elemento-gasto-form">
-        <div class="flex">
-            <png-input-text
-                class="w-3"
-                label="Elemento"
-                labelWidth="90"
-                [fg]="fg"
-                control="elemento"
-                [required]="true"
-                autocomplete="off"></png-input-text>
-            <png-input-text
-                class="w-9 ml-3"
-                label="Descripción"
-                labelWidth="90"
-                [fg]="fg"
-                control="descripcion"
-                [required]="true"
-                autocomplete="off"></png-input-text>
-        </div>
-        <div>
-            <png-input-text
-                class="w-full"
-                label="Uso y Contenido"
-                labelWidth="90"
-                [fg]="fg"
-                control="usoContenido"
-                [required]="true"
-                autocomplete="off"></png-input-text>
-        </div>
-        <div>
-            <png-multi-select
-                class="w-full mt-1"
-                [fg]="fg"
-                control="cuentaAsociada"
-                label="Cuentas Asociadas"
-                labelWidth="90"
-                [optionsValues]="cuentasValues"
-                placeholder="&lt;Cuentas Asociadas&gt;"
-                [required]="true"
-                [filter]="true"></png-multi-select>
-        </div>
-        <div>
-            <png-multi-select
-                class="w-full mt-1"
-                [fg]="fg"
-                control="tipoEntidad"
-                label="Tipos de Entidad"
-                labelWidth="90"
-                [optionsValues]="tipoEntidadValues"
-                placeholder="&lt;Cuentas Asociadas&gt;"
-                [required]="true"
-                [filter]="true"></png-multi-select>
-        </div>
-        <div>
-            <png-dropdown
-                class="w-full mt-1"
-                [fg]="fg"
-                control="epigrafe"
-                label="Epígrafe"
-                labelWidth="90"
-                [optionsValues]="epigrafesValues"
-                placeholder="&lt;Epígrafe&gt;"
-                [required]="true"
-                [filter]="true"
-                [showClear]="true"></png-dropdown>
-        </div>
-    </form>
+  <form class="elemento-gasto-form">
+    <div class="flex">
+      <png-input-text
+        class="w-3"
+        label="Elemento"
+        labelWidth="90"
+        [fg]="fg"
+        control="elemento"
+        [required]="true"
+        autocomplete="off"></png-input-text>
+      <png-input-text
+        class="w-9 ml-3"
+        label="Descripción"
+        labelWidth="90"
+        [fg]="fg"
+        control="descripcion"
+        [required]="true"
+        autocomplete="off"></png-input-text>
+    </div>
+    <div>
+      <png-input-text
+        class="w-full"
+        label="Uso y Contenido"
+        labelWidth="90"
+        [fg]="fg"
+        control="usoContenido"
+        [required]="true"
+        autocomplete="off"></png-input-text>
+    </div>
+    <div>
+      <png-multi-select
+        class="w-full mt-1"
+        [fg]="fg"
+        control="cuentaAsociada"
+        label="Cuentas Asociadas"
+        labelWidth="90"
+        [optionsValues]="cuentasValues"
+        placeholder="&lt;Cuentas Asociadas&gt;"
+        [required]="true"
+        [filter]="true"
+        [isLoading]="loadingCuentas"></png-multi-select>
+    </div>
+    <div>
+      <png-multi-select
+        class="w-full mt-1"
+        [fg]="fg"
+        control="tipoEntidad"
+        label="Tipos de Entidad"
+        labelWidth="90"
+        [optionsValues]="tipoEntidadValues"
+        placeholder="&lt;Tipos de Entidad&gt;"
+        [required]="true"
+        [filter]="true"
+        [isLoading]="loadingTipoEntidad"></png-multi-select>
+    </div>
+    <div>
+      <png-dropdown
+        class="w-full mt-1"
+        [fg]="fg"
+        control="epigrafe"
+        label="Epígrafe"
+        labelWidth="90"
+        [optionsValues]="epigrafesValues"
+        placeholder="&lt;Epígrafe&gt;"
+        [required]="true"
+        [filter]="true"
+        [showClear]="true"
+        [isLoading]="loadingEpigrafes"></png-dropdown>
+    </div>
+  </form>
 </app-add-edit-item>

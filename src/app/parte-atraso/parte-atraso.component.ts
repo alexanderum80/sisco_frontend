@@ -1,18 +1,27 @@
+import { SweetalertService } from './../shared/helpers/sweetalert.service';
 import { SelectItem } from 'primeng/api';
 import { DivisionesService } from './../shared/services/divisiones.service';
 import { FormGroup } from '@angular/forms';
 import { ParteAtrasoService } from './shared/services/parte-atraso.service';
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { PdfmakeService } from './../shared/services/pdfmake.service';
-import SweetAlert from 'sweetalert2';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  AfterContentChecked,
+  ChangeDetectorRef,
+} from '@angular/core';
+import { PdfmakeService } from './../shared/helpers/pdfmake.service';
 import { ITableColumns } from '../shared/ui/prime-ng/table/table.model';
+import { IDatosIdGAM, IParteAtrasos } from './shared/models/parte-atraso.model';
 
 @Component({
   selector: 'app-parte-atraso',
   templateUrl: './parte-atraso.component.html',
   styleUrls: ['./parte-atraso.component.scss'],
 })
-export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
+export class ParteAtrasoComponent
+  implements OnInit, OnDestroy, AfterContentChecked
+{
   selectedTabViewIndex = 0;
 
   displayedColumnsParteAtraso: ITableColumns[] = [
@@ -36,8 +45,8 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
     },
   ];
 
-  dataSourceParteAtraso = [];
-  dataSourceDatosIdGam = [];
+  dataSourceParteAtraso: IParteAtrasos[] = [];
+  dataSourceDatosIdGam: IDatosIdGAM[] = [];
 
   divisionesValues: SelectItem[] = [];
   loading = false;
@@ -47,17 +56,22 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private _divisionesSvc: DivisionesService,
     private _parteAtrasoSvc: ParteAtrasoService,
-    private _pdfMakeSvc: PdfmakeService
+    private _pdfMakeSvc: PdfmakeService,
+    private _swalSvc: SweetalertService,
+    private _cd: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.fg = this._parteAtrasoSvc.fg;
+    this.fg.reset();
 
     this._subscribeToFgChanges();
+
+    this._getDivisiones();
   }
 
-  ngAfterViewInit(): void {
-    this._getDivisiones();
+  ngAfterContentChecked(): void {
+    this._cd.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -67,37 +81,24 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   private _getDivisiones(): void {
     try {
       this._parteAtrasoSvc.subscription.push(
-        this._divisionesSvc.getDivisiones().subscribe(response => {
-          const result = response.getAllDivisiones;
+        this._divisionesSvc.getDivisionesByUsuario().subscribe({
+          next: res => {
+            const result = res.getAllDivisionesByUsuario;
 
-          if (!result.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'ERROR',
-              text: result.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
-          }
-
-          this.divisionesValues = result.data.map(
-            (d: { IdDivision: string; Division: string }) => {
+            this.divisionesValues = result.map(d => {
               return {
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
               };
-            }
-          );
+            });
+          },
+          error: err => {
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'ERROR',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -119,35 +120,26 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.loading = true;
 
       this._parteAtrasoSvc.subscription.push(
-        this._parteAtrasoSvc.calcular().subscribe(response => {
-          this.loading = false;
-          const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } =
-            response;
+        this._parteAtrasoSvc.calcular().subscribe({
+          next: res => {
+            this.loading = false;
 
-          if (!_parteAtrasos.success || !_datosIdGAM.success) {
-            return SweetAlert.fire({
-              icon: 'error',
-              title: 'Error',
-              text: _parteAtrasos.error || _datosIdGAM.error,
-              showConfirmButton: true,
-              confirmButtonText: 'Aceptar',
-            });
-          }
+            const { parteAtrasos: _parteAtrasos, datosIdGAM: _datosIdGAM } =
+              res;
 
-          this.dataSourceParteAtraso = JSON.parse(_parteAtrasos.data);
-          this.dataSourceDatosIdGam = JSON.parse(_datosIdGAM.data);
+            this.dataSourceParteAtraso = [..._parteAtrasos];
+            this.dataSourceDatosIdGam = [..._datosIdGAM];
+          },
+          error: err => {
+            this.loading = false;
+            this._swalSvc.error(err);
+          },
         })
       );
     } catch (err: any) {
       this.loading = false;
 
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -155,13 +147,7 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
     try {
       this.selectedTabViewIndex = event.index;
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err as string,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
@@ -179,10 +165,15 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
   private async _reporteParteAtraso(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title: 'Parte de Atrasos Golden DWH | SISCO',
+        },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [
-          await this._pdfMakeSvc.getHeaderDefinition('Parte de Atrasos DWH'),
+          await this._pdfMakeSvc.getHeaderDefinition(
+            'Parte de Atrasos Golden DWH'
+          ),
           await this._getDivisionDefinition(),
           await this._parteAtrasoSvc.getParteAtrasosDefinition(
             this.dataSourceParteAtraso
@@ -203,19 +194,16 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 
   private async _reporteDetalleParteAtraso(): Promise<any> {
     try {
       const documentDefinitions = {
+        info: {
+          title: 'Detalles del Parte de Atrasos Golden DWH | SISCO',
+        },
         pageSize: 'LETTER',
         // pageOrientation: 'landscape',
         content: [
@@ -242,13 +230,7 @@ export class ParteAtrasoComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this._pdfMakeSvc.generatePdf(documentDefinitions);
     } catch (err: any) {
-      SweetAlert.fire({
-        icon: 'error',
-        title: 'Error',
-        text: err,
-        showConfirmButton: true,
-        confirmButtonText: 'Aceptar',
-      });
+      this._swalSvc.error(err);
     }
   }
 

@@ -1,0 +1,34 @@
+query GetConciliacionExternaContab($conciliaExternaInput: ConciliaExternaContabilidadInput!) {
+  getConciliacionExternaContab(conciliaExternaInput: $conciliaExternaInput) {
+    getConciliaContab {
+      Id
+      Anno
+      Mes
+      Tipo
+      CuentaEmisor
+      SubCuentaEmisor
+      DivisionEmisor
+      Emisor
+      CuentaReceptor
+      SubCuentaReceptor
+      DivisionReceptor
+      Receptor
+      Documento
+      FechaEmision
+      ValorEmisor
+      FechaRecepcion
+      ValorReceptor
+      DiferenciaDias
+      DiferenciaImporte
+    }
+    getActaConciliacion {
+      ID
+      Detalle
+      Emisor
+      Receptor
+      SaldoEmisor
+      SaldoReceptor
+      Diferencia
+    }
+  }
+}

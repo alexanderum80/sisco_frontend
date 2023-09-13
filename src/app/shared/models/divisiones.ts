@@ -1,6 +1,10 @@
-import { IQueryResponse } from './query-response';
+export interface IDivisiones {
+  IdDivision: number;
+  Division: string;
+}
 
 export interface DivisionesQueryResponse {
-  getAllDivisiones: IQueryResponse;
-  getDivisionById: IQueryResponse;
+  getAllDivisiones: IDivisiones[];
+  getAllDivisionesByUsuario: IDivisiones[];
+  getDivisionById: IDivisiones;
 }

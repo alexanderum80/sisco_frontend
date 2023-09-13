@@ -1,0 +1,19 @@
+  query ContaEstadistica($contaEstadisticaInput: ContaEstadisticaInput!) {
+    contaEstadistica(contaEstadisticaInput: $contaEstadisticaInput) {
+      IdDivision
+      Division
+      IdCentro
+      Centro
+      Consolidado
+      Annio
+      Periodo
+      FechaActualizacion
+      FechaInicio
+      FechaFin
+      Comprobantes
+      Traspasados
+      SinTraspasar
+      Inconclusos
+      Anulados
+    }
+  }

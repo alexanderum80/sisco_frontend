@@ -1,39 +1,22 @@
 <app-list-item title="Clasificador de Cuentas">
-    <p-tabView class="h-full">
-        <p-tabPanel header="Consolidado">
-            <png-table
-                [columns]="displayedColumns"
-                [data]="clasificadorCuentaConso"
-                [loading]="loading"
-                [inlineButtons]="inlineButtons"
-                [topLeftButtons]="topLeftButtons"
-                [scrollable]="true"
-                scrollHeight="calc(100vh - 290px)"
-                (actionClicked)="actionClicked($event)"></png-table>
-        </p-tabPanel>
-        <p-tabPanel header="Centro">
-            <png-table
-                [columns]="displayedColumns"
-                [data]="clasificadorCuentaCentro"
-                [loading]="loading"
-                [inlineButtons]="inlineButtons"
-                [topLeftButtons]="topLeftButtons"
-                [scrollable]="true"
-                scrollHeight="calc(100vh - 290px)"
-                (actionClicked)="actionClicked($event)"></png-table>
-        </p-tabPanel>
-        <p-tabPanel header="Complejo">
-            <png-table
-                [columns]="displayedColumns"
-                [data]="clasificadorCuentaComplejo"
-                [loading]="loading"
-                [inlineButtons]="inlineButtons"
-                [topLeftButtons]="topLeftButtons"
-                [scrollable]="true"
-                scrollHeight="calc(100vh - 290px)"
-                (actionClicked)="actionClicked($event)"></png-table>
-        </p-tabPanel>
-    </p-tabView>
+  <div class="mr-2 mb-2 ml-2 w-20rem">
+    <form>
+      <png-dropdown
+        [fg]="fg"
+        control="tipo"
+        label="Tipo Clasificador"
+        [optionsValues]="clasificadorCuentasTipoValues"
+        [filter]="false"
+        [showClear]="false"></png-dropdown>
+    </form>
+  </div>
+  <png-table
+    [columns]="displayedColumns"
+    [data]="clasificadorCuentas"
+    [loading]="loading"
+    [inlineButtons]="inlineButtons"
+    [topLeftButtons]="topLeftButtons"
+    [scrollable]="true"
+    scrollHeight="calc(100vh - 255px)"
+    (actionClicked)="actionClicked($event)"></png-table>
 </app-list-item>
-
-<p-toast></p-toast>

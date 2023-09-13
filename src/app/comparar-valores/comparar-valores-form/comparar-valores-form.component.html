@@ -13,6 +13,14 @@
         [showClear]="true"></png-dropdown>
     </div>
     <div>
+      <png-checkbox
+        class="flex flex-auto"
+        [fg]="fg"
+        control="consolidado"
+        label="Consolidado"
+        labelPosition="left"></png-checkbox>
+    </div>
+    <div>
       <png-dropdown
         class="w-20rem"
         label="Expresión"
@@ -24,7 +32,7 @@
         [required]="true"
         [showClear]="true"></png-dropdown>
     </div>
-    <div>
+    <div class="flex">
       <png-dropdown
         class="w-20rem"
         label="Operador"
@@ -35,16 +43,21 @@
         [filter]="true"
         [required]="true"
         [showClear]="true"></png-dropdown>
-    </div>
-    <div>
       <png-input-number
-        class="w-20rem"
+        class="w-20rem ml-5"
         label="Valor"
         [fg]="fg"
         control="valor"
         mode="currency"
         [required]="true"
         autocomplete="off"></png-input-number>
+    </div>
+    <div>
+      <png-checkbox
+        [fg]="fg"
+        control="activo"
+        label="Activo"
+        labelPosition="left"></png-checkbox>
     </div>
   </form>
 </app-add-edit-item>

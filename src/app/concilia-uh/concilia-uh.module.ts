@@ -16,22 +16,22 @@ import { ConciliaUhRoutingModule } from './concilia-uh-routing.module';
 import { ConciliaUhComponent } from './concilia-uh.component';
 
 @NgModule({
-    declarations: [ConciliaUhComponent],
-    imports: [
-        CommonModule,
-        ConciliaUhRoutingModule,
-        FormsModule,
-        ReactiveFormsModule,
-        PrimeProgressSpinnerModule,
-        PrimePanelModule,
-        PrimeCardModule,
-        PrimeRadioButtonModule,
-        PrimeDropdownModule,
-        PrimeCalendarModule,
-        PrimeTabViewModule,
-        PrimeTableModule,
-        PrimeInputTextareaModule,
-        PrimeButtonModule,
-    ],
+  declarations: [ConciliaUhComponent],
+  imports: [
+    CommonModule,
+    ConciliaUhRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    PrimeProgressSpinnerModule,
+    PrimePanelModule,
+    PrimeCardModule,
+    PrimeRadioButtonModule,
+    PrimeDropdownModule,
+    PrimeCalendarModule,
+    PrimeTabViewModule,
+    PrimeTableModule,
+    PrimeInputTextareaModule,
+    PrimeButtonModule,
+  ],
 })
 export class ConciliaUhModule {}

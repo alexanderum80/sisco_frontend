@@ -1,0 +1,15 @@
+query GetConciliacionExternaContabDeudasPorEdades($annio: Int!, $mes: Int!, $mesActual: Boolean!) {
+  getConciliacionExternaContabDeudasPorEdades(annio: $annio, mes: $mes, mesActual: $mesActual) {
+    TipoOperacion
+    Anno
+    Mes
+    IdDivision
+    Division
+    Valor
+    De0a30
+    De30a60
+    De60a90
+    De90a365
+    MasDe1Anno
+  }
+}

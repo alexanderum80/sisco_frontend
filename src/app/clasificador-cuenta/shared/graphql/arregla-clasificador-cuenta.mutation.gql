@@ -1,0 +1,3 @@
+mutation ArreglaClasificadorCuenta($idUnidad: Int!, $tipoUnidad: String!, $annio: String!) {
+  arreglaClasificadorCuenta(idUnidad: $idUnidad, tipoUnidad: $tipoUnidad, annio: $annio)
+}

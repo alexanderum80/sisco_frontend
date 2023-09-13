@@ -1,0 +1,6 @@
+query GetAllDivisionesByUsuario {
+    getAllDivisionesByUsuario {
+        IdDivision
+        Division
+    }
+}

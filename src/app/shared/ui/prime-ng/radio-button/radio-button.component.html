@@ -1,12 +1,12 @@
 <div [formGroup]="fg">
-    <div *ngFor="let item of items" class="p-field-radiobutton">
-        <p-radioButton
-            [inputId]="item.value"
-            [name]="control"
-            [value]="item.value"
-            [disabled]="disabled"
-            [formControlName]="control">
-        </p-radioButton>
-        <label [for]="item.value">{{ item.label }}</label>
-    </div>
+  <div *ngFor="let item of items" class="p-field-radiobutton">
+    <p-radioButton
+      [inputId]="item.value"
+      [name]="control"
+      [value]="item.value"
+      [disabled]="disabled"
+      [formControlName]="control">
+    </p-radioButton>
+    <label [for]="item.value">{{ item.label }}</label>
+  </div>
 </div>

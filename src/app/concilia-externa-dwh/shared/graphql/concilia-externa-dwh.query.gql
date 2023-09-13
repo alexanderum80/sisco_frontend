@@ -1,0 +1,16 @@
+query ConciliaExternaDWH($conciliaExternaDWHInput: ConciliaOperacionesDWHInput!) {
+  conciliaExternaDWH(conciliaExternaDWHInput: $conciliaExternaDWHInput) {
+    success
+    data {
+      Documento
+      FechaE
+      FechaR
+      Emisor
+      Receptor
+      ImporteE
+      ImporteR
+      Diferencia
+    }
+    error
+  }
+}

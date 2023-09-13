@@ -1,0 +1,7 @@
+query GetCategoriaCuentaByIdClase($idClase: Int!) {
+    getCategoriaCuentaByIdClase(idClase: $idClase) {
+    		IdCategoria
+      	IdClase
+    		Categoria
+    }
+}

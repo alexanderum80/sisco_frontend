@@ -1,10 +1,6 @@
 query GetClasificadorEntidad($idUnidad: Int!) {
     getClasificadorEntidad(idUnidad: $idUnidad) {
-        success
-        data {
-            IdUnidad
-            IdTipoEntidad
-        }
-        error
+        IdUnidad
+        IdTipoEntidad
     }
 }

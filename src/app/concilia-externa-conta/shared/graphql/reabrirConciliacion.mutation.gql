@@ -1,0 +1,3 @@
+mutation ReabrirConciliacion($anno: Int!, $mes: Int!) {
+   reabrirConciliacion(anno: $anno, mes: $mes) 
+}

@@ -1,0 +1,6 @@
+mutation UpdateConciliacionEntreUnidades($conciliacionUnidadesInput: ConciliacionEntreUnidadesInput!) {
+   updateConciliacionEntreUnidades(conciliacionUnidadesInput: $conciliacionUnidadesInput) {
+    success
+    error
+  }
+}

@@ -1,0 +1,8 @@
+query GetActFijosClasificadorSubgrupo($grupo: Int!, $codigo: Int!) {
+    getActFijosClasificadorSubgrupo(grupo: $grupo, codigo: $codigo) {
+        Grupo
+        Codigo
+        Descripcion
+        Tasa
+    }
+}

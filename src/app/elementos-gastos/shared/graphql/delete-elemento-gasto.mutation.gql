@@ -1,4 +1,4 @@
-mutation DeleteElementoGasto($id: String!) {
+mutation DeleteElementoGasto($id: [String!]!) {
     deleteElementoGasto(id: $id) {
         success
         error

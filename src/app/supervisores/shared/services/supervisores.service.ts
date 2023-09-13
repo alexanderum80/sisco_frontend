@@ -35,12 +35,38 @@ export class SupervisoresService {
               fetchPolicy: 'network-only',
             })
             .valueChanges.subscribe({
-              next: response => subscriber.next(response.data),
-              error: err => subscriber.error(err),
+              next: res => subscriber.next(res.data),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
+      }
+    });
+  }
+
+  loadSupervisorByIdDivision(
+    idDivision: number
+  ): Observable<SupervisoresQueryResponse> {
+    return new Observable<SupervisoresQueryResponse>(subscriber => {
+      try {
+        this.subscription.push(
+          this._apollo
+            .query<SupervisoresQueryResponse>({
+              query: supervisoresApi.byIdDivision,
+              variables: { idDivision },
+              fetchPolicy: 'network-only',
+            })
+            .subscribe({
+              next: res => {
+                subscriber.next(res.data);
+                subscriber.complete();
+              },
+              error: err => subscriber.error(err.message || err),
+            })
+        );
+      } catch (err: any) {
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -56,15 +82,15 @@ export class SupervisoresService {
               fetchPolicy: 'network-only',
             })
             .subscribe({
-              next: (response) => {
-                subscriber.next(response.data);
+              next: res => {
+                subscriber.next(res.data);
                 subscriber.complete();
               },
-              error: err => subscriber.error(err),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -92,12 +118,12 @@ export class SupervisoresService {
               refetchQueries: ['GetAllSupervisores'],
             })
             .subscribe({
-              next: response => subscriber.next(response.data || undefined),
-              error: err => subscriber.error(err),
+              next: res => subscriber.next(res.data || undefined),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -113,12 +139,12 @@ export class SupervisoresService {
               refetchQueries: ['GetAllSupervisores'],
             })
             .subscribe({
-              next: response => subscriber.next(response.data || undefined),
-              error: err => subscriber.error(err),
+              next: res => subscriber.next(res.data || undefined),
+              error: err => subscriber.error(err.message || err),
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

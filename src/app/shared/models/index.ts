@@ -1,6 +1,6 @@
 export * from './cargos';
 export * from './conexiones';
-// export * from './date-range';
+export * from './date-range';
 export * from './dialog-result';
 export * from './divisiones';
 export * from './list-items';

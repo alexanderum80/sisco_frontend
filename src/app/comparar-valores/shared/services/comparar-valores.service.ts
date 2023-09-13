@@ -9,30 +9,19 @@ import { ComprobarValoresQueryResponse } from '../models/comparar-valores.model'
 @Injectable()
 export class CompararValoresService {
   fg: FormGroup = new FormGroup({
-    id: new FormControl(0),
-    centro: new FormControl(0),
-    expresion: new FormControl(0),
-    operador: new FormControl(''),
-    valor: new FormControl(0),
-    division: new FormControl(0),
+    id: new FormControl(0, { initialValueIsDefault: true }),
+    centro: new FormControl(0, { initialValueIsDefault: true }),
+    expresion: new FormControl(0, { initialValueIsDefault: true }),
+    operador: new FormControl('', { initialValueIsDefault: true }),
+    valor: new FormControl(0, { initialValueIsDefault: true }),
+    division: new FormControl(0, { initialValueIsDefault: true }),
+    consolidado: new FormControl(false, { initialValueIsDefault: true }),
+    activo: new FormControl(true, { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];
 
   constructor(private _apollo: Apollo) {}
-
-  inicializarFg(): void {
-    const payload = {
-      id: 0,
-      centro: null,
-      expresion: null,
-      operador: null,
-      valor: 0,
-      division: 0,
-    };
-
-    this.fg.patchValue(payload);
-  }
 
   loadAll(): Observable<ComprobarValoresQueryResponse> {
     return new Observable<ComprobarValoresQueryResponse>(subscriber => {
@@ -43,12 +32,12 @@ export class CompararValoresService {
               query: compararValoresApi.all,
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(response => {
-              subscriber.next(response.data);
+            .valueChanges.subscribe(res => {
+              subscriber.next(res.data);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -63,13 +52,13 @@ export class CompararValoresService {
               variables: { id },
               fetchPolicy: 'network-only',
             })
-            .valueChanges.subscribe(response => {
-              subscriber.next(response.data);
+            .valueChanges.subscribe(res => {
+              subscriber.next(res.data);
               subscriber.complete();
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -84,6 +73,8 @@ export class CompararValoresService {
           IdOperador: this.fg.controls['operador'].value,
           Valor: this.fg.controls['valor'].value,
           IdDivision: this.fg.controls['division'].value,
+          Consolidado: this.fg.controls['consolidado'].value,
+          Activo: this.fg.controls['activo'].value,
         };
 
         const mutation =
@@ -98,12 +89,12 @@ export class CompararValoresService {
               variables: { comprobarValorInput: payload },
               refetchQueries: ['GetAllComprobarValores'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -118,12 +109,12 @@ export class CompararValoresService {
               variables: { IDs },
               refetchQueries: ['GetAllComprobarValores'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }

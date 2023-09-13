@@ -1,0 +1,18 @@
+query ConciliaInternaConta($conciliaInternaContaInput: ConciliaInternaContaInput!) {
+  conciliaInternaConta(conciliaInternaContaInput: $conciliaInternaContaInput) {
+   	Division
+    Annio
+    Periodo
+    Tipo
+    Emisor
+    Receptor
+    CuentaE
+    SubCuentaE
+    ValorE
+    Operador
+    CuentaR
+    SubCuentaR
+    ValorR
+    Diferencia
+  }
+}

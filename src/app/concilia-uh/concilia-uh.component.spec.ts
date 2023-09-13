@@ -8,9 +8,8 @@ describe('ConciliaUhComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ConciliaUhComponent ]
-    })
-    .compileComponents();
+      declarations: [ConciliaUhComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

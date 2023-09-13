@@ -1,14 +1,11 @@
 query AuthenticateUsuario($usuario: String!, $passw: String!) {
-   authenticateUsuario(usuario: $usuario, passw: $passw) {
-    success
-    data {
-      IdUsuario
-      Usuario
-      CambiarContrasena
-      IdTipoUsuario
-      IdDivision
-      Token
-    }
-    error
+  authenticateUsuario(usuario: $usuario, passw: $passw) {
+    IdUsuario
+    Usuario
+    CambiarContrasena
+    IdTipoUsuario
+    IdDivision
+    Token
+    RefreshToken
   }
 }

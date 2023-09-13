@@ -1,16 +1,10 @@
 query GetContaConexionById($id: Int!) {
     getContaConexionById(id: $id) {
-        success
-        data {
-            Id
-            IdUnidad
-            Consolidado
-            IdDivision
-            IpRodas
-            Usuario
-            Contrasena
-            BaseDatos
-        }
-        error
+        Id
+        IdUnidad
+        Consolidado
+        IdDivision
+        IpRodas
+        BaseDatos
     }
 }

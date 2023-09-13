@@ -1,28 +1,69 @@
 query ConciliaContabilidad($conciliaContaInput: ConciliaContaInput!) {
     conciliaContabilidad(conciliaContaInput: $conciliaContaInput) {
-        success
-        data {
-            ReporteClasificador {
-                success
-                data
-                error
-            }
-            ReporteConsultas {
-                success
-                data
-                error
-            }
-            ReporteExpresiones {
-                success
-                data
-                error
-            }
-            ReporteValores {
-                success
-                data
-                error
-            }
+        ReporteClasificador {
+            Cuenta
+            SubCuenta
+            Descripcion
+            Crt1Clasif
+            Crt2Clasif
+            Crt3Clasif
+            Crt4Clasif
+            Crt5Clasif
+            NatClasif
+            OblClasif
+            Crt1Rodas
+            Crt2Rodas
+            Crt3Rodas
+            Crt4Rodas
+            Crt5Rodas
+            NatRodas
+            OblRodas
         }
-        error
-    }
+        ReporteConsultas {
+            Periodo
+            Centro
+            IdConsulta
+            Consulta
+            Cuenta
+            SubCuenta
+            Analisis1
+            Analisis2
+            Analisis3
+            Analisis4
+            Analisis5
+            Total
+            Consolidado
+        }
+        ReporteExpresiones {
+            Centro
+            Consolidado
+            Periodo
+            Expresion
+            Valor
+            Operador
+            ExpresionC
+            ValorC
+            Resultado
+        }
+        ReporteValores {
+            Centro
+            Periodo
+            Consolidado
+            Expresion
+            Valor
+            Operador
+            ValorRodas
+            Estado
+            Division
+        }
+        CuadreSistemas {
+            Centro
+            Sistema
+            Estado
+        }
+        Informacion {
+            Criterio
+            Saldo
+        }
+  }
 }

@@ -1,9 +1,9 @@
+import { AuthenticationService } from './../../../shared/services/authentication.service';
 import {
   TipoEntidadesMutationResponse,
   TipoEntidadesQueryResponse,
 } from './../models/tipo-entidades.model';
 import { tipoEntidadesApi } from './../graphql/tipo-entidades.actions';
-import { UsuarioService } from './../../../shared/services/usuario.service';
 import { Apollo } from 'apollo-angular';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
@@ -21,10 +21,13 @@ export class TipoEntidadesService {
 
   subscription: Subscription[] = [];
 
-  constructor(private _apollo: Apollo, private _usuarioSvc: UsuarioService) {}
+  constructor(
+    private _apollo: Apollo,
+    private _authSvc: AuthenticationService
+  ) {}
 
   hasAdvancedUserPermission(): boolean {
-    return this._usuarioSvc.hasAdvancedUserPermission();
+    return this._authSvc.hasAdvancedUserPermission();
   }
 
   loadAllTipoEntidades(): Observable<TipoEntidadesQueryResponse> {
@@ -41,7 +44,7 @@ export class TipoEntidadesService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -62,7 +65,7 @@ export class TipoEntidadesService {
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -88,12 +91,12 @@ export class TipoEntidadesService {
               variables: { tipoEntidadInfo },
               refetchQueries: ['GetAllTipoEntidades'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
@@ -108,12 +111,12 @@ export class TipoEntidadesService {
               variables: { IDs },
               refetchQueries: ['GetAllTipoEntidades'],
             })
-            .subscribe(response => {
-              subscriber.next(response.data || undefined);
+            .subscribe(res => {
+              subscriber.next(res.data || undefined);
             })
         );
       } catch (err: any) {
-        subscriber.error(err);
+        subscriber.error(err.message || err);
       }
     });
   }
