@@ -1,0 +1,35 @@
+<app-add-edit-item [fg]="fg" (actionClicked)="onActionClicked($event)">
+  <form [formGroup]="fg" style="width: 400px">
+    <div class="field mt-1">
+      <png-input-text
+        class="w-full mt-1"
+        label="CNMB"
+        labelWidth="100"
+        [fg]="fg"
+        control="cnmb"
+        [required]="true"
+        autocomplete="off"></png-input-text>
+    </div>
+    <div>
+      <png-input-text
+        class="w-full mt-1"
+        label="Descripción"
+        labelWidth="100"
+        [fg]="fg"
+        control="descripcion"
+        [required]="true"
+        autocomplete="off"></png-input-text>
+    </div>
+    <div>
+      <png-input-number
+        class="w-full mt-1"
+        label="Tasa"
+        labelWidth="100"
+        [fg]="fg"
+        control="tasa"
+        [required]="true"
+        mode="decimal"
+        autocomplete="off"></png-input-number>
+    </div>
+  </form>
+</app-add-edit-item>

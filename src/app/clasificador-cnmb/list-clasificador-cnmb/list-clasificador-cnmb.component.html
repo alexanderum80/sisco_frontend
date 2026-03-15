@@ -1,0 +1,13 @@
+<app-list-item title="Clasificador CNMB de los Activos Fijos">
+  <png-table
+    [columns]="displayedColumns"
+    [data]="clasificadorCNMB"
+    [loading]="loading"
+    [inlineButtons]="inlineButtons"
+    [topLeftButtons]="topLeftButtons"
+    [scrollable]="true"
+    scrollHeight="calc(100vh - 220px)"
+    (actionClicked)="actionClicked($event)"></png-table>
+</app-list-item>
+
+<p-toast></p-toast>

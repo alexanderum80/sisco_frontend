@@ -1,0 +1,3 @@
+mutation DeleteActFijosClasificadorCnmb($cnmb: String!) {
+	deleteActFijosClasificadorCnmb(cnmb: $cnmb) 
+}

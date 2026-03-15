@@ -34,6 +34,7 @@ import { PrimeCardModule } from './card/card.module';
 import { PrimeInputTextareaModule } from './input-textarea/input-textarea.module';
 import { PrimeNGConfig } from 'primeng/api';
 import { PrimeInputEmailModule } from './input-email/input-email.module';
+import { PrimeToastModule } from './toast/toast.module';
 
 const modules = [
   PrimeButtonModule,
@@ -66,6 +67,7 @@ const modules = [
   PrimeSplitButtonModule,
   PrimeTabViewModule,
   PrimeTableModule,
+  PrimeToastModule,
   PrimeToolbarModule,
   PrimeTooltipModule,
 ];

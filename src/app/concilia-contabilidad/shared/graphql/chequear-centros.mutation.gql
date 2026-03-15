@@ -1,0 +1,7 @@
+mutation ChequearCentros($chequearCentrosInput: ChequearCentrosInput!) {
+    chequearCentros(chequearCentrosInput: $chequearCentrosInput) {
+        success
+        data
+        error
+    }
+}
