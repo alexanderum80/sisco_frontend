@@ -15,11 +15,13 @@ import { getPreviousMonth } from '../../../shared/models';
 const query = gql`
   query ContaInformeCtasCobrarPagar(
     $idDivision: Int!
+    $resumido: Boolean!
     $annio: Int!
     $periodo: Int!
   ) {
     contaInformeCtasCobrarPagar(
       idDivision: $idDivision
+      resumido: $resumido
       annio: $annio
       periodo: $periodo
     ) {
@@ -46,6 +48,7 @@ export class InformeCuentasCobrarPagarService {
     periodo: new FormControl(getPreviousMonth(new Date()), {
       initialValueIsDefault: true,
     }),
+    resumido: new FormControl(false, { initialValueIsDefault: true }),
   });
 
   subscription: Subscription[] = [];
@@ -62,6 +65,7 @@ export class InformeCuentasCobrarPagarService {
 
   getInformeCuentasCobrarPagar(): Observable<InformeCtasCobrarPagarQueryReponse> {
     const idDivision = +this.fg.get('idDivision')?.value;
+    const resumido = this.fg.get('resumido')?.value;
     const annio = +moment(this.fg.get('periodo')?.value).format('YYYY');
     const periodo = +moment(this.fg.get('periodo')?.value).format('MM');
 
@@ -69,6 +73,7 @@ export class InformeCuentasCobrarPagarService {
       this._apolloSvc
         .query<InformeCtasCobrarPagarQueryReponse>(query, {
           idDivision,
+          resumido,
           annio,
           periodo,
         })
@@ -86,10 +91,14 @@ export class InformeCuentasCobrarPagarService {
   async getDivision(): Promise<any> {
     const definition = [];
 
-    const _division = uniq(this.informeCuentasCobrarPagar.map(u => u.Division));
+    const _division =
+      this.fg.controls['idDivision'].value === 0
+        ? 'EMPRESA: DIRECCION GENERAL'
+        : 'División: ' +
+          uniq(this.informeCuentasCobrarPagar.map(u => u.Division));
 
     definition.push({
-      text: `División:  ${_division} `,
+      text: _division,
       bold: true,
       margin: [0, 5, 0, 0],
     });
@@ -143,17 +152,54 @@ export class InformeCuentasCobrarPagarService {
           definition.push({
             text: cuenta,
             bold: true,
+            decoration: 'underline',
             margin: [0, 10, 0, 0],
           });
 
-          const _filteredData = this.informeCuentasCobrarPagar.filter(
-            f =>
-              f.Organismo === organismo &&
-              f.Grupo === grupo &&
-              f.Cuenta === cuenta
-          );
+          if (
+            this.fg.controls['idDivision'].value === 0 &&
+            this.fg.controls['resumido'].value === false
+          ) {
+            const proveedorClientes = uniq(
+              this.informeCuentasCobrarPagar
+                .filter(
+                  f =>
+                    f.Organismo === organismo &&
+                    f.Grupo === grupo &&
+                    f.Cuenta === cuenta
+                )
+                .map(d => d.ProveedorCliente)
+            );
 
-          definition.push(this._getInformeCtaCobrarPagarTable(_filteredData));
+            proveedorClientes.forEach(proveedorCliente => {
+              definition.push({
+                text: proveedorCliente,
+                bold: true,
+                margin: [0, 10, 0, 0],
+              });
+
+              const _filteredData = this.informeCuentasCobrarPagar.filter(
+                f =>
+                  f.Organismo === organismo &&
+                  f.Grupo === grupo &&
+                  f.Cuenta === cuenta &&
+                  f.ProveedorCliente === proveedorCliente
+              );
+
+              definition.push(
+                this._getInformeCtaCobrarPagarTable(_filteredData)
+              );
+            });
+          } else {
+            const _filteredData = this.informeCuentasCobrarPagar.filter(
+              f =>
+                f.Organismo === organismo &&
+                f.Grupo === grupo &&
+                f.Cuenta === cuenta
+            );
+
+            definition.push(this._getInformeCtaCobrarPagarTable(_filteredData));
+          }
         });
 
         definition.push(this._getTotalesGrupoTabla());
@@ -178,7 +224,11 @@ export class InformeCuentasCobrarPagarService {
         body: [
           [
             {
-              text: 'Cliente / Proveedor',
+              text:
+                this.fg.controls['idDivision'].value === 0 &&
+                this.fg.controls['resumido'].value === false
+                  ? 'División'
+                  : 'Proveedor/Cliente',
               style: 'tableHeader',
             },
             {
@@ -221,7 +271,10 @@ export class InformeCuentasCobrarPagarService {
             this.totalMasDe90Grupo += al.MasDe90;
 
             return [
-              al.ProveedorCliente,
+              this.fg.controls['idDivision'].value === 0 &&
+              this.fg.controls['resumido'].value === false
+                ? al.Division
+                : al.ProveedorCliente,
               {
                 text: numberFormatter.format(al.Saldo),
                 alignment: 'right',
@@ -245,7 +298,7 @@ export class InformeCuentasCobrarPagarService {
             ];
           }),
           [
-            { text: 'TOTAL CUENTA', bold: true },
+            { text: 'TOTAL CLIENTE / PROVEEDOR', bold: true },
             {
               text: numberFormatter.format(totalMonto),
               bold: true,

@@ -8,7 +8,7 @@
           class="w-full flex-auto"
           [fg]="fg"
           control="idDivision"
-          label="Division"
+          label="División"
           [optionsValues]="divisionesValues"
           [filter]="true"
           [required]="true"
@@ -21,6 +21,12 @@
           view="month"
           dateFormat="MM/yy"
           [required]="true"></png-calendar>
+        <png-checkbox
+          *ngIf="aNivelDeEmpresa"
+          class="mt-2"
+          [fg]="fg"
+          control="resumido"
+          label="Resumido"></png-checkbox>
         <div class="flex justify-content-end">
           <png-button
             class="mr-2 mb-2"

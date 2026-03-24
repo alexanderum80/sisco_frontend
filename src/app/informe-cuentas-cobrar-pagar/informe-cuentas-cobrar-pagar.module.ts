@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { InformeCuentasCobrarPagarRoutingModule } from './informe-cuentas-cobrar-pagar-routing.module';
 import { InformeCuentasCobrarPagarComponent } from './informe-cuentas-cobrar-pagar.component';
 import { InformeCuentasCobrarPagarFormComponent } from './informe-cuentas-cobrar-pagar-form/informe-cuentas-cobrar-pagar-form/informe-cuentas-cobrar-pagar-form.component';
+import { PrimeCheckboxModule } from '../shared/ui/prime-ng/checkbox/checkbox.module';
 
 @NgModule({
   declarations: [
@@ -24,6 +25,7 @@ import { InformeCuentasCobrarPagarFormComponent } from './informe-cuentas-cobrar
     PrimeButtonModule,
     PrimeDropdownModule,
     PrimeCalendarModule,
+    PrimeCheckboxModule,
   ],
 })
 export class InformeCuentasCobrarPagarModule {}

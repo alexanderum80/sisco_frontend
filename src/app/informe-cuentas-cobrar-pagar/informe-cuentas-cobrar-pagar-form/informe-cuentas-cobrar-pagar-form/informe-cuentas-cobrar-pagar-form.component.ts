@@ -13,6 +13,8 @@ import {
 } from '@angular/core';
 import { SelectItem } from 'primeng/api';
 import * as moment from 'moment';
+import { AuthenticationService } from 'src/app/shared/services/authentication.service';
+import { ETipoUsuarios } from 'src/app/usuarios/shared/models/usuarios.model';
 
 @Component({
   selector: 'app-informe-cuentas-cobrar-pagar-form',
@@ -34,7 +36,8 @@ export class InformeCuentasCobrarPagarFormComponent
     private _swalSvc: SweetalertService,
     private _dynamicDialogRef: DynamicDialogRef,
     private _cd: ChangeDetectorRef,
-    private _pdfMakeSvc: PdfmakeService
+    private _pdfMakeSvc: PdfmakeService,
+    private _authenticationSvc: AuthenticationService
   ) {}
 
   ngOnInit(): void {
@@ -52,6 +55,10 @@ export class InformeCuentasCobrarPagarFormComponent
     this._informeCtasCobrarPagarSvc.dispose();
   }
 
+  get aNivelDeEmpresa() {
+    return this.fg.get('idDivision')?.value === 0;
+  }
+
   private _getDivisiones(): void {
     try {
       this._informeCtasCobrarPagarSvc.subscription.push(
@@ -59,11 +66,26 @@ export class InformeCuentasCobrarPagarFormComponent
           next: res => {
             const result = res.getAllDivisionesByUsuario;
 
-            this.divisionesValues = result.map(d => {
-              return {
+            if (
+              this._authenticationSvc.usuario.IdDivision === 100 &&
+              (this._authenticationSvc.usuario.IdTipoUsuario ===
+                ETipoUsuarios['Administrador'] ||
+                this._authenticationSvc.usuario.IdTipoUsuario ===
+                  ETipoUsuarios['Usuario Avanzado'] ||
+                this._authenticationSvc.usuario.IdTipoUsuario ===
+                  ETipoUsuarios['Financista'])
+            ) {
+              this.divisionesValues.push({
+                value: 0,
+                label: '<A NIVEL DE EMPRESA>',
+              });
+            }
+
+            result.map(d => {
+              this.divisionesValues.push({
                 value: d.IdDivision,
                 label: d.IdDivision + '-' + d.Division,
-              };
+              });
             });
           },
           error: err => {
